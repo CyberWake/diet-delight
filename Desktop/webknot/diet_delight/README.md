@@ -1,4 +1,4 @@
-# diet_delight
+# diet-delight-mobile
 
 A new Flutter application.
 
