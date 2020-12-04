@@ -123,6 +123,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               child: Container(
                 color: formBackground,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Center(
                       child: Text(
@@ -273,7 +274,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                      padding: const EdgeInsets.fromLTRB(30, 20, 30, 0),
                       child: SizedBox(
                         width: double.infinity,
                         child: TextButton(

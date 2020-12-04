@@ -93,18 +93,18 @@ class _AfterSplashState extends State<AfterSplash>
               height: 50.0,
             )),
             SizedBox(
-              height: 20.0,
+              height: 25.0,
             ),
             Container(
-              width: 240,
+              width: 300,
               child: TabBar(
                 labelStyle: TextStyle(
                   fontFamily: 'RobotoCondensedReg',
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
-                indicatorColor: defaultGreen,
-                indicatorWeight: 4.0,
+                indicatorColor: Colors.transparent,
+                indicatorWeight: 1.0,
                 indicatorSize: TabBarIndicatorSize.label,
                 labelColor: defaultGreen,
                 labelPadding: EdgeInsets.symmetric(horizontal: 13),
@@ -117,15 +117,41 @@ class _AfterSplashState extends State<AfterSplash>
                 controller: _tabcontroller,
                 tabs: <Widget>[
                   Tab(
-                    icon: Align(
+                    child: Align(
                       alignment: Alignment.centerRight,
-                      child: Text('SIGN IN'),
+                      child: Container(
+                        padding: EdgeInsets.only(
+                          bottom: 3, // space between underline and text
+                        ),
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(
+                          color: _tabcontroller.index == 0
+                              ? defaultGreen
+                              : Colors.transparent, // Text colour here
+                          width: 4.0, // Underline width
+                        ))),
+                        child: Text('SIGN IN'),
+                      ),
                     ),
                   ),
                   Tab(
-                    icon: Align(
+                    child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text('SIGN UP'),
+                      child: Container(
+                        padding: EdgeInsets.only(
+                          bottom: 3, // space between underline and text
+                        ),
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(
+                          color: _tabcontroller.index == 1
+                              ? defaultGreen
+                              : Colors.transparent, // Text colour here
+                          width: 4.0, // Underline width
+                        ))),
+                        child: Text('SIGN UP'),
+                      ),
                     ),
                   ),
                 ],

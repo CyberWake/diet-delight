@@ -195,7 +195,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
+                      padding: const EdgeInsets.fromLTRB(30, 50, 30, 0),
                       child: SizedBox(
                         width: double.infinity,
                         child: TextButton(

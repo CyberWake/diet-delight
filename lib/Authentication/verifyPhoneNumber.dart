@@ -59,6 +59,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
               child: Container(
                 color: formBackground,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,7 +164,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),
+                      padding: const EdgeInsets.fromLTRB(30, 40, 30, 0),
                       child: SizedBox(
                         width: double.infinity,
                         child: TextButton(
