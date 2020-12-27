@@ -8,6 +8,8 @@ import 'package:splashscreen/splashscreen.dart';
 import 'package:diet_delight/Authentication/forgotPassword.dart';
 import 'package:diet_delight/Authentication/resetPassword.dart';
 import 'package:diet_delight/Authentication/verifyPhoneNumber.dart';
+import 'package:diet_delight/Authentication/obtainToken.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() {
   runApp(new MaterialApp(
@@ -50,9 +52,18 @@ class _AfterSplashState extends State<AfterSplash>
     with SingleTickerProviderStateMixin {
   TabController _tabcontroller;
   double conHeight = 300.0;
+  final storage = FlutterSecureStorage();
+  String accessToken;
+
+  getToken() async {
+    accessToken = await ObtainToken().fetchToken();
+    print("This is the accessToken in main");
+    print(accessToken);
+  }
 
   @override
   void initState() {
+    getToken();
     _tabcontroller = new TabController(length: 2, vsync: this);
     _tabcontroller.addListener(() {
       if (_tabcontroller.index == 0) {
@@ -193,11 +204,11 @@ class _AfterSplashState extends State<AfterSplash>
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
-                                          0, 8.0, 0, 0),
+                                          0, 8.0, 20, 0),
                                       child: Material(
                                         borderRadius: BorderRadius.circular(5),
                                         child: Container(
-                                          width: 300.0,
+                                          width: double.infinity,
                                           height: 40.0,
                                           decoration: BoxDecoration(
                                               color: Colors.white,
@@ -261,11 +272,11 @@ class _AfterSplashState extends State<AfterSplash>
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
-                                          0, 8.0, 0, 0),
+                                          0, 8.0, 20, 0),
                                       child: Material(
                                         borderRadius: BorderRadius.circular(5),
                                         child: Container(
-                                          width: 300.0,
+                                          width: double.infinity,
                                           height: 40.0,
                                           decoration: BoxDecoration(
                                               color: Colors.white,
@@ -456,7 +467,7 @@ class _AfterSplashState extends State<AfterSplash>
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
-                                          0, 8.0, 0, 0),
+                                          0, 8.0, 20, 0),
                                       child: Row(
                                         children: [
                                           Padding(
@@ -466,7 +477,7 @@ class _AfterSplashState extends State<AfterSplash>
                                               borderRadius:
                                                   BorderRadius.circular(5),
                                               child: Container(
-                                                width: 80.0,
+                                                width: devWidth / 5,
                                                 height: 40.0,
                                                 decoration: BoxDecoration(
                                                     color: Colors.white,
@@ -521,53 +532,60 @@ class _AfterSplashState extends State<AfterSplash>
                                               ),
                                             ),
                                           ),
-                                          Material(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            child: Container(
-                                              width: 210.0,
-                                              height: 40.0,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  border: Border.all(
-                                                      color: formLinks,
-                                                      width: 1.0,
-                                                      style: BorderStyle.solid),
-                                                  borderRadius:
-                                                      BorderRadius.circular(5)),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        20, 3, 20, 7),
-                                                child: TextFormField(
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                0, 0, 0, 0),
+                                            child: Material(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              child: Container(
+                                                width: 3 * devWidth / 5,
+                                                height: 40.0,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    border: Border.all(
+                                                        color: formLinks,
+                                                        width: 1.0,
+                                                        style:
+                                                            BorderStyle.solid),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5)),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          20, 3, 20, 7),
+                                                  child: TextFormField(
 //                                      onChanged: (String otp1) {
 //                                        otp = otp1;
 //                                      },
-                                                  style: TextStyle(
-                                                    fontFamily:
-                                                        'RobotoCondensedReg',
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                    color: formFill,
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                  keyboardType:
-                                                      TextInputType.number,
-                                                  decoration: InputDecoration(
-                                                    fillColor: Colors.white,
-                                                    focusedBorder:
-                                                        InputBorder.none,
-                                                    enabledBorder:
-                                                        InputBorder.none,
-                                                    errorBorder:
-                                                        InputBorder.none,
-                                                    disabledBorder:
-                                                        InputBorder.none,
-                                                    border: OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              3.0),
+                                                    style: TextStyle(
+                                                      fontFamily:
+                                                          'RobotoCondensedReg',
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      color: formFill,
+                                                    ),
+                                                    textAlign: TextAlign.center,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    decoration: InputDecoration(
+                                                      fillColor: Colors.white,
+                                                      focusedBorder:
+                                                          InputBorder.none,
+                                                      enabledBorder:
+                                                          InputBorder.none,
+                                                      errorBorder:
+                                                          InputBorder.none,
+                                                      disabledBorder:
+                                                          InputBorder.none,
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(3.0),
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
@@ -597,11 +615,11 @@ class _AfterSplashState extends State<AfterSplash>
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
-                                          0, 8.0, 0, 0),
+                                          0, 8.0, 20, 0),
                                       child: Material(
                                         borderRadius: BorderRadius.circular(5),
                                         child: Container(
-                                          width: 300.0,
+                                          width: double.infinity,
                                           height: 40.0,
                                           decoration: BoxDecoration(
                                               color: Colors.white,
@@ -665,11 +683,11 @@ class _AfterSplashState extends State<AfterSplash>
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
-                                          0, 8.0, 0, 0),
+                                          0, 8.0, 20, 0),
                                       child: Material(
                                         borderRadius: BorderRadius.circular(5),
                                         child: Container(
-                                          width: 300.0,
+                                          width: double.infinity,
                                           height: 40.0,
                                           decoration: BoxDecoration(
                                               color: Colors.white,
@@ -734,11 +752,11 @@ class _AfterSplashState extends State<AfterSplash>
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
-                                          0, 8.0, 0, 0),
+                                          0, 8.0, 20, 0),
                                       child: Material(
                                         borderRadius: BorderRadius.circular(5),
                                         child: Container(
-                                          width: 300.0,
+                                          width: double.infinity,
                                           height: 40.0,
                                           decoration: BoxDecoration(
                                               color: Colors.white,

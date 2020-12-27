@@ -89,7 +89,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                             child: Material(
                               borderRadius: BorderRadius.circular(5),
                               child: Container(
-                                width: 300.0,
+                                width: double.infinity,
                                 height: 40.0,
                                 decoration: BoxDecoration(
                                     color: Colors.white,
@@ -151,7 +151,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                             child: Material(
                               borderRadius: BorderRadius.circular(5),
                               child: Container(
-                                width: 300.0,
+                                width: double.infinity,
                                 height: 40.0,
                                 decoration: BoxDecoration(
                                     color: Colors.white,

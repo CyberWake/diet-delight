@@ -6,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
+import 'package:diet_delight/Home Page/home.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class VerifyPhoneNumber extends StatefulWidget {
   @override
@@ -13,6 +15,20 @@ class VerifyPhoneNumber extends StatefulWidget {
 }
 
 class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
+  final storage = new FlutterSecureStorage();
+  String accessToken;
+
+  getToken() async {
+    accessToken = await storage.read(key: 'accessToken');
+    print(accessToken);
+  }
+
+  @override
+  void initState() {
+    getToken();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -112,6 +128,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                                   hasUnderline: false,
                                   pinBoxWidth: 30,
                                   pinBoxHeight: 40,
+                                  wrapAlignment: WrapAlignment.spaceBetween,
                                   hasTextBorderColor: Color(0xff909090),
                                   pinBoxColor: Colors.transparent,
                                   pinBoxDecoration: ProvidedPinBoxDecoration
@@ -172,7 +189,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => AfterSplash()));
+                                    builder: (context) => HomePage()));
                           },
                           child: Text(
                             'VERIFY',
