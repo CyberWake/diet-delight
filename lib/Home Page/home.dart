@@ -24,57 +24,39 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.white,
           elevation: 0.0,
           iconTheme: IconThemeData(color: defaultGreen),
-          centerTitle: true,
-          title: Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  width: 0,
-                ),
-                Image.asset(
-                  'images/Group 57.png',
-                  width: 88.0,
-                  height: 39.0,
-                ),
-                Container(
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: CircleAvatar(
-                          radius: 17,
-                          child: Image.asset(
-                            'images/Group 22.png',
-                            width: 16.0,
-                            height: 16.0,
-                          ),
-                          backgroundColor: Colors.white,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: CircleAvatar(
-                          radius: 17,
-                          child: Image.asset(
-                            'images/Group 24.png',
-                            width: 16.0,
-                            height: 16.0,
-                          ),
-                          backgroundColor: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+          title: Image.asset(
+            'images/Group 57.png',
+            height: 50.0,
+            fit: BoxFit.fitHeight,
           ),
+          actions: [
+            GestureDetector(
+              onTap: () {
+                //Navigator.pop(context);
+              },
+              child: Image.asset(
+                'images/Group 22.png',
+                width: 25.0,
+                height: 25.0,
+              ),
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            GestureDetector(
+              onTap: () {
+                //Navigator.pop(context);
+              },
+              child: Image.asset(
+                'images/Group 24.png',
+                width: 25.0,
+                height: 25.0,
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+          ],
         ),
         body: ListView(
           shrinkWrap: true,

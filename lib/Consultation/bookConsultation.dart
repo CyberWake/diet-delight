@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
 import 'dart:ui';
-import 'dart:io';
-import 'package:flutter/foundation.dart';
-import 'package:intl/intl.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
-import 'package:diet_delight/konstants.dart';
-import 'package:flutter_rounded_date_picker/rounded_picker.dart';
+
 import 'package:diet_delight/Consultation/confirmConsultation.dart';
+import 'package:diet_delight/konstants.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_rounded_date_picker/rounded_picker.dart';
+import 'package:intl/intl.dart';
 
 class BookConsultation extends StatefulWidget {
   int package;
@@ -150,37 +150,44 @@ class _BookConsultationState extends State<BookConsultation>
         body: ListView(
           children: [
             Row(
+              mainAxisSize: MainAxisSize.max,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20.0, 20.0, 0, 0),
-                    child: SizedBox(
-                      width: 30.0,
-                      height: 30.0,
-                      child: Icon(
-                        Icons.keyboard_backspace,
-                        size: 30.0,
-                        color: defaultGreen,
+                Expanded(
+                  flex: 2,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 20.0, 0, 0),
+                      child: SizedBox(
+                        width: 30.0,
+                        height: 30.0,
+                        child: Icon(
+                          Icons.keyboard_backspace,
+                          size: 30.0,
+                          color: defaultGreen,
+                        ),
                       ),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 25, top: 30.0),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: SizedBox(
-                      width: 4 * MediaQuery.of(context).size.width / 5,
-                      child: Text(
-                        'Book an Appointment',
-                        style: TextStyle(
-                          fontFamily: 'RobotoCondensedReg',
-                          fontSize: 24,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.black,
+                Expanded(
+                  flex: 8,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 25, top: 20.0),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: SizedBox(
+                        width: 4 * MediaQuery.of(context).size.width / 5,
+                        child: Text(
+                          'Book an Appointment',
+                          style: TextStyle(
+                            fontFamily: 'RobotoCondensedReg',
+                            fontSize: 24,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                     ),
