@@ -1,12 +1,10 @@
-import 'package:flutter/material.dart';
 import 'dart:ui';
-import 'dart:io';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
-import 'package:diet_delight/konstants.dart';
-import 'package:pin_code_text_field/pin_code_text_field.dart';
-import 'package:diet_delight/Authentication/resetPassword.dart';
+
 import 'package:diet_delight/Consultation/bookConsultation.dart';
+import 'package:diet_delight/konstants.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class HomePage extends StatefulWidget {
   @override

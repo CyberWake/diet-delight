@@ -1,6 +1,6 @@
-import 'createClient.dart';
-import 'package:oauth2_client/access_token_response.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import 'createClient.dart';
 
 class ObtainToken {
   final storage = FlutterSecureStorage();
