@@ -1,9 +1,10 @@
 import 'dart:ui';
 
 import 'package:diet_delight/Home Page/home.dart';
-import 'package:diet_delight/Models/loginModel.dart';
 import 'package:diet_delight/Models/registrationModel.dart';
 import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/services/apiCalls.dart';
+import 'package:diet_delight/services/otp.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -12,8 +13,7 @@ import 'package:pin_code_text_field/pin_code_text_field.dart';
 
 class VerifyPhoneNumber extends StatefulWidget {
   final RegModel regDetails;
-  final LogModel logDetails;
-  VerifyPhoneNumber({this.regDetails, this.logDetails});
+  VerifyPhoneNumber({this.regDetails});
   @override
   _VerifyPhoneNumberState createState() => new _VerifyPhoneNumberState();
 }
@@ -21,20 +21,35 @@ class VerifyPhoneNumber extends StatefulWidget {
 class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
   final storage = new FlutterSecureStorage();
   String accessToken;
+  String enteredOtp;
+  FlutterOtp otp = FlutterOtp();
 
   getToken() async {
     accessToken = await storage.read(key: 'accessToken');
-    print(accessToken);
+    print('accessToken present');
+  }
+
+  sendOtp() {
+    List<String> number = widget.regDetails.mobile.split(' ');
+    print(number.first);
+    print(number.last);
+    print('running');
+    otp.sendOtp(number.last, "<#> Verification code for diet delight is: ",
+        100000, 999999, number.first);
+    otp.getOtp();
+    print('done');
   }
 
   @override
   void initState() {
     getToken();
+    sendOtp();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    Api apiCall = Api(token: accessToken);
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -138,28 +153,15 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                                   pinBoxDecoration: ProvidedPinBoxDecoration
                                       .underlinedPinBoxDecoration,
                                   defaultBorderColor: Color(0xff909090),
-//                            onTextChanged: (String otp1) {
-//                              print(otp1);
-//                              print(otp);
-//
-//                              otp = otp1;
-//                            },
+                                  onTextChanged: (String otp) {
+                                    print(otp);
+                                    enteredOtp = otp;
+                                  },
                                   pinTextStyle: TextStyle(
                                     fontFamily: 'RobotoReg',
                                     color: formFill,
                                   ),
                                   keyboardType: TextInputType.number,
-//                                        decoration: InputDecoration(
-//                                          fillColor: Colors.white,
-//                                          focusedBorder: InputBorder.none,
-//                                          enabledBorder: InputBorder.none,
-//                                          errorBorder: InputBorder.none,
-//                                          disabledBorder: InputBorder.none,
-//                                          border: OutlineInputBorder(
-//                                            borderRadius:
-//                                                BorderRadius.circular(3.0),
-//                                          ),
-//                                        ),
                                 ),
                               ),
                             ),
@@ -172,6 +174,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: GestureDetector(
+                          onTap: sendOtp,
                           child: Text(
                             'Resend OTP',
                             style: TextStyle(
@@ -189,11 +192,17 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                       child: SizedBox(
                         width: double.infinity,
                         child: TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomePage()));
+                          onPressed: () async {
+                            if (otp.resultChecker(int.parse(enteredOtp))) {
+                              bool result =
+                                  await apiCall.register(widget.regDetails);
+                              print(result);
+                              if (result) {}
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => HomePage()));
+                            }
                           },
                           child: Text(
                             'VERIFY',

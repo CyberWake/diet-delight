@@ -1,12 +1,13 @@
+import 'package:diet_delight/Auth%20Screens/verifyPhoneNumber.dart';
 import 'package:diet_delight/Models/registrationModel.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'file:///C:/Users/VK/Desktop/ritik/diet-delight-mobile/lib/Auth%20Screens/verifyPhoneNumber.dart';
-
 class SignUp extends StatefulWidget {
+  String token;
+  SignUp({this.token});
   @override
   _SignUpState createState() => _SignUpState();
 }
@@ -47,6 +48,7 @@ class _SignUpState extends State<SignUp> {
         child: ListView(
           shrinkWrap: true,
           children: [
+            //Phone number field
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
               child: Column(
@@ -131,6 +133,7 @@ class _SignUpState extends State<SignUp> {
                 ],
               ),
             ),
+            //email field
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 15, 0, 0),
               child: Column(
@@ -168,6 +171,7 @@ class _SignUpState extends State<SignUp> {
                 ],
               ),
             ),
+            //password field
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 15, 0, 0),
               child: Column(
@@ -206,6 +210,7 @@ class _SignUpState extends State<SignUp> {
                 ],
               ),
             ),
+            //confirm password field
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 15, 0, 0),
               child: Column(
@@ -244,13 +249,14 @@ class _SignUpState extends State<SignUp> {
                 ],
               ),
             ),
+            //submit button
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: SizedBox(
                 width: double.infinity,
                 child: TextButton(
                   focusNode: submit,
-                  onPressed: () {
+                  onPressed: () async {
                     if (EmailValidator.validate(email.text)) {
                       if (confirmPass.text == password.text &&
                           countryCode.text.isNotEmpty &&
@@ -260,7 +266,7 @@ class _SignUpState extends State<SignUp> {
                             email: email.text,
                             password: password.text,
                             mobile: countryCode.text + ' ' + mobileNo.text);
-                        signUpDetails.show();
+                        //signUpDetails.show();
                         Navigator.push(
                             context,
                             CupertinoPageRoute(

@@ -1,3 +1,4 @@
+import 'package:diet_delight/Home%20Page/home.dart';
 import 'package:diet_delight/Models/loginModel.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:email_validator/email_validator.dart';
@@ -6,9 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'file:///C:/Users/VK/Desktop/ritik/diet-delight-mobile/lib/Auth%20Screens/forgotPassword.dart';
-import 'file:///C:/Users/VK/Desktop/ritik/diet-delight-mobile/lib/Auth%20Screens/verifyPhoneNumber.dart';
 
 class Login extends StatefulWidget {
+  String token;
+  Login({this.token});
   @override
   _LoginState createState() => _LoginState();
 }
@@ -155,9 +157,7 @@ class _LoginState extends State<Login> {
                           Navigator.push(
                               context,
                               CupertinoPageRoute(
-                                  builder: (context) => VerifyPhoneNumber(
-                                        logDetails: loginDetails,
-                                      )));
+                                  builder: (context) => HomePage()));
                         } on FormatException {
                           if (EmailValidator.validate(emailOrMobileNo.text)) {
                             var email = emailOrMobileNo.text;
@@ -169,9 +169,7 @@ class _LoginState extends State<Login> {
                             Navigator.push(
                                 context,
                                 CupertinoPageRoute(
-                                    builder: (context) => VerifyPhoneNumber(
-                                          logDetails: loginDetails,
-                                        )));
+                                    builder: (context) => HomePage()));
                           } else {
                             Scaffold.of(context).showSnackBar(SnackBar(
                               content: Text('Enter a valid email'),

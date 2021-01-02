@@ -8,19 +8,32 @@ class RegModel {
   String mobile;
   String address;
   String addressSecondary;
-  List role;
 
   RegModel(
-      {this.status,
-      this.name,
+      {this.status = "0",
+      this.name = "test",
       this.email,
       this.password,
-      this.firstName,
-      this.lastName,
+      this.firstName = "test",
+      this.lastName = "test",
       this.mobile,
-      this.address,
-      this.addressSecondary,
-      this.role});
+      this.address = "test",
+      this.addressSecondary = "test"});
+
+  Map<String, dynamic> toMap() {
+    // ignore: unnecessary_cast
+    return {
+      'status': this.status,
+      'name': this.name,
+      'email': this.email,
+      'password': this.password,
+      'first_name': this.firstName,
+      'last_name': this.lastName,
+      'mobile': this.mobile,
+      'address': this.address,
+      'address_secondary': this.addressSecondary,
+    } as Map<String, dynamic>;
+  }
 
   show() {
     print('status: $status');
@@ -32,6 +45,5 @@ class RegModel {
     print('mobile: $mobile');
     print('address: $address');
     print('addressSecondary: $addressSecondary');
-    print('role: $role');
   }
 }

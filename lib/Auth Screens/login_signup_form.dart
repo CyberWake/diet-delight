@@ -1,7 +1,7 @@
 import 'package:diet_delight/Auth%20Screens/login_screen.dart';
 import 'package:diet_delight/Auth%20Screens/signup_screen.dart';
-import 'package:diet_delight/Authentication/obtainToken.dart';
 import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/services/obtainToken.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -122,8 +122,8 @@ class _AfterSplashState extends State<AfterSplash>
                 child: TabBarView(
                   controller: _tabController,
                   children: <Widget>[
-                    Login(),
-                    SignUp(),
+                    Login(token: accessToken),
+                    SignUp(token: accessToken),
                   ],
                 ),
               ),
