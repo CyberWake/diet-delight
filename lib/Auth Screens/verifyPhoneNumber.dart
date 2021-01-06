@@ -20,6 +20,7 @@ class VerifyPhoneNumber extends StatefulWidget {
 
 class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
   final storage = new FlutterSecureStorage();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String accessToken;
   String enteredOtp;
   FlutterOtp otp = FlutterOtp();
@@ -52,6 +53,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
     Api apiCall = Api(token: accessToken);
     return SafeArea(
       child: Scaffold(
+        key: _scaffoldKey,
         body: Column(
           children: [
             Row(
@@ -193,15 +195,31 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                         width: double.infinity,
                         child: TextButton(
                           onPressed: () async {
-                            if (otp.resultChecker(int.parse(enteredOtp))) {
-                              bool result =
-                                  await apiCall.register(widget.regDetails);
-                              print(result);
-                              if (result) {}
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => HomePage()));
+                            if (enteredOtp.isNotEmpty) {
+                              if (otp.resultChecker(int.parse(enteredOtp))) {
+                                bool result =
+                                    await apiCall.register(widget.regDetails);
+                                print(result);
+                                if (result) {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => HomePage()));
+                                } else {
+                                  _scaffoldKey.currentState.showSnackBar(
+                                      SnackBar(
+                                          content:
+                                              Text('Something went wrong')));
+                                }
+                              } else {
+                                _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                    content: Text('Entered an invalid OTP')));
+                              }
+                            } else {
+                              _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                  content: Text('Enter the OTP to continue')));
                             }
                           },
                           child: Text(

@@ -1,12 +1,11 @@
 import 'dart:ui';
 
+import 'package:diet_delight/Home%20Page/home.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:splashscreen/splashscreen.dart';
-
-import 'file:///C:/Users/VK/Desktop/ritik/diet-delight-mobile/lib/Auth%20Screens/login_signup_form.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -26,7 +25,7 @@ class _MyAppState extends State<MyApp> {
     return SafeArea(
       child: SplashScreen(
         seconds: 3,
-        navigateAfterSeconds: AfterSplash(),
+        navigateAfterSeconds: HomePage(), //AfterSplash(),
         image: Image.asset(
           'images/Group 66.png',
           width: 300.0,

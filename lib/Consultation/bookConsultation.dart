@@ -153,41 +153,34 @@ class _BookConsultationState extends State<BookConsultation>
               mainAxisSize: MainAxisSize.max,
               children: [
                 Expanded(
-                  flex: 2,
+                  flex: 1,
                   child: GestureDetector(
                     onTap: () {
                       Navigator.pop(context);
                     },
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(20.0, 20.0, 0, 0),
-                      child: SizedBox(
-                        width: 30.0,
-                        height: 30.0,
-                        child: Icon(
-                          Icons.keyboard_backspace,
-                          size: 30.0,
-                          color: defaultGreen,
-                        ),
+                      child: Icon(
+                        Icons.keyboard_backspace,
+                        size: 30.0,
+                        color: defaultGreen,
                       ),
                     ),
                   ),
                 ),
                 Expanded(
-                  flex: 8,
+                  flex: 9,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 25, top: 20.0),
                     child: Align(
                       alignment: Alignment.center,
-                      child: SizedBox(
-                        width: 4 * MediaQuery.of(context).size.width / 5,
-                        child: Text(
-                          'Book an Appointment',
-                          style: TextStyle(
-                            fontFamily: 'RobotoCondensedReg',
-                            fontSize: 24,
-                            fontWeight: FontWeight.normal,
-                            color: Colors.black,
-                          ),
+                      child: Text(
+                        'Book an Appointment',
+                        style: TextStyle(
+                          fontFamily: 'RobotoCondensedReg',
+                          fontSize: 24,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black,
                         ),
                       ),
                     ),
@@ -509,55 +502,49 @@ class _BookConsultationState extends State<BookConsultation>
                             ],
                           ),
                         ),
-                        ListView(shrinkWrap: true, children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Container(
-                              width: double.infinity,
-                              height: 200,
-                              child: TabBarView(
-                                controller: _tabcontroller,
-                                children: <Widget>[
-                                  Container(
-                                    height: 300.0,
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 20.0, 0, 0),
-                                      child: ListView.builder(
-                                        padding:
-                                            EdgeInsets.fromLTRB(0, 0, 20, 0),
-                                        itemCount: timeChart[0].length,
-                                        scrollDirection: Axis.horizontal,
-                                        itemBuilder:
-                                            (BuildContext context, int pos) {
-                                          return Column(
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.all(10),
-                                                child: GestureDetector(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        chosenTime = [
-                                                          0,
-                                                          pos,
-                                                          0
-                                                        ];
-                                                        selectedTime =
-                                                            '${timeChart[0][pos]}pm';
-                                                      });
-                                                      print(selectedTime);
-                                                      print(chosenTime);
-                                                    },
-                                                    child: Material(
-                                                        elevation: 0,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(2.0),
-                                                        color: listEquals(
-                                                                chosenTime,
-                                                                [0, pos, 0])
-                                                            ? defaultGreen
-                                                            : Colors.white,
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Container(
+                            width: double.infinity,
+                            height: 200,
+                            child: TabBarView(
+                              controller: _tabcontroller,
+                              children: <Widget>[
+                                Container(
+                                  height: 300.0,
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        0, 20.0, 0, 0),
+                                    child: ListView.builder(
+                                      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                      itemCount: timeChart[0].length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder:
+                                          (BuildContext context, int pos) {
+                                        return Column(
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.all(10),
+                                              child: GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      chosenTime = [0, pos, 0];
+                                                      selectedTime =
+                                                          '${timeChart[0][pos]}pm';
+                                                    });
+                                                    print(selectedTime);
+                                                    print(chosenTime);
+                                                  },
+                                                  child: Material(
+                                                      elevation: 0,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              2.0),
+                                                      color: listEquals(
+                                                              chosenTime,
+                                                              [0, pos, 0])
+                                                          ? defaultGreen
+                                                          : Colors.white,
 //                                                  child:
 //                                              InkWell(
 //                                                      splashColor: defaultGreen
@@ -574,58 +561,6 @@ class _BookConsultationState extends State<BookConsultation>
 //                                                        });
 //                                                        print(selectedTime);
 //                                                      },
-                                                        child: Padding(
-                                                            padding: EdgeInsets
-                                                                .symmetric(
-                                                                    vertical: 5,
-                                                                    horizontal:
-                                                                        10),
-                                                            child: Container(
-                                                              width: 40.0,
-                                                              child: Text(
-                                                                '${timeChart[0][pos]}pm',
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                style: TextStyle(
-                                                                    fontFamily:
-                                                                        'RobotoCondensedReg',
-                                                                    fontSize:
-                                                                        11,
-                                                                    color: listEquals(
-                                                                            chosenTime,
-                                                                            [
-                                                                          0,
-                                                                          pos,
-                                                                          0
-                                                                        ])
-                                                                        ? Colors
-                                                                            .white
-                                                                        : Color(
-                                                                            0xFF303030)),
-                                                              ),
-                                                            )))),
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.all(10),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      chosenTime = [0, pos, 1];
-                                                      selectedTime =
-                                                          '${timeChart[0][pos]}:15pm';
-                                                    });
-                                                  },
-                                                  child: Material(
-                                                      elevation: 0,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              2.0),
-                                                      color: listEquals(
-                                                              chosenTime,
-                                                              [0, pos, 1])
-                                                          ? defaultGreen
-                                                          : Colors.white,
                                                       child: Padding(
                                                           padding: EdgeInsets
                                                               .symmetric(
@@ -635,7 +570,7 @@ class _BookConsultationState extends State<BookConsultation>
                                                           child: Container(
                                                             width: 40.0,
                                                             child: Text(
-                                                              '${timeChart[0][pos]}:15pm',
+                                                              '${timeChart[0][pos]}pm',
                                                               textAlign:
                                                                   TextAlign
                                                                       .center,
@@ -647,182 +582,6 @@ class _BookConsultationState extends State<BookConsultation>
                                                                           chosenTime,
                                                                           [
                                                                         0,
-                                                                        pos,
-                                                                        1
-                                                                      ])
-                                                                      ? Colors
-                                                                          .white
-                                                                      : Color(
-                                                                          0xFF303030)),
-                                                            ),
-                                                          ))),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.all(10),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      chosenTime = [0, pos, 2];
-                                                      selectedTime =
-                                                          '${timeChart[0][pos]}:30pm';
-                                                    });
-                                                  },
-                                                  child: Material(
-                                                      elevation: 0,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              2.0),
-                                                      color: listEquals(
-                                                              chosenTime,
-                                                              [0, pos, 2])
-                                                          ? defaultGreen
-                                                          : Colors.white,
-                                                      child: Padding(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  vertical: 5,
-                                                                  horizontal:
-                                                                      10),
-                                                          child: Container(
-                                                            width: 40,
-                                                            child: Text(
-                                                              '${timeChart[0][pos]}:30pm',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'RobotoCondensedReg',
-                                                                  fontSize: 11,
-                                                                  color: listEquals(
-                                                                          chosenTime,
-                                                                          [
-                                                                        0,
-                                                                        pos,
-                                                                        2
-                                                                      ])
-                                                                      ? Colors
-                                                                          .white
-                                                                      : Color(
-                                                                          0xFF303030)),
-                                                            ),
-                                                          ))),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.all(10),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      chosenTime = [0, pos, 3];
-                                                      selectedTime =
-                                                          '${timeChart[0][pos]}:45pm';
-                                                    });
-                                                  },
-                                                  child: Material(
-                                                      elevation: 0,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              2.0),
-                                                      color: listEquals(
-                                                              chosenTime,
-                                                              [0, pos, 3])
-                                                          ? defaultGreen
-                                                          : Colors.white,
-                                                      child: Padding(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  vertical: 5,
-                                                                  horizontal:
-                                                                      10),
-                                                          child: Container(
-                                                            width: 40,
-                                                            child: Text(
-                                                              '${timeChart[0][pos]}:45pm',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'RobotoCondensedReg',
-                                                                  fontSize: 11,
-                                                                  color: listEquals(
-                                                                          chosenTime,
-                                                                          [
-                                                                        0,
-                                                                        pos,
-                                                                        3
-                                                                      ])
-                                                                      ? Colors
-                                                                          .white
-                                                                      : Color(
-                                                                          0xFF303030)),
-                                                            ),
-                                                          ))),
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 300.0,
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 20.0, 0, 0),
-                                      child: ListView.builder(
-                                        padding:
-                                            EdgeInsets.fromLTRB(0, 0, 20, 0),
-                                        itemCount: timeChart[1].length,
-                                        scrollDirection: Axis.horizontal,
-                                        itemBuilder:
-                                            (BuildContext context, int pos) {
-                                          return Column(
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.all(10),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      chosenTime = [1, pos, 0];
-                                                      selectedTime =
-                                                          '${timeChart[1][pos]}pm';
-                                                    });
-                                                  },
-                                                  child: Material(
-                                                      elevation: 0,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              2.0),
-                                                      color: listEquals(
-                                                              chosenTime,
-                                                              [1, pos, 0])
-                                                          ? defaultGreen
-                                                          : Colors.white,
-                                                      child: Padding(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  vertical: 5,
-                                                                  horizontal:
-                                                                      10),
-                                                          child: Container(
-                                                            width: 40,
-                                                            child: Text(
-                                                              '${timeChart[1][pos]}pm',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'RobotoCondensedReg',
-                                                                  fontSize: 11,
-                                                                  color: listEquals(
-                                                                          chosenTime,
-                                                                          [
-                                                                        1,
                                                                         pos,
                                                                         0
                                                                       ])
@@ -831,399 +590,602 @@ class _BookConsultationState extends State<BookConsultation>
                                                                       : Color(
                                                                           0xFF303030)),
                                                             ),
-                                                          ))),
-                                                ),
+                                                          )))),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.all(10),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    chosenTime = [0, pos, 1];
+                                                    selectedTime =
+                                                        '${timeChart[0][pos]}:15pm';
+                                                  });
+                                                },
+                                                child: Material(
+                                                    elevation: 0,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            2.0),
+                                                    color: listEquals(
+                                                            chosenTime,
+                                                            [0, pos, 1])
+                                                        ? defaultGreen
+                                                        : Colors.white,
+                                                    child: Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 5,
+                                                                horizontal: 10),
+                                                        child: Container(
+                                                          width: 40.0,
+                                                          child: Text(
+                                                            '${timeChart[0][pos]}:15pm',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'RobotoCondensedReg',
+                                                                fontSize: 11,
+                                                                color: listEquals(
+                                                                        chosenTime,
+                                                                        [
+                                                                      0,
+                                                                      pos,
+                                                                      1
+                                                                    ])
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Color(
+                                                                        0xFF303030)),
+                                                          ),
+                                                        ))),
                                               ),
-                                              Padding(
-                                                padding: EdgeInsets.all(10),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      chosenTime = [1, pos, 1];
-                                                      selectedTime =
-                                                          '${timeChart[1][pos]}:15pm';
-                                                    });
-                                                  },
-                                                  child: Material(
-                                                      elevation: 0,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              2.0),
-                                                      color: listEquals(
-                                                              chosenTime,
-                                                              [1, pos, 1])
-                                                          ? defaultGreen
-                                                          : Colors.white,
-                                                      child: Padding(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  vertical: 5,
-                                                                  horizontal:
-                                                                      10),
-                                                          child: Container(
-                                                            width: 40,
-                                                            child: Text(
-                                                              '${timeChart[1][pos]}:15pm',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'RobotoCondensedReg',
-                                                                  fontSize: 11,
-                                                                  color: listEquals(
-                                                                          chosenTime,
-                                                                          [
-                                                                        1,
-                                                                        pos,
-                                                                        1
-                                                                      ])
-                                                                      ? Colors
-                                                                          .white
-                                                                      : Color(
-                                                                          0xFF303030)),
-                                                            ),
-                                                          ))),
-                                                ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.all(10),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    chosenTime = [0, pos, 2];
+                                                    selectedTime =
+                                                        '${timeChart[0][pos]}:30pm';
+                                                  });
+                                                },
+                                                child: Material(
+                                                    elevation: 0,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            2.0),
+                                                    color: listEquals(
+                                                            chosenTime,
+                                                            [0, pos, 2])
+                                                        ? defaultGreen
+                                                        : Colors.white,
+                                                    child: Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 5,
+                                                                horizontal: 10),
+                                                        child: Container(
+                                                          width: 40,
+                                                          child: Text(
+                                                            '${timeChart[0][pos]}:30pm',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'RobotoCondensedReg',
+                                                                fontSize: 11,
+                                                                color: listEquals(
+                                                                        chosenTime,
+                                                                        [
+                                                                      0,
+                                                                      pos,
+                                                                      2
+                                                                    ])
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Color(
+                                                                        0xFF303030)),
+                                                          ),
+                                                        ))),
                                               ),
-                                              Padding(
-                                                padding: EdgeInsets.all(10),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      chosenTime = [1, pos, 2];
-                                                      selectedTime =
-                                                          '${timeChart[1][pos]}:30pm';
-                                                    });
-                                                  },
-                                                  child: Material(
-                                                      elevation: 0,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              2.0),
-                                                      color: listEquals(
-                                                              chosenTime,
-                                                              [1, pos, 2])
-                                                          ? defaultGreen
-                                                          : Colors.white,
-                                                      child: Padding(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  vertical: 5,
-                                                                  horizontal:
-                                                                      10),
-                                                          child: Container(
-                                                            width: 40,
-                                                            child: Text(
-                                                              '${timeChart[1][pos]}:30pm',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'RobotoCondensedReg',
-                                                                  fontSize: 11,
-                                                                  color: listEquals(
-                                                                          chosenTime,
-                                                                          [
-                                                                        1,
-                                                                        pos,
-                                                                        2
-                                                                      ])
-                                                                      ? Colors
-                                                                          .white
-                                                                      : Color(
-                                                                          0xFF303030)),
-                                                            ),
-                                                          ))),
-                                                ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.all(10),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    chosenTime = [0, pos, 3];
+                                                    selectedTime =
+                                                        '${timeChart[0][pos]}:45pm';
+                                                  });
+                                                },
+                                                child: Material(
+                                                    elevation: 0,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            2.0),
+                                                    color: listEquals(
+                                                            chosenTime,
+                                                            [0, pos, 3])
+                                                        ? defaultGreen
+                                                        : Colors.white,
+                                                    child: Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 5,
+                                                                horizontal: 10),
+                                                        child: Container(
+                                                          width: 40,
+                                                          child: Text(
+                                                            '${timeChart[0][pos]}:45pm',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'RobotoCondensedReg',
+                                                                fontSize: 11,
+                                                                color: listEquals(
+                                                                        chosenTime,
+                                                                        [
+                                                                      0,
+                                                                      pos,
+                                                                      3
+                                                                    ])
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Color(
+                                                                        0xFF303030)),
+                                                          ),
+                                                        ))),
                                               ),
-                                              Padding(
-                                                padding: EdgeInsets.all(10),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      chosenTime = [1, pos, 3];
-                                                      selectedTime =
-                                                          '${timeChart[1][pos]}:45pm';
-                                                    });
-                                                  },
-                                                  child: Material(
-                                                      elevation: 0,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              2.0),
-                                                      color: listEquals(
-                                                              chosenTime,
-                                                              [1, pos, 3])
-                                                          ? defaultGreen
-                                                          : Colors.white,
-                                                      child: Padding(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  vertical: 5,
-                                                                  horizontal:
-                                                                      10),
-                                                          child: Container(
-                                                            width: 40,
-                                                            child: Text(
-                                                              '${timeChart[1][pos]}:45pm',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'RobotoCondensedReg',
-                                                                  fontSize: 11,
-                                                                  color: listEquals(
-                                                                          chosenTime,
-                                                                          [
-                                                                        1,
-                                                                        pos,
-                                                                        3
-                                                                      ])
-                                                                      ? Colors
-                                                                          .white
-                                                                      : Color(
-                                                                          0xFF303030)),
-                                                            ),
-                                                          ))),
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      ),
+                                            ),
+                                          ],
+                                        );
+                                      },
                                     ),
                                   ),
-                                  Container(
-                                    height: 300.0,
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 20.0, 0, 0),
-                                      child: ListView.builder(
-                                        padding:
-                                            EdgeInsets.fromLTRB(0, 0, 20, 0),
-                                        itemCount: timeChart[2].length,
-                                        scrollDirection: Axis.horizontal,
-                                        itemBuilder:
-                                            (BuildContext context, int pos) {
-                                          return Column(
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.all(10),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      chosenTime = [2, pos, 0];
-                                                      selectedTime =
-                                                          '${timeChart[2][pos]}pm';
-                                                    });
-                                                  },
-                                                  child: Material(
-                                                      elevation: 0,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              2.0),
-                                                      color: listEquals(
-                                                              chosenTime,
-                                                              [2, pos, 0])
-                                                          ? defaultGreen
-                                                          : Colors.white,
-                                                      child: Padding(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  vertical: 5,
-                                                                  horizontal:
-                                                                      10),
-                                                          child: Container(
-                                                            width: 40,
-                                                            child: Text(
-                                                              '${timeChart[2][pos]}pm',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'RobotoCondensedReg',
-                                                                  fontSize: 11,
-                                                                  color: listEquals(
-                                                                          chosenTime,
-                                                                          [
-                                                                        2,
-                                                                        pos,
-                                                                        0
-                                                                      ])
-                                                                      ? Colors
-                                                                          .white
-                                                                      : Color(
-                                                                          0xFF303030)),
-                                                            ),
-                                                          ))),
-                                                ),
+                                ),
+                                Container(
+                                  height: 300.0,
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        0, 20.0, 0, 0),
+                                    child: ListView.builder(
+                                      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                      itemCount: timeChart[1].length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder:
+                                          (BuildContext context, int pos) {
+                                        return Column(
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.all(10),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    chosenTime = [1, pos, 0];
+                                                    selectedTime =
+                                                        '${timeChart[1][pos]}pm';
+                                                  });
+                                                },
+                                                child: Material(
+                                                    elevation: 0,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            2.0),
+                                                    color: listEquals(
+                                                            chosenTime,
+                                                            [1, pos, 0])
+                                                        ? defaultGreen
+                                                        : Colors.white,
+                                                    child: Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 5,
+                                                                horizontal: 10),
+                                                        child: Container(
+                                                          width: 40,
+                                                          child: Text(
+                                                            '${timeChart[1][pos]}pm',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'RobotoCondensedReg',
+                                                                fontSize: 11,
+                                                                color: listEquals(
+                                                                        chosenTime,
+                                                                        [
+                                                                      1,
+                                                                      pos,
+                                                                      0
+                                                                    ])
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Color(
+                                                                        0xFF303030)),
+                                                          ),
+                                                        ))),
                                               ),
-                                              Padding(
-                                                padding: EdgeInsets.all(10),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      chosenTime = [2, pos, 1];
-                                                      selectedTime =
-                                                          '${timeChart[2][pos]}:15pm';
-                                                    });
-                                                  },
-                                                  child: Material(
-                                                      elevation: 0,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              2.0),
-                                                      color: listEquals(
-                                                              chosenTime,
-                                                              [2, pos, 1])
-                                                          ? defaultGreen
-                                                          : Colors.white,
-                                                      child: Padding(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  vertical: 5,
-                                                                  horizontal:
-                                                                      10),
-                                                          child: Container(
-                                                            width: 40,
-                                                            child: Text(
-                                                              '${timeChart[2][pos]}:15pm',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'RobotoCondensedReg',
-                                                                  fontSize: 11,
-                                                                  color: listEquals(
-                                                                          chosenTime,
-                                                                          [
-                                                                        2,
-                                                                        pos,
-                                                                        1
-                                                                      ])
-                                                                      ? Colors
-                                                                          .white
-                                                                      : Color(
-                                                                          0xFF303030)),
-                                                            ),
-                                                          ))),
-                                                ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.all(10),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    chosenTime = [1, pos, 1];
+                                                    selectedTime =
+                                                        '${timeChart[1][pos]}:15pm';
+                                                  });
+                                                },
+                                                child: Material(
+                                                    elevation: 0,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            2.0),
+                                                    color: listEquals(
+                                                            chosenTime,
+                                                            [1, pos, 1])
+                                                        ? defaultGreen
+                                                        : Colors.white,
+                                                    child: Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 5,
+                                                                horizontal: 10),
+                                                        child: Container(
+                                                          width: 40,
+                                                          child: Text(
+                                                            '${timeChart[1][pos]}:15pm',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'RobotoCondensedReg',
+                                                                fontSize: 11,
+                                                                color: listEquals(
+                                                                        chosenTime,
+                                                                        [
+                                                                      1,
+                                                                      pos,
+                                                                      1
+                                                                    ])
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Color(
+                                                                        0xFF303030)),
+                                                          ),
+                                                        ))),
                                               ),
-                                              Padding(
-                                                padding: EdgeInsets.all(10),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      chosenTime = [2, pos, 2];
-                                                      selectedTime =
-                                                          '${timeChart[2][pos]}:30pm';
-                                                    });
-                                                  },
-                                                  child: Material(
-                                                      elevation: 0,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              2.0),
-                                                      color: listEquals(
-                                                              chosenTime,
-                                                              [2, pos, 2])
-                                                          ? defaultGreen
-                                                          : Colors.white,
-                                                      child: Padding(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  vertical: 5,
-                                                                  horizontal:
-                                                                      10),
-                                                          child: Container(
-                                                            width: 40,
-                                                            child: Text(
-                                                              '${timeChart[2][pos]}:30pm',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'RobotoCondensedReg',
-                                                                  fontSize: 11,
-                                                                  color: listEquals(
-                                                                          chosenTime,
-                                                                          [
-                                                                        2,
-                                                                        pos,
-                                                                        2
-                                                                      ])
-                                                                      ? Colors
-                                                                          .white
-                                                                      : Color(
-                                                                          0xFF303030)),
-                                                            ),
-                                                          ))),
-                                                ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.all(10),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    chosenTime = [1, pos, 2];
+                                                    selectedTime =
+                                                        '${timeChart[1][pos]}:30pm';
+                                                  });
+                                                },
+                                                child: Material(
+                                                    elevation: 0,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            2.0),
+                                                    color: listEquals(
+                                                            chosenTime,
+                                                            [1, pos, 2])
+                                                        ? defaultGreen
+                                                        : Colors.white,
+                                                    child: Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 5,
+                                                                horizontal: 10),
+                                                        child: Container(
+                                                          width: 40,
+                                                          child: Text(
+                                                            '${timeChart[1][pos]}:30pm',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'RobotoCondensedReg',
+                                                                fontSize: 11,
+                                                                color: listEquals(
+                                                                        chosenTime,
+                                                                        [
+                                                                      1,
+                                                                      pos,
+                                                                      2
+                                                                    ])
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Color(
+                                                                        0xFF303030)),
+                                                          ),
+                                                        ))),
                                               ),
-                                              Padding(
-                                                padding: EdgeInsets.all(10),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      chosenTime = [2, pos, 3];
-                                                      selectedTime =
-                                                          '${timeChart[2][pos]}:45pm';
-                                                    });
-                                                  },
-                                                  child: Material(
-                                                      elevation: 0,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              2.0),
-                                                      color: listEquals(
-                                                              chosenTime,
-                                                              [2, pos, 3])
-                                                          ? defaultGreen
-                                                          : Colors.white,
-                                                      child: Padding(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  vertical: 5,
-                                                                  horizontal:
-                                                                      10),
-                                                          child: Container(
-                                                            width: 40,
-                                                            child: Text(
-                                                              '${timeChart[2][pos]}:45pm',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'RobotoCondensedReg',
-                                                                  fontSize: 11,
-                                                                  color: listEquals(
-                                                                          chosenTime,
-                                                                          [
-                                                                        2,
-                                                                        pos,
-                                                                        3
-                                                                      ])
-                                                                      ? Colors
-                                                                          .white
-                                                                      : Color(
-                                                                          0xFF303030)),
-                                                            ),
-                                                          ))),
-                                                ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.all(10),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    chosenTime = [1, pos, 3];
+                                                    selectedTime =
+                                                        '${timeChart[1][pos]}:45pm';
+                                                  });
+                                                },
+                                                child: Material(
+                                                    elevation: 0,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            2.0),
+                                                    color: listEquals(
+                                                            chosenTime,
+                                                            [1, pos, 3])
+                                                        ? defaultGreen
+                                                        : Colors.white,
+                                                    child: Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 5,
+                                                                horizontal: 10),
+                                                        child: Container(
+                                                          width: 40,
+                                                          child: Text(
+                                                            '${timeChart[1][pos]}:45pm',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'RobotoCondensedReg',
+                                                                fontSize: 11,
+                                                                color: listEquals(
+                                                                        chosenTime,
+                                                                        [
+                                                                      1,
+                                                                      pos,
+                                                                      3
+                                                                    ])
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Color(
+                                                                        0xFF303030)),
+                                                          ),
+                                                        ))),
                                               ),
-                                            ],
-                                          );
-                                        },
-                                      ),
+                                            ),
+                                          ],
+                                        );
+                                      },
                                     ),
                                   ),
+                                ),
+                                Container(
+                                  height: 300.0,
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        0, 20.0, 0, 0),
+                                    child: ListView.builder(
+                                      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                      itemCount: timeChart[2].length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder:
+                                          (BuildContext context, int pos) {
+                                        return Column(
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.all(10),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    chosenTime = [2, pos, 0];
+                                                    selectedTime =
+                                                        '${timeChart[2][pos]}pm';
+                                                  });
+                                                },
+                                                child: Material(
+                                                    elevation: 0,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            2.0),
+                                                    color: listEquals(
+                                                            chosenTime,
+                                                            [2, pos, 0])
+                                                        ? defaultGreen
+                                                        : Colors.white,
+                                                    child: Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 5,
+                                                                horizontal: 10),
+                                                        child: Container(
+                                                          width: 40,
+                                                          child: Text(
+                                                            '${timeChart[2][pos]}pm',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'RobotoCondensedReg',
+                                                                fontSize: 11,
+                                                                color: listEquals(
+                                                                        chosenTime,
+                                                                        [
+                                                                      2,
+                                                                      pos,
+                                                                      0
+                                                                    ])
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Color(
+                                                                        0xFF303030)),
+                                                          ),
+                                                        ))),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.all(10),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    chosenTime = [2, pos, 1];
+                                                    selectedTime =
+                                                        '${timeChart[2][pos]}:15pm';
+                                                  });
+                                                },
+                                                child: Material(
+                                                    elevation: 0,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            2.0),
+                                                    color: listEquals(
+                                                            chosenTime,
+                                                            [2, pos, 1])
+                                                        ? defaultGreen
+                                                        : Colors.white,
+                                                    child: Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 5,
+                                                                horizontal: 10),
+                                                        child: Container(
+                                                          width: 40,
+                                                          child: Text(
+                                                            '${timeChart[2][pos]}:15pm',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'RobotoCondensedReg',
+                                                                fontSize: 11,
+                                                                color: listEquals(
+                                                                        chosenTime,
+                                                                        [
+                                                                      2,
+                                                                      pos,
+                                                                      1
+                                                                    ])
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Color(
+                                                                        0xFF303030)),
+                                                          ),
+                                                        ))),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.all(10),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    chosenTime = [2, pos, 2];
+                                                    selectedTime =
+                                                        '${timeChart[2][pos]}:30pm';
+                                                  });
+                                                },
+                                                child: Material(
+                                                    elevation: 0,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            2.0),
+                                                    color: listEquals(
+                                                            chosenTime,
+                                                            [2, pos, 2])
+                                                        ? defaultGreen
+                                                        : Colors.white,
+                                                    child: Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 5,
+                                                                horizontal: 10),
+                                                        child: Container(
+                                                          width: 40,
+                                                          child: Text(
+                                                            '${timeChart[2][pos]}:30pm',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'RobotoCondensedReg',
+                                                                fontSize: 11,
+                                                                color: listEquals(
+                                                                        chosenTime,
+                                                                        [
+                                                                      2,
+                                                                      pos,
+                                                                      2
+                                                                    ])
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Color(
+                                                                        0xFF303030)),
+                                                          ),
+                                                        ))),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.all(10),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    chosenTime = [2, pos, 3];
+                                                    selectedTime =
+                                                        '${timeChart[2][pos]}:45pm';
+                                                  });
+                                                },
+                                                child: Material(
+                                                    elevation: 0,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            2.0),
+                                                    color: listEquals(
+                                                            chosenTime,
+                                                            [2, pos, 3])
+                                                        ? defaultGreen
+                                                        : Colors.white,
+                                                    child: Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 5,
+                                                                horizontal: 10),
+                                                        child: Container(
+                                                          width: 40,
+                                                          child: Text(
+                                                            '${timeChart[2][pos]}:45pm',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'RobotoCondensedReg',
+                                                                fontSize: 11,
+                                                                color: listEquals(
+                                                                        chosenTime,
+                                                                        [
+                                                                      2,
+                                                                      pos,
+                                                                      3
+                                                                    ])
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Color(
+                                                                        0xFF303030)),
+                                                          ),
+                                                        ))),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
 //                                  Container(
 //                                    height: 600.0,
 //                                    child: Padding(
@@ -1244,11 +1206,10 @@ class _BookConsultationState extends State<BookConsultation>
 //                                  SizedBox(
 //                                    height: 600.0,
 //                                  ),
-                                ],
-                              ),
+                              ],
                             ),
                           ),
-                        ]),
+                        ),
                       ],
                     ),
                   ),

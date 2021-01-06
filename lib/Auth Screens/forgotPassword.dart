@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/services/otp.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -15,8 +16,21 @@ class ForgotPassword extends StatefulWidget {
 
 class _ForgotPasswordState extends State<ForgotPassword> {
   int count = 0;
+  String enteredOtp;
   TextEditingController mobileNo = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  FlutterOtp otp = FlutterOtp();
+
+  sendOtp() {
+    List<String> number = mobileNo.text.split(' ');
+    print(number.first);
+    print(number.last);
+    print('running');
+    otp.sendOtp(number.last, "<#> Verification code for diet delight is: ",
+        100000, 999999, number.first);
+    otp.getOtp();
+    print('done');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +121,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                       mobileNo.text = done;
                                     },
                                     style: authInputTextStyle,
-                                    keyboardType: TextInputType.number,
+                                    keyboardType: TextInputType.phone,
                                     decoration: authInputFieldDecoration,
                                   ),
                                 ),
@@ -147,11 +161,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                   pinBoxDecoration: ProvidedPinBoxDecoration
                                       .underlinedPinBoxDecoration,
                                   defaultBorderColor: Color(0xff909090),
-                                  onTextChanged: (String otp1) {
-                                    // print(otp1);
-                                    // print(otp);
-                                    //
-                                    // otp = otp1;
+                                  onTextChanged: (String otp) {
+                                    print(otp);
+                                    enteredOtp = otp;
                                   },
                                   pinTextStyle: TextStyle(
                                     fontFamily: 'RobotoReg',
@@ -170,6 +182,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: GestureDetector(
+                          onTap: sendOtp,
                           child: Text(
                             'Resend OTP',
                             style: TextStyle(
@@ -188,13 +201,26 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         width: double.infinity,
                         child: TextButton(
                           onPressed: () {
-                            if (count > 0) {
-                              Navigator.push(
-                                  context,
-                                  CupertinoPageRoute(
-                                      builder: (context) => ResetPassword()));
+                            if (count > 0 && mobileNo.text.isNotEmpty) {
+                              if (enteredOtp.isNotEmpty && otp.resultChecker(int.parse(enteredOtp))) {
+                                Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (context) => ResetPassword()));
+                              }else {
+                                if(enteredOtp.isEmpty){
+                                  _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                      content:
+                                      Text('OTP not entered')));
+                                }else if(!otp.resultChecker(int.parse(enteredOtp))){
+                                  _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                      content:
+                                      Text('Enter a valid OTP')));
+                                }
+                              }
                             }
-                            if (mobileNo.text.isNotEmpty) {
+                            if (mobileNo.text.isNotEmpty && count == 0) {
+                              sendOtp();
                               setState(() {
                                 count++;
                               });

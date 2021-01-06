@@ -9,7 +9,7 @@ import 'package:flutter/services.dart';
 import 'file:///C:/Users/VK/Desktop/ritik/diet-delight-mobile/lib/Auth%20Screens/forgotPassword.dart';
 
 class Login extends StatefulWidget {
-  String token;
+  final String token;
   Login({this.token});
   @override
   _LoginState createState() => _LoginState();

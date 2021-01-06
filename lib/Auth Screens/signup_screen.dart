@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SignUp extends StatefulWidget {
-  String token;
+  final String token;
   SignUp({this.token});
   @override
   _SignUpState createState() => _SignUpState();

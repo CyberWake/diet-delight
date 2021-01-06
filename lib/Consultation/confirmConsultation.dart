@@ -1,17 +1,16 @@
-import 'package:flutter/material.dart';
 import 'dart:ui';
-import 'dart:io';
-import 'package:intl/intl.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
-import 'package:diet_delight/konstants.dart';
-import 'package:flutter_rounded_date_picker/rounded_picker.dart';
+
 import 'package:diet_delight/Home Page/home.dart';
+import 'package:diet_delight/konstants.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 
 class ConfirmConsultation extends StatefulWidget {
   int package;
-  DateTime selectedDate;
-  String consultationTime;
+  final DateTime selectedDate;
+  final String consultationTime;
 
   ConfirmConsultation({this.package, this.selectedDate, this.consultationTime});
   @override
@@ -117,16 +116,16 @@ class _ConfirmConsultationState extends State<ConfirmConsultation> {
         body: ListView(
           children: [
             Row(
+              mainAxisSize: MainAxisSize.max,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20.0, 20.0, 0, 0),
-                    child: SizedBox(
-                      width: 30.0,
-                      height: 30.0,
+                Expanded(
+                  flex: 1,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 20.0, 0, 0),
                       child: Icon(
                         Icons.keyboard_backspace,
                         size: 30.0,
@@ -135,12 +134,12 @@ class _ConfirmConsultationState extends State<ConfirmConsultation> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 25, top: 30.0),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: SizedBox(
-                      width: 4 * MediaQuery.of(context).size.width / 5,
+                Expanded(
+                  flex: 9,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 25, top: 20.0),
+                    child: Align(
+                      alignment: Alignment.center,
                       child: Text(
                         'Book an Appointment',
                         style: TextStyle(
