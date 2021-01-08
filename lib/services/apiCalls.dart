@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:diet_delight/Models/consultationModel.dart';
 import 'package:diet_delight/Models/loginModel.dart';
+import 'package:diet_delight/Models/questionnaireModel.dart';
 import 'package:diet_delight/Models/registrationModel.dart';
 import 'package:http/http.dart' as http;
 import 'package:oauth2/oauth2.dart' as oauth2;
@@ -99,10 +100,17 @@ class Api {
     if (result.isNotEmpty) {
       var body = convert.jsonDecode(result);
       print('body: ${body['data']}');
+      List data = body['data'];
+      List<QuestionnaireModel> items = List();
+      data.forEach((element) {
+        QuestionnaireModel item = QuestionnaireModel.fromMap(element);
+        items.add(item);
+      });
       print('data received');
-      return true;
+      print(items.length);
+      return items;
     } else {
-      return false;
+      return [];
     }
   }
 }

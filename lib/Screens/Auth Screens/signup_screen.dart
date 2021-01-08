@@ -1,5 +1,5 @@
-import 'package:diet_delight/Auth%20Screens/verifyPhoneNumber.dart';
 import 'package:diet_delight/Models/registrationModel.dart';
+import 'package:diet_delight/Screens/Auth%20Screens/verifyPhoneNumber.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';

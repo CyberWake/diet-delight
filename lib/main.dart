@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:diet_delight/Auth%20Screens/login_signup_form.dart';
+import 'package:diet_delight/Screens/Auth%20Screens/login_signup_form.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

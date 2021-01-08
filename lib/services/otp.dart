@@ -1,10 +1,10 @@
 import 'dart:math';
 
-import 'package:sms/sms.dart';
+import 'package:twilio_flutter/twilio_flutter.dart';
 
 class FlutterOtp {
   int _otp, _minOtpValue, _maxOtpValue; //Generated OTP
-
+  TwilioFlutter twilioFlutter;
   void generateOtp([int min = 1000, int max = 9999]) {
     //Generates four digit OTP by default
     _minOtpValue = min;
@@ -21,13 +21,30 @@ class FlutterOtp {
       int min = 1000,
       int max = 9999,
       String countryCode = '+1']) {
-    //function parameter 'message' is optional.
     generateOtp(min, max);
-    SmsSender sender = new SmsSender();
-    String address =
-        countryCode + phoneNumber; // +1 for USA. Change it according to use.
-    sender.sendSms(new SmsMessage(address, messageText + _otp.toString()));
+    String address = countryCode + phoneNumber;
+    twilioFlutter = TwilioFlutter(
+        accountSid: 'ACd7e0b5a7b2a7d84b913e35badce320f3',
+        authToken: 'c566ae9a47b768b4957757143f954ef2',
+        twilioNumber: '+18636177383');
+
+    sendSms(
+        address,
+        messageText +
+            _otp.toString()); // +1 for USA. Change it according to use.
   }
+
+  void sendSms(number, message) async {
+    twilioFlutter.sendSMS(toNumber: number.toString(), messageBody: message);
+  }
+/*
+  void _sendSMS(String message, List<String> recipients) async {
+    String _result = await sendSMS(message: message, recipients: recipients)
+        .catchError((onError) {
+      print(onError);
+    });
+    print(_result);
+  }*/
 
   bool resultChecker(int enteredOtp) {
     //To validate OTP

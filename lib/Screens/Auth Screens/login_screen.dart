@@ -1,14 +1,12 @@
-import 'package:diet_delight/Home%20Page/home.dart';
 import 'package:diet_delight/Models/loginModel.dart';
+import 'package:diet_delight/Screens/Auth%20Screens/forgotPassword.dart';
+import 'package:diet_delight/Screens/Home%20Page/home.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-import 'file:///C:/Users/VK/Desktop/ritik/diet-delight-mobile/lib/Auth%20Screens/forgotPassword.dart';
 
 class Login extends StatefulWidget {
   final String token;
@@ -23,7 +21,6 @@ class _LoginState extends State<Login> {
   FocusNode submit;
   TextEditingController emailOrMobileNo = TextEditingController();
   TextEditingController password = TextEditingController();
-  final storage = new FlutterSecureStorage();
   final _apiCall = Api.instance;
 
   @override

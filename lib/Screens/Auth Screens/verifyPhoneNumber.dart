@@ -1,28 +1,30 @@
 import 'dart:ui';
 
+import 'package:diet_delight/Models/registrationModel.dart';
+import 'package:diet_delight/Screens/Auth%20Screens/userMoto.dart';
 import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/services/apiCalls.dart';
 import 'package:diet_delight/services/otp.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 
-import 'file:///C:/Users/VK/Desktop/ritik/diet-delight-mobile/lib/Auth%20Screens/resetPassword.dart';
-
-class ForgotPassword extends StatefulWidget {
+class VerifyPhoneNumber extends StatefulWidget {
+  final RegModel regDetails;
+  VerifyPhoneNumber({this.regDetails});
   @override
-  _ForgotPasswordState createState() => new _ForgotPasswordState();
+  _VerifyPhoneNumberState createState() => new _VerifyPhoneNumberState();
 }
 
-class _ForgotPasswordState extends State<ForgotPassword> {
-  int count = 0;
+class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
+  final _apiCall = Api.instance;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String enteredOtp;
-  TextEditingController mobileNo = TextEditingController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   FlutterOtp otp = FlutterOtp();
 
   sendOtp() {
-    List<String> number = mobileNo.text.split(' ');
+    List<String> number = widget.regDetails.mobile.split(' ');
     print(number.first);
     print(number.last);
     print('running');
@@ -33,11 +35,16 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   }
 
   @override
+  void initState() {
+    sendOtp();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
-        backgroundColor: Colors.white,
         body: Column(
           children: [
             Row(
@@ -82,57 +89,34 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Center(
-                      child: Text(
-                        'FORGOT PASSWORD',
-                        style: TextStyle(
-                          fontFamily: 'RobotoCondensedReg',
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: defaultGreen,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'PHONE NUMBER',
-                            style: authLabelTextStyle,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'VERIFY YOUR PHONE NUMBER',
+                          style: TextStyle(
+                            fontFamily: 'RobotoCondensedReg',
+                            fontSize: 18,
+                            fontWeight: FontWeight.normal,
+                            color: defaultGreen,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 8.0, 0, 0),
-                            child: Material(
-                              borderRadius: BorderRadius.circular(5),
-                              child: Container(
-                                width: double.infinity,
-                                height: 40.0,
-                                decoration: authFieldDecoration,
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(20, 3, 20, 7),
-                                  child: TextFormField(
-                                    onChanged: (String number) {
-                                      mobileNo.text = number;
-                                    },
-                                    onFieldSubmitted: (done) {
-                                      mobileNo.text = done;
-                                    },
-                                    style: authInputTextStyle,
-                                    keyboardType: TextInputType.phone,
-                                    decoration: authInputFieldDecoration,
-                                  ),
-                                ),
-                              ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 8.0, 0, 0),
+                          child: Text(
+                            'You would have received an otp on your phone...',
+                            style: TextStyle(
+                              fontFamily: 'RobotoCondensedReg',
+                              fontSize: 13,
+                              fontWeight: FontWeight.normal,
+                              color: defaultGreen,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(30, 15, 30, 0),
+                      padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -156,6 +140,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                   hasUnderline: false,
                                   pinBoxWidth: 30,
                                   pinBoxHeight: 40,
+                                  wrapAlignment: WrapAlignment.spaceBetween,
                                   hasTextBorderColor: Color(0xff909090),
                                   pinBoxColor: Colors.transparent,
                                   pinBoxDecoration: ProvidedPinBoxDecoration
@@ -196,42 +181,41 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(30, 20, 30, 0),
+                      padding: const EdgeInsets.fromLTRB(30, 40, 30, 0),
                       child: SizedBox(
                         width: double.infinity,
                         child: TextButton(
-                          onPressed: () {
-                            if (count > 0 && mobileNo.text.isNotEmpty) {
-                              if (enteredOtp.isNotEmpty && otp.resultChecker(int.parse(enteredOtp))) {
-                                Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => ResetPassword()));
-                              }else {
-                                if(enteredOtp.isEmpty){
-                                  _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                      content:
-                                      Text('OTP not entered')));
-                                }else if(!otp.resultChecker(int.parse(enteredOtp))){
-                                  _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                      content:
-                                      Text('Enter a valid OTP')));
+                          onPressed: () async {
+                            if (enteredOtp.isNotEmpty) {
+                              if (otp.resultChecker(int.parse(enteredOtp))) {
+                                bool result =
+                                    await _apiCall.register(widget.regDetails);
+                                print(result);
+                                if (result) {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (context) =>
+                                              Questionnaire()));
+                                } else {
+                                  _scaffoldKey.currentState.showSnackBar(
+                                      SnackBar(
+                                          content:
+                                              Text('Something went wrong')));
                                 }
+                              } else {
+                                _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                    content: Text('Entered an invalid OTP')));
                               }
-                            }
-                            if (mobileNo.text.isNotEmpty && count == 0) {
-                              sendOtp();
-                              setState(() {
-                                count++;
-                              });
                             } else {
                               _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                  content:
-                                      Text('Enter phone number to get OTP')));
+                                  content: Text('Enter the OTP to continue')));
                             }
                           },
                           child: Text(
-                            count == 0 ? 'SEND OTP' : 'VERIFY',
+                            'VERIFY',
                             style: TextStyle(
                               fontFamily: 'RobotoCondensedReg',
                               fontSize: 20,

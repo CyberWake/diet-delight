@@ -13,13 +13,10 @@ dependencies:
   splashscreen: ^1.3.5
   pin_code_text_field: ^1.7.1
   flutter_rounded_date_picker: ^1.0.5
-  oauth2_client: ^1.6.1
   email_validator: ^1.0.6
-  flutter_otp: ^0.3.2
   oauth2: ^1.6.3
-  
-
   cupertino_icons: ^1.0.0
+  twilio_flutter: ^0.0.5
 
 dev_dependencies:
   flutter_test:

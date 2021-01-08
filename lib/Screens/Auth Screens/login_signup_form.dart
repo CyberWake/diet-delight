@@ -1,9 +1,7 @@
-import 'package:diet_delight/Auth%20Screens/login_screen.dart';
-import 'package:diet_delight/Auth%20Screens/signup_screen.dart';
+import 'package:diet_delight/Screens/Auth%20Screens/login_screen.dart';
+import 'package:diet_delight/Screens/Auth%20Screens/signup_screen.dart';
 import 'package:diet_delight/konstants.dart';
-import 'package:diet_delight/services/obtainToken.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AfterSplash extends StatefulWidget {
   @override
@@ -14,18 +12,10 @@ class _AfterSplashState extends State<AfterSplash>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
   double conHeight = 300.0;
-  final storage = FlutterSecureStorage();
   String accessToken;
-
-  getToken() async {
-    accessToken = await ObtainToken().fetchToken();
-    print("This is the accessToken in main");
-    print(accessToken);
-  }
 
   @override
   void initState() {
-    //getToken();
     _tabController = new TabController(length: 2, vsync: this);
     _tabController.addListener(() {
       if (_tabController.index == 0) {
