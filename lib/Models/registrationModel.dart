@@ -11,11 +11,11 @@ class RegModel {
 
   RegModel(
       {this.status = "0",
-      this.name = "test",
+      this.name,
       this.email,
       this.password,
-      this.firstName = "test",
-      this.lastName = "test",
+      this.firstName,
+      this.lastName,
       this.mobile,
       this.address = "test",
       this.addressSecondary = "test"});

@@ -13,12 +13,16 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  FocusNode first;
+  FocusNode last;
   FocusNode country;
   FocusNode mobile;
   FocusNode mail;
   FocusNode pass;
   FocusNode confPass;
   FocusNode submit;
+  TextEditingController firstName = TextEditingController();
+  TextEditingController lastName = TextEditingController();
   TextEditingController countryCode = TextEditingController();
   TextEditingController mobileNo = TextEditingController();
   TextEditingController email = TextEditingController();
@@ -29,6 +33,8 @@ class _SignUpState extends State<SignUp> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    first = FocusNode();
+    last = FocusNode();
     country = FocusNode();
     mobile = FocusNode();
     mail = FocusNode();
@@ -48,9 +54,90 @@ class _SignUpState extends State<SignUp> {
         child: ListView(
           shrinkWrap: true,
           children: [
-            //Phone number field
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('NAME', style: authLabelTextStyle),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 8.0, 20, 0),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                          child: Material(
+                            borderRadius: BorderRadius.circular(5),
+                            child: Container(
+                              width: devWidth / 2.5,
+                              height: 40.0,
+                              decoration: authFieldDecoration,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 3, 20, 7),
+                                child: TextFormField(
+                                    onChanged: (String nameFirst) {
+                                      firstName.text = nameFirst;
+                                    },
+                                    onFieldSubmitted: (done) {
+                                      firstName.text = done;
+                                      first.unfocus();
+                                      FocusScope.of(context).requestFocus(last);
+                                    },
+                                    textAlign: TextAlign.center,
+                                    textDirection: TextDirection.ltr,
+                                    keyboardType: TextInputType.name,
+                                    focusNode: first,
+                                    textInputAction: TextInputAction.next,
+                                    style: authInputTextStyle,
+                                    decoration: authInputFieldDecoration
+                                        .copyWith(hintText: 'First Name')),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                          child: Material(
+                            borderRadius: BorderRadius.circular(5),
+                            child: Container(
+                              width: devWidth / 2.5,
+                              height: 40.0,
+                              decoration: authFieldDecoration,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 3, 20, 7),
+                                child: TextFormField(
+                                    onChanged: (String nameLast) {
+                                      lastName.text = nameLast;
+                                    },
+                                    onFieldSubmitted: (done) {
+                                      lastName.text = done;
+                                      last.unfocus();
+                                      FocusScope.of(context)
+                                          .requestFocus(country);
+                                    },
+                                    textAlign: TextAlign.center,
+                                    textDirection: TextDirection.ltr,
+                                    keyboardType: TextInputType.name,
+                                    focusNode: last,
+                                    textInputAction: TextInputAction.next,
+                                    style: authInputTextStyle,
+                                    decoration: authInputFieldDecoration
+                                        .copyWith(hintText: 'Last Name')),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            //Phone number field
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 15, 0, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -261,8 +348,13 @@ class _SignUpState extends State<SignUp> {
                       if (confirmPass.text == password.text &&
                           countryCode.text.isNotEmpty &&
                           confirmPass.text.isNotEmpty &&
-                          password.text.isNotEmpty) {
+                          password.text.isNotEmpty &&
+                          firstName.text.isNotEmpty &&
+                          lastName.text.isNotEmpty) {
                         RegModel signUpDetails = RegModel(
+                            name: firstName.text + ' ' + lastName.text,
+                            firstName: firstName.text,
+                            lastName: lastName.text,
                             email: email.text,
                             password: password.text,
                             mobile: countryCode.text + ' ' + mobileNo.text);
@@ -274,8 +366,26 @@ class _SignUpState extends State<SignUp> {
                                       regDetails: signUpDetails,
                                     )));
                       } else {
-                        Scaffold.of(context).showSnackBar(
-                            SnackBar(content: Text('Passwords do not match')));
+                        if (confirmPass.text == password.text) {
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Text('Passwords do not match')));
+                        } else if (countryCode.text.isNotEmpty) {
+                          Scaffold.of(context).showSnackBar(
+                              SnackBar(content: Text('Enter Country Code')));
+                        } else if (confirmPass.text.isNotEmpty) {
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                              content:
+                                  Text('Enter the confirmation password')));
+                        } else if (password.text.isNotEmpty) {
+                          Scaffold.of(context).showSnackBar(
+                              SnackBar(content: Text('Enter the password')));
+                        } else if (firstName.text.isNotEmpty) {
+                          Scaffold.of(context).showSnackBar(
+                              SnackBar(content: Text('Enter your first name')));
+                        } else if (lastName.text.isNotEmpty) {
+                          Scaffold.of(context).showSnackBar(
+                              SnackBar(content: Text('Enter your last name')));
+                        }
                       }
                     } else {
                       Scaffold.of(context).showSnackBar(

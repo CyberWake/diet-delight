@@ -1,10 +1,12 @@
 import 'package:diet_delight/Home%20Page/home.dart';
 import 'package:diet_delight/Models/loginModel.dart';
 import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/services/apiCalls.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'file:///C:/Users/VK/Desktop/ritik/diet-delight-mobile/lib/Auth%20Screens/forgotPassword.dart';
 
@@ -21,6 +23,8 @@ class _LoginState extends State<Login> {
   FocusNode submit;
   TextEditingController emailOrMobileNo = TextEditingController();
   TextEditingController password = TextEditingController();
+  final storage = new FlutterSecureStorage();
+  final _apiCall = Api.instance;
 
   @override
   void initState() {
@@ -143,7 +147,7 @@ class _LoginState extends State<Login> {
                 width: double.infinity,
                 child: TextButton(
                   focusNode: submit,
-                  onPressed: () {
+                  onPressed: () async {
                     if (emailOrMobileNo.text.isNotEmpty) {
                       if (password.text.isNotEmpty) {
                         try {
@@ -154,10 +158,13 @@ class _LoginState extends State<Login> {
                             password: password.text,
                           );
                           loginDetails.show();
-                          Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (context) => HomePage()));
+                          bool result = await _apiCall.login(loginDetails);
+                          if (result) {
+                            Navigator.pushReplacement(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => HomePage()));
+                          }
                         } on FormatException {
                           if (EmailValidator.validate(emailOrMobileNo.text)) {
                             var email = emailOrMobileNo.text;
@@ -166,10 +173,13 @@ class _LoginState extends State<Login> {
                               password: password.text,
                             );
                             loginDetails.show();
-                            Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                    builder: (context) => HomePage()));
+                            bool result = await _apiCall.login(loginDetails);
+                            if (result) {
+                              Navigator.pushReplacement(
+                                  context,
+                                  CupertinoPageRoute(
+                                      builder: (context) => HomePage()));
+                            }
                           } else {
                             Scaffold.of(context).showSnackBar(SnackBar(
                               content: Text('Enter a valid email'),

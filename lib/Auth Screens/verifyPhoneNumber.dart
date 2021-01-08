@@ -20,15 +20,10 @@ class VerifyPhoneNumber extends StatefulWidget {
 
 class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
   final storage = new FlutterSecureStorage();
+  final _apiCall = Api.instance;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  String accessToken;
   String enteredOtp;
   FlutterOtp otp = FlutterOtp();
-
-  getToken() async {
-    accessToken = await storage.read(key: 'accessToken');
-    print('accessToken present');
-  }
 
   sendOtp() {
     List<String> number = widget.regDetails.mobile.split(' ');
@@ -43,14 +38,12 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
 
   @override
   void initState() {
-    getToken();
     sendOtp();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    Api apiCall = Api(token: accessToken);
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
@@ -198,7 +191,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                             if (enteredOtp.isNotEmpty) {
                               if (otp.resultChecker(int.parse(enteredOtp))) {
                                 bool result =
-                                    await apiCall.register(widget.regDetails);
+                                    await _apiCall.register(widget.regDetails);
                                 print(result);
                                 if (result) {
                                   Navigator.pop(context);

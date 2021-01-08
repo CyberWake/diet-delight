@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:diet_delight/Home%20Page/home.dart';
+import 'package:diet_delight/Auth%20Screens/login_signup_form.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +25,7 @@ class _MyAppState extends State<MyApp> {
     return SafeArea(
       child: SplashScreen(
         seconds: 3,
-        navigateAfterSeconds: HomePage(), //AfterSplash(),
+        navigateAfterSeconds: AfterSplash(), //AfterSplash(),
         image: Image.asset(
           'images/Group 66.png',
           width: 300.0,

@@ -34,7 +34,107 @@ const TextStyle authLabelTextStyle = TextStyle(
   fontWeight: FontWeight.normal,
   color: defaultGreen,
 );
+const TextStyle tabTextStyle = TextStyle(
+  fontFamily: 'RobotoCondensedReg',
+  fontSize: 12,
+  fontWeight: FontWeight.bold,
+);
+const TextStyle dateTabTextStyle = TextStyle(
+  fontFamily: 'RobotoCondensedReg',
+  fontSize: 12,
+  fontWeight: FontWeight.normal,
+);
+
+const appBarTextStyle = TextStyle(
+  fontFamily: 'RobotoCondensedReg',
+  fontSize: 24,
+  fontWeight: FontWeight.normal,
+  color: Colors.black,
+);
+
 BoxDecoration authFieldDecoration = BoxDecoration(
     color: Colors.white,
     border: Border.all(color: formLinks, width: 1.0, style: BorderStyle.solid),
     borderRadius: BorderRadius.circular(5));
+List<List<Color>> itemColors = [
+  [
+    Color(0xFF808080),
+    Color(0xFFE0E0E0),
+    Color(0xFFE8E8E8),
+    Color(0xFFDFDFDF),
+    Color(0xFF999999)
+  ],
+  [
+    Color(0xFF8080A1),
+    Color(0xFFE0E0FF),
+    Color(0xFFE8E8FF),
+    Color(0xFFDFDFFF),
+    Color(0xFF9999BA)
+  ],
+  [
+    Color(0xFFA3784B),
+    Color(0xFFFEDF97),
+    Color(0xFFFCE7B3),
+    Color(0xFFFFDD8F),
+    Color(0xFFBA9360)
+  ],
+];
+List<Widget> ddItems = [
+  Container(
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: itemColors[0]),
+    ),
+    child: Padding(
+        padding: EdgeInsets.fromLTRB(15, 3, 15, 3),
+        child: Text(
+          'SILVER',
+          style: TextStyle(
+            fontFamily: 'RobotoCondensedReg',
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        )),
+  ),
+  Container(
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: itemColors[1]),
+    ),
+    child: Padding(
+        padding: EdgeInsets.fromLTRB(15, 3, 15, 3),
+        child: Text(
+          'PLATINUM',
+          style: TextStyle(
+            fontFamily: 'RobotoCondensedReg',
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        )),
+  ),
+  Container(
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: itemColors[2]),
+    ),
+    child: Padding(
+        padding: EdgeInsets.fromLTRB(15, 3, 15, 3),
+        child: Text(
+          'GOLD',
+          style: TextStyle(
+            fontFamily: 'RobotoCondensedReg',
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        )),
+  )
+];

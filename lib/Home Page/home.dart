@@ -1,10 +1,13 @@
 import 'dart:ui';
 
 import 'package:diet_delight/Consultation/bookConsultation.dart';
+import 'package:diet_delight/Models/consultationModel.dart';
 import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -12,6 +15,27 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool isLoaded = false;
+  String accessToken;
+  final _apiCall = Api.instance;
+  final storage = FlutterSecureStorage();
+  List<ConsultationModel> consultationPackages;
+
+  Future testApiData() async {
+    consultationPackages = await _apiCall.getConsultationPackages();
+    bool result2 = await _apiCall.getQuestions();
+  }
+
+  @override
+  void initState() {
+    testApiData().whenComplete(() {
+      setState(() {
+        isLoaded = true;
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double devWidth = MediaQuery.of(context).size.width;
@@ -562,381 +586,161 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     Padding(
-                      padding: EdgeInsets.fromLTRB(20, 20, 10, 0),
-                      child: Container(
-                          height: 0.525 * devWidth,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(right: 15.0),
-                                child: Material(
-                                  elevation: 0.0,
-                                  shadowColor: Colors.white,
-                                  child: InkWell(
-                                    splashColor: defaultGreen.withAlpha(30),
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BookConsultation(
-                                                    package: 0,
-                                                  )));
-                                    },
-                                    child: Container(
-                                      width: 110,
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          border: Border.all(
-                                              width: 2.0, color: defaultGreen)),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Padding(
-                                              padding: EdgeInsets.only(
-                                                  bottom: 10.0, top: 10),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  gradient: LinearGradient(
-                                                      begin:
-                                                          Alignment.centerLeft,
-                                                      end:
-                                                          Alignment.centerRight,
-                                                      colors: [
-                                                        Color(0xFF8080A1),
-                                                        Color(0xFFE0E0FF),
-                                                        Color(0xFFE8E8FF),
-                                                        Color(0xFFDFDFFF),
-                                                        Color(0xFF9999BA)
-                                                      ]),
-                                                ),
-                                                child: Padding(
+                        padding: EdgeInsets.fromLTRB(20, 20, 10, 0),
+                        child: Container(
+                            height: 0.525 * devWidth,
+                            child: isLoaded
+                                ? ListView.builder(
+                                    itemCount: consultationPackages.length,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Padding(
+                                        padding: EdgeInsets.only(right: 15.0),
+                                        child: Material(
+                                          elevation: 0.0,
+                                          shadowColor: Colors.white,
+                                          child: InkWell(
+                                            splashColor:
+                                                defaultGreen.withAlpha(30),
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  CupertinoPageRoute(
+                                                      builder: (context) =>
+                                                          BookConsultation(
+                                                            packageIndex: index,
+                                                            consultation:
+                                                                consultationPackages,
+                                                          )));
+                                            },
+                                            child: Container(
+                                              width: 110,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  border: Border.all(
+                                                      width: 2.0,
+                                                      color: defaultGreen)),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                          bottom: 10.0,
+                                                          top: 10),
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          gradient: LinearGradient(
+                                                              begin: Alignment
+                                                                  .centerLeft,
+                                                              end: Alignment
+                                                                  .centerRight,
+                                                              colors:
+                                                                  itemColors[
+                                                                      index]),
+                                                        ),
+                                                        child: Padding(
+                                                            padding: EdgeInsets
+                                                                .fromLTRB(15, 3,
+                                                                    15, 3),
+                                                            child: Text(
+                                                              consultationPackages[
+                                                                      index]
+                                                                  .name,
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'RobotoCondensedReg',
+                                                                fontSize: 11,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .black,
+                                                              ),
+                                                            )),
+                                                      )),
+                                                  Padding(
                                                     padding:
                                                         EdgeInsets.fromLTRB(
-                                                            15, 3, 15, 3),
+                                                            5.0, 10, 5, 0),
                                                     child: Text(
-                                                      'SILVER',
+                                                      consultationPackages[
+                                                              index]
+                                                          .details,
+                                                      textAlign:
+                                                          TextAlign.center,
                                                       style: TextStyle(
                                                         fontFamily:
                                                             'RobotoCondensedReg',
                                                         fontSize: 11,
                                                         fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black,
+                                                            FontWeight.normal,
+                                                        color: cardGray,
                                                       ),
-                                                    )),
-                                              )),
-                                          Padding(
-                                            padding: EdgeInsets.fromLTRB(
-                                                5.0, 10, 5, 0),
-                                            child: Text(
-                                              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontFamily:
-                                                    'RobotoCondensedReg',
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.normal,
-                                                color: cardGray,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.fromLTRB(
-                                                5.0, 10, 5, 0),
-                                            child: Text(
-                                              'BD 20',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontFamily:
-                                                    'RobotoCondensedReg',
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
-                                                color: defaultGreen,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                20, 10, 20, 10),
-                                            child: Container(
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                  color: defaultGreen,
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(5))),
-                                              height: 25,
-                                              child: Center(
-                                                child: Text(
-                                                  'BOOK YOUR APPOINTMENT',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    fontFamily:
-                                                        'RobotoCondensedReg',
-                                                    fontSize: 8,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white,
+                                                    ),
                                                   ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(right: 15.0),
-                                child: Material(
-                                  elevation: 0.0,
-                                  shadowColor: Colors.white,
-                                  child: InkWell(
-                                    splashColor: defaultGreen.withAlpha(30),
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BookConsultation(
-                                                    package: 1,
-                                                  )));
-                                    },
-                                    child: Container(
-                                      width: 110,
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          border: Border.all(
-                                              width: 2.0, color: defaultGreen)),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Padding(
-                                              padding: EdgeInsets.only(
-                                                  bottom: 10.0, top: 10),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  gradient: LinearGradient(
-                                                      begin:
-                                                          Alignment.centerLeft,
-                                                      end:
-                                                          Alignment.centerRight,
-                                                      colors: [
-                                                        Color(0xFFA3784B),
-                                                        Color(0xFFFEDF97),
-                                                        Color(0xFFFCE7B3),
-                                                        Color(0xFFFFDD8F),
-                                                        Color(0xFFBA9360)
-                                                      ]),
-                                                ),
-                                                child: Padding(
+                                                  Padding(
                                                     padding:
                                                         EdgeInsets.fromLTRB(
-                                                            15, 3, 15, 3),
+                                                            5.0, 10, 5, 0),
                                                     child: Text(
-                                                      'GOLD',
+                                                      consultationPackages[
+                                                              index]
+                                                          .price,
+                                                      textAlign:
+                                                          TextAlign.center,
                                                       style: TextStyle(
                                                         fontFamily:
                                                             'RobotoCondensedReg',
-                                                        fontSize: 11,
+                                                        fontSize: 20,
                                                         fontWeight:
                                                             FontWeight.bold,
-                                                        color: Colors.black,
+                                                        color: defaultGreen,
                                                       ),
-                                                    )),
-                                              )),
-                                          Padding(
-                                            padding: EdgeInsets.fromLTRB(
-                                                5.0, 10, 5, 0),
-                                            child: Text(
-                                              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontFamily:
-                                                    'RobotoCondensedReg',
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.normal,
-                                                color: cardGray,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.fromLTRB(
-                                                5.0, 10, 5, 0),
-                                            child: Text(
-                                              'BD 40',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontFamily:
-                                                    'RobotoCondensedReg',
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
-                                                color: defaultGreen,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                20, 10, 20, 10),
-                                            child: Container(
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                  color: defaultGreen,
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(5))),
-                                              height: 25,
-                                              child: Center(
-                                                child: Text(
-                                                  'BOOK YOUR APPOINTMENT',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    fontFamily:
-                                                        'RobotoCondensedReg',
-                                                    fontSize: 8,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white,
+                                                    ),
                                                   ),
-                                                ),
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                            .fromLTRB(
+                                                        20, 10, 20, 10),
+                                                    child: Container(
+                                                      width: double.infinity,
+                                                      decoration: BoxDecoration(
+                                                          color: defaultGreen,
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          5))),
+                                                      height: 25,
+                                                      child: Center(
+                                                        child: Text(
+                                                          'BOOK YOUR APPOINTMENT',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'RobotoCondensedReg',
+                                                            fontSize: 8,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(right: 15.0),
-                                child: Material(
-                                  elevation: 0.0,
-                                  shadowColor: Colors.white,
-                                  child: InkWell(
-                                    splashColor: defaultGreen.withAlpha(30),
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BookConsultation(
-                                                    package: 2,
-                                                  )));
+                                        ),
+                                      );
                                     },
-                                    child: Container(
-                                      width: 110,
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          border: Border.all(
-                                              width: 2.0, color: defaultGreen)),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Padding(
-                                              padding: EdgeInsets.only(
-                                                  bottom: 10.0, top: 10),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  gradient: LinearGradient(
-                                                      begin:
-                                                          Alignment.centerLeft,
-                                                      end:
-                                                          Alignment.centerRight,
-                                                      colors: [
-                                                        Color(0xFF808080),
-                                                        Color(0xFFE0E0E0),
-                                                        Color(0xFFE8E8E8),
-                                                        Color(0xFFDFDFDF),
-                                                        Color(0xFF999999)
-                                                      ]),
-                                                ),
-                                                child: Padding(
-                                                    padding:
-                                                        EdgeInsets.fromLTRB(
-                                                            15, 3, 15, 3),
-                                                    child: Text(
-                                                      'PLATINUM',
-                                                      style: TextStyle(
-                                                        fontFamily:
-                                                            'RobotoCondensedReg',
-                                                        fontSize: 11,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black,
-                                                      ),
-                                                    )),
-                                              )),
-                                          Padding(
-                                            padding: EdgeInsets.fromLTRB(
-                                                5.0, 10, 5, 0),
-                                            child: Text(
-                                              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontFamily:
-                                                    'RobotoCondensedReg',
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.normal,
-                                                color: cardGray,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.fromLTRB(
-                                                5.0, 10, 5, 0),
-                                            child: Text(
-                                              'BD 60',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontFamily:
-                                                    'RobotoCondensedReg',
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
-                                                color: defaultGreen,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                20, 10, 20, 10),
-                                            child: Container(
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                  color: defaultGreen,
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(5))),
-                                              height: 25,
-                                              child: Center(
-                                                child: Text(
-                                                  'BOOK YOUR APPOINTMENT',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    fontFamily:
-                                                        'RobotoCondensedReg',
-                                                    fontSize: 8,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )),
-                    ),
+                                  )
+                                : Center(child: CircularProgressIndicator()))),
                     SizedBox(
                       height: 100.0,
                     ),

@@ -25,7 +25,7 @@ class _AfterSplashState extends State<AfterSplash>
 
   @override
   void initState() {
-    getToken();
+    //getToken();
     _tabController = new TabController(length: 2, vsync: this);
     _tabController.addListener(() {
       if (_tabController.index == 0) {

@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:diet_delight/Home Page/home.dart';
+import 'package:diet_delight/Models/consultationModel.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,101 +11,19 @@ class ConfirmConsultation extends StatefulWidget {
   int package;
   final DateTime selectedDate;
   final String consultationTime;
+  final List<ConsultationModel> consultation;
 
-  ConfirmConsultation({this.package, this.selectedDate, this.consultationTime});
+  ConfirmConsultation(
+      {this.package,
+      this.selectedDate,
+      this.consultationTime,
+      this.consultation});
   @override
   _ConfirmConsultationState createState() => new _ConfirmConsultationState();
 }
 
 class _ConfirmConsultationState extends State<ConfirmConsultation> {
-  List<List> costItems = [
-    ['Silver', 20],
-    ['Gold', 40],
-    ['Platinum', 60]
-  ];
-  List<Widget> ddItems = [
-    Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [
-              Color(0xFF8080A1),
-              Color(0xFFE0E0FF),
-              Color(0xFFE8E8FF),
-              Color(0xFFDFDFFF),
-              Color(0xFF9999BA)
-            ]),
-      ),
-      child: Padding(
-          padding: EdgeInsets.fromLTRB(15, 3, 15, 3),
-          child: Text(
-            'SILVER',
-            style: TextStyle(
-              fontFamily: 'RobotoCondensedReg',
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          )),
-    ),
-    Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [
-              Color(0xFFA3784B),
-              Color(0xFFFEDF97),
-              Color(0xFFFCE7B3),
-              Color(0xFFFFDD8F),
-              Color(0xFFBA9360)
-            ]),
-      ),
-      child: Padding(
-          padding: EdgeInsets.fromLTRB(15, 3, 15, 3),
-          child: Text(
-            'GOLD',
-            style: TextStyle(
-              fontFamily: 'RobotoCondensedReg',
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          )),
-    ),
-    Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [
-              Color(0xFF808080),
-              Color(0xFFE0E0E0),
-              Color(0xFFE8E8E8),
-              Color(0xFFDFDFDF),
-              Color(0xFF999999)
-            ]),
-      ),
-      child: Padding(
-          padding: EdgeInsets.fromLTRB(15, 3, 15, 3),
-          child: Text(
-            'PLATINUM',
-            style: TextStyle(
-              fontFamily: 'RobotoCondensedReg',
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          )),
-    )
-  ];
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -113,47 +31,25 @@ class _ConfirmConsultationState extends State<ConfirmConsultation> {
     double devHeight = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          centerTitle: true,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.keyboard_backspace,
+              size: 30.0,
+              color: defaultGreen,
+            ),
+          ),
+          title: Text('Book an Appointment', style: appBarTextStyle),
+        ),
         body: ListView(
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20.0, 20.0, 0, 0),
-                      child: Icon(
-                        Icons.keyboard_backspace,
-                        size: 30.0,
-                        color: defaultGreen,
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 9,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 25, top: 20.0),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Book an Appointment',
-                        style: TextStyle(
-                          fontFamily: 'RobotoCondensedReg',
-                          fontSize: 24,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 30.0, 0, 20.0),
               child: Column(
@@ -163,6 +59,7 @@ class _ConfirmConsultationState extends State<ConfirmConsultation> {
                     padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
                       children: [
                         DropdownButton<Widget>(
                           value: ddItems[widget.package],
@@ -183,7 +80,7 @@ class _ConfirmConsultationState extends State<ConfirmConsultation> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(0, 15.0, 0, 0),
                           child: Text(
-                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
+                            widget.consultation[widget.package].details,
                             textAlign: TextAlign.left,
                             style: TextStyle(
                               fontFamily: 'RobotoCondensedReg',
@@ -282,26 +179,19 @@ class _ConfirmConsultationState extends State<ConfirmConsultation> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Padding(
-                                  padding: EdgeInsets.only(top: 0.0),
-                                  child: Text(
-                                    '${costItems[widget.package][0]} Consultancy Package',
-                                    style: TextStyle(
-                                      fontFamily: 'RobotoCondensedReg',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                    ),
-                                  )),
+                                padding: EdgeInsets.only(top: 0.0),
+                                child: Text(
+                                  '${widget.consultation[widget.package].name} Consultancy Package',
+                                  style: dateTabTextStyle.copyWith(
+                                      color: Colors.black),
+                                ),
+                              ),
                               Padding(
                                   padding: EdgeInsets.only(top: 0.0),
                                   child: Text(
-                                    '${costItems[widget.package][1]}BD',
-                                    style: TextStyle(
-                                      fontFamily: 'RobotoCondensedReg',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                    ),
+                                    '${widget.consultation[widget.package].price}',
+                                    style: dateTabTextStyle.copyWith(
+                                        color: Colors.black),
                                   )),
                             ],
                           ),
@@ -377,7 +267,7 @@ class _ConfirmConsultationState extends State<ConfirmConsultation> {
                                   padding:
                                       EdgeInsets.only(top: 10.0, left: 10.0),
                                   child: Text(
-                                    '${costItems[widget.package][1] + 80}BD',
+                                    '${int.parse(widget.consultation[widget.package].price.substring(0, 2)) + 80}BD',
                                     style: TextStyle(
                                       fontFamily: 'RobotoCondensedReg',
                                       fontSize: 12,
@@ -398,10 +288,13 @@ class _ConfirmConsultationState extends State<ConfirmConsultation> {
                       height: 50.0,
                       child: TextButton(
                         onPressed: () {
-                          Navigator.push(
+                          print('pressed');
+                          _scaffoldKey.currentState.showSnackBar(
+                              SnackBar(content: Text('To be implemented')));
+                          /*Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => HomePage()));
+                                  builder: (context) => HomePage()));*/
                         },
                         child: Text(
                           'BOOK PACKAGE',
