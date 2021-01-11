@@ -43,6 +43,7 @@ class _AfterSplashState extends State<AfterSplash>
     double devHeight = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: _tabController.index == 0 ? false : true,
         body: ListView(
           children: [
             SizedBox(

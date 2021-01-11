@@ -197,8 +197,11 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                                   Navigator.push(
                                       context,
                                       CupertinoPageRoute(
-                                          builder: (context) =>
-                                              Questionnaire()));
+                                          builder: (context) => Questionnaire(
+                                              username: widget
+                                                      .regDetails.firstName +
+                                                  " " +
+                                                  widget.regDetails.lastName)));
                                 } else {
                                   _scaffoldKey.currentState.showSnackBar(
                                       SnackBar(

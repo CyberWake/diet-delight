@@ -99,15 +99,13 @@ class Api {
         'http://dietdelight.enigmaty.com/api/v1/questions?pageSize=20&sortOrder=desc');
     if (result.isNotEmpty) {
       var body = convert.jsonDecode(result);
-      print('body: ${body['data']}');
       List data = body['data'];
       List<QuestionnaireModel> items = List();
       data.forEach((element) {
         QuestionnaireModel item = QuestionnaireModel.fromMap(element);
         items.add(item);
       });
-      print('data received');
-      print(items.length);
+      print('data received: ${items.length}');
       return items;
     } else {
       return [];

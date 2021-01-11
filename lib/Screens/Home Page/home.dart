@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:diet_delight/Models/consultationModel.dart';
-import 'package:diet_delight/Models/questionnaireModel.dart';
+import 'package:diet_delight/Screens/Auth%20Screens/userMoto.dart';
 import 'package:diet_delight/Screens/Consultation/bookConsultation.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
@@ -18,14 +18,9 @@ class _HomePageState extends State<HomePage> {
   bool isLoaded = false;
   final _apiCall = Api.instance;
   List<ConsultationModel> consultationPackages;
-  List<QuestionnaireModel> questions;
 
   Future testApiData() async {
     consultationPackages = await _apiCall.getConsultationPackages();
-    questions = await _apiCall.getQuestions();
-    questions.forEach((element) {
-      element.show();
-    });
   }
 
   @override
@@ -58,10 +53,11 @@ class _HomePageState extends State<HomePage> {
           actions: [
             GestureDetector(
               onTap: () {
-                /*Navigator.push(
+                Navigator.push(
                     context,
                     CupertinoPageRoute(
-                        builder: (context) =>Questionnaire()));*/
+                        builder: (context) =>
+                            Questionnaire(username: "ritik")));
               },
               child: Image.asset(
                 'images/Group 22.png',
