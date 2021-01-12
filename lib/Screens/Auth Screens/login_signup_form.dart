@@ -17,24 +17,6 @@ class _AfterSplashState extends State<AfterSplash>
   @override
   void initState() {
     _tabController = new TabController(length: 2, vsync: this);
-    _tabController.addListener(() {
-      if (_tabController.index == 0) {
-        setState(() {
-          conHeight = 300.0;
-          print(conHeight);
-        });
-      } else if (_tabController.index == 1) {
-        setState(() {
-          conHeight = 600.0;
-          print(conHeight);
-        });
-      } else {
-        setState(() {
-          conHeight = 300.0;
-          print(conHeight);
-        });
-      }
-    });
     super.initState();
   }
 
@@ -66,8 +48,9 @@ class _AfterSplashState extends State<AfterSplash>
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                   ),
-                  indicatorColor: Colors.transparent,
-                  indicatorWeight: 1.0,
+                  indicatorColor: defaultGreen,
+                  //indicatorPadding: EdgeInsets.symmetric(horizontal: 50),
+                  indicatorWeight: 3.0,
                   indicatorSize: TabBarIndicatorSize.label,
                   labelColor: defaultGreen,
                   labelPadding: EdgeInsets.symmetric(horizontal: 13),
@@ -80,45 +63,24 @@ class _AfterSplashState extends State<AfterSplash>
                   controller: _tabController,
                   tabs: List.generate(2, (index) {
                     return Tab(
-                      child: Align(
-                        alignment: index == 0
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        child: Container(
-                          padding: EdgeInsets.only(
-                            bottom: 3, // space between underline and text
-                          ),
-                          decoration: BoxDecoration(
-                              border: Border(
-                                  bottom: BorderSide(
-                            color: _tabController.index == index
-                                ? defaultGreen
-                                : Colors.transparent, // Text colour here
-                            width: 4.0, // Underline width
-                          ))),
-                          child: index == 0 ? Text('SIGN IN') : Text('SIGN UP'),
-                        ),
-                      ),
-                    );
+                        child: index == 0 ? Text('SIGN IN') : Text('SIGN UP'));
                   })),
             ),
-            ListView(shrinkWrap: true, children: [
-              Container(
-                margin: EdgeInsets.all(10.0),
-                width: double.infinity,
-                height: 3 * devHeight / 4,
-                decoration: BoxDecoration(
-                  color: formBackground,
-                ),
-                child: TabBarView(
-                  controller: _tabController,
-                  children: <Widget>[
-                    Login(token: accessToken),
-                    SignUp(token: accessToken),
-                  ],
-                ),
+            Container(
+              margin: EdgeInsets.all(10.0),
+              width: double.infinity,
+              height: 3 * devHeight / 4,
+              decoration: BoxDecoration(
+                color: formBackground,
               ),
-            ]),
+              child: TabBarView(
+                controller: _tabController,
+                children: <Widget>[
+                  Login(token: accessToken),
+                  SignUp(token: accessToken),
+                ],
+              ),
+            ),
           ],
         ),
       ),

@@ -3,12 +3,14 @@ import 'dart:ui';
 import 'package:diet_delight/Models/consultationModel.dart';
 import 'package:diet_delight/Screens/Auth%20Screens/userMoto.dart';
 import 'package:diet_delight/Screens/Consultation/bookConsultation.dart';
-import 'package:diet_delight/Screens/Menu/menupage.dart';
+import 'package:diet_delight/Screens/mealplan.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+
+import 'file:///C:/Users/VK/Desktop/ritik/diet-delight-mobile/lib/Screens/menupage.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -197,6 +199,10 @@ class _HomePageState extends State<HomePage> {
                                     splashColor: defaultGreen.withAlpha(30),
                                     onTap: () {
                                       print('Card tapped.');
+                                      Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                              builder: (context) => Menu()));
                                     },
                                     child: Container(
                                       color: Colors.white,
@@ -347,7 +353,9 @@ class _HomePageState extends State<HomePage> {
                                       Navigator.push(
                                           context,
                                           CupertinoPageRoute(
-                                              builder: (context) => Menu()));
+                                              builder: (context) => MealPlan(
+                                                    planDuration: 31,
+                                                  )));
                                     },
                                     child: Container(
                                       color: defaultGreen,

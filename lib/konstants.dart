@@ -29,6 +29,19 @@ const TextStyle authInputTextStyle = TextStyle(
   fontWeight: FontWeight.normal,
   color: formFill,
 );
+
+const TextStyle unSelectedTab = TextStyle(
+  fontFamily: 'RobotoCondensedReg',
+  fontSize: 14,
+  fontWeight: FontWeight.bold,
+);
+
+const TextStyle selectedTab = TextStyle(
+  fontFamily: 'RobotoCondensedReg',
+  fontSize: 18,
+  fontWeight: FontWeight.bold,
+);
+
 const TextStyle authLabelTextStyle = TextStyle(
   fontFamily: 'RobotoCondensedReg',
   fontSize: 12,
