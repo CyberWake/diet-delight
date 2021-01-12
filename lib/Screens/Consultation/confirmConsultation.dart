@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
+// ignore: must_be_immutable
 class ConfirmConsultation extends StatefulWidget {
   int package;
   final DateTime selectedDate;
@@ -27,8 +28,6 @@ class _ConfirmConsultationState extends State<ConfirmConsultation> {
 
   @override
   Widget build(BuildContext context) {
-    double devWidth = MediaQuery.of(context).size.width;
-    double devHeight = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,

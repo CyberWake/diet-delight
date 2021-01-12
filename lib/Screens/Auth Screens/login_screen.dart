@@ -22,7 +22,7 @@ class _LoginState extends State<Login> {
   TextEditingController emailOrMobileNo = TextEditingController();
   TextEditingController password = TextEditingController();
   final _apiCall = Api.instance;
-
+  bool initiated = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -142,11 +142,15 @@ class _LoginState extends State<Login> {
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: SizedBox(
                 width: double.infinity,
+                height: 50,
                 child: TextButton(
                   focusNode: submit,
                   onPressed: () async {
-                    if (emailOrMobileNo.text.isNotEmpty) {
+                    if (emailOrMobileNo.text.isNotEmpty && !initiated) {
                       if (password.text.isNotEmpty) {
+                        setState(() {
+                          initiated = true;
+                        });
                         try {
                           var value = double.parse(emailOrMobileNo.text);
                           var mobile = value.toStringAsFixed(0);
@@ -195,15 +199,17 @@ class _LoginState extends State<Login> {
                       ));
                     }
                   },
-                  child: Text(
-                    'SIGN IN',
-                    style: TextStyle(
-                      fontFamily: 'RobotoCondensedReg',
-                      fontSize: 20,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: initiated
+                      ? CircularProgressIndicator()
+                      : Text(
+                          'SIGN IN',
+                          style: TextStyle(
+                            fontFamily: 'RobotoCondensedReg',
+                            fontSize: 20,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.white,
+                          ),
+                        ),
                   style: TextButton.styleFrom(
                       backgroundColor: defaultGreen,
                       shape: const RoundedRectangleBorder(

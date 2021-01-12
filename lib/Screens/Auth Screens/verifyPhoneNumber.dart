@@ -21,6 +21,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
   final _apiCall = Api.instance;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String enteredOtp;
+  bool initiated = false;
   FlutterOtp otp = FlutterOtp();
 
   sendOtp() {
@@ -184,10 +185,14 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                       padding: const EdgeInsets.fromLTRB(30, 40, 30, 0),
                       child: SizedBox(
                         width: double.infinity,
+                        height: 50,
                         child: TextButton(
                           onPressed: () async {
-                            if (enteredOtp.isNotEmpty) {
+                            if (enteredOtp.isNotEmpty && !initiated) {
                               if (otp.resultChecker(int.parse(enteredOtp))) {
+                                setState(() {
+                                  initiated = true;
+                                });
                                 bool result =
                                     await _apiCall.register(widget.regDetails);
                                 print(result);
@@ -217,15 +222,17 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                                   content: Text('Enter the OTP to continue')));
                             }
                           },
-                          child: Text(
-                            'VERIFY',
-                            style: TextStyle(
-                              fontFamily: 'RobotoCondensedReg',
-                              fontSize: 20,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.white,
-                            ),
-                          ),
+                          child: initiated
+                              ? CircularProgressIndicator()
+                              : Text(
+                                  'VERIFY',
+                                  style: TextStyle(
+                                    fontFamily: 'RobotoCondensedReg',
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.white,
+                                  ),
+                                ),
                           style: TextButton.styleFrom(
                               backgroundColor: defaultGreen,
                               shape: const RoundedRectangleBorder(

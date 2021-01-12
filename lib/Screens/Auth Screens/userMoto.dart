@@ -16,9 +16,9 @@ class Questionnaire extends StatefulWidget {
 class _QuestionnaireState extends State<Questionnaire> {
   ScrollController _scrollController = new ScrollController();
   final _apiCall = Api.instance;
-  FocusNode yesSpecific;
   int questionNumber = 0;
   bool isLoaded = false;
+  bool show = false;
   bool notAnswered = true;
   int chatLength = 0;
   List _data = [];
@@ -46,7 +46,6 @@ class _QuestionnaireState extends State<Questionnaire> {
   @override
   void initState() {
     super.initState();
-    yesSpecific = FocusNode();
     getQuestions().whenComplete(() {
       setState(() {
         isLoaded = true;
@@ -85,6 +84,11 @@ class _QuestionnaireState extends State<Questionnaire> {
                       setState(() {
                         questionNumber++;
                       });
+                      if (questionNumber == 2) {
+                        setState(() {
+                          show = true;
+                        });
+                      }
                       if (index < questions.length) {
                         insertSingleItem(
                             questions[index].question + "<question>");
@@ -120,7 +124,9 @@ class _QuestionnaireState extends State<Questionnaire> {
                             label: Text(options[index][optionIndex]),
                             onPressed: () {
                               print('tapped: $index');
-                              FocusScope.of(context).requestFocus(yesSpecific);
+                              setState(() {
+                                show = true;
+                              });
                             },
                             backgroundColor: Colors.grey[200],
                             shape: StadiumBorder(
@@ -134,41 +140,59 @@ class _QuestionnaireState extends State<Questionnaire> {
                           flex: 9,
                           child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 10),
-                            child: Container(
-                              width: double.infinity,
-                              height: 40.0,
-                              decoration: authFieldDecoration,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(20, 3, 20, 7),
-                                child: TextFormField(
-                                    focusNode: yesSpecific,
-                                    onFieldSubmitted: (done) {
-                                      if (done.isNotEmpty) {
-                                        print('tapped: $index');
-                                        print(done);
-                                        insertSingleItem(
-                                            options[index][optionIndex]);
-                                        index++;
-                                        setState(() {
-                                          questionNumber++;
-                                        });
-                                        if (index < questions.length) {
-                                          insertSingleItem(
-                                              questions[index].question +
-                                                  "<question>");
-                                        }
-                                        _scrollController.jumpTo(
-                                            _scrollController
-                                                .position.maxScrollExtent);
-                                      }
-                                    },
-                                    style: authInputTextStyle,
-                                    keyboardType: TextInputType.text,
-                                    textInputAction: TextInputAction.done,
-                                    decoration: authInputFieldDecoration),
-                              ),
-                            ),
+                            child: !show
+                                ? Container()
+                                : Container(
+                                    width: double.infinity,
+                                    height: 40.0,
+                                    decoration: authFieldDecoration,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          20, 3, 20, 3),
+                                      child: TextFormField(
+                                          onFieldSubmitted: (done) {
+                                            if (done.isNotEmpty) {
+                                              setState(() {
+                                                show = false;
+                                              });
+                                              print('tapped: $index');
+                                              print(done);
+                                              if (questionNumber != 2) {
+                                                insertSingleItem(options[index]
+                                                            [optionIndex]
+                                                        .replaceAll(
+                                                            "Please specify:",
+                                                            "") +
+                                                    ' $done');
+                                              } else {
+                                                List values = done.split('-');
+                                                insertSingleItem(
+                                                    'Height: ${values[0]}  Weight: ${values[1]}');
+                                              }
+                                              index++;
+                                              setState(() {
+                                                questionNumber++;
+                                              });
+                                              if (index < questions.length) {
+                                                insertSingleItem(
+                                                    questions[index].question +
+                                                        "<question>");
+                                              }
+                                              _scrollController.jumpTo(
+                                                  _scrollController.position
+                                                      .maxScrollExtent);
+                                            }
+                                          },
+                                          style: authInputTextStyle,
+                                          keyboardType: TextInputType.text,
+                                          textInputAction: TextInputAction.done,
+                                          decoration: questionNumber == 2
+                                              ? authInputFieldDecoration
+                                                  .copyWith(
+                                                      hintText: "Height-Weight")
+                                              : authInputFieldDecoration),
+                                    ),
+                                  ),
                           ),
                         ),
                       ],

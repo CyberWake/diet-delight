@@ -18,6 +18,7 @@ dependencies:
   cupertino_icons: ^1.0.0
   twilio_flutter: ^0.0.5
   bubble: ^1.1.9+1
+  page_view_indicators: ^1.4.0
 
 dev_dependencies:
   flutter_test:
