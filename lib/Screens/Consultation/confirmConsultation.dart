@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:diet_delight/Models/consultationModel.dart';
+import 'package:diet_delight/Screens/prepayment.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,38 @@ class ConfirmConsultation extends StatefulWidget {
 
 class _ConfirmConsultationState extends State<ConfirmConsultation> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  Widget breakDownFields(String disc, String price, bool isGrandTotal) {
+    return Row(
+      mainAxisAlignment:
+          isGrandTotal ? MainAxisAlignment.end : MainAxisAlignment.spaceBetween,
+      children: [
+        Padding(
+            padding: isGrandTotal
+                ? EdgeInsets.only(top: 10.0, right: 10)
+                : EdgeInsets.only(top: 10.0),
+            child: Text(
+              disc,
+              style: TextStyle(
+                fontFamily: 'RobotoCondensedReg',
+                fontSize: 12,
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+              ),
+            )),
+        Padding(
+            padding: EdgeInsets.only(top: 10.0),
+            child: Text(
+              price,
+              style: TextStyle(
+                fontFamily: 'RobotoCondensedReg',
+                fontSize: 12,
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+              ),
+            )),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -174,108 +207,16 @@ class _ConfirmConsultationState extends State<ConfirmConsultation> {
                       width: double.infinity,
                       child: Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(top: 0.0),
-                                child: Text(
-                                  '${widget.consultation[widget.package].name} Consultancy Package',
-                                  style: dateTabTextStyle.copyWith(
-                                      color: Colors.black),
-                                ),
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(top: 0.0),
-                                  child: Text(
-                                    '${widget.consultation[widget.package].price}',
-                                    style: dateTabTextStyle.copyWith(
-                                        color: Colors.black),
-                                  )),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                  padding: EdgeInsets.only(top: 10.0),
-                                  child: Text(
-                                    'Extras',
-                                    style: TextStyle(
-                                      fontFamily: 'RobotoCondensedReg',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                    ),
-                                  )),
-                              Padding(
-                                  padding: EdgeInsets.only(top: 10.0),
-                                  child: Text(
-                                    '40BD',
-                                    style: TextStyle(
-                                      fontFamily: 'RobotoCondensedReg',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                    ),
-                                  )),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                  padding: EdgeInsets.only(top: 10.0),
-                                  child: Text(
-                                    'Taxes',
-                                    style: TextStyle(
-                                      fontFamily: 'RobotoCondensedReg',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                    ),
-                                  )),
-                              Padding(
-                                  padding: EdgeInsets.only(top: 10.0),
-                                  child: Text(
-                                    '40BD',
-                                    style: TextStyle(
-                                      fontFamily: 'RobotoCondensedReg',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                    ),
-                                  )),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Padding(
-                                  padding: EdgeInsets.only(top: 10.0),
-                                  child: Text(
-                                    'Grand Total',
-                                    style: TextStyle(
-                                      fontFamily: 'RobotoCondensedReg',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                    ),
-                                  )),
-                              Padding(
-                                  padding:
-                                      EdgeInsets.only(top: 10.0, left: 10.0),
-                                  child: Text(
-                                    '${int.parse(widget.consultation[widget.package].price.substring(0, 2)) + 80}BD',
-                                    style: TextStyle(
-                                      fontFamily: 'RobotoCondensedReg',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                    ),
-                                  )),
-                            ],
-                          ),
+                          breakDownFields(
+                              '${widget.consultation[widget.package].name} Consultancy Package',
+                              '${widget.consultation[widget.package].price}',
+                              false),
+                          breakDownFields('Extras', '- - USD', false),
+                          breakDownFields('Taxes', '- - USD', false),
+                          breakDownFields(
+                              'Grand Total',
+                              '${int.parse(widget.consultation[widget.package].price.substring(0, 2)) + 80} USD',
+                              true),
                         ],
                       ),
                     ),
@@ -288,12 +229,12 @@ class _ConfirmConsultationState extends State<ConfirmConsultation> {
                       child: TextButton(
                         onPressed: () {
                           print('pressed');
-                          _scaffoldKey.currentState.showSnackBar(
-                              SnackBar(content: Text('To be implemented')));
-                          /*Navigator.push(
+                          /* _scaffoldKey.currentState.showSnackBar(
+                              SnackBar(content: Text('To be implemented')));*/
+                          Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => HomePage()));*/
+                                  builder: (context) => PrePayment()));
                         },
                         child: Text(
                           'BOOK PACKAGE',

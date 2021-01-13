@@ -7,6 +7,7 @@ import 'package:diet_delight/Models/questionnaireModel.dart';
 import 'package:diet_delight/Models/registrationModel.dart';
 import 'package:http/http.dart' as http;
 import 'package:oauth2/oauth2.dart' as oauth2;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Api {
   static var client;
@@ -42,6 +43,7 @@ class Api {
 
   Future<bool> login(LogModel loginData) async {
     try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       print("control in login function");
       final authorizationEndpoint =
           Uri.parse('http://dietdelight.enigmaty.com/oauth/token');
@@ -59,9 +61,9 @@ class Api {
         secret: secret,
       );
       print('client initialised');
-      /*var result = await client.read(
-          'http://dietdelight.enigmaty.com/api/v1/questions?pageSize=20&sortOrder=desc');
-      print(convert.jsonDecode(result));*/
+      prefs.setString('email', loginData.email);
+      prefs.setString('mobile', loginData.mobile);
+      prefs.setString('password', loginData.password);
       /*File('~/.DietDelight/credentials.json')
           .writeAsString(client.credentials.toJson());*/
       return true;
