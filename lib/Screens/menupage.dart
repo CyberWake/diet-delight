@@ -3,6 +3,8 @@ import 'package:diet_delight/konstants.dart';
 import 'package:flutter/material.dart';
 
 class Menu extends StatefulWidget {
+  final int index;
+  Menu({this.index});
   @override
   _MenuState createState() => _MenuState();
 }
@@ -11,6 +13,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ScrollController _scrollController = new ScrollController();
   TabController _pageController;
+  int packageIndex = 0;
   List<String> time = ['Breakfast', 'Lunch', 'Dinner'];
   List<List<FoodItemModel>> category = [
     [
@@ -32,6 +35,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
 
   void initState() {
     super.initState();
+    packageIndex = widget.index;
     _pageController = TabController(length: time.length, vsync: this);
   }
 
@@ -39,7 +43,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
-        backgroundColor: Colors.grey[300],
+        backgroundColor: white,
         appBar: AppBar(
           elevation: 0.0,
           backgroundColor: white,
@@ -87,10 +91,10 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              blurRadius: 10,
+                              blurRadius: 4,
                               color: Colors.grey[500],
-                              spreadRadius: 1,
-                              offset: const Offset(5.0, 10.0),
+                              spreadRadius: 0,
+                              offset: const Offset(0.0, 0.0),
                             )
                           ],
                         ),
@@ -103,19 +107,51 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
             ),
             Expanded(
               flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
+              child: DropdownButton<Widget>(
+                value: menuPackageDropdownItems[packageIndex],
+                elevation: 16,
+                onChanged: (Widget newValue) {
+                  setState(() {
+                    print(menuPackageDropdownItems.indexOf(newValue));
+                    packageIndex = menuPackageDropdownItems.indexOf(newValue);
+                  });
+                },
+                items: menuPackageDropdownItems
+                    .map<DropdownMenuItem<Widget>>((Widget value) {
+                  return DropdownMenuItem<Widget>(
+                    value: value,
+                    child: value,
+                  );
+                }).toList(),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: white,
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 4,
+                      color: Colors.black.withOpacity(0.25),
+                      spreadRadius: 0,
+                      offset: const Offset(0.0, 0.0),
+                    )
+                  ],
+                ),
                 child: TabBar(
                   controller: _pageController,
                   onTap: (index) {},
-                  labelStyle: selectedTab.copyWith(fontSize: 24),
-                  indicatorColor: defaultGreen,
+                  labelStyle:
+                      selectedTab.copyWith(fontSize: 24, color: Colors.black),
+                  indicatorColor: Colors.transparent,
                   indicatorWeight: 3.0,
                   indicatorSize: TabBarIndicatorSize.label,
-                  labelColor: defaultGreen,
+                  labelColor: Colors.black,
                   labelPadding: EdgeInsets.symmetric(horizontal: 13),
-                  unselectedLabelStyle: unSelectedTab.copyWith(fontSize: 20),
-                  unselectedLabelColor: inactiveGreen,
+                  unselectedLabelStyle:
+                      unSelectedTab.copyWith(fontSize: 20, color: Colors.grey),
+                  unselectedLabelColor: Colors.grey,
                   tabs: List.generate(3, (index) {
                     return Tab(
                       text: time[index],
@@ -159,20 +195,14 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            height: 30,
-                            width: 30,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: items[index].isVeg
-                                      ? Colors.green
-                                      : Colors.red[900]),
-                            ),
-                            child: Center(
-                              child: CircleAvatar(
-                                  radius: 7,
-                                  backgroundColor: items[index].isVeg
-                                      ? Colors.green
-                                      : Colors.red[900]),
+                            height: 15,
+                            width: 15,
+                            child: Image.asset(
+                              items[index].isVeg
+                                  ? 'images/veg.png'
+                                  : 'images/nonVeg.png',
+                              fit: BoxFit.fitHeight,
+                              scale: 0.5,
                             ),
                           ),
                           SizedBox(
@@ -180,7 +210,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                           ),
                           Text(
                             items[index].foodName,
-                            style: appBarTextStyle,
+                            style: appBarTextStyle.copyWith(fontSize: 20),
                           ),
                           SizedBox(
                             height: 4,

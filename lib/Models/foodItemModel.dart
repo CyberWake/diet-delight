@@ -1,5 +1,9 @@
 class FoodItemModel {
   bool isVeg;
   String foodName;
-  FoodItemModel({this.foodName, this.isVeg});
+  bool isSelected;
+  FoodItemModel({this.foodName, this.isVeg, this.isSelected});
+  change(bool isSel) {
+    this.isSelected = isSel;
+  }
 }

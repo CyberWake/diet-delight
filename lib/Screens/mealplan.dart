@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 
 class MealPlan extends StatefulWidget {
   final int planDuration;
-  MealPlan({this.planDuration});
+  final int index;
+  final String mealPlanName;
+  final String mealPlanDisc;
+  MealPlan(
+      {this.index, this.planDuration, this.mealPlanDisc, this.mealPlanName});
   @override
   _MealPlanState createState() => _MealPlanState();
 }
@@ -14,28 +18,38 @@ class _MealPlanState extends State<MealPlan>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ScrollController _scrollController = new ScrollController();
   TabController _pageController;
+  int planIndex = 0;
   List<String> time = ['Breakfast', 'Lunch', 'Dinner'];
   List<List<FoodItemModel>> category = [
     [
-      FoodItemModel(isVeg: true, foodName: 'Crunchy Chickpea Salad'),
-      FoodItemModel(isVeg: true, foodName: 'Crunchy Chickpea Salad'),
-      FoodItemModel(isVeg: true, foodName: 'Crunchy Chickpea Salad'),
+      FoodItemModel(
+          isVeg: true, foodName: 'Crunchy Chickpea Salad', isSelected: true),
+      FoodItemModel(
+          isVeg: true, foodName: 'Crunchy Chickpea Salad', isSelected: false),
+      FoodItemModel(
+          isVeg: true, foodName: 'Crunchy Chickpea Salad', isSelected: false),
     ],
     [
-      FoodItemModel(isVeg: false, foodName: 'Crunchy Chickpea Salad'),
-      FoodItemModel(isVeg: false, foodName: 'Crunchy Chickpea Salad'),
-      FoodItemModel(isVeg: false, foodName: 'Crunchy Chickpea Salad'),
+      FoodItemModel(
+          isVeg: true, foodName: 'Crunchy Chickpea Salad', isSelected: false),
+      FoodItemModel(
+          isVeg: true, foodName: 'Crunchy Chickpea Salad', isSelected: true),
+      FoodItemModel(
+          isVeg: true, foodName: 'Crunchy Chickpea Salad', isSelected: false),
     ],
     [
-      FoodItemModel(isVeg: false, foodName: 'Crunchy Chickpea Salad'),
-      FoodItemModel(isVeg: true, foodName: 'Crunchy Chickpea Salad'),
-      FoodItemModel(isVeg: false, foodName: 'Crunchy Chickpea Salad'),
+      FoodItemModel(
+          isVeg: true, foodName: 'Crunchy Chickpea Salad', isSelected: false),
+      FoodItemModel(
+          isVeg: true, foodName: 'Crunchy Chickpea Salad', isSelected: false),
+      FoodItemModel(
+          isVeg: true, foodName: 'Crunchy Chickpea Salad', isSelected: true),
     ]
   ];
 
   void initState() {
-    // TODO: implement initState
     super.initState();
+    planIndex = widget.index;
     _pageController = TabController(length: widget.planDuration, vsync: this);
   }
 
@@ -43,7 +57,7 @@ class _MealPlanState extends State<MealPlan>
   Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
-        backgroundColor: Colors.grey[300],
+        backgroundColor: white,
         appBar: AppBar(
           elevation: 0.0,
           backgroundColor: white,
@@ -58,7 +72,7 @@ class _MealPlanState extends State<MealPlan>
               color: defaultGreen,
             ),
           ),
-          title: Text('Menu Packages', style: appBarTextStyle),
+          title: Text('Meal Plan', style: appBarTextStyle),
         ),
         body: Container(
           child: Column(children: [
@@ -76,7 +90,7 @@ class _MealPlanState extends State<MealPlan>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Immune Booster',
+                            widget.mealPlanName,
                             style: TextStyle(
                               fontFamily: 'RobotoCondensedReg',
                               fontSize: 28,
@@ -84,7 +98,10 @@ class _MealPlanState extends State<MealPlan>
                             ),
                           ),
                           Text(
-                              'sgasdfjijadfigfadjfvadsfiluHFIUDSBFS\nADIUAGFIGF')
+                            widget.mealPlanDisc,
+                            style: authInputTextStyle.copyWith(
+                                fontSize: 20, color: Colors.black),
+                          )
                         ],
                       ),
                     ),
@@ -97,10 +114,10 @@ class _MealPlanState extends State<MealPlan>
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              blurRadius: 10,
+                              blurRadius: 4,
                               color: Colors.grey[500],
-                              spreadRadius: 1,
-                              offset: const Offset(5.0, 10.0),
+                              spreadRadius: 0,
+                              offset: const Offset(0.0, 0.0),
                             )
                           ],
                         ),
@@ -113,20 +130,51 @@ class _MealPlanState extends State<MealPlan>
             ),
             Expanded(
               flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
+              child: DropdownButton<Widget>(
+                value: mealPlanDropdownItems[planIndex],
+                elevation: 16,
+                onChanged: (Widget newValue) {
+                  setState(() {
+                    print(mealPlanDropdownItems.indexOf(newValue));
+                    planIndex = mealPlanDropdownItems.indexOf(newValue);
+                  });
+                },
+                items: mealPlanDropdownItems
+                    .map<DropdownMenuItem<Widget>>((Widget value) {
+                  return DropdownMenuItem<Widget>(
+                    value: value,
+                    child: value,
+                  );
+                }).toList(),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: white,
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 4,
+                      color: Colors.black.withOpacity(0.25),
+                      spreadRadius: 0,
+                      offset: const Offset(0.0, 0.0),
+                    )
+                  ],
+                ),
                 child: TabBar(
                   isScrollable: true,
                   controller: _pageController,
                   onTap: (index) {},
-                  labelStyle: selectedTab,
-                  indicatorColor: defaultGreen,
+                  labelStyle: selectedTab.copyWith(color: Colors.black),
+                  indicatorColor: Colors.transparent,
                   indicatorWeight: 3.0,
                   indicatorSize: TabBarIndicatorSize.label,
-                  labelColor: defaultGreen,
+                  labelColor: Colors.black,
                   labelPadding: EdgeInsets.symmetric(horizontal: 10),
-                  unselectedLabelStyle: unSelectedTab,
-                  unselectedLabelColor: inactiveGreen,
+                  unselectedLabelStyle:
+                      unSelectedTab.copyWith(color: Colors.grey),
+                  unselectedLabelColor: Colors.grey,
                   tabs: List.generate(widget.planDuration, (index) {
                     return Tab(
                       text: 'Day ${(index + 1).toString()}',
@@ -154,16 +202,51 @@ class _MealPlanState extends State<MealPlan>
       controller: _scrollController,
       shrinkWrap: true,
       itemCount: category.length,
-      itemBuilder: (BuildContext context, int index) {
-        List<FoodItemModel> items = category[index];
+      itemBuilder: (BuildContext context, int indexMajor) {
+        List<FoodItemModel> items = category[indexMajor];
         return ExpansionTile(
           title: Text(
-            time[index],
+            time[indexMajor],
             style: selectedTab.copyWith(fontSize: 28),
           ),
-          children: List.generate(items.length, (index) {
+          children: List.generate(items.length + 1, (index) {
+            if (index == 3) {
+              return Column(
+                children: [
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Text(
+                      'Let us know if there is something you’d want us to know about your menu, we’ll pass it on to the chef.',
+                      style: authInputTextStyle.copyWith(
+                          fontSize: 20, color: Colors.black),
+                    ),
+                  ),
+                  Container(
+                      margin: EdgeInsets.all(15),
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      height: MediaQuery.of(context).size.height * 0.15,
+                      decoration: BoxDecoration(
+                        color: white,
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 4,
+                            color: Colors.black.withOpacity(0.25),
+                            spreadRadius: 0,
+                            offset: const Offset(0.0, 0.0),
+                          )
+                        ],
+                      ),
+                      child: TextFormField(
+                        decoration: authInputFieldDecoration.copyWith(
+                            hintText: 'Enter your note here'),
+                      )),
+                ],
+              );
+            }
             return Container(
-              height: 120,
+              height: 110,
+              margin: EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 children: [
                   Expanded(
@@ -175,22 +258,13 @@ class _MealPlanState extends State<MealPlan>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            height: 20,
-                            width: 20,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: items[index].isVeg
-                                    ? Colors.green
-                                    : Colors.red[900],
-                              ),
-                            ),
-                            child: Center(
-                              child: CircleAvatar(
-                                radius: 5,
-                                backgroundColor: items[index].isVeg
-                                    ? Colors.green
-                                    : Colors.red[900],
-                              ),
+                            height: 15,
+                            width: 15,
+                            child: Image.asset(
+                              items[index].isVeg
+                                  ? 'images/veg.png'
+                                  : 'images/nonVeg.png',
+                              fit: BoxFit.fitHeight,
                             ),
                           ),
                           SizedBox(
@@ -198,7 +272,7 @@ class _MealPlanState extends State<MealPlan>
                           ),
                           Text(
                             items[index].foodName,
-                            style: appBarTextStyle,
+                            style: appBarTextStyle.copyWith(fontSize: 20),
                           ),
                           SizedBox(
                             height: 4,
@@ -230,20 +304,45 @@ class _MealPlanState extends State<MealPlan>
                         ),
                         Positioned(
                           top: 70.0,
-                          left: 8.0,
+                          left: 3.5,
                           child: SizedBox(
-                            width: 65,
+                            width: 75,
                             height: 33,
-                            child: TextButton(
-                              onPressed: () async {},
-                              child: Text('Select',
-                                  style: selectedTab.copyWith(
-                                      color: Colors.black)),
-                              style: TextButton.styleFrom(
-                                  backgroundColor: defaultGreen,
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(5)))),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    blurRadius: 4,
+                                    color: Colors.black.withOpacity(0.25),
+                                    spreadRadius: 0,
+                                    offset: const Offset(0.0, 0.0),
+                                  )
+                                ],
+                              ),
+                              child: TextButton(
+                                onPressed: () async {
+                                  for (int i = 0; i < items.length; i++) {
+                                    category[indexMajor][i].change(false);
+                                  }
+                                  setState(() {
+                                    category[indexMajor][index].change(true);
+                                  });
+                                },
+                                child: Text(
+                                    items[index].isSelected
+                                        ? 'Selected'
+                                        : 'Select',
+                                    style: selectedTab.copyWith(
+                                        color: items[index].isSelected
+                                            ? white
+                                            : defaultGreen,
+                                        fontSize: 16)),
+                                style: TextButton.styleFrom(
+                                  backgroundColor: items[index].isSelected
+                                      ? defaultGreen
+                                      : white,
+                                ),
+                              ),
                             ),
                           ),
                         )

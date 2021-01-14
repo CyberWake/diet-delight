@@ -47,11 +47,13 @@ class _PrePaymentState extends State<PrePayment> {
               decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      blurRadius: 10,
-                      color: Colors.grey[500],
-                      spreadRadius: 1,
+                      blurRadius: 4,
+                      color: Colors.black.withOpacity(0.25),
+                      spreadRadius: 0,
+                      offset: const Offset(0.0, 0.0),
                     )
                   ],
+                  borderRadius: BorderRadius.circular(8.0),
                   border: Border.all(width: 1, color: Colors.grey),
                   color: white),
               child: Column(
@@ -87,11 +89,13 @@ class _PrePaymentState extends State<PrePayment> {
               decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      blurRadius: 10,
-                      color: Colors.grey[500],
-                      spreadRadius: 1,
+                      blurRadius: 4,
+                      color: Colors.black.withOpacity(0.25),
+                      spreadRadius: 0,
+                      offset: const Offset(0.0, 0.0),
                     )
                   ],
+                  borderRadius: BorderRadius.circular(8.0),
                   border: Border.all(width: 1, color: Colors.grey),
                   color: white),
               child: Column(
@@ -108,23 +112,24 @@ class _PrePaymentState extends State<PrePayment> {
                     ],
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 10,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
+                        height: 55,
+                        width: 75,
+                        padding: EdgeInsets.all(3),
                         decoration: BoxDecoration(
                             border: Border.all(width: 1, color: Colors.grey)),
-                        child: FlutterLogo(
-                          size: 60,
+                        child: Image.asset(
+                          'images/card.png',
+                          fit: BoxFit.fill,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 30.0, bottom: 20),
-                        child:
-                            Text('**** **** **** 3947', style: unSelectedTab),
-                      ),
+                      Text('**** **** **** 3947', style: unSelectedTab),
                     ],
                   ),
                 ],

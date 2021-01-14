@@ -93,18 +93,45 @@ List<List<Color>> itemColors = [
     Color(0xFFBA9360)
   ],
 ];
-List<Widget> ddItems = [
-  Container(
+List<Widget> ddItems = List.generate(
+    3,
+    (index) => Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: itemColors[index]),
+          ),
+          child: Padding(
+              padding: EdgeInsets.fromLTRB(15, 3, 15, 3),
+              child: Text(
+                index == 0
+                    ? 'SILVER'
+                    : index == 1
+                        ? 'Platinum'
+                        : 'Gold',
+                style: TextStyle(
+                  fontFamily: 'RobotoCondensedReg',
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              )),
+        ));
+
+List<Widget> mealPlanDropdownItems = List.generate(
+  5,
+  (index) => Container(
     decoration: BoxDecoration(
       gradient: LinearGradient(
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
-          colors: itemColors[0]),
+          colors: [white, white]),
     ),
     child: Padding(
         padding: EdgeInsets.fromLTRB(15, 3, 15, 3),
         child: Text(
-          'SILVER',
+          'Calorie',
           style: TextStyle(
             fontFamily: 'RobotoCondensedReg',
             fontSize: 15,
@@ -113,17 +140,21 @@ List<Widget> ddItems = [
           ),
         )),
   ),
-  Container(
+);
+
+List<Widget> menuPackageDropdownItems = List.generate(
+  5,
+  (index) => Container(
     decoration: BoxDecoration(
       gradient: LinearGradient(
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
-          colors: itemColors[1]),
+          colors: [white, white]),
     ),
     child: Padding(
         padding: EdgeInsets.fromLTRB(15, 3, 15, 3),
         child: Text(
-          'PLATINUM',
+          'Immune Booster',
           style: TextStyle(
             fontFamily: 'RobotoCondensedReg',
             fontSize: 15,
@@ -132,23 +163,4 @@ List<Widget> ddItems = [
           ),
         )),
   ),
-  Container(
-    decoration: BoxDecoration(
-      gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: itemColors[2]),
-    ),
-    child: Padding(
-        padding: EdgeInsets.fromLTRB(15, 3, 15, 3),
-        child: Text(
-          'GOLD',
-          style: TextStyle(
-            fontFamily: 'RobotoCondensedReg',
-            fontSize: 15,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        )),
-  )
-];
+);
