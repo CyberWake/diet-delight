@@ -1,5 +1,8 @@
 import 'package:diet_delight/Models/foodItemModel.dart';
+import 'package:diet_delight/Models/menuCategoryModel.dart';
+import 'package:diet_delight/Models/menuModel.dart';
 import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
 
 class Menu extends StatefulWidget {
@@ -9,34 +12,76 @@ class Menu extends StatefulWidget {
   _MenuState createState() => _MenuState();
 }
 
-class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
+class _MenuState extends State<Menu> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ScrollController _scrollController = new ScrollController();
   TabController _pageController;
+  List<MenuModel> menuItems = List();
+  List<MenuCategoryModel> categoryItems = List();
+  List<List<FoodItemModel>> foodItems = List();
+  final _apiCall = Api.instance;
   int packageIndex = 0;
+  bool isLoaded = false;
   List<String> time = ['Breakfast', 'Lunch', 'Dinner'];
-  List<List<FoodItemModel>> category = [
-    [
-      FoodItemModel(isVeg: true, foodName: 'Crunchy Chickpea Salad'),
-      FoodItemModel(isVeg: true, foodName: 'Crunchy Chickpea Salad'),
-      FoodItemModel(isVeg: true, foodName: 'Crunchy Chickpea Salad'),
-    ],
-    [
-      FoodItemModel(isVeg: false, foodName: 'Crunchy Chickpea Salad'),
-      FoodItemModel(isVeg: false, foodName: 'Crunchy Chickpea Salad'),
-      FoodItemModel(isVeg: false, foodName: 'Crunchy Chickpea Salad'),
-    ],
-    [
-      FoodItemModel(isVeg: false, foodName: 'Crunchy Chickpea Salad'),
-      FoodItemModel(isVeg: true, foodName: 'Crunchy Chickpea Salad'),
-      FoodItemModel(isVeg: false, foodName: 'Crunchy Chickpea Salad'),
-    ]
-  ];
+
+  List<Widget> menuPackageDropdownItems = List.generate(
+    Api.itemsMenu.length,
+    (index) => Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [white, white]),
+      ),
+      child: Padding(
+          padding: EdgeInsets.fromLTRB(15, 3, 15, 3),
+          child: Text(
+            Api.itemsMenu[index].name,
+            style: TextStyle(
+              fontFamily: 'RobotoCondensedReg',
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          )),
+    ),
+  );
 
   void initState() {
     super.initState();
     packageIndex = widget.index;
-    _pageController = TabController(length: time.length, vsync: this);
+    _pageController = TabController(length: categoryItems.length, vsync: this);
+    getData();
+  }
+
+  getData() async {
+    await getMenus();
+    await getMenuCategories(menuItems[packageIndex].id);
+  }
+
+  getMenus() async {
+    menuItems = await _apiCall.getMenuPackages();
+  }
+
+  getMenuCategories(int menuId) async {
+    categoryItems = [];
+    foodItems = [];
+    setState(() {
+      isLoaded = false;
+    });
+    categoryItems = await _apiCall.getCategories(menuId);
+    _pageController = TabController(length: categoryItems.length, vsync: this);
+    if (categoryItems.isNotEmpty) {
+      for (int i = 0; i < categoryItems.length;) {
+        foodItems.add(await _apiCall
+            .getCategoryFoodItems(menuItems[packageIndex].id.toString(),
+                categoryItems[i].id.toString())
+            .whenComplete(() => i++));
+      }
+    }
+    setState(() {
+      isLoaded = true;
+    });
   }
 
   @override
@@ -61,129 +106,140 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
           title: Text('Menu Packages', style: appBarTextStyle),
         ),
         body: Container(
-          child: Column(children: [
-            Expanded(
-              flex: 2,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+          child: isLoaded
+              ? Column(children: [
                   Expanded(
-                    flex: 7,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Immune Booster',
-                              style: selectedTab.copyWith(fontSize: 28)),
-                          Text(
-                              'sgasdfjijadfigfadjfvadsfiluHFIUDSBFS\nADIUAGFIGF')
+                    flex: 2,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 7,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(menuItems[packageIndex].name,
+                                    style: selectedTab.copyWith(fontSize: 28)),
+                                Text(
+                                    'sgasdfjijadfigfadjfvadsfiluHFIUDSBFS\nADIUAGFIGF')
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                            flex: 3,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    blurRadius: 4,
+                                    color: Colors.grey[500],
+                                    spreadRadius: 0,
+                                    offset: const Offset(0.0, 0.0),
+                                  )
+                                ],
+                              ),
+                              child: CircleAvatar(
+                                radius: 45,
+                              ),
+                            ))
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: DropdownButton<Widget>(
+                      value: menuPackageDropdownItems[packageIndex],
+                      elevation: 16,
+                      onChanged: (Widget newValue) {
+                        setState(() {
+                          packageIndex =
+                              menuPackageDropdownItems.indexOf(newValue);
+                          getMenuCategories(menuItems[packageIndex].id);
+                        });
+                      },
+                      items: menuPackageDropdownItems
+                          .map<DropdownMenuItem<Widget>>((Widget value) {
+                        return DropdownMenuItem<Widget>(
+                          value: value,
+                          child: value,
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: white,
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 4,
+                            color: Colors.black.withOpacity(0.25),
+                            spreadRadius: 0,
+                            offset: const Offset(0.0, 0.0),
+                          )
                         ],
+                      ),
+                      child: Center(
+                        child: TabBar(
+                          controller: _pageController,
+                          isScrollable: true,
+                          onTap: (index) async {},
+                          labelStyle: selectedTab.copyWith(
+                              fontSize: 24, color: Colors.black),
+                          indicatorColor: Colors.transparent,
+                          indicatorWeight: 3.0,
+                          indicatorSize: TabBarIndicatorSize.label,
+                          labelColor: Colors.black,
+                          labelPadding: EdgeInsets.symmetric(horizontal: 13),
+                          unselectedLabelStyle: unSelectedTab.copyWith(
+                              fontSize: 20, color: Colors.grey),
+                          unselectedLabelColor: Colors.grey,
+                          tabs: List.generate(categoryItems.length, (index) {
+                            return Tab(
+                              text: categoryItems[index].name,
+                            );
+                          }),
+                        ),
                       ),
                     ),
                   ),
                   Expanded(
-                      flex: 3,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 4,
-                              color: Colors.grey[500],
-                              spreadRadius: 0,
-                              offset: const Offset(0.0, 0.0),
-                            )
-                          ],
-                        ),
-                        child: CircleAvatar(
-                          radius: 45,
-                        ),
-                      ))
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: DropdownButton<Widget>(
-                value: menuPackageDropdownItems[packageIndex],
-                elevation: 16,
-                onChanged: (Widget newValue) {
-                  setState(() {
-                    print(menuPackageDropdownItems.indexOf(newValue));
-                    packageIndex = menuPackageDropdownItems.indexOf(newValue);
-                  });
-                },
-                items: menuPackageDropdownItems
-                    .map<DropdownMenuItem<Widget>>((Widget value) {
-                  return DropdownMenuItem<Widget>(
-                    value: value,
-                    child: value,
-                  );
-                }).toList(),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: white,
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 4,
-                      color: Colors.black.withOpacity(0.25),
-                      spreadRadius: 0,
-                      offset: const Offset(0.0, 0.0),
-                    )
-                  ],
-                ),
-                child: TabBar(
-                  controller: _pageController,
-                  onTap: (index) {},
-                  labelStyle:
-                      selectedTab.copyWith(fontSize: 24, color: Colors.black),
-                  indicatorColor: Colors.transparent,
-                  indicatorWeight: 3.0,
-                  indicatorSize: TabBarIndicatorSize.label,
-                  labelColor: Colors.black,
-                  labelPadding: EdgeInsets.symmetric(horizontal: 13),
-                  unselectedLabelStyle:
-                      unSelectedTab.copyWith(fontSize: 20, color: Colors.grey),
-                  unselectedLabelColor: Colors.grey,
-                  tabs: List.generate(3, (index) {
-                    return Tab(
-                      text: time[index],
-                    );
-                  }),
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 9,
-              child: TabBarView(
-                  controller: _pageController,
-                  children: List.generate(time.length, (index) {
-                    return Container(
-                      child: menuUi(category[index]),
-                    );
-                  })),
-            )
-          ]),
+                    flex: 9,
+                    child: TabBarView(
+                        controller: _pageController,
+                        children: List.generate(categoryItems.length, (index) {
+                          return Container(
+                            margin: index == 0
+                                ? EdgeInsets.only(top: 10)
+                                : EdgeInsets.zero,
+                            child: menuUi(foodItems[index]),
+                          );
+                        })),
+                  )
+                ])
+              : Center(child: CircularProgressIndicator()),
         ));
   }
 
-  Widget menuUi(List<FoodItemModel> items) {
+  Widget menuUi(List<FoodItemModel> foodItem) {
     return ListView.builder(
         controller: _scrollController,
         shrinkWrap: true,
-        itemCount: items.length,
+        itemCount: foodItem.length,
         itemBuilder: (BuildContext context, int index) {
           return InkWell(
             onTap: () {},
             child: Container(
-              height: 120,
+              height: 125,
               child: Row(
                 children: [
                   Expanded(
@@ -198,7 +254,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                             height: 15,
                             width: 15,
                             child: Image.asset(
-                              items[index].isVeg
+                              foodItem[index].isVeg
                                   ? 'images/veg.png'
                                   : 'images/nonVeg.png',
                               fit: BoxFit.fitHeight,
@@ -209,7 +265,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                             height: 10,
                           ),
                           Text(
-                            items[index].foodName,
+                            foodItem[index].foodName,
                             style: appBarTextStyle.copyWith(fontSize: 20),
                           ),
                           SizedBox(

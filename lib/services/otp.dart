@@ -37,14 +37,6 @@ class FlutterOtp {
   void sendSms(number, message) async {
     twilioFlutter.sendSMS(toNumber: number.toString(), messageBody: message);
   }
-/*
-  void _sendSMS(String message, List<String> recipients) async {
-    String _result = await sendSMS(message: message, recipients: recipients)
-        .catchError((onError) {
-      print(onError);
-    });
-    print(_result);
-  }*/
 
   bool resultChecker(int enteredOtp) {
     //To validate OTP

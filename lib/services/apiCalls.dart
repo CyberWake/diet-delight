@@ -2,7 +2,11 @@ import 'dart:convert' as convert;
 import 'dart:io';
 
 import 'package:diet_delight/Models/consultationModel.dart';
+import 'package:diet_delight/Models/foodItemModel.dart';
 import 'package:diet_delight/Models/loginModel.dart';
+import 'package:diet_delight/Models/mealModel.dart';
+import 'package:diet_delight/Models/menuCategoryModel.dart';
+import 'package:diet_delight/Models/menuModel.dart';
 import 'package:diet_delight/Models/questionnaireModel.dart';
 import 'package:diet_delight/Models/registrationModel.dart';
 import 'package:http/http.dart' as http;
@@ -11,6 +15,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Api {
   static var client;
+  static List<QuestionnaireModel> itemsQuestionnaire = List();
+  static List<ConsultationModel> itemsConsultation = List();
+  static List<MenuModel> itemsMenu = List();
+  static List<MealModel> itemsMeal = List();
+  static List<MenuCategoryModel> itemsMenuCategory = List();
+  static List<FoodItemModel> itemsFood = List();
   Api._privateConstructor();
 
   static final Api instance = Api._privateConstructor();
@@ -73,42 +83,111 @@ class Api {
     }
   }
 
-  getConsultationPackages() async {
-    //print(client.toString());
+  Future<List<ConsultationModel>> getConsultationPackages() async {
     print('called');
     final String result = await client.read(
-        'http://dietdelight.enigmaty.com/api/v1/consultation-packages?pageSize=20&sortOrder=desc');
+        'http://dietdelight.enigmaty.com/api/v1/consultation-packages?sortOrder=desc');
     if (result.isNotEmpty) {
       var body = convert.jsonDecode(result);
-      print('body: ${body['data']}');
-      List<ConsultationModel> items = List();
       List data = body['data'];
       data.forEach((element) {
         ConsultationModel item = ConsultationModel.fromMap(element);
-        items.add(item);
+        itemsConsultation.add(item);
       });
-      print(items.length);
-      print('data fetched');
-      return items;
+      return itemsConsultation;
     } else {
       return [];
     }
   }
 
-  getQuestions() async {
-    print('called2');
-    final String result = await client.read(
-        'http://dietdelight.enigmaty.com/api/v1/questions?pageSize=20&sortOrder=desc');
+  Future<List<MenuModel>> getMenuPackages() async {
+    itemsMenu = [];
+    final String result = await client
+        .read('http://dietdelight.enigmaty.com/api/v1/menus?sortOrder=desc');
     if (result.isNotEmpty) {
       var body = convert.jsonDecode(result);
       List data = body['data'];
-      List<QuestionnaireModel> items = List();
+      data.forEach((element) {
+        MenuModel item = MenuModel.fromMap(element);
+        itemsMenu.add(item);
+      });
+      print(data);
+      print('data received menu');
+      return itemsMenu;
+    } else {
+      return [];
+    }
+  }
+
+  Future<List<MealModel>> getMealPlans() async {
+    itemsMeal = [];
+    final String result = await client.read(
+        'http://dietdelight.enigmaty.com/api/v1/meal-plans?sortOrder=desc');
+    if (result.isNotEmpty) {
+      var body = convert.jsonDecode(result);
+      List data = body['data'];
+      data.forEach((element) {
+        MealModel item = MealModel.fromMap(element);
+        itemsMeal.add(item);
+      });
+      print(data);
+      print('data received meal');
+      return itemsMeal;
+    } else {
+      return [];
+    }
+  }
+
+  Future<List<QuestionnaireModel>> getQuestions() async {
+    print('called2');
+    final String result = await client.read(
+        'http://dietdelight.enigmaty.com/api/v1/questions?sortOrder=desc');
+    if (result.isNotEmpty) {
+      var body = convert.jsonDecode(result);
+      List data = body['data'];
       data.forEach((element) {
         QuestionnaireModel item = QuestionnaireModel.fromMap(element);
-        items.add(item);
+        itemsQuestionnaire.add(item);
       });
-      print('data received: ${items.length}');
-      return items;
+      print('data received: ${itemsQuestionnaire.length}');
+      return itemsQuestionnaire;
+    } else {
+      return [];
+    }
+  }
+
+  Future<List<MenuCategoryModel>> getCategories(int menuId) async {
+    itemsMenuCategory = [];
+    final String result = await client.read(
+        'http://dietdelight.enigmaty.com/api/v1/menu-categories?menu_id=$menuId&sortOrder=desc');
+    if (result.isNotEmpty) {
+      var body = convert.jsonDecode(result);
+      List data = body['data'];
+      data.forEach((element) {
+        MenuCategoryModel item = MenuCategoryModel.fromMap(element);
+        itemsMenuCategory.add(item);
+      });
+      print('data received: ${itemsMenuCategory.length}');
+      return itemsMenuCategory;
+    } else {
+      return [];
+    }
+  }
+
+  Future<List<FoodItemModel>> getCategoryFoodItems(
+      String menuId, String categoryId) async {
+    itemsFood = [];
+    final String result = await client.read(
+        'http://dietdelight.enigmaty.com/api/v1/menu-items?menu_id=$menuId&menu_category_id=$categoryId&sortOrder=desc');
+    if (result.isNotEmpty) {
+      var body = convert.jsonDecode(result);
+      List data = body['data'];
+      data.forEach((element) {
+        FoodItemModel item = FoodItemModel.fromMap(element);
+        itemsFood.add(item);
+      });
+      print(itemsFood.length);
+      return itemsFood;
     } else {
       return [];
     }

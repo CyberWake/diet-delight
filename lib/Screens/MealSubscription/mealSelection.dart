@@ -77,7 +77,7 @@ class _MealPlanState extends State<MealPlan>
         body: Container(
           child: Column(children: [
             Expanded(
-              flex: 2,
+              flex: 4,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -89,18 +89,26 @@ class _MealPlanState extends State<MealPlan>
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            widget.mealPlanName,
-                            style: TextStyle(
-                              fontFamily: 'RobotoCondensedReg',
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              widget.mealPlanName,
+                              style: TextStyle(
+                                fontFamily: 'RobotoCondensedReg',
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                          Text(
-                            widget.mealPlanDisc,
-                            style: authInputTextStyle.copyWith(
-                                fontSize: 20, color: Colors.black),
+                          Expanded(
+                            flex: 7,
+                            child: ClipRect(
+                              child: Text(
+                                widget.mealPlanDisc,
+                                style: authInputTextStyle.copyWith(
+                                    fontSize: 14, color: Colors.black),
+                              ),
+                            ),
                           )
                         ],
                       ),

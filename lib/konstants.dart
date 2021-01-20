@@ -141,26 +141,3 @@ List<Widget> mealPlanDropdownItems = List.generate(
         )),
   ),
 );
-
-List<Widget> menuPackageDropdownItems = List.generate(
-  5,
-  (index) => Container(
-    decoration: BoxDecoration(
-      gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [white, white]),
-    ),
-    child: Padding(
-        padding: EdgeInsets.fromLTRB(15, 3, 15, 3),
-        child: Text(
-          'Immune Booster',
-          style: TextStyle(
-            fontFamily: 'RobotoCondensedReg',
-            fontSize: 15,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        )),
-  ),
-);

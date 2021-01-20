@@ -74,7 +74,7 @@ class _SignUpState extends State<SignUp> {
                               decoration: authFieldDecoration,
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.fromLTRB(20, 3, 20, 7),
+                                    const EdgeInsets.fromLTRB(20, 5, 20, 5),
                                 child: TextFormField(
                                     onChanged: (String nameFirst) {
                                       firstName.text = nameFirst;
@@ -106,7 +106,7 @@ class _SignUpState extends State<SignUp> {
                               decoration: authFieldDecoration,
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.fromLTRB(20, 3, 20, 7),
+                                    const EdgeInsets.fromLTRB(20, 5, 20, 5),
                                 child: TextFormField(
                                     onChanged: (String nameLast) {
                                       lastName.text = nameLast;
@@ -236,7 +236,7 @@ class _SignUpState extends State<SignUp> {
                         height: 40.0,
                         decoration: authFieldDecoration,
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 3, 20, 7),
+                          padding: EdgeInsets.fromLTRB(20, 3, 20, 7),
                           child: TextFormField(
                               onChanged: (String mail) {
                                 email.text = mail;

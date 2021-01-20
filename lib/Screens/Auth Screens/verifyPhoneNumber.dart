@@ -21,18 +21,23 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
   final _apiCall = Api.instance;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String enteredOtp;
+  int count = 0;
   bool initiated = false;
   FlutterOtp otp = FlutterOtp();
 
   sendOtp() {
-    List<String> number = widget.regDetails.mobile.split(' ');
-    print(number.first);
-    print(number.last);
-    print('running');
-    otp.sendOtp(number.last, "<#> Verification code for diet delight is: ",
-        100000, 999999, number.first);
-    otp.getOtp();
-    print('done');
+    try {
+      List<String> number = widget.regDetails.mobile.split(' ');
+      print(number.first);
+      print(number.last);
+      print('running');
+      otp.sendOtp(number.last, "<#> Verification code for diet delight is: ",
+          100000, 999999, number.first);
+      otp.getOtp();
+      print('done');
+    } on Exception catch (e) {
+      // TODO
+    }
   }
 
   @override
@@ -168,7 +173,23 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: GestureDetector(
-                          onTap: sendOtp,
+                          onTap: () {
+                            if (count < 3) {
+                              setState(() {
+                                count++;
+                              });
+                              _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                  duration: Duration(milliseconds: 300  ),
+                                  content: Text(
+                                      'OTP request limit remaining ${3 - count}')));
+                              sendOtp();
+                              _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                  content: Text('OTP re-sent successfully')));
+                            } else {
+                              _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                  content: Text('Exceeded OTP request limit')));
+                            }
+                          },
                           child: Text(
                             'Resend OTP',
                             style: TextStyle(
