@@ -4,6 +4,7 @@ import 'package:diet_delight/konstants.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 class SignUp extends StatefulWidget {
   final String token;
@@ -28,6 +29,7 @@ class _SignUpState extends State<SignUp> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController confirmPass = TextEditingController();
+  final SmsAutoFill _autoFill = SmsAutoFill();
 
   @override
   void initState() {
@@ -42,6 +44,13 @@ class _SignUpState extends State<SignUp> {
     confPass = FocusNode();
     submit = FocusNode();
     countryCode.text = '+91';
+  }
+
+  getPhoneNumbers() async {
+    mobileNo.text = await _autoFill.hint;
+    countryCode.text = mobileNo.text.substring(0, 3);
+    mobileNo.text = mobileNo.text.substring(3);
+    FocusScope.of(context).requestFocus(mail);
   }
 
   @override
@@ -114,8 +123,7 @@ class _SignUpState extends State<SignUp> {
                                     onFieldSubmitted: (done) {
                                       lastName.text = done;
                                       last.unfocus();
-                                      FocusScope.of(context)
-                                          .requestFocus(country);
+                                      getPhoneNumbers();
                                     },
                                     textAlign: TextAlign.center,
                                     textDirection: TextDirection.ltr,
@@ -166,6 +174,7 @@ class _SignUpState extends State<SignUp> {
                                     countryCode.text = done;
                                     country.unfocus();
                                     FocusScope.of(context).requestFocus(mobile);
+                                    getPhoneNumbers();
                                   },
                                   initialValue: '+91',
                                   style: TextStyle(
@@ -195,6 +204,7 @@ class _SignUpState extends State<SignUp> {
                                 padding:
                                     const EdgeInsets.fromLTRB(20, 3, 20, 7),
                                 child: TextFormField(
+                                    controller: mobileNo,
                                     onChanged: (String mobile) {
                                       mobileNo.text = mobile;
                                     },
@@ -285,7 +295,7 @@ class _SignUpState extends State<SignUp> {
                                 FocusScope.of(context).requestFocus(confPass);
                               },
                               style: authInputTextStyle,
-                              keyboardType: TextInputType.emailAddress,
+                              keyboardType: TextInputType.text,
                               textInputAction: TextInputAction.next,
                               obscureText: true,
                               focusNode: pass,
@@ -325,7 +335,7 @@ class _SignUpState extends State<SignUp> {
                                 FocusScope.of(context).requestFocus(submit);
                               },
                               style: authInputTextStyle,
-                              keyboardType: TextInputType.emailAddress,
+                              keyboardType: TextInputType.text,
                               obscureText: true,
                               textInputAction: TextInputAction.done,
                               decoration: authInputFieldDecoration),

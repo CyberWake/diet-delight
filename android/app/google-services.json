@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "403601863858",
+    "project_id": "dietdelights-bh",
+    "storage_bucket": "dietdelights-bh.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:403601863858:android:23049ff3feb08abcb785ab",
+        "android_client_info": {
+          "package_name": "com.webknot.diet_delight"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "403601863858-rkjicdg8q527fhcnbstnt4qvoma1psq8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.webknot.diet_delight",
+            "certificate_hash": "85cdf5ae5eff1677b49fdf4ef436c10a97f3e546"
+          }
+        },
+        {
+          "client_id": "403601863858-cih0an5btjbd0go7e85tft9brd8u5ggd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHm06Y8xRvNAoVGlUvOtL99Z-MjRnh664"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "403601863858-cih0an5btjbd0go7e85tft9brd8u5ggd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

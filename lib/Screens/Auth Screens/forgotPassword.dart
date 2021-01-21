@@ -1,8 +1,6 @@
 import 'dart:ui';
 
-import 'package:diet_delight/Screens/Auth%20Screens/resetPassword.dart';
 import 'package:diet_delight/konstants.dart';
-import 'package:diet_delight/services/otp.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -18,18 +16,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   String enteredOtp;
   TextEditingController mobileNo = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  FlutterOtp otp = FlutterOtp();
-
-  sendOtp() {
-    List<String> number = mobileNo.text.split(' ');
-    print(number.first);
-    print(number.last);
-    print('running');
-    otp.sendOtp(number.last, "<#> Verification code for diet delight is: ",
-        100000, 999999, number.first);
-    otp.getOtp();
-    print('done');
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -181,7 +167,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: GestureDetector(
-                          onTap: sendOtp,
+                          onTap: () {},
                           child: Text(
                             'Resend OTP',
                             style: TextStyle(
@@ -199,36 +185,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       child: SizedBox(
                         width: double.infinity,
                         child: TextButton(
-                          onPressed: () {
-                            if (count > 0 && mobileNo.text.isNotEmpty) {
-                              if (enteredOtp.isNotEmpty && otp.resultChecker(int.parse(enteredOtp))) {
-                                Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => ResetPassword()));
-                              }else {
-                                if(enteredOtp.isEmpty){
-                                  _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                      content:
-                                      Text('OTP not entered')));
-                                }else if(!otp.resultChecker(int.parse(enteredOtp))){
-                                  _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                      content:
-                                      Text('Enter a valid OTP')));
-                                }
-                              }
-                            }
-                            if (mobileNo.text.isNotEmpty && count == 0) {
-                              sendOtp();
-                              setState(() {
-                                count++;
-                              });
-                            } else {
-                              _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                  content:
-                                      Text('Enter phone number to get OTP')));
-                            }
-                          },
+                          onPressed: () {},
                           child: Text(
                             count == 0 ? 'SEND OTP' : 'VERIFY',
                             style: TextStyle(

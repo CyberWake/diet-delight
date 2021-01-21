@@ -4,7 +4,7 @@ import 'package:diet_delight/Models/registrationModel.dart';
 import 'package:diet_delight/Screens/Auth%20Screens/userMoto.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
-import 'package:diet_delight/services/otp.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -19,13 +19,20 @@ class VerifyPhoneNumber extends StatefulWidget {
 
 class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
   final _apiCall = Api.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final TextEditingController _smsController = TextEditingController();
   String enteredOtp;
   int count = 0;
   bool initiated = false;
-  FlutterOtp otp = FlutterOtp();
+  String _verificationId;
+  bool result;
 
-  sendOtp() {
+  void showSnackBar(String message) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  /*sendOtp() {
     try {
       List<String> number = widget.regDetails.mobile.split(' ');
       print(number.first);
@@ -36,14 +43,93 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
       otp.getOtp();
       print('done');
     } on Exception catch (e) {
-      // TODO
+      print(e.toString());
+    }
+  }*/
+
+  registerUser() async {
+    result = await _apiCall.register(widget.regDetails);
+    print(result);
+    if (result) {
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.push(
+          context,
+          CupertinoPageRoute(
+              builder: (context) => Questionnaire(
+                  username: widget.regDetails.firstName +
+                      " " +
+                      widget.regDetails.lastName)));
+    } else {
+      showSnackBar('Something went wrong');
     }
   }
 
   @override
   void initState() {
-    sendOtp();
+    //sendOtp();
     super.initState();
+    verifyPhoneNo();
+  }
+
+  verifyPhoneNo() async {
+    PhoneVerificationCompleted verificationCompleted =
+        (PhoneAuthCredential phoneAuthCredential) async {
+      await _auth.signInWithCredential(phoneAuthCredential);
+      registerUser();
+      showSnackBar("Phone number automatically verified");
+    };
+    print('ver complete check');
+    PhoneVerificationFailed verificationFailed =
+        (FirebaseAuthException authException) {
+      showSnackBar(
+          'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
+    };
+    print('ver fail check');
+    PhoneCodeSent codeSent =
+        (String verificationId, [int forceResendingToken]) async {
+      showSnackBar('Please check your phone for the verification code.');
+      _verificationId = verificationId;
+    };
+    print('ver codesent check');
+    PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
+        (String verificationId) {
+      print('time out');
+      _verificationId = verificationId;
+    };
+    print('ver timeout check');
+    try {
+      print(widget.regDetails.mobile);
+      await _auth.verifyPhoneNumber(
+          phoneNumber: widget.regDetails.mobile,
+          timeout: const Duration(seconds: 30),
+          verificationCompleted: verificationCompleted,
+          verificationFailed: verificationFailed,
+          codeSent: codeSent,
+          codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
+      print('ver done check');
+    } catch (e) {
+      print('error');
+      showSnackBar("Failed to Verify Phone Number: ${e.toString()}");
+    }
+  }
+
+  Future<bool> signInWithPhoneNumber() async {
+    try {
+      final AuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: _verificationId,
+        smsCode: _smsController.text,
+      );
+
+      final User user = (await _auth.signInWithCredential(credential)).user;
+      if (user != null) {
+        return result;
+      }
+      return false;
+    } catch (e) {
+      showSnackBar("Failed to sign in: " + e.toString());
+      return false;
+    }
   }
 
   @override
@@ -142,6 +228,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 11, vertical: 4),
                                 child: PinCodeTextField(
+                                  controller: _smsController,
                                   maxLength: 6,
                                   hasUnderline: false,
                                   pinBoxWidth: 30,
@@ -174,21 +261,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                         alignment: Alignment.centerRight,
                         child: GestureDetector(
                           onTap: () {
-                            if (count < 3) {
-                              setState(() {
-                                count++;
-                              });
-                              _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                  duration: Duration(milliseconds: 300  ),
-                                  content: Text(
-                                      'OTP request limit remaining ${3 - count}')));
-                              sendOtp();
-                              _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                  content: Text('OTP re-sent successfully')));
-                            } else {
-                              _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                  content: Text('Exceeded OTP request limit')));
-                            }
+                            verifyPhoneNo();
                           },
                           child: Text(
                             'Resend OTP',
@@ -210,33 +283,12 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                         child: TextButton(
                           onPressed: () async {
                             if (enteredOtp.isNotEmpty && !initiated) {
-                              if (otp.resultChecker(int.parse(enteredOtp))) {
-                                setState(() {
-                                  initiated = true;
-                                });
-                                bool result =
-                                    await _apiCall.register(widget.regDetails);
-                                print(result);
-                                if (result) {
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.push(
-                                      context,
-                                      CupertinoPageRoute(
-                                          builder: (context) => Questionnaire(
-                                              username: widget
-                                                      .regDetails.firstName +
-                                                  " " +
-                                                  widget.regDetails.lastName)));
-                                } else {
-                                  _scaffoldKey.currentState.showSnackBar(
-                                      SnackBar(
-                                          content:
-                                              Text('Something went wrong')));
-                                }
-                              } else {
-                                _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                    content: Text('Entered an invalid OTP')));
+                              setState(() {
+                                initiated = true;
+                              });
+                              bool success = await signInWithPhoneNumber();
+                              if (success) {
+                                registerUser();
                               }
                             } else {
                               _scaffoldKey.currentState.showSnackBar(SnackBar(
