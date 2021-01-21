@@ -1,17 +1,24 @@
+import 'package:diet_delight/Models/mealModel.dart';
+import 'package:diet_delight/Models/menuCategoryModel.dart';
 import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class PrePaymentMealPlan extends StatefulWidget {
+  final MealModel mealPlan;
   final DateTime selectedDate;
   final List<String> selectedDays;
-  PrePaymentMealPlan({this.selectedDate, this.selectedDays});
+  PrePaymentMealPlan({this.selectedDate, this.selectedDays, this.mealPlan});
   @override
   _PrePaymentMealPlanState createState() => _PrePaymentMealPlanState();
 }
 
 class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool isLoaded = false;
+  List<MenuCategoryModel> categoryItems = List();
+  final _apiCall = Api.instance;
 
   Widget breakDownFields(String disc, String price, bool isGrandTotal) {
     return Row(
@@ -39,6 +46,35 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
             )),
       ],
     );
+  }
+
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  getCategories() {
+    String displayCategories = '';
+    categoryItems.forEach((element) {
+      displayCategories += element.name + ', ';
+    });
+    return displayCategories;
+  }
+
+  getData() async {
+    await getMenuCategories(widget.mealPlan.menuId);
+  }
+
+  getMenuCategories(int menuId) async {
+    categoryItems = [];
+    setState(() {
+      isLoaded = false;
+    });
+    categoryItems = await _apiCall.getCategories(menuId).whenComplete(() {
+      setState(() {
+        isLoaded = true;
+      });
+    });
   }
 
   @override
@@ -136,19 +172,19 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 10.0),
-                          child: Text('Menu Package Name',
+                          child: Text(widget.mealPlan.name,
                               style: selectedTab.copyWith(
                                   fontSize: 14, fontWeight: FontWeight.normal)),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 10.0),
-                          child: Text('Menu Package Description',
+                          child: Text(widget.mealPlan.details,
                               style: selectedTab.copyWith(
                                   fontSize: 14, fontWeight: FontWeight.normal)),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 10.0),
-                          child: Text('Menu Package Categories',
+                          child: Text(getCategories(),
                               style: selectedTab.copyWith(
                                   fontSize: 14, fontWeight: FontWeight.normal)),
                         ),
@@ -260,10 +296,12 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                   width: double.infinity,
                   child: Column(
                     children: [
-                      breakDownFields('Meal Plan Name', '- - USD', false),
+                      breakDownFields(widget.mealPlan.name,
+                          widget.mealPlan.price + ' USD', false),
                       breakDownFields('Extras', '- - USD', false),
                       breakDownFields('Taxes', '- - USD', false),
-                      breakDownFields('Grand Total', '- - USD', true),
+                      breakDownFields(
+                          'Grand Total', widget.mealPlan.price + ' USD', true),
                     ],
                   ),
                 ),

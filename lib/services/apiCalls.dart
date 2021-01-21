@@ -108,10 +108,10 @@ class Api {
       var body = convert.jsonDecode(result);
       List data = body['data'];
       data.forEach((element) {
+        print(element);
         MenuModel item = MenuModel.fromMap(element);
         itemsMenu.add(item);
       });
-      print(data);
       print('data received menu');
       return itemsMenu;
     } else {
@@ -127,10 +127,10 @@ class Api {
       var body = convert.jsonDecode(result);
       List data = body['data'];
       data.forEach((element) {
+        print(element);
         MealModel item = MealModel.fromMap(element);
         itemsMeal.add(item);
       });
-      print(data);
       print('data received meal');
       return itemsMeal;
     } else {

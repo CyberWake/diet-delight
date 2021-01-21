@@ -19,7 +19,7 @@ class MealModel {
       this.duration,
       this.menuId,
       this.picture,
-      this.price});
+      this.price,this.status});
 
   factory MealModel.fromMap(Map item) {
     return MealModel(
@@ -29,16 +29,21 @@ class MealModel {
         duration: item['duration'],
         subtitle: item['subtitle'],
         picture: item['picture'],
+        menuId: item['menu_id'],
         price: item['price'],
-        salePrice: item['sale_price']);
+        salePrice: item['sale_price'],
+      status: item['status'],
+    );
   }
   show() {
     print('id: $id');
     print('name: $name');
+    print('status: $status');
     print('details: $details');
     print('duration: $duration');
     print('subtitle: $subtitle');
     print('picture: $picture');
+    print('menuId: $menuId');
     print('price: $price');
     print('salePrice: $salePrice');
   }

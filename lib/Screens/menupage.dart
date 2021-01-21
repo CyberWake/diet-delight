@@ -6,8 +6,8 @@ import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
 
 class Menu extends StatefulWidget {
-  final int index;
-  Menu({this.index});
+  final MenuModel menu;
+  Menu({this.menu});
   @override
   _MenuState createState() => _MenuState();
 }
@@ -20,47 +20,18 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
   List<MenuCategoryModel> categoryItems = List();
   List<List<FoodItemModel>> foodItems = List();
   final _apiCall = Api.instance;
-  int packageIndex = 0;
+  int menuId = 0;
   bool isLoaded = false;
-  List<String> time = ['Breakfast', 'Lunch', 'Dinner'];
-
-  List<Widget> menuPackageDropdownItems = List.generate(
-    Api.itemsMenu.length,
-    (index) => Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [white, white]),
-      ),
-      child: Padding(
-          padding: EdgeInsets.fromLTRB(15, 3, 15, 3),
-          child: Text(
-            Api.itemsMenu[index].name,
-            style: TextStyle(
-              fontFamily: 'RobotoCondensedReg',
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          )),
-    ),
-  );
 
   void initState() {
     super.initState();
-    packageIndex = widget.index;
+    menuId = widget.menu.id;
     _pageController = TabController(length: categoryItems.length, vsync: this);
     getData();
   }
 
   getData() async {
-    await getMenus();
-    await getMenuCategories(menuItems[packageIndex].id);
-  }
-
-  getMenus() async {
-    menuItems = await _apiCall.getMenuPackages();
+    await getMenuCategories(menuId);
   }
 
   getMenuCategories(int menuId) async {
@@ -74,8 +45,8 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
     if (categoryItems.isNotEmpty) {
       for (int i = 0; i < categoryItems.length;) {
         foodItems.add(await _apiCall
-            .getCategoryFoodItems(menuItems[packageIndex].id.toString(),
-                categoryItems[i].id.toString())
+            .getCategoryFoodItems(
+                menuId.toString(), categoryItems[i].id.toString())
             .whenComplete(() => i++));
       }
     }
@@ -121,7 +92,7 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(menuItems[packageIndex].name,
+                                Text(widget.menu.name,
                                     style: selectedTab.copyWith(fontSize: 28)),
                                 Text(
                                     'sgasdfjijadfigfadjfvadsfiluHFIUDSBFS\nADIUAGFIGF')
@@ -153,24 +124,7 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                   ),
                   Expanded(
                     flex: 1,
-                    child: DropdownButton<Widget>(
-                      value: menuPackageDropdownItems[packageIndex],
-                      elevation: 16,
-                      onChanged: (Widget newValue) {
-                        setState(() {
-                          packageIndex =
-                              menuPackageDropdownItems.indexOf(newValue);
-                          getMenuCategories(menuItems[packageIndex].id);
-                        });
-                      },
-                      items: menuPackageDropdownItems
-                          .map<DropdownMenuItem<Widget>>((Widget value) {
-                        return DropdownMenuItem<Widget>(
-                          value: value,
-                          child: value,
-                        );
-                      }).toList(),
-                    ),
+                    child: SizedBox(),
                   ),
                   Expanded(
                     flex: 1,

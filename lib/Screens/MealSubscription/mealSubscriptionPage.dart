@@ -1,3 +1,4 @@
+import 'package:diet_delight/Models/mealModel.dart';
 import 'package:diet_delight/Screens/MealSubscription/prePaymentSubscription.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,6 +7,9 @@ import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:intl/intl.dart';
 
 class MealSubscriptionPage extends StatefulWidget {
+  final MealModel mealPackage;
+  final int weekDaysSelected;
+  MealSubscriptionPage({this.mealPackage, this.weekDaysSelected});
   @override
   _MealSubscriptionPageState createState() => _MealSubscriptionPageState();
 }
@@ -16,6 +20,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
   DateTime dateSelected;
   String date;
   int postIndex;
+  int count = 0;
   List<String> selDays = List();
   List<bool> selectedDays = [false, false, false, false, false, false, false];
   List<String> days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -24,6 +29,17 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
   void initState() {
     super.initState();
     today = new DateTime.now();
+    widget.weekDaysSelected == 7
+        ? selectedDays = [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+          ]
+        : selectedDays = [true, true, true, true, true, false, false];
   }
 
   @override
@@ -108,9 +124,25 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                   4,
                   (index) => GestureDetector(
                         onTap: () {
-                          setState(() {
-                            selectedDays[index] = !selectedDays[index];
-                          });
+                          if (selectedDays[index] == true) {
+                            print('unmarking');
+                            setState(() {
+                              selectedDays[index] = false;
+                              count--;
+                            });
+                          } else if (selectedDays[index] == false) {
+                            if (count < widget.weekDaysSelected) {
+                              print('marking');
+                              setState(() {
+                                selectedDays[index] = true;
+                                count++;
+                              });
+                            } else {
+                              _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                  content: Text(
+                                      'Change the Meal Subscription plan to with weekends or change the week days selected')));
+                            }
+                          }
                         },
                         child: Container(
                           height: 45,
@@ -145,10 +177,25 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                           padding: const EdgeInsets.all(10.0),
                           child: GestureDetector(
                             onTap: () {
-                              setState(() {
-                                selectedDays[index + 4] =
-                                    !selectedDays[index + 4];
-                              });
+                              if (selectedDays[index + 4] == true) {
+                                print('unmarking');
+                                setState(() {
+                                  selectedDays[index + 4] = false;
+                                  count--;
+                                });
+                              } else if (selectedDays[index + 4] == false) {
+                                if (count < widget.weekDaysSelected) {
+                                  print('marking');
+                                  setState(() {
+                                    selectedDays[index + 4] = true;
+                                    count++;
+                                  });
+                                } else {
+                                  _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                      content: Text(
+                                          'Change the Meal Subscription plan to with weekends or change the week days selected')));
+                                }
+                              }
                             },
                             child: Container(
                               height: 45,
@@ -318,8 +365,10 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                           context,
                           CupertinoPageRoute(
                               builder: (context) => PrePaymentMealPlan(
-                                  selectedDate: dateSelected,
-                                  selectedDays: selDays)));
+                                    selectedDate: dateSelected,
+                                    selectedDays: selDays,
+                                    mealPlan: widget.mealPackage,
+                                  )));
                     } else {
                       _scaffoldKey.currentState.showSnackBar(
                           SnackBar(content: Text('Select a date first.')));

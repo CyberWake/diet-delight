@@ -6,7 +6,8 @@ import 'package:diet_delight/Models/mealModel.dart';
 import 'package:diet_delight/Models/menuModel.dart';
 import 'package:diet_delight/Screens/Auth%20Screens/login_signup_form.dart';
 import 'package:diet_delight/Screens/Consultation/bookConsultation.dart';
-import 'package:diet_delight/Screens/MealSubscription/mealSubscriptionPage.dart';
+import 'package:diet_delight/Screens/MealSubscription/mealPlanScreen.dart';
+import 'package:diet_delight/Screens/MealSubscription/mealSelection.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,7 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'file:///C:/Users/VK/Desktop/ritik/diet-delight-mobile/lib/Screens/MealSubscription/mealSelection.dart';
 import 'file:///C:/Users/VK/Desktop/ritik/diet-delight-mobile/lib/Screens/menupage.dart';
 
 class HomePage extends StatefulWidget {
@@ -79,6 +79,16 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  getMenu(int mealPlanIndex) {
+    MenuModel menu;
+    menus.forEach((eachMenu) {
+      if (eachMenu.id == mealPackages[mealPlanIndex].menuId) {
+        menu = eachMenu;
+      }
+    });
+    return menu;
+  }
+
   @override
   Widget build(BuildContext context) {
     double devWidth = MediaQuery.of(context).size.width;
@@ -132,7 +142,12 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(
                     context,
                     CupertinoPageRoute(
-                        builder: (context) => MealSubscriptionPage()));
+                        builder: (BuildContext context) => MealPlan(
+                              planDuration: mealPackages[0].duration,
+                              mealPlanName: mealPackages[0].name,
+                              mealPlanDisc: mealPackages[0].details,
+                              index: 0,
+                            )));
               },
               child: Image.asset(
                 'images/Group 22.png',
@@ -286,7 +301,7 @@ class _HomePageState extends State<HomePage> {
                                                     CupertinoPageRoute(
                                                         builder: (context) =>
                                                             Menu(
-                                                              index: pos,
+                                                              menu: menus[pos],
                                                             )));
                                               },
                                               child: Container(
@@ -450,26 +465,20 @@ class _HomePageState extends State<HomePage> {
                                               splashColor:
                                                   defaultGreen.withAlpha(30),
                                               onTap: () {
-                                                print('Card tapped.');
-                                                Navigator.push(
-                                                    context,
-                                                    CupertinoPageRoute(
-                                                        builder: (context) =>
-                                                            MealPlan(
-                                                              planDuration:
-                                                                  mealPackages[
-                                                                          pos]
-                                                                      .duration,
-                                                              mealPlanName:
-                                                                  mealPackages[
-                                                                          pos]
-                                                                      .name,
-                                                              mealPlanDisc:
-                                                                  mealPackages[
-                                                                          pos]
-                                                                      .details,
-                                                              index: pos,
-                                                            )));
+                                                print(
+                                                    'Card tapped: ${mealPackages[pos].menuId}');
+                                                MenuModel pass = getMenu(pos);
+                                                if (pass != null) {
+                                                  Navigator.push(
+                                                      context,
+                                                      CupertinoPageRoute(
+                                                          builder: (context) =>
+                                                              MealPlanPage(
+                                                                  menu: pass,
+                                                                  mealPlan:
+                                                                      mealPackages[
+                                                                          pos])));
+                                                }
                                               },
                                               child: Container(
                                                 color: defaultGreen,
