@@ -1,6 +1,6 @@
 import 'package:bubble/bubble.dart';
 import 'package:diet_delight/Models/questionnaireModel.dart';
-import 'package:diet_delight/Screens/Home%20Page/home.dart';
+import 'file:///C:/Users/VK/Desktop/ritik/diet-delight-mobile/lib/Screens/landingPage.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
@@ -211,9 +211,10 @@ class _QuestionnaireState extends State<Questionnaire> {
       child: Padding(
         padding: EdgeInsets.only(top: 10),
         child: Container(
-          alignment: isQuestion ? Alignment.topLeft : Alignment.topRight,
+          alignment: isQuestion ? Alignment.center : Alignment.center,
           child: Bubble(
-            nip: isQuestion ? BubbleNip.leftTop : BubbleNip.rightTop,
+            nip: BubbleNip
+                .no, //isQuestion ? BubbleNip.leftTop : BubbleNip.rightTop,
             child: Text(
               item.replaceAll("<question>", ""),
               style: TextStyle(color: isQuestion ? Colors.white : Colors.black),
