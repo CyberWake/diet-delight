@@ -3,9 +3,10 @@ import 'dart:ui';
 
 import 'package:diet_delight/Screens/Auth%20Screens/login_signup_form.dart';
 import 'package:diet_delight/Screens/Auth%20Screens/userMoto.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/dashboardPage.dart';
+import 'package:diet_delight/Screens/Drawer%20Screens/consutationOrdersPage.dart';
+import 'package:diet_delight/Screens/Drawer%20Screens/dashboardUserInfoPage.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/homePage.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/ordersPage.dart';
+import 'package:diet_delight/Screens/Drawer%20Screens/mealPlanOrdersPage.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -221,7 +222,7 @@ class _HomePageState extends State<HomePage>
           children: [
             HomeScreen(),
             TabBarView(controller: _pageController, children: [
-              DashBoardPage(),
+              DashBoardUserInfoPage(),
               Container(
                 color: Colors.blueGrey,
               ),
@@ -230,10 +231,8 @@ class _HomePageState extends State<HomePage>
               color: Colors.blueGrey,
             ),
             TabBarView(controller: _pageController, children: [
-              OrderHistoryPage(),
-              Container(
-                color: Colors.blueGrey,
-              ),
+              ConsultationOrderHistoryPage(),
+              MealPlanOrderHistoryPage()
             ]),
           ],
         ),

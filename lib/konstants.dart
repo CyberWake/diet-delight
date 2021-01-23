@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 const Color defaultGreen = Color(0xFF8BC53F);
+const Color darkGreen = Color(0xFF079404);
 const Color inactiveGreen = Color(0x808BC53F);
 const Color white = Color(0xFFFFFFFF);
 const Color formBackground = Color(0x8DFFFFFF);

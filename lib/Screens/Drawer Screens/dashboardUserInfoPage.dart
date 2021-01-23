@@ -3,12 +3,12 @@ import 'package:diet_delight/konstants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 
-class DashBoardPage extends StatefulWidget {
+class DashBoardUserInfoPage extends StatefulWidget {
   @override
-  _DashBoardPageState createState() => _DashBoardPageState();
+  _DashBoardUserInfoPageState createState() => _DashBoardUserInfoPageState();
 }
 
-class _DashBoardPageState extends State<DashBoardPage> {
+class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
   FocusNode fullName;
   FocusNode phoneNo;
   FocusNode mail;
