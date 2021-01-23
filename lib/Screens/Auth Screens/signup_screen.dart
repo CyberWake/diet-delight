@@ -48,9 +48,11 @@ class _SignUpState extends State<SignUp> {
 
   getPhoneNumbers() async {
     mobileNo.text = await _autoFill.hint;
-    countryCode.text = mobileNo.text.substring(0, 3);
-    mobileNo.text = mobileNo.text.substring(3);
-    FocusScope.of(context).requestFocus(mail);
+    if (mobileNo.text.isNotEmpty) {
+      countryCode.text = mobileNo.text.substring(0, 3);
+      mobileNo.text = mobileNo.text.substring(3);
+      FocusScope.of(context).requestFocus(mail);
+    }
   }
 
   @override
@@ -85,9 +87,6 @@ class _SignUpState extends State<SignUp> {
                                 padding:
                                     const EdgeInsets.fromLTRB(20, 5, 20, 5),
                                 child: TextFormField(
-                                    onChanged: (String nameFirst) {
-                                      firstName.text = nameFirst;
-                                    },
                                     onFieldSubmitted: (done) {
                                       firstName.text = done;
                                       first.unfocus();
@@ -117,9 +116,6 @@ class _SignUpState extends State<SignUp> {
                                 padding:
                                     const EdgeInsets.fromLTRB(20, 5, 20, 5),
                                 child: TextFormField(
-                                    onChanged: (String nameLast) {
-                                      lastName.text = nameLast;
-                                    },
                                     onFieldSubmitted: (done) {
                                       lastName.text = done;
                                       last.unfocus();
@@ -167,9 +163,6 @@ class _SignUpState extends State<SignUp> {
                                     const EdgeInsets.fromLTRB(20, 3, 20, 7),
                                 child: TextFormField(
                                   focusNode: country,
-                                  onChanged: (String code) {
-                                    countryCode.text = code;
-                                  },
                                   onFieldSubmitted: (done) {
                                     countryCode.text = done;
                                     country.unfocus();
@@ -205,16 +198,12 @@ class _SignUpState extends State<SignUp> {
                                     const EdgeInsets.fromLTRB(20, 3, 20, 7),
                                 child: TextFormField(
                                     controller: mobileNo,
-                                    onChanged: (String mobile) {
-                                      mobileNo.text = mobile;
-                                    },
                                     onFieldSubmitted: (done) {
                                       mobileNo.text = done;
                                       mobile.unfocus();
                                       FocusScope.of(context).requestFocus(mail);
                                     },
                                     textAlign: TextAlign.center,
-                                    textDirection: TextDirection.ltr,
                                     keyboardType: TextInputType.phone,
                                     focusNode: mobile,
                                     textInputAction: TextInputAction.next,
@@ -248,9 +237,6 @@ class _SignUpState extends State<SignUp> {
                         child: Padding(
                           padding: EdgeInsets.fromLTRB(20, 3, 20, 7),
                           child: TextFormField(
-                              onChanged: (String mail) {
-                                email.text = mail;
-                              },
                               onFieldSubmitted: (done) {
                                 email.text = done;
                                 mail.unfocus();
@@ -286,9 +272,6 @@ class _SignUpState extends State<SignUp> {
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(20, 3, 20, 7),
                           child: TextFormField(
-                              onChanged: (String pass) {
-                                password.text = pass;
-                              },
                               onFieldSubmitted: (done) {
                                 password.text = done;
                                 mail.unfocus();
@@ -326,9 +309,6 @@ class _SignUpState extends State<SignUp> {
                           padding: const EdgeInsets.fromLTRB(20, 3, 20, 7),
                           child: TextFormField(
                               focusNode: confPass,
-                              onChanged: (String passConfirm) {
-                                confirmPass.text = passConfirm;
-                              },
                               onFieldSubmitted: (done) {
                                 confirmPass.text = done;
                                 confPass.unfocus();

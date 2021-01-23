@@ -21,33 +21,18 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
   final _apiCall = Api.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final TextEditingController _smsController = TextEditingController();
   String enteredOtp;
   int count = 0;
   bool initiated = false;
   String _verificationId;
-  bool result;
+  bool result = false;
 
   void showSnackBar(String message) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
   }
 
-  /*sendOtp() {
-    try {
-      List<String> number = widget.regDetails.mobile.split(' ');
-      print(number.first);
-      print(number.last);
-      print('running');
-      otp.sendOtp(number.last, "<#> Verification code for diet delight is: ",
-          100000, 999999, number.first);
-      otp.getOtp();
-      print('done');
-    } on Exception catch (e) {
-      print(e.toString());
-    }
-  }*/
-
   registerUser() async {
+    result = false;
     result = await _apiCall.register(widget.regDetails);
     print(result);
     if (result) {
@@ -67,7 +52,6 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
 
   @override
   void initState() {
-    //sendOtp();
     super.initState();
     verifyPhoneNo();
   }
@@ -102,7 +86,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
       print(widget.regDetails.mobile);
       await _auth.verifyPhoneNumber(
           phoneNumber: widget.regDetails.mobile,
-          timeout: const Duration(seconds: 30),
+          timeout: Duration(seconds: 120),
           verificationCompleted: verificationCompleted,
           verificationFailed: verificationFailed,
           codeSent: codeSent,
@@ -114,21 +98,19 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
     }
   }
 
-  Future<bool> signInWithPhoneNumber() async {
+  Future<void> signInWithPhoneNumber() async {
     try {
       final AuthCredential credential = PhoneAuthProvider.credential(
         verificationId: _verificationId,
-        smsCode: _smsController.text,
+        smsCode: enteredOtp,
       );
 
       final User user = (await _auth.signInWithCredential(credential)).user;
       if (user != null) {
-        return result;
+        registerUser();
       }
-      return false;
     } catch (e) {
-      showSnackBar("Failed to sign in: " + e.toString());
-      return false;
+      showSnackBar('Verification OTP entered is invalid');
     }
   }
 
@@ -228,7 +210,6 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 11, vertical: 4),
                                 child: PinCodeTextField(
-                                  controller: _smsController,
                                   maxLength: 6,
                                   hasUnderline: false,
                                   pinBoxWidth: 30,
@@ -286,13 +267,13 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                               setState(() {
                                 initiated = true;
                               });
-                              bool success = await signInWithPhoneNumber();
-                              if (success) {
-                                registerUser();
-                              }
+                              await signInWithPhoneNumber();
                             } else {
-                              _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                  content: Text('Enter the OTP to continue')));
+                              if (enteredOtp.isNotEmpty) {
+                                _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                    content:
+                                        Text('Enter the OTP to continue')));
+                              }
                             }
                           },
                           child: initiated
