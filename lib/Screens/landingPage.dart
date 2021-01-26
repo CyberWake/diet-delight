@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:diet_delight/Screens/Auth%20Screens/login_signup_form.dart';
 import 'package:diet_delight/Screens/Auth%20Screens/userMoto.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/consutationOrdersPage.dart';
+import 'package:diet_delight/Screens/Drawer%20Screens/dashboardOnGoingOrders.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/dashboardUserInfoPage.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/homePage.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/mealPlanOrdersPage.dart';
@@ -112,7 +113,6 @@ class _HomePageState extends State<HomePage>
               : Text(pageTitle[page], style: appBarTextStyle),
           leading: IconButton(
             icon: Icon(Icons.menu),
-            color: Colors.black,
             onPressed: () => _scaffoldKey.currentState.openDrawer(),
           ),
           actions: page == 0
@@ -138,15 +138,6 @@ class _HomePageState extends State<HomePage>
                           CupertinoPageRoute(
                               builder: (BuildContext context) => Questionnaire(
                                   username: 'Ritik kumar srivastava')));
-                      /*Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (BuildContext context) => MealPlan(
-                              planDuration: mealPackages[0].duration,
-                              mealPlanName: mealPackages[0].name,
-                              mealPlanDisc: mealPackages[0].details,
-                              index: 0,
-                            )));*/
                     },
                     child: Image.asset(
                       'images/Group 24.png',
@@ -223,9 +214,7 @@ class _HomePageState extends State<HomePage>
             HomeScreen(),
             TabBarView(controller: _pageController, children: [
               DashBoardUserInfoPage(),
-              Container(
-                color: Colors.blueGrey,
-              ),
+              DashBoardOngoingOrders(),
             ]),
             Container(
               color: Colors.blueGrey,

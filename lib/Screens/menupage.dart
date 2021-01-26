@@ -89,13 +89,24 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 10.0),
                             child: Column(
+                              mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(widget.menu.name,
-                                    style: selectedTab.copyWith(fontSize: 28)),
-                                Text(
-                                    'sgasdfjijadfigfadjfvadsfiluHFIUDSBFS\nADIUAGFIGF')
+                                Flexible(
+                                  fit: FlexFit.loose,
+                                  child: Text(widget.menu.name,
+                                      style:
+                                          selectedTab.copyWith(fontSize: 28)),
+                                ),
+                                Flexible(
+                                  fit: FlexFit.loose,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 10.0, right: 10.0),
+                                    child: Text(widget.menu.description),
+                                  ),
+                                )
                               ],
                             ),
                           ),

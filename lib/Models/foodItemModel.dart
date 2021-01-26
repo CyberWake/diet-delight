@@ -21,6 +21,7 @@ class FoodItemModel {
       categoryId: item['categoryId'],
       menuId: item['menuId'],
       picture: item['picture'],
+      isVeg: item['veg'] == 1 ? true : false,
     );
   }
 

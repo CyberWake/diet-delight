@@ -21,6 +21,9 @@ class Api {
   static List<MealModel> itemsMeal = List();
   static List<MenuCategoryModel> itemsMenuCategory = List();
   static List<FoodItemModel> itemsFood = List();
+  static RegModel userInfo = RegModel();
+  static String token;
+  String uri = 'http://dietdelight.enigmaty.com';
   Api._privateConstructor();
 
   static final Api instance = Api._privateConstructor();
@@ -31,10 +34,8 @@ class Api {
     };
     String body = convert.jsonEncode(registerData.toMap());
     print(body);
-    final response = await http.post(
-        'http://dietdelight.enigmaty.com/api/v1/register',
-        headers: headers,
-        body: body);
+    final response =
+        await http.post(uri + '/api/v1/register', headers: headers, body: body);
     if (response.statusCode == 200) {
       print('Success');
       print(response.body);
@@ -54,15 +55,11 @@ class Api {
   Future<bool> login(LogModel loginData) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      print("control in login function");
-      final authorizationEndpoint =
-          Uri.parse('http://dietdelight.enigmaty.com/oauth/token');
+      final authorizationEndpoint = Uri.parse(uri + '/oauth/token');
       final username = loginData.mobile ?? loginData.email;
       final password = loginData.password;
-      print('is before client initialisation');
       final identifier = '2';
       final secret = '3X7ar2wWTrdzAzRDl2rge1pGL5cFWLSQq7sVkMRV';
-
       client = await oauth2.resourceOwnerPasswordGrant(
         authorizationEndpoint,
         username,
@@ -70,12 +67,15 @@ class Api {
         identifier: identifier,
         secret: secret,
       );
-      print('client initialised');
+      print(client.credentials);
+      var body = convert.jsonDecode(client.credentials.toJson());
+      token = body['accessToken'];
       prefs.setString('email', loginData.email);
       prefs.setString('mobile', loginData.mobile);
       prefs.setString('password', loginData.password);
-      /*File('~/.DietDelight/credentials.json')
-          .writeAsString(client.credentials.toJson());*/
+      prefs.setString('accessToken', body['accessToken']);
+      prefs.setString('refreshToken', body['refreshToken']);
+      await getUserInfo();
       return true;
     } on Exception catch (e) {
       print(e.toString());
@@ -83,10 +83,39 @@ class Api {
     }
   }
 
+  Future<RegModel> getUserInfo() async {
+    final String result = await client.read(uri + '/api/v1/user');
+    if (result.isNotEmpty) {
+      var body = convert.jsonDecode(result);
+      userInfo = RegModel.fromMap(body);
+      return userInfo;
+    } else {
+      return null;
+    }
+  }
+
+  Future<bool> updateUserInfo(RegModel user) async {
+    final String result = await client.write(
+      uri + '/api/v1/menus?sortOrder=desc',
+    );
+    if (result.isNotEmpty) {
+      var body = convert.jsonDecode(result);
+      List data = body['data'];
+      data.forEach((element) {
+        MenuModel item = MenuModel.fromMap(element);
+        itemsMenu.add(item);
+      });
+      print('data received menu');
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<List<ConsultationModel>> getConsultationPackages() async {
     print('called');
-    final String result = await client.read(
-        'http://dietdelight.enigmaty.com/api/v1/consultation-packages?sortOrder=desc');
+    final String result =
+        await client.read(uri + '/api/v1/consultation-packages?sortOrder=desc');
     if (result.isNotEmpty) {
       var body = convert.jsonDecode(result);
       List data = body['data'];
@@ -102,17 +131,15 @@ class Api {
 
   Future<List<MenuModel>> getMenuPackages() async {
     itemsMenu = [];
-    final String result = await client
-        .read('http://dietdelight.enigmaty.com/api/v1/menus?sortOrder=desc');
+    final String result =
+        await client.read(uri + '/api/v1/menus?sortOrder=desc');
     if (result.isNotEmpty) {
       var body = convert.jsonDecode(result);
       List data = body['data'];
       data.forEach((element) {
-        print(element);
         MenuModel item = MenuModel.fromMap(element);
         itemsMenu.add(item);
       });
-      print('data received menu');
       return itemsMenu;
     } else {
       return [];
@@ -121,17 +148,15 @@ class Api {
 
   Future<List<MealModel>> getMealPlans() async {
     itemsMeal = [];
-    final String result = await client.read(
-        'http://dietdelight.enigmaty.com/api/v1/meal-plans?sortOrder=desc');
+    final String result =
+        await client.read(uri + '/api/v1/meal-plans?sortOrder=desc');
     if (result.isNotEmpty) {
       var body = convert.jsonDecode(result);
       List data = body['data'];
       data.forEach((element) {
-        print(element);
         MealModel item = MealModel.fromMap(element);
         itemsMeal.add(item);
       });
-      print('data received meal');
       return itemsMeal;
     } else {
       return [];
@@ -140,8 +165,8 @@ class Api {
 
   Future<List<QuestionnaireModel>> getQuestions() async {
     print('called2');
-    final String result = await client.read(
-        'http://dietdelight.enigmaty.com/api/v1/questions?sortOrder=desc');
+    final String result =
+        await client.read(uri + '/api/v1/questions?sortOrder=desc');
     if (result.isNotEmpty) {
       var body = convert.jsonDecode(result);
       List data = body['data'];
@@ -149,7 +174,6 @@ class Api {
         QuestionnaireModel item = QuestionnaireModel.fromMap(element);
         itemsQuestionnaire.add(item);
       });
-      print('data received: ${itemsQuestionnaire.length}');
       return itemsQuestionnaire;
     } else {
       return [];
@@ -158,8 +182,8 @@ class Api {
 
   Future<List<MenuCategoryModel>> getCategories(int menuId) async {
     itemsMenuCategory = [];
-    final String result = await client.read(
-        'http://dietdelight.enigmaty.com/api/v1/menu-categories?menu_id=$menuId&sortOrder=desc');
+    final String result = await client
+        .read(uri + '/api/v1/menu-categories?menu_id=$menuId&sortOrder=desc');
     if (result.isNotEmpty) {
       var body = convert.jsonDecode(result);
       List data = body['data'];
@@ -167,7 +191,6 @@ class Api {
         MenuCategoryModel item = MenuCategoryModel.fromMap(element);
         itemsMenuCategory.add(item);
       });
-      print('data received: ${itemsMenuCategory.length}');
       return itemsMenuCategory;
     } else {
       return [];
@@ -177,8 +200,8 @@ class Api {
   Future<List<FoodItemModel>> getCategoryFoodItems(
       String menuId, String categoryId) async {
     itemsFood = [];
-    final String result = await client.read(
-        'http://dietdelight.enigmaty.com/api/v1/menu-items?menu_id=$menuId&menu_category_id=$categoryId&sortOrder=desc');
+    final String result = await client.read(uri +
+        '/api/v1/menu-items?menu_id=$menuId&menu_category_id=$categoryId&sortOrder=desc');
     if (result.isNotEmpty) {
       var body = convert.jsonDecode(result);
       List data = body['data'];
@@ -186,7 +209,6 @@ class Api {
         FoodItemModel item = FoodItemModel.fromMap(element);
         itemsFood.add(item);
       });
-      print(itemsFood.length);
       return itemsFood;
     } else {
       return [];

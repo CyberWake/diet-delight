@@ -166,6 +166,10 @@ class _LoginState extends State<Login> {
                                 context,
                                 CupertinoPageRoute(
                                     builder: (context) => HomePage()));
+                          } else {
+                            setState(() {
+                              initiated = false;
+                            });
                           }
                         } on FormatException {
                           if (EmailValidator.validate(emailOrMobileNo.text)) {

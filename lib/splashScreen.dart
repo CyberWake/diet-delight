@@ -30,7 +30,6 @@ class _SplashScreenState extends State<SplashScreen>
     bool credMobileFound = prefs.containsKey('mobile');
     if (!credEmailFound && !credMobileFound) {
       Timer(Duration(seconds: 2), () {
-        print("Pushing navigate after page");
         Navigator.of(context).pushReplacement(CupertinoPageRoute(
             builder: (BuildContext context) => widget.navigateAfterSeconds));
       });
@@ -78,9 +77,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-    print("running binding");
     WidgetsBinding.instance.addObserver(this);
-    print("running dynamic link");
     _retrieveCredentials();
   }
 

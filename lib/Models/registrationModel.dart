@@ -35,6 +35,19 @@ class RegModel {
     } as Map<String, dynamic>;
   }
 
+  factory RegModel.fromMap(Map item) {
+    return RegModel(
+        status: item['status'].toString(),
+        name: item['name'],
+        email: item['email'],
+        password: item['password'],
+        firstName: item['first_name'],
+        lastName: item['last_name'],
+        mobile: item['mobile'],
+        address: item['address'],
+        addressSecondary: item['address_secondary']);
+  }
+
   show() {
     print('status: $status');
     print('name: $name');
