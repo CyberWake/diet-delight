@@ -39,12 +39,10 @@ class _ConsultationOrderHistoryPageState
 
   getData() async {
     consultationPurchases = await _apiCall.getConsultationPurchases();
-    print('called');
     appointments =
         await _apiCall.getAppointments().whenComplete(() => setState(() {
               loaded = true;
             }));
-    print('here');
   }
 
   @override
@@ -63,9 +61,6 @@ class _ConsultationOrderHistoryPageState
                   DateTime.parse(appointments[index].createdAt);
               DateTime appointmentDateTime =
                   DateTime.parse(appointments[index].consultationTime);
-
-              print(createdDateTime);
-              print(appointmentDateTime);
               return Container(
                 margin: EdgeInsets.all(10),
                 padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
@@ -134,7 +129,7 @@ class _ConsultationOrderHistoryPageState
                               ),
                               Text(formatDate(createdDateTime, format)),
                               Spacer(),
-                              Text('100 BHD')
+                              Text(consultationPurchases[index].amountPaid)
                             ],
                           ),
                         )),

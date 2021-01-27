@@ -1,4 +1,7 @@
+import 'package:date_format/date_format.dart';
+import 'package:diet_delight/Models/mealPurchaseModel.dart';
 import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -9,17 +12,10 @@ class MealPlanOrderHistoryPage extends StatefulWidget {
 }
 
 class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
-  TextEditingController addressPrimary = TextEditingController();
-  TextEditingController addressSecondary = TextEditingController();
-  FocusNode addressFocus = FocusNode();
-  String addressArea = 'Bahrain';
-  String localAddress = '';
-  double _height = 350;
-  int items = 4;
-  int selectedAddress = -1;
-  List<String> types = ['Home', 'Work'];
-  List<String> areas = ['Bahrain', 'India'];
-  String addressType = 'Home';
+  List<MealPurchaseModel> purchasedMeal;
+  final _apiCall = Api.instance;
+  bool loaded = false;
+  List<String> format = [hh, ':', nn, ' ', am, dd, ' ', 'M', ', ', yyyy];
 
   Widget dataField({String fieldName, String fieldValue}) {
     return Flexible(
@@ -37,99 +33,102 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
         ));
   }
 
+  getData() async {
+    purchasedMeal =
+        await _apiCall.getMealPurchases().whenComplete(() => setState(() {
+              loaded = true;
+            }));
+  }
+
   @override
   void initState() {
     super.initState();
-    addressFocus.addListener(() {
-      if (addressFocus.hasFocus) {
-        print('height increased');
-        setState(() {
-          items = 5;
-          _height = 600;
-        });
-      } else if (!addressFocus.hasFocus) {
-        print('height decreased');
-        setState(() {
-          items = 4;
-          _height = 350;
-        });
-      }
-    });
+    getData();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      shrinkWrap: true,
-      children: List.generate(3, (index) {
-        return Container(
-          margin: EdgeInsets.all(10),
-          padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
-          decoration: BoxDecoration(
-            color: white,
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 4,
-                color: Colors.black.withOpacity(0.25),
-                spreadRadius: 0,
-                offset: const Offset(0.0, 0.0),
-              )
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Flexible(
-                  fit: FlexFit.loose,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(child: Text('Menu Plan')),
-                        Flexible(
-                            child: IconButton(
-                                icon: Icon(Icons.more_vert), onPressed: () {})),
-                      ],
+    return loaded
+        ? ListView(
+            shrinkWrap: true,
+            children: List.generate(purchasedMeal.length, (index) {
+              return Container(
+                margin: EdgeInsets.all(10),
+                padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
+                decoration: BoxDecoration(
+                  color: white,
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 4,
+                      color: Colors.black.withOpacity(0.25),
+                      spreadRadius: 0,
+                      offset: const Offset(0.0, 0.0),
+                    )
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Flexible(
+                        fit: FlexFit.loose,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(child: Text('Menu Plan')),
+                              Flexible(
+                                  child: IconButton(
+                                      icon: Icon(Icons.more_vert),
+                                      onPressed: () {})),
+                            ],
+                          ),
+                        )),
+                    Flexible(
+                        fit: FlexFit.loose,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(purchasedMeal[index].mealPlanName),
+                        )),
+                    dataField(
+                      fieldName: 'Subscription:',
+                      fieldValue: purchasedMeal[index].mealPlanDuration +
+                          ' Days\n' +
+                          purchasedMeal[index].showWeek(),
                     ),
-                  )),
-              Flexible(
-                  fit: FlexFit.loose,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text('Meal Plan Name'),
-                  )),
-              dataField(
-                fieldName: 'Subscription:',
-                fieldValue: '2 Weeks\nMon, Tue, Wed, Fri, Sun',
-              ),
-              dataField(
-                fieldName: 'Remaining Days:',
-                fieldValue: '12',
-              ),
-              Flexible(
-                  fit: FlexFit.loose,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(Icons.schedule),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text('4:40pm 12 Jan, 2021'),
-                        Spacer(),
-                        Text('100 BHD')
-                      ],
+                    dataField(
+                      fieldName: 'Remaining Days:',
+                      fieldValue: '12',
                     ),
-                  ))
-            ],
-          ),
-        );
-      }),
-    );
+                    Flexible(
+                        fit: FlexFit.loose,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(Icons.schedule),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(formatDate(
+                                  DateTime.parse(
+                                      purchasedMeal[index].createdAt),
+                                  format)),
+                              Spacer(),
+                              Text(purchasedMeal[index].amountPaid)
+                            ],
+                          ),
+                        ))
+                  ],
+                ),
+              );
+            }),
+          )
+        : Center(
+            child: CircularProgressIndicator(),
+          );
   }
 }

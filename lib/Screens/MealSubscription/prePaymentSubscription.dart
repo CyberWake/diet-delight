@@ -1,4 +1,5 @@
 import 'package:diet_delight/Models/mealModel.dart';
+import 'package:diet_delight/Models/mealPurchaseModel.dart';
 import 'package:diet_delight/Models/menuCategoryModel.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
@@ -312,10 +313,27 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                   width: double.infinity,
                   height: 50.0,
                   child: TextButton(
-                    onPressed: () {
+                    onPressed: () async {
                       print('pressed');
-                      _scaffoldKey.currentState.showSnackBar(
-                          SnackBar(content: Text('To be implemented')));
+                      MealPurchaseModel orderDetails = MealPurchaseModel(
+                          userId: Api.userInfo.id,
+                          mealPlanId: widget.mealPlan.id.toString(),
+                          paymentId: '1234123',
+                          status: '1',
+                          mealPlanName: widget.mealPlan.name,
+                          mealPlanDuration: widget.mealPlan.duration.toString(),
+                          amountPaid: widget.mealPlan.price,
+                          startDate: widget.selectedDate.toString(),
+                          weekdays: widget.selectedDays);
+                      bool success =
+                          await _apiCall.postMealPurchase(orderDetails);
+                      if (success) {
+                        _scaffoldKey.currentState.showSnackBar(SnackBar(
+                            content: Text('Meal Plan Purchased Successfully')));
+                      } else {
+                        _scaffoldKey.currentState.showSnackBar(
+                            SnackBar(content: Text('Something went wrong')));
+                      }
                     },
                     child: Text(
                       'Pay Now',

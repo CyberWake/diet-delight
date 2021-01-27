@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:core';
 
-import 'package:diet_delight/Models/loginModel.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,35 +22,18 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>
     with WidgetsBindingObserver {
   Timer _timerLink;
+  final _apiCall = Api.instance;
 
   _retrieveCredentials() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool credEmailFound = prefs.containsKey('email');
-    bool credMobileFound = prefs.containsKey('mobile');
-    if (!credEmailFound && !credMobileFound) {
-      Timer(Duration(seconds: 2), () {
-        Navigator.of(context).pushReplacement(CupertinoPageRoute(
-            builder: (BuildContext context) => widget.navigateAfterSeconds));
-      });
-    } else {
-      bool result;
-      final _apiCall = Api.instance;
-      if (credEmailFound) {
-        result = await _apiCall.login(LogModel(
-            email: prefs.getString('email'),
-            password: prefs.getString('password')));
-      } else {
-        result = await _apiCall.login(LogModel(
-            mobile: prefs.getString('mobile'),
-            password: prefs.getString('password')));
-      }
-      if (result) {
+    if (prefs.containsKey('accessToken')) {
+      _apiCall.autoLogin().whenComplete(() {
         Navigator.of(context).pushReplacement(
             CupertinoPageRoute(builder: (BuildContext context) => HomePage()));
-      } else {
-        Navigator.of(context).pushReplacement(CupertinoPageRoute(
-            builder: (BuildContext context) => widget.navigateAfterSeconds));
-      }
+      });
+    } else {
+      Navigator.of(context).pushReplacement(CupertinoPageRoute(
+          builder: (BuildContext context) => widget.navigateAfterSeconds));
     }
   }
 
