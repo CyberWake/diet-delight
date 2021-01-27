@@ -1,5 +1,6 @@
 class RegModel {
   String status;
+  String id;
   String name;
   String email;
   String password;
@@ -11,6 +12,7 @@ class RegModel {
 
   RegModel(
       {this.status = "0",
+      this.id,
       this.name,
       this.email,
       this.password,
@@ -38,6 +40,7 @@ class RegModel {
   factory RegModel.fromMap(Map item) {
     return RegModel(
         status: item['status'].toString(),
+        id: item['id'].toString(),
         name: item['name'],
         email: item['email'],
         password: item['password'],
@@ -50,6 +53,7 @@ class RegModel {
 
   show() {
     print('status: $status');
+    print('id: $id');
     print('name: $name');
     print('email: $email');
     print('password: $password');

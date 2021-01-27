@@ -1,5 +1,3 @@
-import 'package:diet_delight/Models/menuModel.dart';
-import 'package:diet_delight/Screens/menupage.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -111,34 +109,6 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
                 fieldName: 'Remaining Days:',
                 fieldValue: '12',
               ),
-              Flexible(
-                  fit: FlexFit.loose,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        TextButton(
-                            onPressed: () {
-                              MenuModel menu =
-                                  MenuModel(id: 1, name: 'One Meal Plan');
-                              Navigator.push(
-                                  context,
-                                  CupertinoPageRoute(
-                                      builder: (BuildContext context) => Menu(
-                                            menu: menu,
-                                          )));
-                            },
-                            child: Text(
-                              'Menu',
-                              style: TextStyle(
-                                color: darkGreen,
-                                decoration: TextDecoration.underline,
-                              ),
-                            )),
-                      ],
-                    ),
-                  )),
               Flexible(
                   fit: FlexFit.loose,
                   child: Padding(

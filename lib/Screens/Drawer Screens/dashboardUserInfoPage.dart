@@ -544,7 +544,7 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
               password: passwordUpdated ? newConfPassword.text : info.password,
             );
             updateUserData.show();
-            _apiCall.updateUserInfo(updateUserData);
+            _apiCall.putUserInfo(updateUserData);
             Scaffold.of(context).showSnackBar(
                 SnackBar(content: Text('User Info Updated Successfully')));
           },

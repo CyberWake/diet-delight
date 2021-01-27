@@ -1,4 +1,5 @@
 import 'dart:ui';
+
 import 'package:diet_delight/Models/consultationModel.dart';
 import 'package:diet_delight/Screens/Consultation/confirmConsultation.dart';
 import 'package:diet_delight/konstants.dart';
@@ -26,7 +27,7 @@ class _BookConsultationState extends State<BookConsultation>
   DateTime dateSelected;
   TabController _tabController;
   double conHeight = 300.0;
-  String selectedTime = '1pm';
+  String selectedTime = '1PM';
   String time;
   String date;
   List<List> timeChart = [
@@ -38,13 +39,13 @@ class _BookConsultationState extends State<BookConsultation>
   getSubTime(int index, int rowIndex) {
     String suffix;
     if (index == 0) {
-      suffix = 'am';
+      suffix = 'AM';
     } else {
-      suffix = 'pm';
+      suffix = 'PM';
     }
     switch (rowIndex) {
       case 0:
-        return '$suffix';
+        return ':00$suffix';
         break;
       case 1:
         return ':15$suffix';
@@ -62,13 +63,13 @@ class _BookConsultationState extends State<BookConsultation>
     String suffix;
     String displayTime;
     if (index == 0) {
-      suffix = 'am';
+      suffix = 'AM';
     } else {
-      suffix = 'pm';
+      suffix = 'PM';
     }
     switch (rowIndex) {
       case 0:
-        displayTime = '${timeChart[index][pos]}$suffix';
+        displayTime = '${timeChart[index][pos]}:00$suffix';
         break;
       case 1:
         displayTime = '${timeChart[index][pos]}:15$suffix';
@@ -324,10 +325,10 @@ class _BookConsultationState extends State<BookConsultation>
                                   ),
                                   Text(
                                       index == 0
-                                          ? '9am to 12pm'
+                                          ? '9AM to 12PM'
                                           : index == 1
-                                              ? '12pm to 5pm'
-                                              : '5pm to 9pm',
+                                              ? '12PM to 5PM'
+                                              : '5PM to 9PM',
                                       style: dateTabTextStyle.copyWith(
                                           color: _tabController.index == index
                                               ? defaultGreen

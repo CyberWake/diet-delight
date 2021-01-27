@@ -1,13 +1,28 @@
+import 'package:diet_delight/Models/consultationAppointmentModel.dart';
+import 'package:diet_delight/Models/consultationPurchaseModel.dart';
 import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
 
 class PrePayment extends StatefulWidget {
+  final ConsAppointmentModel appointment;
+  final ConsPurchaseModel orderDetails;
+  PrePayment({this.orderDetails, this.appointment});
   @override
   _PrePaymentState createState() => _PrePaymentState();
 }
 
 class _PrePaymentState extends State<PrePayment> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  Api _apiCall = Api.instance;
+  ConsAppointmentModel _appointment;
+  ConsPurchaseModel order;
+  @override
+  void initState() {
+    super.initState();
+    order = widget.orderDetails;
+    _appointment = widget.appointment;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,10 +157,25 @@ class _PrePaymentState extends State<PrePayment> {
                 width: double.infinity,
                 height: 50.0,
                 child: TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     print('pressed');
-                    _scaffoldKey.currentState.showSnackBar(
-                        SnackBar(content: Text('To be implemented')));
+                    order.setUserPaymentDetails(
+                        userId: Api.userInfo.id, paymentId: '11487');
+                    String id = await _apiCall.postConsultationPurchase(order);
+                    if (id != null) {
+                      _appointment.putId(packagePurchaseId: id);
+                      bool success =
+                          await _apiCall.postAppointment(_appointment);
+                      if (success) {
+                        _scaffoldKey.currentState.showSnackBar(
+                            SnackBar(content: Text('Appointment Added')));
+                      }
+                      _scaffoldKey.currentState.showSnackBar(
+                          SnackBar(content: Text('Purchase Successful')));
+                    } else {
+                      _scaffoldKey.currentState.showSnackBar(
+                          SnackBar(content: Text('Something went wrong')));
+                    }
                   },
                   child: Text(
                     'Pay Now',

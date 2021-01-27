@@ -25,7 +25,6 @@ class _HomeScreenState extends State<HomeScreen> {
     consultationPackages = await _apiCall.getConsultationPackages();
 
     mealPackages = await _apiCall.getMealPlans();
-    print('mealPlans: ${mealPackages.length}');
     menus = await _apiCall.getMenuPackages();
   }
 
@@ -167,13 +166,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: InkWell(
                                       splashColor: defaultGreen.withAlpha(30),
                                       onTap: () {
-                                        print('Card tapped.');
                                         Navigator.push(
                                             context,
                                             CupertinoPageRoute(
                                                 builder: (context) => Menu(
                                                       menu: menus[pos],
                                                     )));
+
+                                        print('success getting menu screen');
                                       },
                                       child: Container(
                                         color: Colors.white,
@@ -324,8 +324,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: InkWell(
                                       splashColor: defaultGreen.withAlpha(30),
                                       onTap: () {
-                                        print(
-                                            'Card tapped: ${mealPackages[pos].menuId}');
                                         MenuModel pass = getMenu(pos);
                                         if (pass != null) {
                                           Navigator.push(
@@ -337,6 +335,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           mealPlan:
                                                               mealPackages[
                                                                   pos])));
+                                          print(
+                                              'success getting meal details page');
                                         }
                                       },
                                       child: Container(
@@ -612,6 +612,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         consultation:
                                                             consultationPackages,
                                                       )));
+                                          print(
+                                              'success getting consultation package screen');
                                         },
                                         child: Container(
                                           width: 110,

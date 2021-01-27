@@ -1,8 +1,11 @@
 import 'dart:ui';
 
+import 'package:diet_delight/Models/consultationAppointmentModel.dart';
 import 'package:diet_delight/Models/consultationModel.dart';
+import 'package:diet_delight/Models/consultationPurchaseModel.dart';
 import 'package:diet_delight/Screens/prepayment.dart';
 import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -229,12 +232,36 @@ class _ConfirmConsultationState extends State<ConfirmConsultation> {
                       child: TextButton(
                         onPressed: () {
                           print('pressed');
-                          /* _scaffoldKey.currentState.showSnackBar(
-                              SnackBar(content: Text('To be implemented')));*/
+                          var formatter = new DateFormat('yyyy-MM-dd');
+                          DateTime time = DateFormat("hh:mma")
+                              .parse(widget.consultationTime);
+                          ConsAppointmentModel appointment =
+                              ConsAppointmentModel(
+                            userId: Api.userInfo.id,
+                            consultationTime:
+                                formatter.format(widget.selectedDate) +
+                                    ' ' +
+                                    DateFormat.Hms().format(time),
+                          );
+                          ConsPurchaseModel purchaseDetails = ConsPurchaseModel(
+                              consultationName:
+                                  widget.consultation[widget.package].name,
+                              consultationPackageId: widget
+                                  .consultation[widget.package].id
+                                  .toString(),
+                              consultationPackageDuration: widget
+                                  .consultation[widget.package].duration
+                                  .toString(),
+                              amountPaid: widget
+                                  .consultation[widget.package].price
+                                  .toString());
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => PrePayment()));
+                                  builder: (context) => PrePayment(
+                                        appointment: appointment,
+                                        orderDetails: purchaseDetails,
+                                      )));
                         },
                         child: Text(
                           'BOOK PACKAGE',

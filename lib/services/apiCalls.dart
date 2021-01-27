@@ -1,7 +1,9 @@
 import 'dart:convert' as convert;
 import 'dart:io';
 
+import 'package:diet_delight/Models/consultationAppointmentModel.dart';
 import 'package:diet_delight/Models/consultationModel.dart';
+import 'package:diet_delight/Models/consultationPurchaseModel.dart';
 import 'package:diet_delight/Models/foodItemModel.dart';
 import 'package:diet_delight/Models/loginModel.dart';
 import 'package:diet_delight/Models/mealModel.dart';
@@ -20,7 +22,9 @@ class Api {
   static List<MenuModel> itemsMenu = List();
   static List<MealModel> itemsMeal = List();
   static List<MenuCategoryModel> itemsMenuCategory = List();
+  static List<ConsPurchaseModel> itemsConsultationPurchases = List();
   static List<FoodItemModel> itemsFood = List();
+  static List<ConsAppointmentModel> itemAppointments = List();
   static RegModel userInfo = RegModel();
   static String token;
   String uri = 'http://dietdelight.enigmaty.com';
@@ -67,7 +71,6 @@ class Api {
         identifier: identifier,
         secret: secret,
       );
-      print(client.credentials);
       var body = convert.jsonDecode(client.credentials.toJson());
       token = body['accessToken'];
       prefs.setString('email', loginData.email);
@@ -84,17 +87,26 @@ class Api {
   }
 
   Future<RegModel> getUserInfo() async {
-    final String result = await client.read(uri + '/api/v1/user');
-    if (result.isNotEmpty) {
-      var body = convert.jsonDecode(result);
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    final response = await http.get(uri + '/api/v1/user', headers: headers);
+    if (response.statusCode == 200) {
+      print('Success getting user info');
+      var body = convert.jsonDecode(response.body);
       userInfo = RegModel.fromMap(body);
       return userInfo;
+    } else if (response.statusCode == 400) {
+      print(response.statusCode);
+      return null;
     } else {
+      print(response.statusCode);
       return null;
     }
   }
 
-  Future<bool> updateUserInfo(RegModel user) async {
+  Future<bool> putUserInfo(RegModel user) async {
     final String result = await client.write(
       uri + '/api/v1/menus?sortOrder=desc',
     );
@@ -113,11 +125,17 @@ class Api {
   }
 
   Future<List<ConsultationModel>> getConsultationPackages() async {
-    print('called');
-    final String result =
-        await client.read(uri + '/api/v1/consultation-packages?sortOrder=desc');
-    if (result.isNotEmpty) {
-      var body = convert.jsonDecode(result);
+    itemsConsultation = [];
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    final response = await http.get(
+        uri + '/api/v1/consultation-packages?sortOrder=desc',
+        headers: headers);
+    if (response.statusCode == 200) {
+      print('Success getting consultation packages');
+      var body = convert.jsonDecode(response.body);
       List data = body['data'];
       data.forEach((element) {
         ConsultationModel item = ConsultationModel.fromMap(element);
@@ -125,16 +143,23 @@ class Api {
       });
       return itemsConsultation;
     } else {
-      return [];
+      print(response.statusCode);
+      print(response.body);
+      return itemsConsultation;
     }
   }
 
   Future<List<MenuModel>> getMenuPackages() async {
     itemsMenu = [];
-    final String result =
-        await client.read(uri + '/api/v1/menus?sortOrder=desc');
-    if (result.isNotEmpty) {
-      var body = convert.jsonDecode(result);
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    final response =
+        await http.get(uri + '/api/v1/menus?sortOrder=desc', headers: headers);
+    if (response.statusCode == 200) {
+      print('Success getting menus');
+      var body = convert.jsonDecode(response.body);
       List data = body['data'];
       data.forEach((element) {
         MenuModel item = MenuModel.fromMap(element);
@@ -142,16 +167,23 @@ class Api {
       });
       return itemsMenu;
     } else {
-      return [];
+      print(response.statusCode);
+      print(response.body);
+      return itemsMenu;
     }
   }
 
   Future<List<MealModel>> getMealPlans() async {
     itemsMeal = [];
-    final String result =
-        await client.read(uri + '/api/v1/meal-plans?sortOrder=desc');
-    if (result.isNotEmpty) {
-      var body = convert.jsonDecode(result);
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    final response = await http.get(uri + '/api/v1/meal-plans?sortOrder=desc',
+        headers: headers);
+    if (response.statusCode == 200) {
+      print('Success getting meal plans');
+      var body = convert.jsonDecode(response.body);
       List data = body['data'];
       data.forEach((element) {
         MealModel item = MealModel.fromMap(element);
@@ -159,16 +191,23 @@ class Api {
       });
       return itemsMeal;
     } else {
-      return [];
+      print(response.statusCode);
+      print(response.body);
+      return itemsMeal;
     }
   }
 
   Future<List<QuestionnaireModel>> getQuestions() async {
-    print('called2');
-    final String result =
-        await client.read(uri + '/api/v1/questions?sortOrder=desc');
-    if (result.isNotEmpty) {
-      var body = convert.jsonDecode(result);
+    itemsQuestionnaire = [];
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    final response = await http.get(uri + '/api/v1/questions?sortOrder=desc',
+        headers: headers);
+    if (response.statusCode == 200) {
+      print('Success getting question');
+      var body = convert.jsonDecode(response.body);
       List data = body['data'];
       data.forEach((element) {
         QuestionnaireModel item = QuestionnaireModel.fromMap(element);
@@ -176,16 +215,24 @@ class Api {
       });
       return itemsQuestionnaire;
     } else {
-      return [];
+      print(response.statusCode);
+      print(response.body);
+      return itemsQuestionnaire;
     }
   }
 
   Future<List<MenuCategoryModel>> getCategories(int menuId) async {
     itemsMenuCategory = [];
-    final String result = await client
-        .read(uri + '/api/v1/menu-categories?menu_id=$menuId&sortOrder=desc');
-    if (result.isNotEmpty) {
-      var body = convert.jsonDecode(result);
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    final response = await http.get(
+        uri + '/api/v1/menu-categories?menu_id=$menuId&sortOrder=desc',
+        headers: headers);
+    if (response.statusCode == 200) {
+      print('Success getting menu categories');
+      var body = convert.jsonDecode(response.body);
       List data = body['data'];
       data.forEach((element) {
         MenuCategoryModel item = MenuCategoryModel.fromMap(element);
@@ -193,17 +240,26 @@ class Api {
       });
       return itemsMenuCategory;
     } else {
-      return [];
+      print(response.statusCode);
+      print(response.body);
+      return itemsMenuCategory;
     }
   }
 
   Future<List<FoodItemModel>> getCategoryFoodItems(
       String menuId, String categoryId) async {
     itemsFood = [];
-    final String result = await client.read(uri +
-        '/api/v1/menu-items?menu_id=$menuId&menu_category_id=$categoryId&sortOrder=desc');
-    if (result.isNotEmpty) {
-      var body = convert.jsonDecode(result);
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    final response = await http.get(
+        uri +
+            '/api/v1/menu-items?menu_id=$menuId&menu_category_id=$categoryId&sortOrder=desc',
+        headers: headers);
+    if (response.statusCode == 200) {
+      print('Success getting menu category items');
+      var body = convert.jsonDecode(response.body);
       List data = body['data'];
       data.forEach((element) {
         FoodItemModel item = FoodItemModel.fromMap(element);
@@ -211,7 +267,95 @@ class Api {
       });
       return itemsFood;
     } else {
-      return [];
+      print(response.statusCode);
+      print(response.body);
+      return itemsFood;
+    }
+  }
+
+  Future<String> postConsultationPurchase(ConsPurchaseModel order) async {
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    String body = convert.jsonEncode(order.toMap());
+    final response = await http.post(uri + '/api/v1/my-consultation-purchases',
+        headers: headers, body: body);
+    if (response.statusCode == 201) {
+      var body = convert.jsonDecode(response.body);
+      ConsPurchaseModel item = ConsPurchaseModel.fromMap(body['data']);
+      return item.id;
+    } else {
+      print(response.statusCode);
+      print(response.body);
+      return null;
+    }
+  }
+
+  Future<List<ConsPurchaseModel>> getConsultationPurchases() async {
+    itemsConsultationPurchases = [];
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    final response = await http.get(
+        uri + '/api/v1/my-consultation-purchases?sortOrder=desc',
+        headers: headers);
+    if (response.statusCode == 200) {
+      print('Success getting menu category items');
+      var body = convert.jsonDecode(response.body);
+      List data = body['data'];
+      data.forEach((element) {
+        ConsPurchaseModel item = ConsPurchaseModel.fromMap(element);
+        itemsConsultationPurchases.add(item);
+      });
+      return itemsConsultationPurchases;
+    } else {
+      print(response.statusCode);
+      print(response.body);
+      return itemsConsultationPurchases;
+    }
+  }
+
+  Future<bool> postAppointment(ConsAppointmentModel appointment) async {
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    String body = convert.jsonEncode(appointment.toMap());
+    final response = await http.post(uri + '/api/v1/my-consultations',
+        headers: headers, body: body);
+    if (response.statusCode == 201) {
+      print('appointment Posted');
+      return true;
+    } else {
+      print(response.statusCode);
+      print(response.body);
+      return false;
+    }
+  }
+
+  Future<List<ConsAppointmentModel>> getAppointments() async {
+    itemAppointments = [];
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    final response =
+        await http.get(uri + '/api/v1/my-consultations', headers: headers);
+    if (response.statusCode == 200) {
+      var body = convert.jsonDecode(response.body);
+      List data = body['data'];
+      data.forEach((element) {
+        ConsAppointmentModel item = ConsAppointmentModel.fromMap(element);
+        itemAppointments.add(item);
+      });
+      print(itemAppointments.length);
+      return itemAppointments;
+    } else {
+      print(response.statusCode);
+      print(response.body);
+      return itemAppointments;
     }
   }
 }
