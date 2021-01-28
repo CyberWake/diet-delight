@@ -24,4 +24,9 @@ class MenuCategoryModel {
     print('parent: $parent');
     print('maxBuy: $maxBuy');
   }
+
+  showNew() {
+    print(
+        'id: $id\tname: $name\tmenuId: $menuId\tparent: $parent\tmaxBuy: $maxBuy');
+  }
 }
