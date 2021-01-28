@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:core';
 
+import 'package:diet_delight/landingPage.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'file:///C:/Users/VK/Desktop/ritik/diet-delight-mobile/lib/Screens/landingPage.dart';
 
 class SplashScreen extends StatefulWidget {
   final dynamic navigateAfterSeconds;

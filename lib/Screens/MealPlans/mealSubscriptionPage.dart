@@ -1,8 +1,9 @@
 import 'package:diet_delight/Models/mealModel.dart';
-import 'package:diet_delight/Screens/MealSubscription/prePaymentSubscription.dart';
+import 'package:diet_delight/Screens/MealPlans/prePaymentMealPlan.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -24,6 +25,18 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
   List<String> selDays = List();
   List<bool> selectedDays = [false, false, false, false, false, false, false];
   List<String> days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  TextEditingController addressPrimary = TextEditingController();
+  TextEditingController addressSecondary = TextEditingController();
+  FocusNode addressFocus = FocusNode();
+  String addressArea = 'Bahrain';
+  String localAddress = '';
+  double _height = 350;
+  int items = 4;
+  int selectedAddress = -1;
+  List<String> types = ['Home', 'Work'];
+  List<String> areas = ['Bahrain', 'India'];
+  List<String> areas2 = ['Bahrain', 'India'];
+  String addressType = 'Home';
 
   @override
   void initState() {
@@ -40,6 +53,305 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
             true,
           ]
         : selectedDays = [true, true, true, true, true, false, false];
+    addressFocus.addListener(() {
+      if (addressFocus.hasFocus) {
+        setState(() {
+          items = 5;
+          _height = 600;
+        });
+      } else if (!addressFocus.hasFocus) {
+        setState(() {
+          items = 4;
+          _height = 350;
+        });
+      }
+    });
+  }
+
+  void addAddress({int address}) {
+    if (address == 0 && addressPrimary.text.isNotEmpty) {
+      var separatedAddress = addressPrimary.text.split(',');
+      addressArea = separatedAddress[separatedAddress.length - 1];
+      localAddress = separatedAddress[0];
+    } else if (address == 1 && addressSecondary.text.isNotEmpty) {
+      var separatedAddress = addressSecondary.text.split(',');
+      addressArea = separatedAddress[separatedAddress.length - 1];
+      localAddress = separatedAddress[0];
+    } else {
+      localAddress = '';
+    }
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        builder: (builder) {
+          return StatefulBuilder(builder:
+              (BuildContext context, StateSetter addressModalStateUpdate) {
+            return Container(
+              height: _height,
+              color:
+                  Colors.transparent, //could change this to Color(0xFF737373),
+              //so you don't have to change MaterialApp canvasColor
+              child: Container(
+                  padding: EdgeInsets.only(top: 30),
+                  child: Column(
+                      children: List.generate(items, (index) {
+                    if (index < 2) {
+                      return Expanded(
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          decoration: BoxDecoration(
+                            color: white,
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 4,
+                                color: Colors.black.withOpacity(0.25),
+                                spreadRadius: 0,
+                                offset: const Offset(0.0, 0.0),
+                              )
+                            ],
+                          ),
+                          child: DropDown<String>(
+                            showUnderline: false,
+                            items: index == 0 ? types : areas,
+                            onChanged: (String choice) {
+                              if (index == 0) {
+                                addressType = choice;
+                              } else if (index == 1) {
+                                addressArea = choice;
+                              }
+                              print(choice);
+                              addressModalStateUpdate(() {});
+                            },
+                            isExpanded: true,
+                          ),
+                        ),
+                      );
+                    } else if (index == 2) {
+                      return Expanded(
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          decoration: BoxDecoration(
+                            color: white,
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 4,
+                                color: Colors.black.withOpacity(0.25),
+                                spreadRadius: 0,
+                                offset: const Offset(0.0, 0.0),
+                              )
+                            ],
+                          ),
+                          child: TextFormField(
+                              controller: address == 0
+                                  ? addressPrimary
+                                  : addressSecondary,
+                              focusNode: addressFocus,
+                              onFieldSubmitted: (done) {
+                                localAddress = done;
+                              },
+                              style: authInputTextStyle,
+                              textAlign: TextAlign.center,
+                              keyboardType: TextInputType.text,
+                              textInputAction: TextInputAction.next,
+                              decoration: authInputFieldDecoration.copyWith(
+                                  hintText:
+                                      'House #, House name, Street name')),
+                        ),
+                      );
+                    } else if (index == 3) {
+                      return Expanded(
+                          child: GestureDetector(
+                        onTap: () {
+                          print(addressArea);
+                          if (address == 0) {
+                            addressPrimary.text += ', ' + addressArea;
+                            print(addressPrimary.text);
+                          } else if (address == 1) {
+                            addressSecondary.text += ', ' + addressArea;
+                          }
+                          setState(() {});
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(top: 20),
+                          color: defaultGreen,
+                          child: Center(
+                              child: Text(
+                            localAddress.length > 0 || addressArea != null
+                                ? 'Update'
+                                : 'ADD',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          )),
+                        ),
+                      ));
+                    } else {
+                      return SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.35,
+                      );
+                    }
+                  }))),
+            );
+          });
+        });
+  }
+
+  void getBottomSheet() {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        builder: (builder) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter modalStateUpdate) {
+            return Container(
+              height: 380,
+              color: Colors.transparent,
+              child: Container(
+                  padding: EdgeInsets.only(top: 10),
+                  child: Column(
+                      children: List.generate(3, (index) {
+                    if (index == 2) {
+                      return Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(top: 20),
+                            color: defaultGreen,
+                            child: Center(
+                                child: Text(
+                              'Done',
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            )),
+                          ),
+                        ),
+                      );
+                    }
+                    if (index == 0 && addressPrimary.text.isNotEmpty) {
+                      var separatedAddress = addressPrimary.text.split(',');
+                      addressArea =
+                          separatedAddress[separatedAddress.length - 1];
+                      localAddress = separatedAddress[0];
+                    } else if (index == 1 && addressSecondary.text.isNotEmpty) {
+                      var separatedAddress = addressSecondary.text.split(',');
+                      addressArea =
+                          separatedAddress[separatedAddress.length - 1];
+                      localAddress = separatedAddress[0];
+                    } else {
+                      localAddress = '';
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 40.0, vertical: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(left: 15.0, bottom: 10),
+                            child: Text(
+                              index == 0
+                                  ? 'Primary Address'
+                                  : 'Secondary Address',
+                              style: selectedTab.copyWith(
+                                  color:
+                                      index == 0 ? defaultGreen : Colors.black,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              if (index == 0) {
+                                if (addressPrimary.text.isNotEmpty) {
+                                  modalStateUpdate(() {
+                                    selectedAddress = index;
+                                  });
+                                }
+                              } else if (index == 1) {
+                                if (addressSecondary.text.isNotEmpty) {
+                                  modalStateUpdate(() {
+                                    selectedAddress = index;
+                                  });
+                                }
+                              }
+                            },
+                            child: Container(
+                                height: 100,
+                                decoration: BoxDecoration(
+                                    color: selectedAddress == index
+                                        ? defaultGreen
+                                        : white,
+                                    border: Border.all(color: defaultGreen),
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: localAddress.length > 0
+                                    ? Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(15.0),
+                                                child: Text(
+                                                  localAddress +
+                                                      ',\n' +
+                                                      addressArea,
+                                                  style: selectedTab.copyWith(
+                                                      color: selectedAddress ==
+                                                              index
+                                                          ? white
+                                                          : defaultGreen,
+                                                      fontWeight:
+                                                          FontWeight.w400),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      )
+                                    : Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              TextButton(
+                                                child: Text('Add',
+                                                    style: TextStyle(
+                                                      color: darkGreen,
+                                                    )),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  addAddress(address: index);
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [Text('Not Available')],
+                                          )
+                                        ],
+                                      )),
+                          )
+                        ],
+                      ),
+                    );
+                  }))),
+            );
+          });
+        });
   }
 
   @override
@@ -328,8 +640,11 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                         'Jane Doe',
                         style: selectedTab,
                       ),
-                      Text('Change',
-                          style: unSelectedTab.copyWith(color: defaultGreen)),
+                      GestureDetector(
+                        onTap: getBottomSheet,
+                        child: Text('Change',
+                            style: unSelectedTab.copyWith(color: defaultGreen)),
+                      ),
                     ],
                   ),
                   SizedBox(

@@ -14,14 +14,14 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  FocusNode first;
-  FocusNode last;
-  FocusNode country;
-  FocusNode mobile;
-  FocusNode mail;
-  FocusNode pass;
-  FocusNode confPass;
-  FocusNode submit;
+  FocusNode first = FocusNode();
+  FocusNode last = FocusNode();
+  FocusNode country = FocusNode();
+  FocusNode mobile = FocusNode();
+  FocusNode mail = FocusNode();
+  FocusNode pass = FocusNode();
+  FocusNode confPass = FocusNode();
+  FocusNode submit = FocusNode();
   TextEditingController firstName = TextEditingController();
   TextEditingController lastName = TextEditingController();
   TextEditingController countryCode = TextEditingController();
@@ -35,14 +35,6 @@ class _SignUpState extends State<SignUp> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    first = FocusNode();
-    last = FocusNode();
-    country = FocusNode();
-    mobile = FocusNode();
-    mail = FocusNode();
-    pass = FocusNode();
-    confPass = FocusNode();
-    submit = FocusNode();
     countryCode.text = '+91';
   }
 

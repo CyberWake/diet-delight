@@ -1,9 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diet_delight/Models/consultationModel.dart';
 import 'package:diet_delight/Models/mealModel.dart';
 import 'package:diet_delight/Models/menuModel.dart';
 import 'package:diet_delight/Screens/Consultation/bookConsultation.dart';
-import 'package:diet_delight/Screens/MealSubscription/mealPlanScreen.dart';
-import 'package:diet_delight/Screens/menupage.dart';
+import 'package:diet_delight/Screens/MealPlans/mealPlanSelectionScreen.dart';
+import 'package:diet_delight/Screens/Menu/menupage.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
@@ -46,6 +47,312 @@ class _HomeScreenState extends State<HomeScreen> {
         isLoaded = true;
       });
     });
+  }
+
+  Widget menuItemCard(int pos) {
+    return Padding(
+      padding: EdgeInsets.only(right: 15.0),
+      child: Material(
+        elevation: 0.0,
+        shadowColor: Colors.white,
+        child: InkWell(
+          splashColor: defaultGreen.withAlpha(30),
+          onTap: () {
+            Navigator.push(
+                context,
+                CupertinoPageRoute(
+                    builder: (context) => Menu(
+                          menu: menus[pos],
+                        )));
+
+            print('success getting menu screen');
+          },
+          child: Container(
+            color: Colors.white,
+            width: 110,
+            height: 220,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(bottom: 10.0),
+                  child: CircleAvatar(
+                    radius: 35,
+                    backgroundColor: Colors.white,
+                    child: CachedNetworkImage(
+                      imageUrl: menus[pos].picture,
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
+                  ),
+                ),
+                Column(
+                  children: [
+                    Text(
+                      menus[pos].name,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'RobotoCondensedReg',
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: defaultPurple,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 3, 0, 0),
+                      child: Container(
+                        width: 40,
+                        height: 2,
+                        color: defaultGreen,
+                      ),
+                    )
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10.0),
+                  child: Text(
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'RobotoCondensedReg',
+                      fontSize: 11,
+                      fontWeight: FontWeight.normal,
+                      color: cardGray,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: defaultGreen,
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    height: 25,
+                    child: Center(
+                      child: Text(
+                        'VIEW MENU',
+                        style: TextStyle(
+                          fontFamily: 'RobotoCondensedReg',
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget mealPlanCategoryCard(int pos) {
+    return Padding(
+      padding: EdgeInsets.only(right: 15.0),
+      child: Material(
+        elevation: 0.0,
+        shadowColor: Colors.white,
+        child: InkWell(
+          splashColor: defaultGreen.withAlpha(30),
+          onTap: () {
+            MenuModel pass = getMenu(pos);
+            if (pass != null) {
+              Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (context) => MealPlanPage(
+                          menu: pass, mealPlan: mealPackages[pos])));
+              print('success getting meal details page');
+            }
+          },
+          child: Container(
+            color: defaultGreen,
+            width: 120,
+            height: 220,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                    padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                    child: Text(
+                      mealPackages[pos].duration.toString() + ' days',
+                      style: TextStyle(
+                        fontFamily: 'RobotoCondensedReg',
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    )),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 10.0),
+                  child: Text(
+                    mealPackages[pos].name,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'RobotoCondensedReg',
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10.0),
+                  child: Text(
+                    mealPackages[pos].subtitle,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'RobotoCondensedReg',
+                      fontSize: 11,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    height: 25,
+                    child: Center(
+                      child: Text(
+                        'SUBSCRIPTION',
+                        style: TextStyle(
+                          fontFamily: 'RobotoCondensedReg',
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: defaultGreen,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget consultationItemCard(int pos) {
+    return Padding(
+      padding: EdgeInsets.only(right: 15.0),
+      child: Material(
+        elevation: 0.0,
+        shadowColor: Colors.white,
+        child: InkWell(
+          splashColor: defaultGreen.withAlpha(30),
+          onTap: () {
+            Navigator.push(
+                context,
+                CupertinoPageRoute(
+                    builder: (context) => BookConsultation(
+                          packageIndex: pos,
+                          consultation: consultationPackages,
+                        )));
+            print('success getting consultation package screen');
+          },
+          child: Container(
+            width: 110,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(width: 2.0, color: defaultGreen)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                    padding: EdgeInsets.only(bottom: 10.0, top: 10),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: itemColors[pos]),
+                      ),
+                      child: Padding(
+                          padding: EdgeInsets.fromLTRB(15, 3, 15, 3),
+                          child: Text(
+                            consultationPackages[pos].name,
+                            style: TextStyle(
+                              fontFamily: 'RobotoCondensedReg',
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          )),
+                    )),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(5.0, 10, 5, 0),
+                  child: Text(
+                    consultationPackages[pos].details,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'RobotoCondensedReg',
+                      fontSize: 11,
+                      fontWeight: FontWeight.normal,
+                      color: cardGray,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(5.0, 10, 5, 0),
+                  child: Text(
+                    consultationPackages[pos].price,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'RobotoCondensedReg',
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: defaultGreen,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: defaultGreen,
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    height: 25,
+                    child: Center(
+                      child: Text(
+                        'BOOK YOUR APPOINTMENT',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: 'RobotoCondensedReg',
+                          fontSize: 8,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -157,116 +464,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: ListView.builder(
                               itemCount: menus.length,
                               scrollDirection: Axis.horizontal,
-                              itemBuilder: (BuildContext context, int pos) {
-                                return Padding(
-                                  padding: EdgeInsets.only(right: 15.0),
-                                  child: Material(
-                                    elevation: 0.0,
-                                    shadowColor: Colors.white,
-                                    child: InkWell(
-                                      splashColor: defaultGreen.withAlpha(30),
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            CupertinoPageRoute(
-                                                builder: (context) => Menu(
-                                                      menu: menus[pos],
-                                                    )));
-
-                                        print('success getting menu screen');
-                                      },
-                                      child: Container(
-                                        color: Colors.white,
-                                        width: 110,
-                                        height: 220,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  EdgeInsets.only(bottom: 10.0),
-                                              child: CircleAvatar(
-                                                radius: 35,
-                                                child: Image.asset(
-                                                  'images/Ellipse 3.png',
-                                                ),
-                                                backgroundColor: Colors.white,
-                                              ),
-                                            ),
-                                            Column(
-                                              children: [
-                                                Text(
-                                                  menus[pos].name,
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    fontFamily:
-                                                        'RobotoCondensedReg',
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: defaultPurple,
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.fromLTRB(
-                                                      0, 3, 0, 0),
-                                                  child: Container(
-                                                    width: 40,
-                                                    height: 2,
-                                                    color: defaultGreen,
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  EdgeInsets.only(top: 10.0),
-                                              child: Text(
-                                                'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontFamily:
-                                                      'RobotoCondensedReg',
-                                                  fontSize: 11,
-                                                  fontWeight: FontWeight.normal,
-                                                  color: cardGray,
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      20, 20, 20, 10),
-                                              child: Container(
-                                                width: double.infinity,
-                                                decoration: BoxDecoration(
-                                                    color: defaultGreen,
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                5))),
-                                                height: 25,
-                                                child: Center(
-                                                  child: Text(
-                                                    'VIEW MENU',
-                                                    style: TextStyle(
-                                                      fontFamily:
-                                                          'RobotoCondensedReg',
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
+                              itemBuilder: (BuildContext context, int index) {
+                                return menuItemCard(index);
                               }),
                         ),
                       )
@@ -315,118 +514,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: ListView.builder(
                               itemCount: mealPackages.length,
                               scrollDirection: Axis.horizontal,
-                              itemBuilder: (BuildContext context, int pos) {
-                                return Padding(
-                                  padding: EdgeInsets.only(right: 15.0),
-                                  child: Material(
-                                    elevation: 0.0,
-                                    shadowColor: Colors.white,
-                                    child: InkWell(
-                                      splashColor: defaultGreen.withAlpha(30),
-                                      onTap: () {
-                                        MenuModel pass = getMenu(pos);
-                                        if (pass != null) {
-                                          Navigator.push(
-                                              context,
-                                              CupertinoPageRoute(
-                                                  builder: (context) =>
-                                                      MealPlanPage(
-                                                          menu: pass,
-                                                          mealPlan:
-                                                              mealPackages[
-                                                                  pos])));
-                                          print(
-                                              'success getting meal details page');
-                                        }
-                                      },
-                                      child: Container(
-                                        color: defaultGreen,
-                                        width: 120,
-                                        height: 220,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Padding(
-                                                padding: EdgeInsets.only(
-                                                    top: 10.0, bottom: 10.0),
-                                                child: Text(
-                                                  mealPackages[pos]
-                                                          .duration
-                                                          .toString() +
-                                                      ' days',
-                                                  style: TextStyle(
-                                                    fontFamily:
-                                                        'RobotoCondensedReg',
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white,
-                                                  ),
-                                                )),
-                                            Padding(
-                                              padding:
-                                                  EdgeInsets.only(bottom: 10.0),
-                                              child: Text(
-                                                mealPackages[pos].name,
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontFamily:
-                                                      'RobotoCondensedReg',
-                                                  fontSize: 11,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  EdgeInsets.only(top: 10.0),
-                                              child: Text(
-                                                mealPackages[pos].subtitle,
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontFamily:
-                                                      'RobotoCondensedReg',
-                                                  fontSize: 11,
-                                                  fontWeight: FontWeight.normal,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      20, 20, 20, 10),
-                                              child: Container(
-                                                width: double.infinity,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                5))),
-                                                height: 25,
-                                                child: Center(
-                                                  child: Text(
-                                                    'SUBSCRIPTION',
-                                                    style: TextStyle(
-                                                      fontFamily:
-                                                          'RobotoCondensedReg',
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: defaultGreen,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
+                              itemBuilder: (BuildContext context, int index) {
+                                return mealPlanCategoryCard(index);
                               }),
                         ),
                       ),
@@ -595,137 +684,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 itemCount: consultationPackages.length,
                                 scrollDirection: Axis.horizontal,
                                 itemBuilder: (BuildContext context, int index) {
-                                  return Padding(
-                                    padding: EdgeInsets.only(right: 15.0),
-                                    child: Material(
-                                      elevation: 0.0,
-                                      shadowColor: Colors.white,
-                                      child: InkWell(
-                                        splashColor: defaultGreen.withAlpha(30),
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              CupertinoPageRoute(
-                                                  builder: (context) =>
-                                                      BookConsultation(
-                                                        packageIndex: index,
-                                                        consultation:
-                                                            consultationPackages,
-                                                      )));
-                                          print(
-                                              'success getting consultation package screen');
-                                        },
-                                        child: Container(
-                                          width: 110,
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              border: Border.all(
-                                                  width: 2.0,
-                                                  color: defaultGreen)),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                  padding: EdgeInsets.only(
-                                                      bottom: 10.0, top: 10),
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      gradient: LinearGradient(
-                                                          begin: Alignment
-                                                              .centerLeft,
-                                                          end: Alignment
-                                                              .centerRight,
-                                                          colors: itemColors[
-                                                              index]),
-                                                    ),
-                                                    child: Padding(
-                                                        padding:
-                                                            EdgeInsets.fromLTRB(
-                                                                15, 3, 15, 3),
-                                                        child: Text(
-                                                          consultationPackages[
-                                                                  index]
-                                                              .name,
-                                                          style: TextStyle(
-                                                            fontFamily:
-                                                                'RobotoCondensedReg',
-                                                            fontSize: 11,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.black,
-                                                          ),
-                                                        )),
-                                                  )),
-                                              Padding(
-                                                padding: EdgeInsets.fromLTRB(
-                                                    5.0, 10, 5, 0),
-                                                child: Text(
-                                                  consultationPackages[index]
-                                                      .details,
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    fontFamily:
-                                                        'RobotoCondensedReg',
-                                                    fontSize: 11,
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                    color: cardGray,
-                                                  ),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.fromLTRB(
-                                                    5.0, 10, 5, 0),
-                                                child: Text(
-                                                  consultationPackages[index]
-                                                      .price,
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    fontFamily:
-                                                        'RobotoCondensedReg',
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: defaultGreen,
-                                                  ),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        20, 10, 20, 10),
-                                                child: Container(
-                                                  width: double.infinity,
-                                                  decoration: BoxDecoration(
-                                                      color: defaultGreen,
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  5))),
-                                                  height: 25,
-                                                  child: Center(
-                                                    child: Text(
-                                                      'BOOK YOUR APPOINTMENT',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                        fontFamily:
-                                                            'RobotoCondensedReg',
-                                                        fontSize: 8,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
+                                  return consultationItemCard(index);
                                 },
                               ))),
                       SizedBox(

@@ -1,7 +1,7 @@
 import 'package:bubble/bubble.dart';
 import 'package:diet_delight/Models/questionnaireModel.dart';
-import 'file:///C:/Users/VK/Desktop/ritik/diet-delight-mobile/lib/Screens/landingPage.dart';
 import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/landingPage.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

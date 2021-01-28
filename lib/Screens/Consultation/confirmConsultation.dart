@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:diet_delight/Models/consultationAppointmentModel.dart';
 import 'package:diet_delight/Models/consultationModel.dart';
 import 'package:diet_delight/Models/consultationPurchaseModel.dart';
-import 'package:diet_delight/Screens/prepayment.dart';
+import 'package:diet_delight/Screens/Consultation/prePaymentConsultation.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';

@@ -131,31 +131,13 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
             child: Container(
               decoration: authFieldDecoration,
               child: TextFormField(
-                  controller: index == 0
-                      ? name
-                      : index == 1
-                          ? mobileNo
-                          : email,
+                  controller: name,
                   onFieldSubmitted: (done) {
-                    switch (index) {
-                      case 0:
-                        name.text = done;
-                        break;
-                      case 1:
-                        mobileNo.text = done;
-                        break;
-                      case 2:
-                        email.text = done;
-                        break;
-                    }
+                    name.text = done;
                   },
                   style: authInputTextStyle.copyWith(fontSize: 16),
                   textAlign: TextAlign.center,
-                  keyboardType: index == 0
-                      ? TextInputType.text
-                      : index == 1
-                          ? TextInputType.phone
-                          : TextInputType.emailAddress,
+                  keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
                   focusNode: focusNode,
                   decoration: authInputFieldDecoration),
@@ -508,9 +490,10 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                   onPress: () {
                     getPassBottomSheet();
                   }),
-              generateTextField(
-                  fieldName: 'Phone Number', focusNode: phoneNo, index: 1),
-              generateTextField(fieldName: 'Email', focusNode: mail, index: 2),
+              generateStaticTextField(
+                  fieldName: 'Phone Number', fieldValue: mobileNo.text),
+              generateStaticTextField(
+                  fieldName: 'Email', fieldValue: email.text),
               generateOnTapFields(
                   fieldName: 'Address',
                   text: addressPrimary.text.isNotEmpty

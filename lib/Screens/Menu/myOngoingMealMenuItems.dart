@@ -1,5 +1,5 @@
 import 'package:diet_delight/Models/foodItemModel.dart';
-import 'package:diet_delight/Screens/MealSubscription/mealSelection.dart';
+import 'package:diet_delight/Screens/Menu/editMyMealPlanMenuItems.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

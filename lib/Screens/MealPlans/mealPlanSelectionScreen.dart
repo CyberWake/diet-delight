@@ -1,8 +1,8 @@
 import 'package:diet_delight/Models/mealModel.dart';
 import 'package:diet_delight/Models/menuCategoryModel.dart';
 import 'package:diet_delight/Models/menuModel.dart';
-import 'package:diet_delight/Screens/MealSubscription/mealSubscriptionPage.dart';
-import 'package:diet_delight/Screens/menupage.dart';
+import 'package:diet_delight/Screens/MealPlans/mealSubscriptionPage.dart';
+import 'package:diet_delight/Screens/Menu/menupage.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,6 +18,7 @@ class MealPlanPage extends StatefulWidget {
 
 class _MealPlanPageState extends State<MealPlanPage> {
   List<MenuCategoryModel> categoryItems = List();
+  List<MenuCategoryModel> tempItems = List();
   final _apiCall = Api.instance;
   int menuId = 0;
   int weekSelectionIndex = 0;
@@ -68,10 +69,16 @@ class _MealPlanPageState extends State<MealPlanPage> {
     setState(() {
       isLoaded = false;
     });
-    categoryItems = await _apiCall.getCategories(menuId).whenComplete(() {
-      setState(() {
-        isLoaded = true;
-      });
+    categoryItems = await _apiCall.getCategories(menuId);
+    categoryItems.forEach((element) {
+      if (element.parent == 0) {
+        tempItems.add(element);
+      }
+    });
+    categoryItems = [];
+    categoryItems = tempItems;
+    setState(() {
+      isLoaded = true;
     });
   }
 
@@ -169,7 +176,11 @@ class _MealPlanPageState extends State<MealPlanPage> {
                                 child: Container(
                                     height: 80,
                                     width: 80,
-                                    child: CircleAvatar())),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Image.network(
+                                        widget.mealPlan.picture))),
                             SizedBox(height: 5),
                             Expanded(
                                 flex: 2,
@@ -202,58 +213,68 @@ class _MealPlanPageState extends State<MealPlanPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
-                    child: Text(
-                      getCategories(),
-                      style: selectedTab.copyWith(
-                          fontSize: 16, fontWeight: FontWeight.w400),
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
+                      child: Text(
+                        getCategories(),
+                        style: selectedTab.copyWith(
+                            fontSize: 16, fontWeight: FontWeight.w400),
+                      ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
-                    child: Text(
-                      '- ' + widget.menu.description,
-                      style: selectedTab.copyWith(
-                          fontSize: 16, fontWeight: FontWeight.w400),
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
+                      child: Text(
+                        '- ' + widget.menu.description,
+                        style: selectedTab.copyWith(
+                            fontSize: 16, fontWeight: FontWeight.w400),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
             Expanded(
-              flex: 2,
+              flex: 1,
               child: Container(
-                margin: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.18,
-                    vertical: 28),
+                margin: EdgeInsets.only(
+                    right: MediaQuery.of(context).size.width * 0.18,
+                    left: MediaQuery.of(context).size.width * 0.18,
+                    bottom: 15),
                 width: double.infinity,
                 decoration: BoxDecoration(
                     color: defaultGreen,
                     borderRadius: BorderRadius.all(Radius.circular(15))),
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                            builder: (context) => MealSubscriptionPage(
-                                mealPackage: widget.mealPlan,
-                                weekDaysSelected:
-                                    weekSelectionIndex == 0 ? 7 : 5)));
-                  },
-                  child: Text(
-                    'Buy Subscription',
-                    style: TextStyle(
-                      fontFamily: 'RobotoCondensedReg',
-                      fontSize: 20,
-                      fontWeight: FontWeight.normal,
-                      color: white,
+                child: Center(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) => MealSubscriptionPage(
+                                  mealPackage: widget.mealPlan,
+                                  weekDaysSelected:
+                                      weekSelectionIndex == 0 ? 7 : 5)));
+                    },
+                    child: Text(
+                      'Buy Subscription',
+                      style: TextStyle(
+                        fontFamily: 'RobotoCondensedReg',
+                        fontSize: 20,
+                        fontWeight: FontWeight.normal,
+                        color: white,
+                      ),
                     ),
+                    style: TextButton.styleFrom(
+                        backgroundColor: defaultGreen,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20)))),
                   ),
-                  style: TextButton.styleFrom(
-                      backgroundColor: defaultGreen,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20)))),
                 ),
               ),
             ),
