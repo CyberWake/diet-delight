@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:date_format/date_format.dart';
 import 'package:diet_delight/Models/consultationModel.dart';
 import 'package:diet_delight/Screens/Consultation/confirmConsultation.dart';
 import 'package:diet_delight/konstants.dart';
@@ -22,6 +23,7 @@ class _BookConsultationState extends State<BookConsultation>
     with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int consultationIndex;
+  List<String> format = [yyyy, '-', mm, '-', dd];
   String dropdownValue = 'One';
   DateTime today;
   DateTime dateSelected;
@@ -89,7 +91,9 @@ class _BookConsultationState extends State<BookConsultation>
   @override
   void initState() {
     super.initState();
-    today = new DateTime.now();
+    today = new DateTime.now().add(Duration(days: 2));
+    dateSelected = today;
+    date = formatDate(dateSelected, format);
     _tabController = new TabController(length: 3, vsync: this);
     consultationIndex = widget.packageIndex;
     _tabController.addListener(() {
@@ -229,9 +233,8 @@ class _BookConsultationState extends State<BookConsultation>
                           initialDate: dateSelected ?? today,
                           firstDate: today.subtract(Duration(days: 1)));
                       setState(() {
-                        dateSelected = selectedDateTime;
-                        date =
-                            '${dateSelected.year.toString()}-${dateSelected.month.toString().padLeft(2, '0')}-${dateSelected.day.toString().padLeft(2, '0')}';
+                        dateSelected = selectedDateTime ?? dateSelected;
+                        date = formatDate(dateSelected, format);
                       });
                       print(date);
                     },

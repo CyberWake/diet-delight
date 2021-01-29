@@ -1,4 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:date_format/date_format.dart';
 import 'package:diet_delight/Models/foodItemModel.dart';
+import 'package:diet_delight/Models/mealModel.dart';
+import 'package:diet_delight/Models/mealPurchaseModel.dart';
 import 'package:diet_delight/Screens/Menu/editMyMealPlanMenuItems.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,12 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 
 class MyMealMenu extends StatefulWidget {
-  final int planDuration;
-  final int index;
-  final String mealPlanName;
-  final String mealPlanDisc;
-  MyMealMenu(
-      {this.index, this.planDuration, this.mealPlanDisc, this.mealPlanName});
+  final MealPurchaseModel purchaseDetails;
+  final MealModel plan;
+  MyMealMenu({this.purchaseDetails, this.plan});
   @override
   _MyMealMenuState createState() => _MyMealMenuState();
 }
@@ -21,7 +22,6 @@ class _MyMealMenuState extends State<MyMealMenu>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ScrollController _scrollController = new ScrollController();
   TabController _pageController;
-  int planIndex = 0;
   TextEditingController addressPrimary = TextEditingController();
   TextEditingController addressSecondary = TextEditingController();
   FocusNode addressFocus = FocusNode();
@@ -30,6 +30,7 @@ class _MyMealMenuState extends State<MyMealMenu>
   double _height = 350;
   int items = 4;
   int selectedAddress = -1;
+  List<String> format = [dd, ' ', 'M', ', ', yyyy];
   List<String> types = ['Home', 'Work'];
   List<String> areas1 = ['Bahrain', 'India'];
   List<String> areas2 = ['Bahrain', 'India'];
@@ -70,8 +71,9 @@ class _MyMealMenuState extends State<MyMealMenu>
   @override
   void initState() {
     super.initState();
-    planIndex = widget.index;
-    _pageController = TabController(length: widget.planDuration, vsync: this);
+    _pageController = TabController(
+        length: int.parse(widget.purchaseDetails.mealPlanDuration),
+        vsync: this);
     addressFocus.addListener(() {
       if (addressFocus.hasFocus) {
         setState(() {
@@ -425,7 +427,7 @@ class _MyMealMenuState extends State<MyMealMenu>
                                   children: [
                                     Flexible(
                                       child: Text(
-                                        widget.mealPlanName,
+                                        widget.purchaseDetails.mealPlanName,
                                         style: TextStyle(
                                           fontFamily: 'RobotoCondensedReg',
                                           fontSize: 28,
@@ -438,7 +440,7 @@ class _MyMealMenuState extends State<MyMealMenu>
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 10),
                                         child: Text(
-                                          widget.mealPlanDisc,
+                                          widget.plan.details,
                                           style: authInputTextStyle.copyWith(
                                               fontSize: 14,
                                               color: Colors.black),
@@ -465,6 +467,25 @@ class _MyMealMenuState extends State<MyMealMenu>
                                     ),
                                     child: CircleAvatar(
                                       radius: 45,
+                                      backgroundColor: Colors.white,
+                                      child: CachedNetworkImage(
+                                        imageUrl: widget.plan.picture,
+                                        imageBuilder:
+                                            (context, imageProvider) =>
+                                                Container(
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        placeholder: (context, url) =>
+                                            CircularProgressIndicator(),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.error),
+                                      ),
                                     ),
                                   ))
                             ],
@@ -484,20 +505,23 @@ class _MyMealMenuState extends State<MyMealMenu>
                         children: [
                           Flexible(
                             child: Text(
-                              "10 day meal plan • without weekends",
+                              "${widget.purchaseDetails.mealPlanDuration} day meal plan • " +
+                                  (widget.plan.type == 0
+                                      ? "With Weekends"
+                                      : "Without Weekends"),
                               style: TextStyle(color: Colors.black),
                             ),
                           ),
                           Flexible(
                             fit: FlexFit.loose,
                             child: Text(
-                              "Calorie",
+                              "${widget.purchaseDetails.kCal} Calorie",
                               style: TextStyle(color: Colors.black),
                             ),
                           ),
                           Flexible(
                             child: Text(
-                              "Start Date - 22 Jun 2021 ",
+                              'Start Date - ${formatDate(DateTime.parse(widget.purchaseDetails.startDate), format)}',
                               style: TextStyle(color: Colors.black),
                             ),
                           ),
@@ -534,19 +558,10 @@ class _MyMealMenuState extends State<MyMealMenu>
                   ),
                 ),
                 Expanded(
-                  flex: 2,
-                  child: Center(
-                    child: DropDown<String>(
-                      showUnderline: false,
-                      items: calorie,
-                      onChanged: (String choice) {
-                        planIndex = calorie.indexOf(choice);
-                        setState(() {});
-                      },
-                      initialValue: calorie[planIndex],
-                    ),
-                  ),
-                ),
+                    flex: 2,
+                    child: Align(
+                        alignment: Alignment.center,
+                        child: Text('${widget.purchaseDetails.kCal} Calorie'))),
                 Expanded(
                   flex: 2,
                   child: Container(
@@ -574,7 +589,9 @@ class _MyMealMenuState extends State<MyMealMenu>
                       unselectedLabelStyle:
                           unSelectedTab.copyWith(color: Colors.grey),
                       unselectedLabelColor: Colors.grey,
-                      tabs: List.generate(widget.planDuration, (index) {
+                      tabs: List.generate(
+                          int.parse(widget.purchaseDetails.mealPlanDuration),
+                          (index) {
                         return Tab(
                           text: 'Day ${(index + 1).toString()}',
                         );
@@ -586,7 +603,9 @@ class _MyMealMenuState extends State<MyMealMenu>
                   flex: 18,
                   child: TabBarView(
                       controller: _pageController,
-                      children: List.generate(widget.planDuration, (index) {
+                      children: List.generate(
+                          int.parse(widget.purchaseDetails.mealPlanDuration),
+                          (index) {
                         return Column(
                           children: [
                             Expanded(child: menuUi()),
@@ -597,12 +616,9 @@ class _MyMealMenuState extends State<MyMealMenu>
                                     CupertinoPageRoute(
                                         builder: (BuildContext context) =>
                                             MealPlan(
-                                              planDuration: 14,
-                                              mealPlanName: 'One meal plan',
-                                              mealPlanDisc:
-                                                  'fajbfiahOIWJRCQRHNEWOCRHESNROEWTHCIEWNXEHCRBNEWIOTCNXGTCUEWIYOUQH',
-                                              index: 0,
-                                            )));
+                                                plan: widget.plan,
+                                                purchaseDetails:
+                                                    widget.purchaseDetails)));
                               },
                               child: Container(
                                 height: 50,

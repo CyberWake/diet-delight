@@ -60,12 +60,8 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                             context,
                             CupertinoPageRoute(
                                 builder: (BuildContext context) => MealPlan(
-                                      planDuration: 14,
-                                      mealPlanName: 'One meal plan',
-                                      mealPlanDisc:
-                                          'fajbfiahOIWJRCQRHNEWOCRHESNROEWTHCIEWNXEHCRBNEWIOTCNXGTCUEWIYOUQH',
-                                      index: 0,
-                                    )));
+                                    purchaseDetails: orders[index],
+                                    plan: plans[index])));
                         setState(() {
                           firstVisit = false;
                         });
@@ -74,12 +70,8 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                             context,
                             CupertinoPageRoute(
                                 builder: (BuildContext context) => MyMealMenu(
-                                      planDuration: 14,
-                                      mealPlanName: 'One meal plan',
-                                      mealPlanDisc:
-                                          'fajbfiahOIWJRCQRHNEWOCRHESNROEWTHCIEWNXEHCRBNEWIOTCNXGTCUEWIYOUQH',
-                                      index: 0,
-                                    )));
+                                    purchaseDetails: orders[index],
+                                    plan: plans[index])));
                       }
                     },
                     child: Container(
@@ -232,12 +224,9 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                                         CupertinoPageRoute(
                                             builder: (BuildContext context) =>
                                                 MealPlan(
-                                                  planDuration: 14,
-                                                  mealPlanName: 'One meal plan',
-                                                  mealPlanDisc:
-                                                      'fajbfiahOIWJRCQRHNEWOCRHESNROEWTHCIEWNXEHCRBNEWIOTCNXGTCUEWIYOUQH',
-                                                  index: 0,
-                                                )));
+                                                    purchaseDetails:
+                                                        orders[index],
+                                                    plan: plans[index])));
                                     setState(() {
                                       firstVisit = false;
                                     });
@@ -247,12 +236,9 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                                         CupertinoPageRoute(
                                             builder: (BuildContext context) =>
                                                 MyMealMenu(
-                                                  planDuration: 14,
-                                                  mealPlanName: 'One meal plan',
-                                                  mealPlanDisc:
-                                                      'fajbfiahOIWJRCQRHNEWOCRHESNROEWTHCIEWNXEHCRBNEWIOTCNXGTCUEWIYOUQH',
-                                                  index: 0,
-                                                )));
+                                                    purchaseDetails:
+                                                        orders[index],
+                                                    plan: plans[index])));
                                   }
                                 },
                                 child: firstVisit

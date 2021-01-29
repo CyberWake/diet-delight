@@ -1,14 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diet_delight/Models/foodItemModel.dart';
+import 'package:diet_delight/Models/mealModel.dart';
+import 'package:diet_delight/Models/mealPurchaseModel.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:flutter/material.dart';
 
 class MealPlan extends StatefulWidget {
-  final int planDuration;
-  final int index;
-  final String mealPlanName;
-  final String mealPlanDisc;
-  MealPlan(
-      {this.index, this.planDuration, this.mealPlanDisc, this.mealPlanName});
+  final MealPurchaseModel purchaseDetails;
+  final MealModel plan;
+  MealPlan({this.purchaseDetails, this.plan});
   @override
   _MealPlanState createState() => _MealPlanState();
 }
@@ -18,7 +18,6 @@ class _MealPlanState extends State<MealPlan>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ScrollController _scrollController = new ScrollController();
   TabController _pageController;
-  int planIndex = 0;
   List<String> time = ['Breakfast', 'Lunch', 'Dinner'];
   List<List<FoodItemModel>> category = [
     [
@@ -49,8 +48,9 @@ class _MealPlanState extends State<MealPlan>
 
   void initState() {
     super.initState();
-    planIndex = widget.index;
-    _pageController = TabController(length: widget.planDuration, vsync: this);
+    _pageController = TabController(
+        length: int.parse(widget.purchaseDetails.mealPlanDuration),
+        vsync: this);
   }
 
   @override
@@ -92,7 +92,7 @@ class _MealPlanState extends State<MealPlan>
                           Expanded(
                             flex: 3,
                             child: Text(
-                              widget.mealPlanName,
+                              widget.purchaseDetails.mealPlanName,
                               style: TextStyle(
                                 fontFamily: 'RobotoCondensedReg',
                                 fontSize: 28,
@@ -104,7 +104,7 @@ class _MealPlanState extends State<MealPlan>
                             flex: 7,
                             child: ClipRect(
                               child: Text(
-                                widget.mealPlanDisc,
+                                widget.plan.details,
                                 style: authInputTextStyle.copyWith(
                                     fontSize: 14, color: Colors.black),
                               ),
@@ -131,31 +131,29 @@ class _MealPlanState extends State<MealPlan>
                         ),
                         child: CircleAvatar(
                           radius: 45,
+                          backgroundColor: Colors.white,
+                          child: CachedNetworkImage(
+                            imageUrl: widget.plan.picture,
+                            imageBuilder: (context, imageProvider) => Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            placeholder: (context, url) =>
+                                CircularProgressIndicator(),
+                            errorWidget: (context, url, error) => Icon(Icons.error),
+                          ),
                         ),
                       ))
                 ],
               ),
             ),
             Expanded(
-              flex: 1,
-              child: DropdownButton<Widget>(
-                value: mealPlanDropdownItems[planIndex],
-                elevation: 16,
-                onChanged: (Widget newValue) {
-                  setState(() {
-                    print(mealPlanDropdownItems.indexOf(newValue));
-                    planIndex = mealPlanDropdownItems.indexOf(newValue);
-                  });
-                },
-                items: mealPlanDropdownItems
-                    .map<DropdownMenuItem<Widget>>((Widget value) {
-                  return DropdownMenuItem<Widget>(
-                    value: value,
-                    child: value,
-                  );
-                }).toList(),
-              ),
-            ),
+                flex: 1, child: Text('${widget.purchaseDetails.kCal} Calorie')),
             Expanded(
               flex: 1,
               child: Container(
@@ -183,7 +181,9 @@ class _MealPlanState extends State<MealPlan>
                   unselectedLabelStyle:
                       unSelectedTab.copyWith(color: Colors.grey),
                   unselectedLabelColor: Colors.grey,
-                  tabs: List.generate(widget.planDuration, (index) {
+                  tabs: List.generate(
+                      int.parse(widget.purchaseDetails.mealPlanDuration),
+                      (index) {
                     return Tab(
                       text: 'Day ${(index + 1).toString()}',
                     );
@@ -195,7 +195,9 @@ class _MealPlanState extends State<MealPlan>
               flex: 9,
               child: TabBarView(
                   controller: _pageController,
-                  children: List.generate(widget.planDuration, (index) {
+                  children: List.generate(
+                      int.parse(widget.purchaseDetails.mealPlanDuration),
+                      (index) {
                     return Container(
                       child: menuUi(),
                     );
