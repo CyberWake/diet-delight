@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:diet_delight/Screens/Auth%20Screens/login_signup_form.dart';
 import 'package:diet_delight/Screens/Auth%20Screens/userMoto.dart';
+import 'package:diet_delight/Screens/Drawer%20Screens/Favourite.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/consutationOrdersPage.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/dashboardOnGoingOrders.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/dashboardUserInfoPage.dart';
@@ -15,6 +16,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'Screens/Drawer Screens/NotificationScreen.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -33,7 +36,9 @@ class _HomePageState extends State<HomePage>
     'Dashboard',
     'Settings',
     'Order History',
-    'Logout'
+    'Logout',
+    "Favourites",
+    "Notifications"
   ];
 
   List<List<String>> tabItemsTitle = [
@@ -71,24 +76,34 @@ class _HomePageState extends State<HomePage>
   }
 
   drawerOnTaps(int index) async {
-    if (index == page) {
-      Navigator.pop(context);
-    } else if (index != 4) {
-      Navigator.pop(context);
-      setState(() {
-        page = index;
-      });
-      print(page);
+    print(index);
+    if(index == 5){
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (BuildContext context) => FavouritesScreen()));
+    }else if(index == 6){
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (BuildContext context) => NotificationsScreen()));
     }
-    if (index == 4) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      bool result = await prefs.clear();
-      if (result) {
-        Navigator.of(context).pushReplacement(CupertinoPageRoute(
-            builder: (BuildContext context) => AfterSplash()));
-      } else {
-        _scaffoldKey.currentState
-            .showSnackBar(SnackBar(content: Text('Something went wrong')));
+    else{
+      if (index == page) {
+        Navigator.pop(context);
+      } else if (index != 4) {
+        Navigator.pop(context);
+        setState(() {
+          page = index;
+        });
+        print(page);
+      }
+      if (index == 4) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        bool result = await prefs.clear();
+        if (result) {
+          Navigator.of(context).pushReplacement(CupertinoPageRoute(
+              builder: (BuildContext context) => AfterSplash()));
+        } else {
+          _scaffoldKey.currentState
+              .showSnackBar(SnackBar(content: Text('Something went wrong')));
+        }
       }
     }
   }
@@ -179,9 +194,9 @@ class _HomePageState extends State<HomePage>
         drawer: Drawer(
           child: Padding(
             padding:
-                EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1),
+                EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.04),
             child: ListView(
-                children: List.generate(6, (index) {
+                children: List.generate(drawerItems.length , (index) {
               if (index == 0) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
@@ -196,7 +211,7 @@ class _HomePageState extends State<HomePage>
                 padding: EdgeInsets.only(top: 5.0),
                 child: ListTile(
                     onTap: () {
-                      drawerOnTaps(index - 1);
+                      drawerOnTaps(index-1);
                     },
                     title: Center(
                         child: Text(

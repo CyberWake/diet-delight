@@ -6,6 +6,7 @@ class FoodItemModel {
   int categoryId;
   int menuId;
   String picture;
+  String des;
   FoodItemModel(
       {this.foodName,
       this.isVeg = true,
@@ -13,7 +14,8 @@ class FoodItemModel {
       this.id,
       this.categoryId,
       this.menuId,
-      this.picture});
+      this.picture,
+      this.des});
   factory FoodItemModel.fromMap(Map item) {
     return FoodItemModel(
       id: item['id'],

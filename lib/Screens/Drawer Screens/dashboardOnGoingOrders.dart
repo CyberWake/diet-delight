@@ -8,7 +8,7 @@ import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'file:///C:/Users/VK/Desktop/ritik/diet-delight-mobile/lib/Screens/Menu/myOngoingMealMenuItems.dart';
+import '../Menu/myOngoingMealMenuItems.dart';
 
 class DashBoardOngoingOrders extends StatefulWidget {
   @override

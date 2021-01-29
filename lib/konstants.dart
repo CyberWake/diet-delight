@@ -40,7 +40,18 @@ const TextStyle unSelectedTab = TextStyle(
 const TextStyle selectedTab = TextStyle(
   fontFamily: 'RobotoCondensedReg',
   fontSize: 18,
-  fontWeight: FontWeight.bold,
+  fontWeight: FontWeight.w400,
+);
+const TextStyle pageViewTabSelected = TextStyle(
+  fontFamily: 'RobotoCondensedReg',
+  fontSize: 12,
+  fontWeight: FontWeight.w400,
+);
+const TextStyle pageViewTabUnSelected = TextStyle(
+  fontFamily: 'RobotoCondensedReg',
+  fontSize: 12,
+  color: Color.fromRGBO(144, 144, 144, 1),
+  fontWeight: FontWeight.w400,
 );
 
 const TextStyle authLabelTextStyle = TextStyle(
@@ -62,8 +73,8 @@ const TextStyle dateTabTextStyle = TextStyle(
 
 const appBarTextStyle = TextStyle(
   fontFamily: 'RobotoCondensedReg',
-  fontSize: 24,
-  fontWeight: FontWeight.normal,
+  fontSize: 18,
+  fontWeight: FontWeight.w400,
   color: Colors.black,
 );
 
@@ -101,7 +112,8 @@ List<Widget> ddItems = List.generate(
             gradient: LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
-                colors: itemColors[index]),
+                //colors: itemColors[index]
+              ),
           ),
           child: Padding(
               padding: EdgeInsets.fromLTRB(15, 3, 15, 3),
@@ -127,7 +139,8 @@ List<Widget> mealPlanDropdownItems = List.generate(
       gradient: LinearGradient(
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
-          colors: [white, white]),
+     //     colors: [white, white],
+      ),
     ),
     child: Padding(
         padding: EdgeInsets.fromLTRB(15, 3, 15, 3),
