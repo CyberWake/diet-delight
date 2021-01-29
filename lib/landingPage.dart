@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:diet_delight/Screens/Auth%20Screens/login_signup_form.dart';
 import 'package:diet_delight/Screens/Auth%20Screens/userMoto.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/Favourite.dart';
+import 'package:diet_delight/Screens/Drawer%20Screens/Settings.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/consutationOrdersPage.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/dashboardOnGoingOrders.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/dashboardUserInfoPage.dart';
@@ -231,9 +232,7 @@ class _HomePageState extends State<HomePage>
               DashBoardUserInfoPage(),
               DashBoardOngoingOrders(),
             ]),
-            Container(
-              color: Colors.blueGrey,
-            ),
+            SettingsPage(),
             TabBarView(controller: _pageController, children: [
               ConsultationOrderHistoryPage(),
               MealPlanOrderHistoryPage()
