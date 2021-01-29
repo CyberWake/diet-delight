@@ -193,7 +193,10 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 10.0),
                             child: Text(
-                              "${orders[index].mealPlanDuration} day meal plan • without weekends",
+                              "${orders[index].mealPlanDuration} day meal plan • " +
+                                  (plans[index].type == 0
+                                      ? "With Weekends"
+                                      : "Without Weekends"),
                               style: TextStyle(
                                   color: firstVisit ? Colors.black : white),
                             ),

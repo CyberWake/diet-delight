@@ -11,7 +11,9 @@ class PrePaymentMealPlan extends StatefulWidget {
   final MealModel mealPlan;
   final DateTime selectedDate;
   final List<String> selectedDays;
-  PrePaymentMealPlan({this.selectedDate, this.selectedDays, this.mealPlan});
+  final String categories;
+  PrePaymentMealPlan(
+      {this.categories, this.selectedDate, this.selectedDays, this.mealPlan});
   @override
   _PrePaymentMealPlanState createState() => _PrePaymentMealPlanState();
 }
@@ -65,7 +67,6 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
 
   void initState() {
     super.initState();
-    getData();
     addressFocus.addListener(() {
       if (addressFocus.hasFocus) {
         setState(() {
@@ -371,36 +372,6 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
         });
   }
 
-  getCategories() {
-    String displayCategories = '';
-    categoryItems.forEach((element) {
-      displayCategories += element.name + ', ';
-    });
-    return displayCategories;
-  }
-
-  getData() async {
-    await getMenuCategories(widget.mealPlan.menuId);
-  }
-
-  getMenuCategories(int menuId) async {
-    categoryItems = [];
-    setState(() {
-      isLoaded = false;
-    });
-    categoryItems = await _apiCall.getCategories(menuId);
-    categoryItems.forEach((element) {
-      if (element.parent == 0) {
-        tempItems.add(element);
-      }
-    });
-    categoryItems = [];
-    categoryItems = tempItems;
-    setState(() {
-      isLoaded = true;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -515,7 +486,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 10.0),
-                          child: Text(getCategories(),
+                          child: Text(widget.categories,
                               style: selectedTab.copyWith(
                                   fontSize: 14, fontWeight: FontWeight.normal)),
                         ),

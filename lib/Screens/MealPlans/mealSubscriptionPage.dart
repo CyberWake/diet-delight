@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diet_delight/Models/mealModel.dart';
 import 'package:diet_delight/Screens/MealPlans/prePaymentMealPlan.dart';
 import 'package:diet_delight/konstants.dart';
@@ -8,9 +9,11 @@ import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:intl/intl.dart';
 
 class MealSubscriptionPage extends StatefulWidget {
+  final String categories;
   final MealModel mealPackage;
   final int weekDaysSelected;
-  MealSubscriptionPage({this.mealPackage, this.weekDaysSelected});
+  MealSubscriptionPage(
+      {this.mealPackage, this.weekDaysSelected, this.categories});
   @override
   _MealSubscriptionPageState createState() => _MealSubscriptionPageState();
 }
@@ -376,48 +379,64 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
         title: Text('Subscribe your meal plan', style: appBarTextStyle),
       ),
       body: Container(
-        padding: EdgeInsets.only(top: 10),
+        padding: EdgeInsets.only(bottom: 10),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Meal Plan Name',
-                          style: selectedTab.copyWith(fontSize: 28)),
-                      Text('sgasdfjijadfigfadjfvadsfiluH\nFIUDSBFSADIUAGFIGF'),
-                      Text('Breakfast, lunch, dinner')
-                    ],
+            Flexible(
+              fit: FlexFit.loose,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    flex: 15,
+                    fit: FlexFit.loose,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            fit: FlexFit.loose,
+                            child: Text(widget.mealPackage.name,
+                                style: selectedTab.copyWith(fontSize: 28)),
+                          ),
+                          Flexible(
+                              fit: FlexFit.loose,
+                              child: Text(widget.mealPackage.details)),
+                          Flexible(child: Text(widget.categories)),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 4,
-                        color: Colors.grey[500],
-                        spreadRadius: 0,
-                        offset: const Offset(0.0, 0.0),
-                      )
-                    ],
+                  Flexible(
+                    flex: 5,
+                    fit: FlexFit.loose,
+                    child: CachedNetworkImage(
+                      imageUrl: widget.mealPackage.picture,
+                      imageBuilder: (context, imageProvider) => Container(
+                        height: 100,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
                   ),
-                  child: CircleAvatar(
-                    radius: 45,
-                    backgroundColor: Color(0xffC4C4C4),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 20.0, top: 20),
+              padding: const EdgeInsets.only(left: 20.0),
               child: Text(
                 'Days of the week',
                 style: selectedTab,
@@ -489,24 +508,30 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                           padding: const EdgeInsets.all(10.0),
                           child: GestureDetector(
                             onTap: () {
-                              if (selectedDays[index + 4] == true) {
-                                print('unmarking');
-                                setState(() {
-                                  selectedDays[index + 4] = false;
-                                  count--;
-                                });
-                              } else if (selectedDays[index + 4] == false) {
-                                if (count < widget.weekDaysSelected) {
-                                  print('marking');
+                              if (widget.weekDaysSelected > index + 4) {
+                                if (selectedDays[index + 4] == true) {
+                                  print('unmarking');
                                   setState(() {
-                                    selectedDays[index + 4] = true;
-                                    count++;
+                                    selectedDays[index + 4] = false;
+                                    count--;
                                   });
-                                } else {
-                                  _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                      content: Text(
-                                          'Change the Meal Subscription plan to with weekends or change the week days selected')));
+                                } else if (selectedDays[index + 4] == false) {
+                                  if (count < widget.weekDaysSelected) {
+                                    print('marking');
+                                    setState(() {
+                                      selectedDays[index + 4] = true;
+                                      count++;
+                                    });
+                                  } else {
+                                    _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                        content: Text(
+                                            'Change the Meal Subscription plan to with weekends or change the week days selected')));
+                                  }
                                 }
+                              } else {
+                                _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                    content: Text(
+                                        'Change the Meal Subscription plan to with weekends')));
                               }
                             },
                             child: Container(
@@ -680,6 +705,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                           context,
                           CupertinoPageRoute(
                               builder: (context) => PrePaymentMealPlan(
+                                categories: widget.categories,
                                     selectedDate: dateSelected,
                                     selectedDays: selDays,
                                     mealPlan: widget.mealPackage,

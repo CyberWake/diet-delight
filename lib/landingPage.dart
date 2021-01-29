@@ -21,10 +21,10 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => new _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>
-    with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  TabController _pageController;
+  TabController _pageController1;
+  TabController _pageController2;
   int page = 0;
   String _platformVersion = 'Unknown';
   List<String> drawerItems = [
@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage>
   List<List<String>> tabItemsTitle = [
     ['', ''],
     ['User Info', 'Ongoing Meal Plans'],
-    ['', ''],
+    ['Transactions', 'FAQ', 'Privacy Policy'],
     ['Consultation Orders', 'Meal Plan Orders'],
   ];
 
@@ -66,7 +66,8 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    _pageController = TabController(length: 2, vsync: this);
+    _pageController1 = TabController(length: 2, vsync: this);
+    _pageController2 = TabController(length: 3, vsync: this);
     initPlatformState();
   }
 
@@ -150,9 +151,9 @@ class _HomePageState extends State<HomePage>
                   ),
                 ]
               : [],
-          bottom: page == 1 || page == 3
+          bottom: page == 1 || page == 3 || page == 2
               ? TabBar(
-                  controller: _pageController,
+                  controller: page == 2 ? _pageController2 : _pageController1,
                   isScrollable: true,
                   onTap: (index) async {},
                   labelStyle: selectedTab.copyWith(
@@ -212,14 +213,25 @@ class _HomePageState extends State<HomePage>
           index: page,
           children: [
             HomeScreen(),
-            TabBarView(controller: _pageController, children: [
+            TabBarView(controller: _pageController1, children: [
               DashBoardUserInfoPage(),
               DashBoardOngoingOrders(),
             ]),
-            Container(
-              color: Colors.blueGrey,
+            TabBarView(
+              controller: _pageController2,
+              children: [
+                Container(
+                  color: Colors.blueGrey,
+                ),
+                Container(
+                  color: Colors.white,
+                ),
+                Container(
+                  color: Colors.yellow,
+                ),
+              ],
             ),
-            TabBarView(controller: _pageController, children: [
+            TabBarView(controller: _pageController1, children: [
               ConsultationOrderHistoryPage(),
               MealPlanOrderHistoryPage()
             ]),

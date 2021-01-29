@@ -29,16 +29,6 @@ class _HomeScreenState extends State<HomeScreen> {
     menus = await _apiCall.getMenuPackages();
   }
 
-  getMenu(int mealPlanIndex) {
-    MenuModel menu;
-    menus.forEach((eachMenu) {
-      if (eachMenu.id == mealPackages[mealPlanIndex].menuId) {
-        menu = eachMenu;
-      }
-    });
-    return menu;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -47,6 +37,23 @@ class _HomeScreenState extends State<HomeScreen> {
         isLoaded = true;
       });
     });
+  }
+
+  getDurationTitle(int days) {
+    switch (days) {
+      case 10:
+        return '10 Days';
+        break;
+      case 15:
+        return '2 Weeks';
+        break;
+      case 30:
+        return '1 Month';
+        break;
+      case 60:
+        return '2 Month';
+        break;
+    }
   }
 
   Widget menuItemCard(int pos) {
@@ -169,15 +176,12 @@ class _HomeScreenState extends State<HomeScreen> {
         child: InkWell(
           splashColor: defaultGreen.withAlpha(30),
           onTap: () {
-            MenuModel pass = getMenu(pos);
-            if (pass != null) {
-              Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                      builder: (context) => MealPlanPage(
-                          menu: pass, mealPlan: mealPackages[pos])));
-              print('success getting meal details page');
-            }
+            Navigator.push(
+                context,
+                CupertinoPageRoute(
+                    builder: (context) =>
+                        MealPlanPage(menus: menus, mealPlans: mealPackages)));
+            print('success getting meal details page');
           },
           child: Container(
             color: defaultGreen,
@@ -189,7 +193,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                     padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                     child: Text(
-                      mealPackages[pos].duration.toString() + ' days',
+                      getDurationTitle((pos == 0
+                          ? 10
+                          : pos == 1
+                              ? 15
+                              : pos == 2
+                                  ? 30
+                                  : 60)),
                       style: TextStyle(
                         fontFamily: 'RobotoCondensedReg',
                         fontSize: 14,
@@ -200,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 10.0),
                   child: Text(
-                    mealPackages[pos].name,
+                    'With/Without Weekends',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'RobotoCondensedReg',
@@ -213,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                   padding: EdgeInsets.only(top: 10.0),
                   child: Text(
-                    mealPackages[pos].subtitle,
+                    'Description of the particular category to be displayed to the user',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'RobotoCondensedReg',
@@ -512,7 +522,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           height: 0.48 * devWidth,
                           child: ListView.builder(
-                              itemCount: mealPackages.length,
+                              itemCount: 4,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (BuildContext context, int index) {
                                 return mealPlanCategoryCard(index);

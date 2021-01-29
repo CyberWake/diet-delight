@@ -6,6 +6,7 @@ class MealModel {
   int duration;
   int menuId;
   String subtitle;
+  int type;
   String picture;
   String price;
   String salePrice;
@@ -17,9 +18,11 @@ class MealModel {
       this.salePrice,
       this.details,
       this.duration,
+      this.type,
       this.menuId,
       this.picture,
-      this.price,this.status});
+      this.price,
+      this.status});
 
   factory MealModel.fromMap(Map item) {
     return MealModel(
@@ -32,8 +35,8 @@ class MealModel {
         menuId: item['menu_id'],
         price: item['price'],
         salePrice: item['sale_price'],
-      status: item['status'],
-    );
+        status: item['status'],
+        type: item['type']);
   }
   show() {
     print('id: $id');
@@ -46,5 +49,6 @@ class MealModel {
     print('menuId: $menuId');
     print('price: $price');
     print('salePrice: $salePrice');
+    print('type: $type');
   }
 }
