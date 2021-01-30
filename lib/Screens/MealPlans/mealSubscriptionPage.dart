@@ -27,7 +27,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
   int count = 0;
   List<String> selDays = List();
   List<bool> selectedDays = [false, false, false, false, false, false, false];
-  List<String> days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  List<String> days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
   TextEditingController addressPrimary = TextEditingController();
   TextEditingController addressSecondary = TextEditingController();
   FocusNode addressFocus = FocusNode();
@@ -705,7 +705,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                           context,
                           CupertinoPageRoute(
                               builder: (context) => PrePaymentMealPlan(
-                                categories: widget.categories,
+                                    categories: widget.categories,
                                     selectedDate: dateSelected,
                                     selectedDays: selDays,
                                     mealPlan: widget.mealPackage,

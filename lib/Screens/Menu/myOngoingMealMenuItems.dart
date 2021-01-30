@@ -9,15 +9,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 
-class MyMealMenu extends StatefulWidget {
+class PresentMealMenu extends StatefulWidget {
   final MealPurchaseModel purchaseDetails;
   final MealModel plan;
-  MyMealMenu({this.purchaseDetails, this.plan});
+  PresentMealMenu({this.purchaseDetails, this.plan});
   @override
-  _MyMealMenuState createState() => _MyMealMenuState();
+  _PresentMealMenuState createState() => _PresentMealMenuState();
 }
 
-class _MyMealMenuState extends State<MyMealMenu>
+class _PresentMealMenuState extends State<PresentMealMenu>
     with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ScrollController _scrollController = new ScrollController();
@@ -25,6 +25,7 @@ class _MyMealMenuState extends State<MyMealMenu>
   TextEditingController addressPrimary = TextEditingController();
   TextEditingController addressSecondary = TextEditingController();
   FocusNode addressFocus = FocusNode();
+  List<String> dates = [];
   String addressArea = 'Bahrain';
   String localAddress = '';
   double _height = 350;
@@ -71,6 +72,7 @@ class _MyMealMenuState extends State<MyMealMenu>
   @override
   void initState() {
     super.initState();
+    getDates();
     _pageController = TabController(
         length: int.parse(widget.purchaseDetails.mealPlanDuration),
         vsync: this);
@@ -87,6 +89,34 @@ class _MyMealMenuState extends State<MyMealMenu>
         });
       }
     });
+  }
+
+  getDates() {
+    dates = [];
+    int count = 0;
+    print(widget.purchaseDetails.weekdays);
+    DateTime startDate = DateTime.parse(widget.purchaseDetails.startDate);
+    List days = widget.purchaseDetails.weekdays;
+    if (days.contains('Thu')) {
+      days.remove('Thu');
+      days.add('Thur');
+    }
+    for (int i = 0;
+        i < int.parse(widget.purchaseDetails.mealPlanDuration);
+        i++) {
+      DateTime date = startDate.add(Duration(days: (count)));
+      while (!days.contains(formatDate(date, [D]))) {
+        count++;
+        date = startDate.add(Duration(days: count));
+      }
+      dates.insert(i, formatDate(date, [dd, '/', mm]));
+      print('i: $i date: ${formatDate(date, [
+        d,
+        '/',
+        m
+      ])} day: ${formatDate(date, [D])}');
+      count++;
+    }
   }
 
   void addAddress({int address}) {
@@ -580,7 +610,7 @@ class _MyMealMenuState extends State<MyMealMenu>
                       isScrollable: true,
                       controller: _pageController,
                       onTap: (index) {},
-                      labelStyle: selectedTab.copyWith(color: Colors.black),
+                      labelStyle: selectedTab.copyWith(color: Colors.black,fontSize: 14),
                       indicatorColor: Colors.transparent,
                       indicatorWeight: 3.0,
                       indicatorSize: TabBarIndicatorSize.label,
@@ -593,7 +623,15 @@ class _MyMealMenuState extends State<MyMealMenu>
                           int.parse(widget.purchaseDetails.mealPlanDuration),
                           (index) {
                         return Tab(
-                          text: 'Day ${(index + 1).toString()}',
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('Day ${(index + 1).toString()}'),
+                              Text(dates[index])
+                            ],
+                          ),
                         );
                       }),
                     ),
@@ -615,7 +653,7 @@ class _MyMealMenuState extends State<MyMealMenu>
                                     context,
                                     CupertinoPageRoute(
                                         builder: (BuildContext context) =>
-                                            MealPlan(
+                                            EditMealMenu(
                                                 plan: widget.plan,
                                                 purchaseDetails:
                                                     widget.purchaseDetails)));

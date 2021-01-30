@@ -534,6 +534,32 @@ class Api {
     }
   }
 
+  Future<ConsultationModel> getConsultationData(String consultationId) async {
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+      final response = await http.get(
+          uri + '/api/v1/consultation-packages/$consultationId',
+          headers: headers);
+      if (response.statusCode == 200) {
+        print('Success getting consultation package');
+        var body = convert.jsonDecode(response.body);
+        var data = body['data'];
+        ConsultationModel item = ConsultationModel.fromMap(data);
+        return item;
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        return null;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
   getMenuOrders(String menuId) async {
     try {
       Map<String, String> headers = {

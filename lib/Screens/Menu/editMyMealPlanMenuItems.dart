@@ -1,23 +1,25 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:date_format/date_format.dart';
 import 'package:diet_delight/Models/foodItemModel.dart';
 import 'package:diet_delight/Models/mealModel.dart';
 import 'package:diet_delight/Models/mealPurchaseModel.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:flutter/material.dart';
 
-class MealPlan extends StatefulWidget {
+class EditMealMenu extends StatefulWidget {
   final MealPurchaseModel purchaseDetails;
   final MealModel plan;
-  MealPlan({this.purchaseDetails, this.plan});
+  EditMealMenu({this.purchaseDetails, this.plan});
   @override
-  _MealPlanState createState() => _MealPlanState();
+  _EditMealMenuState createState() => _EditMealMenuState();
 }
 
-class _MealPlanState extends State<MealPlan>
+class _EditMealMenuState extends State<EditMealMenu>
     with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ScrollController _scrollController = new ScrollController();
   TabController _pageController;
+  List<String> dates = [];
   List<String> time = ['Breakfast', 'Lunch', 'Dinner'];
   List<List<FoodItemModel>> category = [
     [
@@ -51,10 +53,40 @@ class _MealPlanState extends State<MealPlan>
     _pageController = TabController(
         length: int.parse(widget.purchaseDetails.mealPlanDuration),
         vsync: this);
+    getDates();
+  }
+
+  getDates() {
+    dates = [];
+    int count = 0;
+    print(widget.purchaseDetails.weekdays);
+    DateTime startDate = DateTime.parse(widget.purchaseDetails.startDate);
+    List days = widget.purchaseDetails.weekdays;
+    if (days.contains('Thu')) {
+      days.remove('Thu');
+      days.add('Thur');
+    }
+    for (int i = 0;
+        i < int.parse(widget.purchaseDetails.mealPlanDuration);
+        i++) {
+      DateTime date = startDate.add(Duration(days: (count)));
+      while (!days.contains(formatDate(date, [D]))) {
+        count++;
+        date = startDate.add(Duration(days: count));
+      }
+      dates.insert(i, formatDate(date, [dd, '/', mm]));
+      print('i: $i date: ${formatDate(date, [
+        d,
+        '/',
+        m
+      ])} day: ${formatDate(date, [D])}');
+      count++;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    //getDates();
     return Scaffold(
         key: _scaffoldKey,
         backgroundColor: white,
@@ -145,7 +177,8 @@ class _MealPlanState extends State<MealPlan>
                             ),
                             placeholder: (context, url) =>
                                 CircularProgressIndicator(),
-                            errorWidget: (context, url, error) => Icon(Icons.error),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
                           ),
                         ),
                       ))
@@ -172,7 +205,8 @@ class _MealPlanState extends State<MealPlan>
                   isScrollable: true,
                   controller: _pageController,
                   onTap: (index) {},
-                  labelStyle: selectedTab.copyWith(color: Colors.black),
+                  labelStyle:
+                      selectedTab.copyWith(color: Colors.black, fontSize: 14),
                   indicatorColor: Colors.transparent,
                   indicatorWeight: 3.0,
                   indicatorSize: TabBarIndicatorSize.label,
@@ -185,7 +219,15 @@ class _MealPlanState extends State<MealPlan>
                       int.parse(widget.purchaseDetails.mealPlanDuration),
                       (index) {
                     return Tab(
-                      text: 'Day ${(index + 1).toString()}',
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Day ${(index + 1).toString()}'),
+                          Text(dates[index])
+                        ],
+                      ),
                     );
                   }),
                 ),

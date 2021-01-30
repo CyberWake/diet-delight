@@ -3,12 +3,11 @@ import 'package:date_format/date_format.dart';
 import 'package:diet_delight/Models/mealModel.dart';
 import 'package:diet_delight/Models/mealPurchaseModel.dart';
 import 'package:diet_delight/Screens/Menu/editMyMealPlanMenuItems.dart';
+import 'package:diet_delight/Screens/Menu/myOngoingMealMenuItems.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'file:///C:/Users/VK/Desktop/ritik/diet-delight-mobile/lib/Screens/Menu/myOngoingMealMenuItems.dart';
 
 class DashBoardOngoingOrders extends StatefulWidget {
   @override
@@ -59,7 +58,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                         Navigator.push(
                             context,
                             CupertinoPageRoute(
-                                builder: (BuildContext context) => MealPlan(
+                                builder: (BuildContext context) => EditMealMenu(
                                     purchaseDetails: orders[index],
                                     plan: plans[index])));
                         setState(() {
@@ -69,7 +68,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                         Navigator.push(
                             context,
                             CupertinoPageRoute(
-                                builder: (BuildContext context) => MyMealMenu(
+                                builder: (BuildContext context) => PresentMealMenu(
                                     purchaseDetails: orders[index],
                                     plan: plans[index])));
                       }
@@ -223,7 +222,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                                         context,
                                         CupertinoPageRoute(
                                             builder: (BuildContext context) =>
-                                                MealPlan(
+                                                EditMealMenu(
                                                     purchaseDetails:
                                                         orders[index],
                                                     plan: plans[index])));
@@ -235,7 +234,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                                         context,
                                         CupertinoPageRoute(
                                             builder: (BuildContext context) =>
-                                                MyMealMenu(
+                                                PresentMealMenu(
                                                     purchaseDetails:
                                                         orders[index],
                                                     plan: plans[index])));

@@ -1,5 +1,6 @@
 import 'package:date_format/date_format.dart';
 import 'package:diet_delight/Models/consultationAppointmentModel.dart';
+import 'package:diet_delight/Models/consultationModel.dart';
 import 'package:diet_delight/Models/consultationPurchaseModel.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
@@ -15,8 +16,9 @@ class ConsultationOrderHistoryPage extends StatefulWidget {
 class _ConsultationOrderHistoryPageState
     extends State<ConsultationOrderHistoryPage> {
   Api _apiCall = Api.instance;
-  List<ConsPurchaseModel> consultationPurchases;
-  List<ConsAppointmentModel> appointments;
+  List<ConsPurchaseModel> consultationPurchases = List();
+  List<ConsultationModel> consultationData = List();
+  List<ConsAppointmentModel> appointments = List();
   bool loaded = false;
   List<String> format = [hh, ':', nn, ' ', am, '\n', dd, ' ', 'M', ', ', yyyy];
 
@@ -39,10 +41,19 @@ class _ConsultationOrderHistoryPageState
 
   getData() async {
     consultationPurchases = await _apiCall.getConsultationPurchases();
-    appointments =
-        await _apiCall.getAppointments().whenComplete(() => setState(() {
-              loaded = true;
-            }));
+    appointments = await _apiCall.getAppointments();
+    for (int i = 0; i < consultationPurchases.length;) {
+      consultationData.add(await _apiCall
+          .getConsultationData(consultationPurchases[i].consultationPackageId)
+          .whenComplete(() {
+        i++;
+        if (i == consultationPurchases.length) {
+          setState(() {
+            loaded = true;
+          });
+        }
+      }));
+    }
   }
 
   @override
@@ -102,7 +113,7 @@ class _ConsultationOrderHistoryPageState
                         fit: FlexFit.loose,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text('Consultation Package Name'),
+                          child: Text(consultationData[index].name),
                         )),
                     dataField(
                       fieldName: 'Appointment:',

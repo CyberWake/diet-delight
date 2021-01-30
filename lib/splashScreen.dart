@@ -88,8 +88,8 @@ class _SplashScreenState extends State<SplashScreen>
                       )),
                       radius: 100.0,
                     ),
-                    Padding(
-                      padding: EdgeInsets.all(10.0),
+                    SizedBox(
+                      height: 24,
                     ),
                   ],
                 )),

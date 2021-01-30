@@ -281,12 +281,13 @@ class _HomeScreenState extends State<HomeScreen> {
             print('success getting consultation package screen');
           },
           child: Container(
-            width: 110,
+            width: 130,
             decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border.all(width: 2.0, color: defaultGreen)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Padding(
                     padding: EdgeInsets.only(bottom: 10.0, top: 10),
@@ -312,7 +313,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(5.0, 10, 5, 0),
                   child: Text(
-                    consultationPackages[pos].details,
+                    consultationPackages[pos].subtitle,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'RobotoCondensedReg',
@@ -325,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(5.0, 10, 5, 0),
                   child: Text(
-                    consultationPackages[pos].price,
+                    consultationPackages[pos].price+' BHD',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'RobotoCondensedReg',
