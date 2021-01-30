@@ -4,7 +4,6 @@ import 'package:diet_delight/konstants.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sms_autofill/sms_autofill.dart';
 
 class SignUp extends StatefulWidget {
   final String token;
@@ -29,22 +28,12 @@ class _SignUpState extends State<SignUp> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController confirmPass = TextEditingController();
-  final SmsAutoFill _autoFill = SmsAutoFill();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     countryCode.text = '+91';
-  }
-
-  getPhoneNumbers() async {
-    mobileNo.text = await _autoFill.hint;
-    if (mobileNo.text.isNotEmpty) {
-      countryCode.text = mobileNo.text.substring(0, 3);
-      mobileNo.text = mobileNo.text.substring(3);
-      FocusScope.of(context).requestFocus(mail);
-    }
   }
 
   @override
@@ -111,7 +100,8 @@ class _SignUpState extends State<SignUp> {
                                     onFieldSubmitted: (done) {
                                       lastName.text = done;
                                       last.unfocus();
-                                      getPhoneNumbers();
+                                      FocusScope.of(context)
+                                          .requestFocus(country);
                                     },
                                     textAlign: TextAlign.center,
                                     textDirection: TextDirection.ltr,
@@ -159,7 +149,6 @@ class _SignUpState extends State<SignUp> {
                                     countryCode.text = done;
                                     country.unfocus();
                                     FocusScope.of(context).requestFocus(mobile);
-                                    getPhoneNumbers();
                                   },
                                   initialValue: '+91',
                                   style: TextStyle(
