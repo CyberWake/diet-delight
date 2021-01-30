@@ -126,7 +126,7 @@ class _SettingsPageState extends State<SettingsPage> with SingleTickerProviderSt
                       ],
                     ),),
                   )
-                      : fAQs ;
+                      : index == 1 ?fAQs : Container() ;
 
                 })),
           )

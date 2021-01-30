@@ -357,6 +357,11 @@ class Api {
         print('Success getting menu category items');
         var body = convert.jsonDecode(response.body);
         List data = body['data'];
+        for(int i =0;i<data.length;i++){
+          print('data');
+          print(data[5+i]);
+        }
+        print(data);
         data.forEach((element) {
           ConsPurchaseModel item = ConsPurchaseModel.fromMap(element);
           itemsConsultationPurchases.add(item);

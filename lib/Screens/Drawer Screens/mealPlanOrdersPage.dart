@@ -1,5 +1,6 @@
 import 'package:date_format/date_format.dart';
 import 'package:diet_delight/Models/mealPurchaseModel.dart';
+import 'package:diet_delight/Screens/MealPlans/mealSubscriptionPage.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
@@ -80,9 +81,18 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
                             children: [
                               Flexible(child: Text('Menu Plan')),
                               Flexible(
-                                  child: IconButton(
-                                      icon: Icon(Icons.more_vert),
-                                      onPressed: () {})),
+                                  child: FlatButton(
+                                      child: Text("Re-Book",style: pageViewTabSelected.copyWith(color: Colors.green),),
+
+                                      onPressed: () {
+
+                                        Navigator.of(context).push(MaterialPageRoute(
+                                            builder: (BuildContext context) => MealSubscriptionPage(
+                                              weekdays: purchasedMeal[index].weekdays,
+                                              mealPlanName: purchasedMeal[index].mealPlanName,
+                                              endDate: DateTime.now().toLocal(),
+                                            )));
+                                      })),
                             ],
                           ),
                         )),

@@ -7,6 +7,7 @@ class ConsPurchaseModel {
   String consultationPackageId;
   String amountPaid;
   String paymentId;
+  String consultationPackageName;
 
   ConsPurchaseModel(
       {this.id,
@@ -16,7 +17,7 @@ class ConsPurchaseModel {
       this.consultationPackageId,
       this.consultationPackageDuration,
       this.amountPaid,
-      this.paymentId});
+      this.paymentId,});
 
   Map<String, dynamic> toMap() {
     // ignore: unnecessary_cast

@@ -173,7 +173,7 @@ class _BookConsultationState extends State<BookConsultation>
                         fontFamily: 'RobotoCondensedReg',
                         fontSize: 11,
                         fontWeight: FontWeight.normal,
-                        color: cardGray,
+                        color: Color.fromRGBO(102, 102, 102, 1),
                       ),
                     ),
                   ),

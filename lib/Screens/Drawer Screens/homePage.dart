@@ -285,7 +285,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         gradient: LinearGradient(
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
-                            //color: itemColors[pos],
+                            colors: itemColors[pos],
                         ),
                       ),
                       child: Padding(

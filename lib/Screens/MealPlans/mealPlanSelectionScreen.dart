@@ -30,7 +30,7 @@ class _MealPlanPageState extends State<MealPlanPage> {
         gradient: LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
-            //colors: [white, white]
+            colors: [white, white]
           ),
       ),
       child: Padding(

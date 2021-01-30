@@ -8,11 +8,14 @@ import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:intl/intl.dart';
 
 class MealSubscriptionPage extends StatefulWidget {
+  final List<dynamic> weekdays;
   final MealModel mealPackage;
   final int weekDaysSelected;
-  MealSubscriptionPage({this.mealPackage, this.weekDaysSelected});
+  final String mealPlanName;
+  final endDate;
+  MealSubscriptionPage({this.mealPackage, this.weekDaysSelected,this.weekdays,this.mealPlanName,this.endDate});
   @override
-  _MealSubscriptionPageState createState() => _MealSubscriptionPageState();
+  _MealSubscriptionPageState createState() => _MealSubscriptionPageState(endDate : this.endDate,weekdays: this.weekdays,mealPlanName: this.mealPlanName);
 }
 
 class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
@@ -37,6 +40,11 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
   List<String> areas = ['Bahrain', 'India'];
   List<String> areas2 = ['Bahrain', 'India'];
   String addressType = 'Home';
+  List<dynamic> weekdays = [];
+  var mealPlanName;
+  var endDate;
+  _MealSubscriptionPageState({this.weekdays,this.mealPlanName,this.endDate});
+
 
   @override
   void initState() {
@@ -66,6 +74,31 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
         });
       }
     });
+
+    print(dateSelected);
+    if(weekdays != null && weekdays.length != 0){
+      if(weekdays.contains('Sun')){
+        selectedDays[0] = true;
+      }
+      if(weekdays.contains('Mon')){
+        selectedDays[1] = true;
+      }
+      if(weekdays.contains('Tue')){
+        selectedDays[2] = true;
+      }
+      if(weekdays.contains('Wed')){
+        selectedDays[3] = true;
+      }
+      if(weekdays.contains('Thu')){
+        selectedDays[4] = true;
+      }
+      if(weekdays.contains('Fri')){
+        selectedDays[5] = true;
+      }
+      if(weekdays.contains('Sat')){
+        selectedDays[6] = true;
+      }
+    }
   }
 
   void addAddress({int address}) {
@@ -389,7 +422,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Meal Plan Name',
+                      Text(mealPlanName == null ? 'Meal Plan Name' : mealPlanName,
                           style: selectedTab.copyWith(fontSize: 28)),
                       Text('sgasdfjijadfigfadjfvadsfiluH\nFIUDSBFSADIUAGFIGF'),
                       Text('Breakfast, lunch, dinner')
@@ -577,7 +610,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                             disabledColor: formFill,
                             accentTextTheme: TextTheme(),
                           ),
-                          initialDate: dateSelected ?? today,
+                          initialDate: dateSelected!=null ? today : endDate ,
                           firstDate: today.subtract(Duration(days: 1)));
                       setState(() {
                         dateSelected = selectedDateTime;
