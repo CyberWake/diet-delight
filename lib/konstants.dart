@@ -108,6 +108,7 @@ List<List<Color>> itemColors = [
 List<Widget> ddItems = List.generate(
     3,
         (index) => Container(
+          width: 85,
       decoration: BoxDecoration(
         gradient: LinearGradient(
             begin: Alignment.centerLeft,

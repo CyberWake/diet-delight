@@ -235,7 +235,8 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                                         fontFamily: 'RobotoCondensedReg',
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400,
-                                      ),),
+
+                                      ),maxLines: 3,),
                                     ),
                                   )
                                 ],

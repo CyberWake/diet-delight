@@ -390,23 +390,27 @@ class _BookConsultationState extends State<BookConsultation>
                                                                 index == 1
                                                                     ? 2
                                                                     : 10),
-                                                    child: Container(
-                                                      width: 40.0,
-                                                      child: Text(
-                                                        showSlots(index, pos,
-                                                            rowIndex),
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: dateTabTextStyle.copyWith(
-                                                            fontSize: 11,
-                                                            color: time ==
-                                                                    showSlots(
-                                                                        index,
-                                                                        pos,
-                                                                        rowIndex)
-                                                                ? Colors.white
-                                                                : Color(
-                                                                    0xFF303030)),
+                                                    child: FittedBox(
+                                                      fit: BoxFit.scaleDown,
+                                                      child: Container(
+                                                        width: 45.0,
+                                                        child: Text(
+                                                          showSlots(index, pos,
+                                                              rowIndex),
+                                                          maxLines: 1,
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: dateTabTextStyle.copyWith(
+                                                              fontSize: 11,
+                                                              color: time ==
+                                                                      showSlots(
+                                                                          index,
+                                                                          pos,
+                                                                          rowIndex)
+                                                                  ? Colors.white
+                                                                  : Color(
+                                                                      0xFF303030)),
+                                                        ),
                                                       ),
                                                     )))),
                                       );

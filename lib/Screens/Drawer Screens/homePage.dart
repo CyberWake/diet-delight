@@ -187,74 +187,77 @@ class _HomeScreenState extends State<HomeScreen> {
             color: defaultGreen,
             width: 120,
             height: 220,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                    padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                      padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                      child: Text(
+                        getDurationTitle((pos == 0
+                            ? 10
+                            : pos == 1
+                                ? 15
+                                : pos == 2
+                                    ? 30
+                                    : 60)),
+                        style: TextStyle(
+                          fontFamily: 'RobotoCondensedReg',
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      )),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 10.0),
                     child: Text(
-                      getDurationTitle((pos == 0
-                          ? 10
-                          : pos == 1
-                              ? 15
-                              : pos == 2
-                                  ? 30
-                                  : 60)),
+                      'With/Without Weekends',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'RobotoCondensedReg',
-                        fontSize: 14,
+                        fontSize: 11,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
-                    )),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 10.0),
-                  child: Text(
-                    'With/Without Weekends',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'RobotoCondensedReg',
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10.0),
-                  child: Text(
-                    'Description of the particular category to be displayed to the user',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'RobotoCondensedReg',
-                      fontSize: 11,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
+                  Padding(
+                    padding: EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      'Description of the particular category to be displayed to the user',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'RobotoCondensedReg',
+                        fontSize: 11,
+                        fontWeight: FontWeight.normal,
                         color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    height: 25,
-                    child: Center(
-                      child: Text(
-                        'SUBSCRIPTION',
-                        style: TextStyle(
-                          fontFamily: 'RobotoCondensedReg',
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: defaultGreen,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(5))),
+                      height: 25,
+                      child: Center(
+                        child: Text(
+                          'SUBSCRIPTION',
+                          style: TextStyle(
+                            fontFamily: 'RobotoCondensedReg',
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: defaultGreen,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

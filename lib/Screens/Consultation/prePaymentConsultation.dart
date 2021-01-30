@@ -32,7 +32,6 @@ class _PrePaymentState extends State<PrePayment> {
       return Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20))), //this right here
         child: Container(
-          height: 242.5,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -54,22 +53,24 @@ class _PrePaymentState extends State<PrePayment> {
                         borderRadius: BorderRadius.circular(3)),
                     child: Padding(
                       padding: const EdgeInsets.only(left : 11.0),
-                      child: DropdownButton<Widget>(
-                        value: addressItems[consultationIndex],
-                        elevation: 16,
-                        onChanged: (Widget newValue) {
-                          setState(() {
-                            print(addressItems.indexOf(newValue));
-                            consultationIndex = addressItems.indexOf(newValue);
-                          });
-                        },
-                        items:
-                        addressItems.map<DropdownMenuItem<Widget>>((Widget value) {
-                          return DropdownMenuItem<Widget>(
-                            value: value,
-                            child: value,
-                          );
-                        }).toList(),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<Widget>(
+                          value: addressItems[consultationIndex],
+                          elevation: 16,
+                          onChanged: (Widget newValue) {
+                            setState(() {
+                              print(addressItems.indexOf(newValue));
+                              consultationIndex = addressItems.indexOf(newValue);
+                            });
+                          },
+                          items:
+                          addressItems.map<DropdownMenuItem<Widget>>((Widget value) {
+                            return DropdownMenuItem<Widget>(
+                              value: value,
+                              child: value,
+                            );
+                          }).toList(),
+                        ),
                       ),
                     ),
                   ),
