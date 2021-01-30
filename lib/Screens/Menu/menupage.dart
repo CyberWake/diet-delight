@@ -6,6 +6,10 @@ import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
 
+import '../../konstants.dart';
+import '../../konstants.dart';
+import '../../konstants.dart';
+
 class Menu extends StatefulWidget {
   final MenuModel menu;
   Menu({this.menu});
@@ -103,71 +107,73 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
     return InkWell(
       onTap: () {},
       child: Container(
-        height: 125,
-        child: Row(
-          children: [
-            Expanded(
-              flex: 8,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 15,
-                      width: 15,
-                      child: Image.asset(
-                        foodItem.isVeg ? 'images/veg.png' : 'images/nonVeg.png',
-                        fit: BoxFit.fitHeight,
-                        scale: 0.5,
+        child: Padding(
+          padding: const EdgeInsets.only( bottom : 22.0),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 8,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 45.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 10,
+                        width: 10,
+                        child: Image.asset(
+                          foodItem.isVeg ? 'images/veg.png' : 'images/nonVeg.png',
+                          fit: BoxFit.fitHeight,
+                          scale: 0.5,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      foodItem.foodName,
-                      style: appBarTextStyle.copyWith(fontSize: 20),
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Container(
-                      alignment: Alignment.bottomRight,
-                      padding: EdgeInsets.only(right: 10),
-                      child: IconButton(
-                          onPressed: () {}, icon: Icon(Icons.favorite_border)),
-                    )
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 3,
-              child: Container(
-                margin: EdgeInsets.only(right: 20),
-                decoration: authFieldDecoration,
-                child: CachedNetworkImage(
-                  imageUrl: foodItem.picture ?? "a",
-                  imageBuilder: (context, imageProvider) => Container(
-                    height: 60,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.cover,
+                      SizedBox(
+                        height: 5,
                       ),
-                    ),
-                  ),
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => FlutterLogo(
-                    size: 60,
+                      Text(
+                        foodItem.foodName,
+                        style: appBarTextStyle.copyWith(fontSize: 12,fontWeight: FontWeight.w400),
+                      ),
+                      SizedBox(
+                        height: 4,
+                      ),
+                      Container(
+                        alignment: Alignment.bottomRight,
+                        padding: EdgeInsets.only(right: 10),
+                        child: IconButton(
+                            onPressed: () {}, icon: Icon(Icons.favorite_border,size: 13,)),
+                      )
+                    ],
                   ),
                 ),
               ),
-            )
-          ],
+              Expanded(
+                flex: 3,
+                child: Container(
+                  margin: EdgeInsets.only(right: 20),
+                  decoration: authFieldDecoration,
+                  child: CachedNetworkImage(
+                    imageUrl: foodItem.picture ?? "a",
+                    imageBuilder: (context, imageProvider) => Container(
+                      height: 60,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => FlutterLogo(
+                      size: 60,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -200,14 +206,14 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                   Expanded(
                     flex: 3,
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 10.0, top: 5),
+                      padding: const EdgeInsets.only(right: 10.0, top: 5,bottom: 20,left: 35),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Expanded(
                             flex: 7,
                             child: Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
+                              padding: const EdgeInsets.only(right: 5.0),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -217,14 +223,19 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                                     fit: FlexFit.loose,
                                     child: Text(widget.menu.name,
                                         style:
-                                            selectedTab.copyWith(fontSize: 28)),
+                                            selectedTab.copyWith(fontSize: 18)),
                                   ),
+                                  SizedBox(height: 10,),
                                   Flexible(
                                     fit: FlexFit.loose,
                                     child: Padding(
                                       padding: const EdgeInsets.only(
                                           left: 10.0, right: 10.0),
-                                      child: Text(widget.menu.description),
+                                      child: Text(widget.menu.description,style:  TextStyle(
+                                        fontFamily: 'RobotoCondensedReg',
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                      ),),
                                     ),
                                   )
                                 ],
@@ -287,15 +298,13 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                           controller: _pageController,
                           isScrollable: true,
                           onTap: (index) async {},
-                          labelStyle: selectedTab.copyWith(
-                              fontSize: 24, color: Colors.black),
+                          labelStyle: pageViewTabSelected,
                           indicatorColor: Colors.transparent,
                           indicatorWeight: 3.0,
                           indicatorSize: TabBarIndicatorSize.label,
                           labelColor: Colors.black,
-                          labelPadding: EdgeInsets.symmetric(horizontal: 13),
-                          unselectedLabelStyle: unSelectedTab.copyWith(
-                              fontSize: 20, color: Colors.grey),
+                          labelPadding: EdgeInsets.symmetric(horizontal: 50),
+                          unselectedLabelStyle: pageViewTabUnSelected,
                           unselectedLabelColor: Colors.grey,
                           tabs:
                               List.generate(mainCategoryItems.length, (index) {
@@ -338,15 +347,17 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                         parentId * subCategoryItems[parentId].length - 1;
                   }
                   expansionFoodItems = foodItems[itemIndex ?? parentId + index];
+                  print("||||||||||||||||||||||||||" + subCategoryItems[parentId][index].name);
                   return ExpansionTile(
                     onExpansionChanged: (bool expanded) {
                       print(parentId + index);
                     },
                     initiallyExpanded: index == 0 ? true : false,
+                    tilePadding: EdgeInsets.only(left : 35,bottom: 0),
                     title: Text(subCategoryItems[parentId][index].name,
                         style: selectedTab.copyWith(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
                             color: Colors.black)),
                     children:
                         List.generate(expansionFoodItems.length, (int index) {
@@ -354,17 +365,23 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                     }),
                   );
                 })
-            : ListView.builder(
-                controller: _scrollController,
-                itemCount: foodItem.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return item(foodItem[index]);
-                })
-        : ListView.builder(
-            controller: _scrollController,
-            itemCount: foodItem.length,
-            itemBuilder: (BuildContext context, int index) {
-              return item(foodItem[index]);
-            });
+            : Padding(
+              padding: const EdgeInsets.only(top : 18.0),
+              child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: foodItem.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return item(foodItem[index]);
+                  }),
+            )
+        : Padding(
+      padding: const EdgeInsets.only(top : 18.0),
+          child: ListView.builder(
+              controller: _scrollController,
+              itemCount: foodItem.length,
+              itemBuilder: (BuildContext context, int index) {
+                return item(foodItem[index]);
+              }),
+        );
   }
 }

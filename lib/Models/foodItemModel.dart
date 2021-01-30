@@ -6,8 +6,10 @@ class FoodItemModel {
   int categoryId;
   int menuId;
   String picture;
+  String des;
   FoodItemModel(
       {this.foodName,
+        this.des,
       this.isVeg = true,
       this.isSelected = false,
       this.id,

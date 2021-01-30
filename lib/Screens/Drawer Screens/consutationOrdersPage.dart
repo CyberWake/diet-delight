@@ -2,6 +2,7 @@ import 'package:date_format/date_format.dart';
 import 'package:diet_delight/Models/consultationAppointmentModel.dart';
 import 'package:diet_delight/Models/consultationModel.dart';
 import 'package:diet_delight/Models/consultationPurchaseModel.dart';
+import 'package:diet_delight/Screens/Consultation/bookConsultation.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
@@ -68,10 +69,12 @@ class _ConsultationOrderHistoryPageState
         ? ListView(
             shrinkWrap: true,
             children: List.generate(appointments.length, (index) {
+              String name = (consultationData[index].name).toString();
               DateTime createdDateTime =
                   DateTime.parse(appointments[index].createdAt);
               DateTime appointmentDateTime =
                   DateTime.parse(appointments[index].consultationTime);
+              int packageIndex =  name.contains("SILVER") ? 0 : name.contains("GOLD") ? 2: 1;
               return Container(
                 margin: EdgeInsets.all(10),
                 padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
@@ -103,9 +106,12 @@ class _ConsultationOrderHistoryPageState
                                   child: Text('Consultation')),
                               Flexible(
                                   fit: FlexFit.loose,
-                                  child: IconButton(
-                                      icon: Icon(Icons.more_vert),
-                                      onPressed: () {})),
+                                  child: FlatButton(
+                                      child: Text("Re-Book",style: pageViewTabSelected.copyWith(color: Colors.green),),
+                                      onPressed: () {
+                                        Navigator.of(context).push(MaterialPageRoute(
+                                            builder: (BuildContext context) => BookConsultation(packageIndex: packageIndex,consultation: consultationData,)));
+                                      })),
                             ],
                           ),
                         )),
@@ -113,7 +119,7 @@ class _ConsultationOrderHistoryPageState
                         fit: FlexFit.loose,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(consultationData[index].name),
+                          child: Text((consultationData[index].name).toString()),
                         )),
                     dataField(
                       fieldName: 'Appointment:',

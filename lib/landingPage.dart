@@ -3,6 +3,8 @@ import 'dart:ui';
 
 import 'package:diet_delight/Screens/Auth%20Screens/login_signup_form.dart';
 import 'package:diet_delight/Screens/Auth%20Screens/userMoto.dart';
+import 'package:diet_delight/Screens/Drawer%20Screens/Favourite.dart';
+import 'package:diet_delight/Screens/Drawer%20Screens/Settings.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/consutationOrdersPage.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/dashboardOnGoingOrders.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/dashboardUserInfoPage.dart';
@@ -16,38 +18,48 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'Screens/Drawer Screens/NotificationScreen.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => new _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  TabController _pageController1;
-  TabController _pageController2;
+  TabController _pageController;
   int page = 0;
   String _platformVersion = 'Unknown';
   List<String> drawerItems = [
     '',
     'Home',
     'Dashboard',
-    'Settings',
+    "Favourites",
     'Order History',
-    'Logout'
+
+    "Notifications",
+    'Settings',
+    'Logout',
   ];
 
   List<List<String>> tabItemsTitle = [
     ['', ''],
     ['User Info', 'Ongoing Meal Plans'],
-    ['Transactions', 'FAQ', 'Privacy Policy'],
+    ['', ''],
     ['Consultation Orders', 'Meal Plan Orders'],
   ];
 
   List<String> pageTitle = [
     '',
     'Dashboard',
-    'Settings',
+    "Favourites",
     'Order History Page',
+
+    "Notifications",
+    'Settings',
+    'Logout',
+
   ];
 
   Future<void> initPlatformState() async {
@@ -66,31 +78,32 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _pageController1 = TabController(length: 2, vsync: this);
-    _pageController2 = TabController(length: 3, vsync: this);
+    _pageController = TabController(length: 2, vsync: this);
     initPlatformState();
   }
 
   drawerOnTaps(int index) async {
-    if (index == page) {
-      Navigator.pop(context);
-    } else if (index != 4) {
-      Navigator.pop(context);
-      setState(() {
-        page = index;
-      });
-      print(page);
-    }
-    if (index == 4) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      bool result = await prefs.clear();
-      if (result) {
-        Navigator.of(context).pushReplacement(CupertinoPageRoute(
-            builder: (BuildContext context) => AfterSplash()));
-      } else {
-        _scaffoldKey.currentState
-            .showSnackBar(SnackBar(content: Text('Something went wrong')));
+    print(index);
+
+      if (index == page) {
+        Navigator.pop(context);
+      } else if (index != 6) {
+        Navigator.pop(context);
+        setState(() {
+          page = index;
+        });
+        print(page);
       }
+      if (index == 6) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        bool result = await prefs.clear();
+        if (result) {
+          Navigator.of(context).pushReplacement(CupertinoPageRoute(
+              builder: (BuildContext context) => AfterSplash()));
+        } else {
+          _scaffoldKey.currentState
+              .showSnackBar(SnackBar(content: Text('Something went wrong')));
+        }
     }
   }
 
@@ -151,9 +164,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ),
                 ]
               : [],
-          bottom: page == 1 || page == 3 || page == 2
+          bottom: page == 1 || page == 3
               ? TabBar(
-                  controller: page == 2 ? _pageController2 : _pageController1,
+                  controller: _pageController,
                   isScrollable: true,
                   onTap: (index) async {},
                   labelStyle: selectedTab.copyWith(
@@ -180,9 +193,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         drawer: Drawer(
           child: Padding(
             padding:
-                EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1),
+                EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.04),
             child: ListView(
-                children: List.generate(6, (index) {
+                children: List.generate(drawerItems.length , (index) {
               if (index == 0) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
@@ -197,7 +210,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 padding: EdgeInsets.only(top: 5.0),
                 child: ListTile(
                     onTap: () {
-                      drawerOnTaps(index - 1);
+                      drawerOnTaps(index-1);
                     },
                     title: Center(
                         child: Text(
@@ -213,28 +226,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           index: page,
           children: [
             HomeScreen(),
-            TabBarView(controller: _pageController1, children: [
+            TabBarView(controller: _pageController, children: [
               DashBoardUserInfoPage(),
               DashBoardOngoingOrders(),
             ]),
-            TabBarView(
-              controller: _pageController2,
-              children: [
-                Container(
-                  color: Colors.blueGrey,
-                ),
-                Container(
-                  color: Colors.white,
-                ),
-                Container(
-                  color: Colors.yellow,
-                ),
-              ],
-            ),
-            TabBarView(controller: _pageController1, children: [
+            FavouritesScreen(),
+            TabBarView(controller: _pageController, children: [
               ConsultationOrderHistoryPage(),
               MealPlanOrderHistoryPage()
             ]),
+
+            NotificationsScreen(),
+            SettingsPage(),
           ],
         ),
       ),

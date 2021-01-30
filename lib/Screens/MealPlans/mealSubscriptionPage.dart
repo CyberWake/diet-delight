@@ -9,13 +9,15 @@ import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:intl/intl.dart';
 
 class MealSubscriptionPage extends StatefulWidget {
-  final String categories;
+  final List<dynamic> weekdays;
   final MealModel mealPackage;
   final int weekDaysSelected;
-  MealSubscriptionPage(
-      {this.mealPackage, this.weekDaysSelected, this.categories});
+  final String mealPlanName;
+  final String categories;
+  final endDate;
+  MealSubscriptionPage({this.mealPackage, this.weekDaysSelected,this.categories,this.weekdays,this.mealPlanName,this.endDate});
   @override
-  _MealSubscriptionPageState createState() => _MealSubscriptionPageState();
+  _MealSubscriptionPageState createState() => _MealSubscriptionPageState(endDate : this.endDate,weekdays: this.weekdays,mealPlanName: this.mealPlanName);
 }
 
 class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
@@ -40,6 +42,11 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
   List<String> areas = ['Bahrain', 'India'];
   List<String> areas2 = ['Bahrain', 'India'];
   String addressType = 'Home';
+  List<dynamic> weekdays = [];
+  var mealPlanName;
+  var endDate;
+  _MealSubscriptionPageState({this.weekdays,this.mealPlanName,this.endDate});
+
 
   @override
   void initState() {
@@ -69,6 +76,31 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
         });
       }
     });
+
+    print(dateSelected);
+    if(weekdays != null && weekdays.length != 0){
+      if(weekdays.contains('Sun')){
+        selectedDays[0] = true;
+      }
+      if(weekdays.contains('Mon')){
+        selectedDays[1] = true;
+      }
+      if(weekdays.contains('Tue')){
+        selectedDays[2] = true;
+      }
+      if(weekdays.contains('Wed')){
+        selectedDays[3] = true;
+      }
+      if(weekdays.contains('Thu')){
+        selectedDays[4] = true;
+      }
+      if(weekdays.contains('Fri')){
+        selectedDays[5] = true;
+      }
+      if(weekdays.contains('Sat')){
+        selectedDays[6] = true;
+      }
+    }
   }
 
   void addAddress({int address}) {
@@ -379,64 +411,48 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
         title: Text('Subscribe your meal plan', style: appBarTextStyle),
       ),
       body: Container(
-        padding: EdgeInsets.only(bottom: 10),
+        padding: EdgeInsets.only(top: 10),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Flexible(
-              fit: FlexFit.loose,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Flexible(
-                    flex: 15,
-                    fit: FlexFit.loose,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Flexible(
-                            fit: FlexFit.loose,
-                            child: Text(widget.mealPackage.name,
-                                style: selectedTab.copyWith(fontSize: 28)),
-                          ),
-                          Flexible(
-                              fit: FlexFit.loose,
-                              child: Text(widget.mealPackage.details)),
-                          Flexible(child: Text(widget.categories)),
-                        ],
-                      ),
-                    ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(mealPlanName == null ? 'Meal Plan Name' : mealPlanName,
+                          style: selectedTab.copyWith(fontSize: 28)),
+                      Text('sgasdfjijadfigfadjfvadsfiluH\nFIUDSBFSADIUAGFIGF'),
+                      Text('Breakfast, lunch, dinner')
+                    ],
                   ),
-                  Flexible(
-                    flex: 5,
-                    fit: FlexFit.loose,
-                    child: CachedNetworkImage(
-                      imageUrl: widget.mealPackage.picture,
-                      imageBuilder: (context, imageProvider) => Container(
-                        height: 100,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      placeholder: (context, url) =>
-                          CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
-                    ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 4,
+                        color: Colors.grey[500],
+                        spreadRadius: 0,
+                        offset: const Offset(0.0, 0.0),
+                      )
+                    ],
                   ),
-                ],
-              ),
+                  child: CircleAvatar(
+                    radius: 45,
+                    backgroundColor: Color(0xffC4C4C4),
+                  ),
+                ),
+              ],
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 20.0),
+              padding: const EdgeInsets.only(left: 20.0, top: 20),
               child: Text(
                 'Days of the week',
                 style: selectedTab,
@@ -705,7 +721,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                           context,
                           CupertinoPageRoute(
                               builder: (context) => PrePaymentMealPlan(
-                                    categories: widget.categories,
+                                categories: widget.categories,
                                     selectedDate: dateSelected,
                                     selectedDays: selDays,
                                     mealPlan: widget.mealPackage,
