@@ -31,7 +31,7 @@ class Api {
 
   static RegModel userInfo = RegModel();
   static String token;
-  String uri = 'http://dietdelight.enigmaty.com';
+  String uri = 'https://dietdelight.enigmaty.com';
   Api._privateConstructor();
 
   static final Api instance = Api._privateConstructor();
@@ -223,6 +223,32 @@ class Api {
     } on Exception catch (e) {
       print(e.toString());
       return [];
+    }
+  }
+
+  Future<MealModel> getMealPlan(String mealPlanId) async {
+    try {
+      MealModel meal;
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+      final response = await http.get(uri + '/api/v1/meal-plans/' + mealPlanId,
+          headers: headers);
+      if (response.statusCode == 200) {
+        print('Success getting meal plans');
+        var body = convert.jsonDecode(response.body);
+        var data = body['data'];
+        MealModel item = MealModel.fromMap(data);
+        return item;
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        return meal;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return null;
     }
   }
 
@@ -478,59 +504,39 @@ class Api {
 
   Future<List<MealPurchaseModel>> getOngoingMealPurchases(
       DateTime endDate) async {
-    try {
-      itemPresentMealPurchases = [];
-      Map<String, String> headers = {
-        HttpHeaders.contentTypeHeader: "application/json",
-        HttpHeaders.authorizationHeader: "Bearer $token"
-      };
-      final response =
-          await http.get(uri + '/api/v1/my-meal-purchases', headers: headers);
-      if (response.statusCode == 200) {
-        print('success getting present meal purchases');
-        var body = convert.jsonDecode(response.body);
-        List data = body['data'];
-        data.forEach((element) {
-          MealPurchaseModel item = MealPurchaseModel.fromMap(element);
-          if (DateTime.parse(item.endDate).compareTo(endDate) > 0) {
-            itemPresentMealPurchases.add(item);
-          }
-        });
-        return itemPresentMealPurchases;
-      } else {
-        print(response.statusCode);
-        print(response.body);
-        return itemPresentMealPurchases;
-      }
+    /*try {
+
     } on Exception catch (e) {
       print(e.toString());
       return [];
-    }
-  }
-
-  Future<MealModel> getMealPlan(String mealPlanId) async {
-    try {
-      MealModel meal;
-      Map<String, String> headers = {
-        HttpHeaders.contentTypeHeader: "application/json",
-        HttpHeaders.authorizationHeader: "Bearer $token"
-      };
-      final response = await http.get(uri + '/api/v1/meal-plans/' + mealPlanId,
-          headers: headers);
-      if (response.statusCode == 200) {
-        print('Success getting meal plans');
-        var body = convert.jsonDecode(response.body);
-        var data = body['data'];
-        MealModel item = MealModel.fromMap(data);
-        return item;
-      } else {
-        print(response.statusCode);
-        print(response.body);
-        return null;
-      }
-    } on Exception catch (e) {
-      print(e.toString());
-      return null;
+    }*/
+    itemPresentMealPurchases = [];
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    final response =
+        await http.get(uri + '/api/v1/my-meal-purchases', headers: headers);
+    if (response.statusCode == 200) {
+      print('success getting present meal purchases');
+      var body = convert.jsonDecode(response.body);
+      List data = body['data'];
+      //print(data);
+      data.forEach((element) {
+        MealPurchaseModel item = MealPurchaseModel.fromMap(element);
+        print(item.endDate);
+        if (item.endDate != null) {
+          if (DateTime.parse(item.endDate).compareTo(endDate) > 0) {
+            itemPresentMealPurchases.add(item);
+          }
+        }
+      });
+      print('present plans: ${itemPresentMealPurchases.length}');
+      return itemPresentMealPurchases;
+    } else {
+      print(response.statusCode);
+      print(response.body);
+      return itemPresentMealPurchases;
     }
   }
 

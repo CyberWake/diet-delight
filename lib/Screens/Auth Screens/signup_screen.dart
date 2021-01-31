@@ -29,12 +29,27 @@ class _SignUpState extends State<SignUp> {
   TextEditingController password = TextEditingController();
   TextEditingController confirmPass = TextEditingController();
 
+  var firstNameText;
+  var secondNameText;
+  var phoneNumberText;
+  var emailText;
+  var firstPasswordText;
+  var confirmPassText;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    countryCode.text = '+91';
+    countryCode.text = '+973';
   }
+
+  /*getPhoneNumbers() async {
+    mobileNo.text = await _autoFill.hint;
+    if (mobileNo.text.isNotEmpty) {
+      countryCode.text = mobileNo.text.substring(0, 3);
+      mobileNo.text = mobileNo.text.substring(3);
+      FocusScope.of(context).requestFocus(mail);
+    }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +83,10 @@ class _SignUpState extends State<SignUp> {
                                 padding:
                                     const EdgeInsets.fromLTRB(20, 5, 20, 5),
                                 child: TextFormField(
-                                    onFieldSubmitted: (done) {
+                                    onChanged: (done) {
                                       firstName.text = done;
+                                    },
+                                    onFieldSubmitted: (done) {
                                       first.unfocus();
                                       FocusScope.of(context).requestFocus(last);
                                     },
@@ -97,11 +114,13 @@ class _SignUpState extends State<SignUp> {
                                 padding:
                                     const EdgeInsets.fromLTRB(20, 5, 20, 5),
                                 child: TextFormField(
-                                    onFieldSubmitted: (done) {
+                                    onChanged: (done) {
                                       lastName.text = done;
+                                    },
+                                    onFieldSubmitted: (done) {
                                       last.unfocus();
                                       FocusScope.of(context)
-                                          .requestFocus(country);
+                                          .requestFocus(mobile);
                                     },
                                     textAlign: TextAlign.center,
                                     textDirection: TextDirection.ltr,
@@ -142,15 +161,17 @@ class _SignUpState extends State<SignUp> {
                               decoration: authFieldDecoration,
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.fromLTRB(20, 3, 20, 7),
+                                    const EdgeInsets.fromLTRB(15, 3, 15, 7),
                                 child: TextFormField(
                                   focusNode: country,
-                                  onFieldSubmitted: (done) {
+                                  onChanged: (done) {
                                     countryCode.text = done;
+                                  },
+                                  onFieldSubmitted: (done) {
                                     country.unfocus();
                                     FocusScope.of(context).requestFocus(mobile);
                                   },
-                                  initialValue: '+91',
+                                  initialValue: '+973',
                                   style: TextStyle(
                                     fontFamily: 'RobotoCondensedReg',
                                     fontSize: 14,
@@ -180,9 +201,12 @@ class _SignUpState extends State<SignUp> {
                                 child: TextFormField(
                                     controller: mobileNo,
                                     onFieldSubmitted: (done) {
-                                      mobileNo.text = done;
-                                      mobile.unfocus();
-                                      FocusScope.of(context).requestFocus(mail);
+                                      setState(() {
+                                        mobileNo..text = done;
+                                        mobile.unfocus();
+                                        FocusScope.of(context)
+                                            .requestFocus(mail);
+                                      });
                                     },
                                     textAlign: TextAlign.center,
                                     keyboardType: TextInputType.phone,
@@ -218,8 +242,10 @@ class _SignUpState extends State<SignUp> {
                         child: Padding(
                           padding: EdgeInsets.fromLTRB(20, 3, 20, 7),
                           child: TextFormField(
-                              onFieldSubmitted: (done) {
+                              onChanged: (done) {
                                 email.text = done;
+                              },
+                              onFieldSubmitted: (done) {
                                 mail.unfocus();
                                 FocusScope.of(context).requestFocus(pass);
                               },
@@ -253,9 +279,11 @@ class _SignUpState extends State<SignUp> {
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(20, 3, 20, 7),
                           child: TextFormField(
-                              onFieldSubmitted: (done) {
+                              onChanged: (done) {
                                 password.text = done;
-                                mail.unfocus();
+                              },
+                              onFieldSubmitted: (done) {
+                                pass.unfocus();
                                 FocusScope.of(context).requestFocus(confPass);
                               },
                               style: authInputTextStyle,
@@ -290,8 +318,10 @@ class _SignUpState extends State<SignUp> {
                           padding: const EdgeInsets.fromLTRB(20, 3, 20, 7),
                           child: TextFormField(
                               focusNode: confPass,
-                              onFieldSubmitted: (done) {
+                              onChanged: (done) {
                                 confirmPass.text = done;
+                              },
+                              onFieldSubmitted: (done) {
                                 confPass.unfocus();
                                 FocusScope.of(context).requestFocus(submit);
                               },
@@ -315,10 +345,15 @@ class _SignUpState extends State<SignUp> {
                 child: TextButton(
                   focusNode: submit,
                   onPressed: () async {
+                    print(confirmPass.text);
+                    print(password.text);
+                    print(firstName.text);
+                    print(lastName.text);
                     if (EmailValidator.validate(email.text)) {
-                      if (confirmPass.text == password.text &&
-                          countryCode.text.isNotEmpty &&
+                      if (confirmPass.text.toString() ==
+                              (password.text).toString() &&
                           confirmPass.text.isNotEmpty &&
+                          countryCode.text.isNotEmpty &&
                           password.text.isNotEmpty &&
                           firstName.text.isNotEmpty &&
                           lastName.text.isNotEmpty) {
@@ -329,7 +364,7 @@ class _SignUpState extends State<SignUp> {
                             email: email.text,
                             password: password.text,
                             mobile: countryCode.text + ' ' + mobileNo.text);
-                        //signUpDetails.show();
+                        signUpDetails.show();
                         Navigator.push(
                             context,
                             CupertinoPageRoute(
@@ -337,28 +372,31 @@ class _SignUpState extends State<SignUp> {
                                       regDetails: signUpDetails,
                                     )));
                       } else {
-                        if (confirmPass.text == password.text) {
+                        if (confirmPass.text != password.text) {
                           Scaffold.of(context).showSnackBar(SnackBar(
                               content: Text('Passwords do not match')));
-                        } else if (countryCode.text.isNotEmpty) {
-                          Scaffold.of(context).showSnackBar(
-                              SnackBar(content: Text('Enter Country Code')));
-                        } else if (confirmPass.text.isNotEmpty) {
+                        } else if (confirmPass.text.isEmpty) {
+                          print(confirmPass.text);
                           Scaffold.of(context).showSnackBar(SnackBar(
                               content:
                                   Text('Enter the confirmation password')));
-                        } else if (password.text.isNotEmpty) {
+                        } else if (countryCode.text.isEmpty) {
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Text('Country code cannot be empty')));
+                        } else if (password.text.isEmpty) {
                           Scaffold.of(context).showSnackBar(
                               SnackBar(content: Text('Enter the password')));
-                        } else if (firstName.text.isNotEmpty) {
+                        } else if (firstName.text.isEmpty) {
                           Scaffold.of(context).showSnackBar(
                               SnackBar(content: Text('Enter your first name')));
-                        } else if (lastName.text.isNotEmpty) {
+                        } else if (lastName.text.isEmpty) {
                           Scaffold.of(context).showSnackBar(
                               SnackBar(content: Text('Enter your last name')));
                         }
                       }
                     } else {
+                      print(email.text);
+                      print(EmailValidator.validate(email.text));
                       Scaffold.of(context).showSnackBar(
                           SnackBar(content: Text('Enter a valid email')));
                     }

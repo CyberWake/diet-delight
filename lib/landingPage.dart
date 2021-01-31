@@ -2,12 +2,16 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:diet_delight/Screens/Auth%20Screens/login_signup_form.dart';
-import 'package:diet_delight/Screens/Auth%20Screens/userMoto.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/consutationOrdersPage.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/dashboardOnGoingOrders.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/dashboardUserInfoPage.dart';
+import 'package:diet_delight/Screens/Drawer%20Screens/favouritesPage.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/homePage.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/mealPlanOrdersPage.dart';
+import 'package:diet_delight/Screens/Drawer%20Screens/notificationsPage.dart';
+import 'package:diet_delight/Screens/Drawer%20Screens/settingsFAQs.dart';
+import 'package:diet_delight/Screens/Drawer%20Screens/settingsPrivacyPolicy.dart';
+import 'package:diet_delight/Screens/Drawer%20Screens/settingsTermsAndConditions.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,23 +35,29 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     '',
     'Home',
     'Dashboard',
-    'Settings',
+    'Favourites',
     'Order History',
+    'Notifications',
+    'Settings',
     'Logout'
   ];
 
   List<List<String>> tabItemsTitle = [
     ['', ''],
     ['User Info', 'Ongoing Meal Plans'],
-    ['Transactions', 'FAQ', 'Privacy Policy'],
+    [],
     ['Consultation Orders', 'Meal Plan Orders'],
+    [],
+    ['Terms and Conditions', 'FAQ', 'Privacy Policy'],
   ];
 
   List<String> pageTitle = [
     '',
     'Dashboard',
-    'Settings',
+    'Favourites',
     'Order History Page',
+    'Notifications',
+    'Settings',
   ];
 
   Future<void> initPlatformState() async {
@@ -74,14 +84,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   drawerOnTaps(int index) async {
     if (index == page) {
       Navigator.pop(context);
-    } else if (index != 4) {
+    } else if (index != 6) {
       Navigator.pop(context);
       setState(() {
         page = index;
       });
       print(page);
     }
-    if (index == 4) {
+    if (index == 6) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       bool result = await prefs.clear();
       if (result) {
@@ -125,14 +135,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     },
                     child: Image.asset(
                       'images/Group 22.png',
-                      width: 25.0,
-                      height: 25.0,
+                      width: 28.0,
+                      height: 28.0,
                     ),
                   ),
                   SizedBox(
                     width: 20,
                   ),
-                  GestureDetector(
+                  /*GestureDetector(
                     onTap: () {
                       Navigator.push(
                           context,
@@ -148,16 +158,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ),
                   SizedBox(
                     width: 10,
-                  ),
+                  ),*/
                 ]
               : [],
-          bottom: page == 1 || page == 3 || page == 2
+          bottom: page == 1 || page == 3 || page == 5
               ? TabBar(
-                  controller: page == 2 ? _pageController2 : _pageController1,
+                  controller: page == 5 ? _pageController2 : _pageController1,
                   isScrollable: true,
                   onTap: (index) async {},
                   labelStyle: selectedTab.copyWith(
-                      fontSize: 20,
+                      fontSize: 18,
                       color: Colors.black,
                       fontWeight: FontWeight.w600),
                   indicatorColor: Colors.transparent,
@@ -166,7 +176,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   labelColor: Colors.black,
                   labelPadding: EdgeInsets.symmetric(horizontal: 13),
                   unselectedLabelStyle: unSelectedTab.copyWith(
-                      fontSize: 18,
+                      fontSize: 16,
                       color: Colors.grey,
                       fontWeight: FontWeight.w400),
                   unselectedLabelColor: Colors.grey,
@@ -182,7 +192,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             padding:
                 EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1),
             child: ListView(
-                children: List.generate(6, (index) {
+                children: List.generate(8, (index) {
               if (index == 0) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
@@ -217,24 +227,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               DashBoardUserInfoPage(),
               DashBoardOngoingOrders(),
             ]),
-            TabBarView(
-              controller: _pageController2,
-              children: [
-                Container(
-                  color: Colors.blueGrey,
-                ),
-                Container(
-                  color: Colors.white,
-                ),
-                Container(
-                  color: Colors.yellow,
-                ),
-              ],
-            ),
+            FavouritesPage(),
             TabBarView(controller: _pageController1, children: [
               ConsultationOrderHistoryPage(),
               MealPlanOrderHistoryPage()
             ]),
+            NotificationsPage(),
+            TabBarView(
+              controller: _pageController2,
+              children: [
+                SettingsTermsAndConditionsPage(),
+                SettingsFAQPage(),
+                SettingsPrivacyPolicyPage(),
+              ],
+            ),
           ],
         ),
       ),

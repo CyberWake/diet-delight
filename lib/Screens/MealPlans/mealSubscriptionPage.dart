@@ -9,11 +9,15 @@ import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:intl/intl.dart';
 
 class MealSubscriptionPage extends StatefulWidget {
-  final String categories;
+  String description;
+  String categories;
   final MealModel mealPackage;
   final int weekDaysSelected;
   MealSubscriptionPage(
-      {this.mealPackage, this.weekDaysSelected, this.categories});
+      {this.description,
+      this.mealPackage,
+      this.weekDaysSelected,
+      this.categories});
   @override
   _MealSubscriptionPageState createState() => _MealSubscriptionPageState();
 }
@@ -44,6 +48,10 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
   @override
   void initState() {
     super.initState();
+    if (widget.categories == null) {
+      widget.categories = 'Breakfast, Lunch, Dinner';
+      widget.description = 'aiduhFIUOYARHOCWYJFIOWEGFCNINYRFAESOITCUBQW';
+    }
     today = new DateTime.now();
     widget.weekDaysSelected == 7
         ? selectedDays = [
@@ -400,14 +408,16 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Flexible(
+                            flex: 2,
                             fit: FlexFit.loose,
                             child: Text(widget.mealPackage.name,
                                 style: selectedTab.copyWith(fontSize: 28)),
                           ),
                           Flexible(
-                              fit: FlexFit.loose,
+                              flex: 2,
+                              fit: FlexFit.tight,
                               child: Text(widget.mealPackage.details)),
-                          Flexible(child: Text(widget.categories)),
+                          Flexible(flex: 1, child: Text(widget.categories)),
                         ],
                       ),
                     ),
@@ -602,8 +612,9 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                             disabledColor: formFill,
                             accentTextTheme: TextTheme(),
                           ),
-                          initialDate: dateSelected ?? today,
-                          firstDate: today.subtract(Duration(days: 1)));
+                          initialDate:
+                              dateSelected ?? today.add(Duration(days: 2)),
+                          firstDate: today.add(Duration(days: 2)));
                       setState(() {
                         dateSelected = selectedDateTime;
                         date =
@@ -619,7 +630,8 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                                 vertical: 5, horizontal: 10),
                             child: Container(
                               child: Text(
-                                DateFormat.E().format(dateSelected ?? today) +
+                                DateFormat.E().format(dateSelected ??
+                                        today.add(Duration(days: 2))) +
                                     ', ' +
                                     DateFormat.MMM()
                                         .add_d()

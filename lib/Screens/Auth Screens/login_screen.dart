@@ -105,7 +105,7 @@ class _LoginState extends State<Login> {
                                 FocusScope.of(context).requestFocus(submit);
                               },
                               style: authInputTextStyle,
-                              keyboardType: TextInputType.text,
+                              keyboardType: TextInputType.emailAddress,
                               obscureText: true,
                               focusNode: pass,
                               textInputAction: TextInputAction.done,

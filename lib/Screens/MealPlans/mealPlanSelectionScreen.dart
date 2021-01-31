@@ -90,7 +90,7 @@ class _MealPlanPageState extends State<MealPlanPage> {
             color: defaultGreen,
           ),
         ),
-        title: Text('Choose your mean plan', style: appBarTextStyle),
+        title: Text('Choose your meal plan', style: appBarTextStyle),
       ),
       body: isLoaded
           ? ListView.builder(

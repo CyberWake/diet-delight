@@ -76,9 +76,6 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
         }
       }
     }
-    print('subCategoryItems.length: ${subCategoryItems.length}');
-    print('mainCategoryItems.length: ${mainCategoryItems.length}');
-    print('categoryItems.length: ${categoryItems.length}');
     _pageController =
         TabController(length: mainCategoryItems.length, vsync: this);
     if (categoryItems.isNotEmpty) {
@@ -89,9 +86,14 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
             .whenComplete(() => i++));
       }
     }
-    setState(() {
-      isLoaded = true;
-    });
+    print('subCategoryItems.length: ${subCategoryItems.length}');
+    print('mainCategoryItems.length: ${mainCategoryItems.length}');
+    print('categoryItems.length: ${categoryItems.length}');
+    if (mounted) {
+      setState(() {
+        isLoaded = true;
+      });
+    }
   }
 
   getFoodItems(int categoryId) async {
@@ -149,11 +151,12 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                 margin: EdgeInsets.only(right: 20),
                 decoration: authFieldDecoration,
                 child: CachedNetworkImage(
-                  imageUrl: foodItem.picture ?? "a",
+                  imageUrl:
+                      foodItem.picture ?? "http://via.placeholder.com/350x150",
                   imageBuilder: (context, imageProvider) => Container(
                     height: 60,
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
+                      shape: BoxShape.rectangle,
                       image: DecorationImage(
                         image: imageProvider,
                         fit: BoxFit.cover,
@@ -237,7 +240,8 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                                 radius: 45,
                                 backgroundColor: white,
                                 child: CachedNetworkImage(
-                                  imageUrl: widget.menu.picture,
+                                  imageUrl: widget.menu.picture ??
+                                      "http://via.placeholder.com/350x150",
                                   imageBuilder: (context, imageProvider) =>
                                       Container(
                                     decoration: BoxDecoration(
@@ -337,7 +341,13 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                     itemIndex =
                         parentId * subCategoryItems[parentId].length - 1;
                   }
-                  expansionFoodItems = foodItems[itemIndex ?? parentId + index];
+                  if (index == 0) {
+                    expansionFoodItems =
+                        foodItems[itemIndex ?? parentId + index];
+                  } else {
+                    expansionFoodItems =
+                        foodItems[itemIndex + index ?? parentId + index];
+                  }
                   return ExpansionTile(
                     onExpansionChanged: (bool expanded) {
                       print(parentId + index);

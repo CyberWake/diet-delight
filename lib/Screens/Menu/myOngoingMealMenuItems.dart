@@ -499,12 +499,13 @@ class _PresentMealMenuState extends State<PresentMealMenu>
                                       radius: 45,
                                       backgroundColor: Colors.white,
                                       child: CachedNetworkImage(
-                                        imageUrl: widget.plan.picture,
+                                        imageUrl: widget.plan.picture ??
+                                            "http://via.placeholder.com/350x150",
                                         imageBuilder:
                                             (context, imageProvider) =>
                                                 Container(
                                           decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
+                                            shape: BoxShape.rectangle,
                                             image: DecorationImage(
                                               image: imageProvider,
                                               fit: BoxFit.cover,
@@ -610,7 +611,8 @@ class _PresentMealMenuState extends State<PresentMealMenu>
                       isScrollable: true,
                       controller: _pageController,
                       onTap: (index) {},
-                      labelStyle: selectedTab.copyWith(color: Colors.black,fontSize: 14),
+                      labelStyle: selectedTab.copyWith(
+                          color: Colors.black, fontSize: 14),
                       indicatorColor: Colors.transparent,
                       indicatorWeight: 3.0,
                       indicatorSize: TabBarIndicatorSize.label,

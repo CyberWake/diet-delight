@@ -33,9 +33,11 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     testApiData().whenComplete(() {
-      setState(() {
-        isLoaded = true;
-      });
+      if (mounted) {
+        setState(() {
+          isLoaded = true;
+        });
+      }
     });
   }
 
@@ -76,9 +78,10 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           child: Container(
             color: Colors.white,
-            width: 110,
-            height: 220,
+            width: 130,
+            height: 250,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
@@ -87,7 +90,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     radius: 35,
                     backgroundColor: Colors.white,
                     child: CachedNetworkImage(
-                      imageUrl: menus[pos].picture,
+                      imageUrl: menus[pos].picture ??
+                          "http://via.placeholder.com/350x150",
                       imageBuilder: (context, imageProvider) => Container(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
@@ -128,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                   padding: EdgeInsets.only(top: 10.0),
                   child: Text(
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
+                    menus[pos].description,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'RobotoCondensedReg',
@@ -138,8 +142,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
+                Spacer(),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 15),
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -189,6 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 220,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
                     padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
@@ -233,8 +239,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
+                Spacer(),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 15),
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -326,7 +333,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(5.0, 10, 5, 0),
                   child: Text(
-                    consultationPackages[pos].price+' BHD',
+                    consultationPackages[pos].price + ' BHD',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'RobotoCondensedReg',
@@ -376,9 +383,12 @@ class _HomeScreenState extends State<HomeScreen> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 30.0, 0, 20.0),
                 child: Container(
-                  height: 125,
+                  height: 100,
                   width: double.infinity,
                   decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('images/banner.jpg'),
+                        fit: BoxFit.fitWidth),
                     color: formBackground,
                     border: Border(
                         bottom: BorderSide(width: 1.0, color: formLinks)),
@@ -408,7 +418,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'FAMILY PACKAGE',
+                              'FAMILY \nPACKAGE',
                               style: TextStyle(
                                   fontFamily: 'RobotoCondensedReg',
                                   fontSize: 19,
@@ -433,6 +443,35 @@ class _HomeScreenState extends State<HomeScreen> {
                                         color: Colors.black),
                                   ]),
                             ),
+                            /*Container(
+                              height: 120,
+                              width: double.infinity,
+                              child: CarouselSlider(
+                                  items: [1, 2, 3, 4, 5].map((i) {
+                                    return Builder(
+                                      builder: (BuildContext context) {
+                                        return Container(
+                                            child: Image.asset(
+                                          'images/banner.jpg',
+                                          fit: BoxFit.fitWidth,
+                                        ));
+                                      },
+                                    );
+                                  }).toList(),
+                                  options: CarouselOptions(
+                                    viewportFraction: 0.7,
+                                    initialPage: 0,
+                                    enableInfiniteScroll: true,
+                                    reverse: false,
+                                    autoPlay: true,
+                                    autoPlayInterval: Duration(seconds: 8),
+                                    autoPlayAnimationDuration:
+                                        Duration(milliseconds: 800),
+                                    autoPlayCurve: Curves.fastOutSlowIn,
+                                    enlargeCenterPage: true,
+                                    scrollDirection: Axis.horizontal,
+                                  )),
+                            )*/
                           ],
                         ),
                       ),
@@ -471,7 +510,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(
                         padding: EdgeInsets.fromLTRB(20, 20, 10, 10),
                         child: Container(
-                          height: 0.6 * devWidth,
+                          height: 0.65 * devWidth,
                           child: ListView.builder(
                               itemCount: menus.length,
                               scrollDirection: Axis.horizontal,
