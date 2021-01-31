@@ -89,9 +89,11 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
             .whenComplete(() => i++));
       }
     }
-    setState(() {
-      isLoaded = true;
-    });
+    if (mounted) {
+      setState(() {
+        isLoaded = true;
+      });
+    }
   }
 
   getFoodItems(int categoryId) async {
@@ -337,7 +339,13 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                     itemIndex =
                         parentId * subCategoryItems[parentId].length - 1;
                   }
-                  expansionFoodItems = foodItems[itemIndex ?? parentId + index];
+                  if (index == 0) {
+                    expansionFoodItems =
+                        foodItems[itemIndex ?? parentId + index];
+                  } else {
+                    expansionFoodItems =
+                        foodItems[itemIndex + index ?? parentId + index];
+                  }
                   return ExpansionTile(
                     onExpansionChanged: (bool expanded) {
                       print(parentId + index);

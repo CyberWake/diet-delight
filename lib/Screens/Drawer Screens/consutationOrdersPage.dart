@@ -59,7 +59,9 @@ class _ConsultationOrderHistoryPageState
   @override
   void initState() {
     super.initState();
-    getData();
+    if (mounted) {
+      getData();
+    }
   }
 
   @override

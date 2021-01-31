@@ -478,33 +478,39 @@ class Api {
 
   Future<List<MealPurchaseModel>> getOngoingMealPurchases(
       DateTime endDate) async {
-    try {
-      itemPresentMealPurchases = [];
-      Map<String, String> headers = {
-        HttpHeaders.contentTypeHeader: "application/json",
-        HttpHeaders.authorizationHeader: "Bearer $token"
-      };
-      final response =
-          await http.get(uri + '/api/v1/my-meal-purchases', headers: headers);
-      if (response.statusCode == 200) {
-        print('success getting present meal purchases');
-        var body = convert.jsonDecode(response.body);
-        List data = body['data'];
-        data.forEach((element) {
-          MealPurchaseModel item = MealPurchaseModel.fromMap(element);
-          if (DateTime.parse(item.endDate).compareTo(endDate) > 0) {
-            itemPresentMealPurchases.add(item);
-          }
-        });
-        return itemPresentMealPurchases;
-      } else {
-        print(response.statusCode);
-        print(response.body);
-        return itemPresentMealPurchases;
-      }
+    /*try {
+
     } on Exception catch (e) {
       print(e.toString());
       return [];
+    }*/
+    itemPresentMealPurchases = [];
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    final response =
+        await http.get(uri + '/api/v1/my-meal-purchases', headers: headers);
+    if (response.statusCode == 200) {
+      print('success getting present meal purchases');
+      var body = convert.jsonDecode(response.body);
+      List data = body['data'];
+      //print(data);
+      data.forEach((element) {
+        MealPurchaseModel item = MealPurchaseModel.fromMap(element);
+        print(item.endDate);
+        if (item.endDate != null) {
+          if (DateTime.parse(item.endDate).compareTo(endDate) > 0) {
+            itemPresentMealPurchases.add(item);
+          }
+        }
+      });
+      print('present plans: ${itemPresentMealPurchases.length}');
+      return itemPresentMealPurchases;
+    } else {
+      print(response.statusCode);
+      print(response.body);
+      return itemPresentMealPurchases;
     }
   }
 
