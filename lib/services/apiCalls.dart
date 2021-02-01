@@ -31,7 +31,7 @@ class Api {
 
   static RegModel userInfo = RegModel();
   static String token;
-  String uri = 'http://dietdelight.enigmaty.com';
+  String uri = 'https://dietdelight.enigmaty.com';
   Api._privateConstructor();
 
   static final Api instance = Api._privateConstructor();
@@ -223,6 +223,32 @@ class Api {
     } on Exception catch (e) {
       print(e.toString());
       return [];
+    }
+  }
+
+  Future<MealModel> getMealPlan(String mealPlanId) async {
+    try {
+      MealModel meal;
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+      final response = await http.get(uri + '/api/v1/meal-plans/' + mealPlanId,
+          headers: headers);
+      if (response.statusCode == 200) {
+        print('Success getting meal plans');
+        var body = convert.jsonDecode(response.body);
+        var data = body['data'];
+        MealModel item = MealModel.fromMap(data);
+        return item;
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        return meal;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return null;
     }
   }
 
@@ -511,32 +537,6 @@ class Api {
       print(response.statusCode);
       print(response.body);
       return itemPresentMealPurchases;
-    }
-  }
-
-  Future<MealModel> getMealPlan(String mealPlanId) async {
-    try {
-      MealModel meal;
-      Map<String, String> headers = {
-        HttpHeaders.contentTypeHeader: "application/json",
-        HttpHeaders.authorizationHeader: "Bearer $token"
-      };
-      final response = await http.get(uri + '/api/v1/meal-plans/' + mealPlanId,
-          headers: headers);
-      if (response.statusCode == 200) {
-        print('Success getting meal plans');
-        var body = convert.jsonDecode(response.body);
-        var data = body['data'];
-        MealModel item = MealModel.fromMap(data);
-        return item;
-      } else {
-        print(response.statusCode);
-        print(response.body);
-        return null;
-      }
-    } on Exception catch (e) {
-      print(e.toString());
-      return null;
     }
   }
 

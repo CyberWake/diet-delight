@@ -1,5 +1,7 @@
 import 'package:date_format/date_format.dart';
+import 'package:diet_delight/Models/mealModel.dart';
 import 'package:diet_delight/Models/mealPurchaseModel.dart';
+import 'package:diet_delight/Screens/MealPlans/mealSubscriptionPage.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,7 +17,7 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
   List<MealPurchaseModel> purchasedMeal;
   final _apiCall = Api.instance;
   bool loaded = false;
-  List<String> format = [hh, ':', nn, ' ', am, dd, ' ', 'M', ', ', yyyy];
+  List<String> format = [hh, ':', nn, ' ', am, '\n', dd, ' ', 'M', ', ', yyyy];
 
   Widget dataField({String fieldName, String fieldValue}) {
     return Flexible(
@@ -34,10 +36,13 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
   }
 
   getData() async {
-    purchasedMeal =
-        await _apiCall.getMealPurchases().whenComplete(() => setState(() {
-              loaded = true;
-            }));
+    purchasedMeal = await _apiCall.getMealPurchases().whenComplete(() {
+      if (mounted) {
+        setState(() {
+          loaded = true;
+        });
+      }
+    });
   }
 
   @override
@@ -80,9 +85,30 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
                             children: [
                               Flexible(child: Text('Menu Plan')),
                               Flexible(
-                                  child: IconButton(
-                                      icon: Icon(Icons.more_vert),
-                                      onPressed: () {})),
+                                  child: FlatButton(
+                                      child: Text(
+                                        "Re-Book",
+                                        style: selectedTab.copyWith(
+                                            color: Colors.green),
+                                      ),
+                                      onPressed: () async {
+                                        MealModel getMealPackage =
+                                            await _apiCall.getMealPlan(
+                                                purchasedMeal[index]
+                                                    .mealPlanId);
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    MealSubscriptionPage(
+                                                      weekDaysSelected:
+                                                          purchasedMeal[index]
+                                                              .weekdays
+                                                              .length,
+                                                      mealPackage:
+                                                          getMealPackage,
+                                                    )));
+                                      })),
                             ],
                           ),
                         )),
@@ -118,7 +144,7 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
                                       purchasedMeal[index].createdAt),
                                   format)),
                               Spacer(),
-                              Text(purchasedMeal[index].amountPaid)
+                              Text(purchasedMeal[index].amountPaid + ' BHD')
                             ],
                           ),
                         ))

@@ -27,6 +27,7 @@ dependencies:
   oauth2_client: ^1.6.1
   date_format: ^1.0.9
   cached_network_image: ^2.5.0
+  carousel_slider: ^3.0.0
 
 dev_dependencies:
   flutter_test:

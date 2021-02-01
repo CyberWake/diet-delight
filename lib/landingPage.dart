@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:diet_delight/Screens/Auth%20Screens/login_signup_form.dart';
-import 'package:diet_delight/Screens/Auth%20Screens/userMoto.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/consutationOrdersPage.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/dashboardOnGoingOrders.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/dashboardUserInfoPage.dart';
@@ -85,14 +84,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   drawerOnTaps(int index) async {
     if (index == page) {
       Navigator.pop(context);
-    } else if (index != 7) {
+    } else if (index != 6) {
       Navigator.pop(context);
       setState(() {
         page = index;
       });
       print(page);
     }
-    if (index == 7) {
+    if (index == 6) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       bool result = await prefs.clear();
       if (result) {
@@ -136,14 +135,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     },
                     child: Image.asset(
                       'images/Group 22.png',
-                      width: 25.0,
-                      height: 25.0,
+                      width: 28.0,
+                      height: 28.0,
                     ),
                   ),
                   SizedBox(
                     width: 20,
                   ),
-                  GestureDetector(
+                  /*GestureDetector(
                     onTap: () {
                       Navigator.push(
                           context,
@@ -159,7 +158,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ),
                   SizedBox(
                     width: 10,
-                  ),
+                  ),*/
                 ]
               : [],
           bottom: page == 1 || page == 3 || page == 5

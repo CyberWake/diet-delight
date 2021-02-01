@@ -370,15 +370,32 @@ class _EditMealMenuState extends State<EditMealMenu>
             child: Stack(
               children: [
                 Positioned(
-                  top: 0.0,
-                  left: 0.0,
-                  child: Container(
+                    top: 0.0,
+                    left: 0.0,
+                    child: Container(
                       margin: EdgeInsets.only(right: 20),
+                      height: 85,
+                      width: 82,
                       decoration: authFieldDecoration,
-                      child: FlutterLogo(
-                        size: 80,
-                      )),
-                ),
+                      child: CachedNetworkImage(
+                        imageUrl: item.picture ??
+                            "http://via.placeholder.com/350x150",
+                        imageBuilder: (context, imageProvider) => Container(
+                          height: 60,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.fitWidth,
+                            ),
+                          ),
+                        ),
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => FlutterLogo(
+                          size: 60,
+                        ),
+                      ),
+                    )),
                 Positioned(
                   top: 70.0,
                   left: 3.5,

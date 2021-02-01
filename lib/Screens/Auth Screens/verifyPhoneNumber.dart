@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:diet_delight/Models/registrationModel.dart';
-import 'package:diet_delight/Screens/Auth%20Screens/userMoto.dart';
+import 'package:diet_delight/Screens/Auth%20Screens/newUserQuestionnaire.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:firebase_auth/firebase_auth.dart';

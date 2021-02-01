@@ -150,7 +150,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                                     radius: 45,
                                     backgroundColor: white,
                                     child: CachedNetworkImage(
-                                      imageUrl: plans[index].picture,
+                                      imageUrl: plans[index].picture??"http://via.placeholder.com/350x150",
                                       imageBuilder: (context, imageProvider) =>
                                           Container(
                                         decoration: BoxDecoration(

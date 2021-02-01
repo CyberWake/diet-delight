@@ -39,7 +39,7 @@ class _SignUpState extends State<SignUp> {
   @override
   void initState() {
     super.initState();
-    countryCode.text = '+91';
+    countryCode.text = '+973';
   }
 
   /*getPhoneNumbers() async {
@@ -120,7 +120,7 @@ class _SignUpState extends State<SignUp> {
                                     onFieldSubmitted: (done) {
                                       last.unfocus();
                                       FocusScope.of(context)
-                                          .requestFocus(country);
+                                          .requestFocus(mobile);
                                     },
                                     textAlign: TextAlign.center,
                                     textDirection: TextDirection.ltr,
@@ -161,7 +161,7 @@ class _SignUpState extends State<SignUp> {
                               decoration: authFieldDecoration,
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.fromLTRB(20, 3, 20, 7),
+                                    const EdgeInsets.fromLTRB(15, 3, 15, 7),
                                 child: TextFormField(
                                   focusNode: country,
                                   onChanged: (done) {
@@ -171,7 +171,7 @@ class _SignUpState extends State<SignUp> {
                                     country.unfocus();
                                     FocusScope.of(context).requestFocus(mobile);
                                   },
-                                  initialValue: '+91',
+                                  initialValue: '+973',
                                   style: TextStyle(
                                     fontFamily: 'RobotoCondensedReg',
                                     fontSize: 14,
