@@ -44,7 +44,7 @@ class _QuestionnaireState extends State<Questionnaire>
   Future getQuestions() async {
     questions = await _apiCall.getQuestions();
     consultationPackages = await _apiCall.getConsultationPackages();
-    _pageController = TabController(length: questions.length, vsync: this);
+    _pageController = TabController(length: questions.length + 1, vsync: this);
   }
 
   @override
@@ -211,15 +211,14 @@ class _QuestionnaireState extends State<Questionnaire>
                                     Navigator.pushReplacement(
                                         context,
                                         CupertinoPageRoute(
-                                            builder: (context) =>
-                                                HomePage()));
+                                            builder: (context) => HomePage()));
                                   },
                                   backgroundColor: Colors.grey[200],
                                   shape: StadiumBorder(
                                       side: BorderSide(
-                                        width: 1,
-                                        color: defaultGreen,
-                                      )),
+                                    width: 1,
+                                    color: defaultGreen,
+                                  )),
                                 ),
                                 ActionChip(
                                   elevation: 8.0,
@@ -245,15 +244,15 @@ class _QuestionnaireState extends State<Questionnaire>
                                                 BookConsultation(
                                                   packageIndex: 0,
                                                   consultation:
-                                                  consultationPackages,
+                                                      consultationPackages,
                                                 )));
                                   },
                                   backgroundColor: Colors.grey[200],
                                   shape: StadiumBorder(
                                       side: BorderSide(
-                                        width: 1,
-                                        color: defaultGreen,
-                                      )),
+                                    width: 1,
+                                    color: defaultGreen,
+                                  )),
                                 ),
                               ],
                             ),

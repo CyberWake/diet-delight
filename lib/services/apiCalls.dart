@@ -7,6 +7,7 @@ import 'package:diet_delight/Models/consultationPurchaseModel.dart';
 import 'package:diet_delight/Models/foodItemModel.dart';
 import 'package:diet_delight/Models/loginModel.dart';
 import 'package:diet_delight/Models/mealModel.dart';
+import 'package:diet_delight/Models/mealPlanDurationsModel.dart';
 import 'package:diet_delight/Models/mealPurchaseModel.dart';
 import 'package:diet_delight/Models/menuCategoryModel.dart';
 import 'package:diet_delight/Models/menuModel.dart';
@@ -28,9 +29,10 @@ class Api {
   static List<ConsAppointmentModel> itemAppointments = List();
   static List<MealPurchaseModel> itemMealPurchases = List();
   static List<MealPurchaseModel> itemPresentMealPurchases = List();
-
+  static List<DurationModel> itemDurations = List();
   static RegModel userInfo = RegModel();
   static String token;
+
   String uri = 'https://dietdelight.enigmaty.com';
   Api._privateConstructor();
 
@@ -210,6 +212,37 @@ class Api {
         print('Success getting meal plans');
         var body = convert.jsonDecode(response.body);
         List data = body['data'];
+        data.forEach((element) {
+          MealModel item = MealModel.fromMap(element);
+          itemsMeal.add(item);
+        });
+        return itemsMeal;
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        return itemsMeal;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return [];
+    }
+  }
+
+  Future<List<MealModel>> getMealPlanWithDuration(int duration) async {
+    try {
+      itemsMeal = [];
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+      final response = await http.get(
+          uri + '/api/v1/meal-plans?duration_id=$duration&sortOrder=desc',
+          headers: headers);
+      if (response.statusCode == 200) {
+        print('Success getting meal plans with duration $duration');
+        var body = convert.jsonDecode(response.body);
+        List data = body['data'];
+        print(body);
         data.forEach((element) {
           MealModel item = MealModel.fromMap(element);
           itemsMeal.add(item);
@@ -581,6 +614,34 @@ class Api {
         var data = body['data'];
         MealModel item = MealModel.fromMap(data);
         return item;
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        return null;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+  Future<List<DurationModel>> getDurations() async {
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+      final response =
+          await http.get(uri + '/api/v1/durations', headers: headers);
+      if (response.statusCode == 200) {
+        print('Success getting durations data');
+        var body = convert.jsonDecode(response.body);
+        List data = body['data'];
+        data.forEach((element) {
+          DurationModel item = DurationModel.fromMap(element);
+          itemDurations.add(item);
+        });
+        return itemDurations;
       } else {
         print(response.statusCode);
         print(response.body);

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diet_delight/Models/consultationModel.dart';
 import 'package:diet_delight/Models/mealModel.dart';
+import 'package:diet_delight/Models/mealPlanDurationsModel.dart';
 import 'package:diet_delight/Models/menuModel.dart';
 import 'package:diet_delight/Screens/Consultation/bookConsultation.dart';
 import 'package:diet_delight/Screens/MealPlans/mealPlanSelectionScreen.dart';
@@ -17,45 +18,36 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _apiCall = Api.instance;
-  List<ConsultationModel> consultationPackages;
-  List<MenuModel> menus;
-  List<MealModel> mealPackages;
+  List<ConsultationModel> consultationPackages = List();
+  List<DurationModel> durations = List();
+  List<MenuModel> menus = List();
+  List<List<MealModel>> mealPackages = List();
   bool isLoaded = false;
 
   Future testApiData() async {
     consultationPackages = await _apiCall.getConsultationPackages();
-
-    mealPackages = await _apiCall.getMealPlans();
     menus = await _apiCall.getMenuPackages();
+    durations = await _apiCall.getDurations();
+    for (int i = 0; i < durations.length;) {
+      List<MealModel> meal = await _apiCall
+          .getMealPlanWithDuration(durations[i].duration)
+          .whenComplete(() => i++);
+      mealPackages.add(meal);
+      print(mealPackages[i].length);
+    }
   }
 
   @override
   void initState() {
     super.initState();
     testApiData().whenComplete(() {
+      print(durations.length);
       if (mounted) {
         setState(() {
           isLoaded = true;
         });
       }
     });
-  }
-
-  getDurationTitle(int days) {
-    switch (days) {
-      case 10:
-        return '10 Days';
-        break;
-      case 15:
-        return '2 Weeks';
-        break;
-      case 30:
-        return '1 Month';
-        break;
-      case 60:
-        return '2 Month';
-        break;
-    }
   }
 
   Widget menuItemCard(int pos) {
@@ -172,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget mealPlanCategoryCard(int pos) {
+  Widget mealPlanDurationCategoryCard(int pos) {
     return Padding(
       padding: EdgeInsets.only(right: 15.0),
       child: Material(
@@ -181,17 +173,18 @@ class _HomeScreenState extends State<HomeScreen> {
         child: InkWell(
           splashColor: defaultGreen.withAlpha(30),
           onTap: () {
+            print(mealPackages[pos]);
             Navigator.push(
                 context,
                 CupertinoPageRoute(
-                    builder: (context) =>
-                        MealPlanPage(menus: menus, mealPlans: mealPackages)));
+                    builder: (context) => MealPlanPage(
+                        menus: menus, mealPlans: mealPackages[pos])));
             print('success getting meal details page');
           },
           child: Container(
             color: defaultGreen,
             width: 120,
-            height: 220,
+            height: 250,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -199,13 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                     padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                     child: Text(
-                      getDurationTitle((pos == 0
-                          ? 10
-                          : pos == 1
-                              ? 15
-                              : pos == 2
-                                  ? 30
-                                  : 60)),
+                      durations[pos].title,
                       style: TextStyle(
                         fontFamily: 'RobotoCondensedReg',
                         fontSize: 14,
@@ -216,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 10.0),
                   child: Text(
-                    'With/Without Weekends',
+                    durations[pos].subTitle ?? 'Not Provided',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'RobotoCondensedReg',
@@ -226,22 +213,24 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10.0),
-                  child: Text(
-                    'Description of the particular category to be displayed to the user',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'RobotoCondensedReg',
-                      fontSize: 11,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.white,
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(5, 10.0, 5, 0),
+                    child: Text(
+                      durations[pos].details,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'RobotoCondensedReg',
+                        fontSize: 11,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
-                Spacer(),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 15),
+                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 15),
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -560,12 +549,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(
                         padding: EdgeInsets.fromLTRB(15, 20, 10, 10),
                         child: Container(
-                          height: 0.48 * devWidth,
+                          height: 0.55 * devWidth,
                           child: ListView.builder(
-                              itemCount: 4,
+                              itemCount: durations.length,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (BuildContext context, int index) {
-                                return mealPlanCategoryCard(index);
+                                return mealPlanDurationCategoryCard(index);
                               }),
                         ),
                       ),
