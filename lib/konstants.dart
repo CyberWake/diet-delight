@@ -67,6 +67,13 @@ const appBarTextStyle = TextStyle(
   color: Colors.black,
 );
 
+const descriptionTextStyle =   TextStyle(
+fontFamily: 'RobotoCondensedReg',
+fontSize: 12,
+fontWeight: FontWeight.w400,
+
+);
+
 BoxDecoration authFieldDecoration = BoxDecoration(
     color: Colors.white,
     border: Border.all(color: formLinks, width: 1.0, style: BorderStyle.solid),
