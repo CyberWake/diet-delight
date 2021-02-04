@@ -13,7 +13,8 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
   FocusNode fullName = FocusNode();
   FocusNode phoneNo = FocusNode();
   FocusNode mail = FocusNode();
-  FocusNode addressFocus = FocusNode();
+  FocusNode addressLine1 = FocusNode();
+  FocusNode addressLine2 = FocusNode();
   FocusNode passCur = FocusNode();
   FocusNode passNew = FocusNode();
   FocusNode passNewConf = FocusNode();
@@ -21,16 +22,16 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
   TextEditingController name = TextEditingController();
   TextEditingController mobileNo = TextEditingController();
   TextEditingController email = TextEditingController();
-  TextEditingController addressPrimary = TextEditingController();
-  TextEditingController addressSecondary = TextEditingController();
+  TextEditingController addressPrimaryLine1 = TextEditingController();
+  TextEditingController addressSecondaryLine1 = TextEditingController();
+  TextEditingController addressPrimaryLine2 = TextEditingController();
+  TextEditingController addressSecondaryLine2 = TextEditingController();
   TextEditingController curPassword = TextEditingController();
   TextEditingController newPassword = TextEditingController();
   TextEditingController newConfPassword = TextEditingController();
   String addressType = 'Home';
-  String addressArea = 'Bahrain';
-  String localAddress = '';
   List<String> types = ['Home', 'Work'];
-  List<String> areas = ['Bahrain', 'India'];
+
   double _height = 300;
   int items = 4;
   RegModel info;
@@ -42,22 +43,39 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
     name.text = info.firstName + ' ' + info.lastName;
     mobileNo.text = info.mobile;
     email.text = info.email;
-    addressPrimary.text = info.address;
-    addressSecondary.text = info.addressSecondary;
+    addressPrimaryLine1.text = info.addressLine1;
+    addressSecondaryLine1.text = info.addressSecondary1;
+    addressPrimaryLine2.text = info.addressLine2;
+    addressSecondaryLine2.text = info.addressSecondary2;
   }
 
   @override
   void initState() {
     getUserInfo();
     super.initState();
-    addressFocus.addListener(() {
-      if (addressFocus.hasFocus) {
+    addressLine1.addListener(() {
+      if (addressLine1.hasFocus) {
         print('height increased');
         setState(() {
           items = 5;
           _height = 550;
         });
-      } else if (!addressFocus.hasFocus) {
+      } else if (!addressLine1.hasFocus) {
+        print('height decreased');
+        setState(() {
+          items = 4;
+          _height = 300;
+        });
+      }
+    });
+    addressLine2.addListener(() {
+      if (addressLine2.hasFocus) {
+        print('height increased');
+        setState(() {
+          items = 5;
+          _height = 550;
+        });
+      } else if (!addressLine2.hasFocus) {
         print('height decreased');
         setState(() {
           items = 4;
@@ -283,6 +301,7 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                             },
                             style: authInputTextStyle.copyWith(fontSize: 16),
                             textAlign: TextAlign.left,
+                            obscureText: true,
                             keyboardType: TextInputType.text,
                             textInputAction: TextInputAction.next,
                             decoration: authInputFieldDecoration.copyWith(
@@ -317,6 +336,7 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                                   content: Text('Passwords do not match')));
                             }
                           } else {
+                            print(info.password);
                             setState(() {
                               passwordUpdated = false;
                             });
@@ -344,23 +364,6 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
   }
 
   void getBottomSheet({int address}) {
-    if (address == 0 && addressPrimary.text.isNotEmpty) {
-      var separatedAddress = addressPrimary.text.split(',');
-      addressArea = separatedAddress[separatedAddress.length - 1];
-      if (!areas.contains(addressArea)) {
-        areas.add(addressArea);
-      }
-      localAddress = separatedAddress[0];
-    } else if (address == 1 && addressSecondary.text.isNotEmpty) {
-      var separatedAddress = addressSecondary.text.split(',');
-      addressArea = separatedAddress[separatedAddress.length - 1];
-      if (!areas.contains(addressArea)) {
-        areas.add(addressArea);
-      }
-      localAddress = separatedAddress[0];
-    } else {
-      localAddress = '';
-    }
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -375,7 +378,7 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                 padding: EdgeInsets.only(top: 30),
                 child: Column(
                     children: List.generate(items, (index) {
-                  if (index < 2) {
+                  if (index == 0) {
                     return Expanded(
                       child: Container(
                         margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
@@ -393,20 +396,16 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                         ),
                         child: DropDown<String>(
                           showUnderline: false,
-                          items: index == 0 ? types : areas,
+                          items: types,
                           onChanged: (String choice) {
-                            if (index == 0) {
-                              addressType = choice;
-                            } else if (index == 1) {
-                              addressArea = choice;
-                            }
+                            addressType = choice;
                           },
-                          initialValue: index == 0 ? addressType : addressArea,
+                          initialValue: addressType,
                           isExpanded: true,
                         ),
                       ),
                     );
-                  } else if (index == 2) {
+                  } else if (index < 3) {
                     return Expanded(
                       child: Container(
                         margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
@@ -423,17 +422,35 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                           ],
                         ),
                         child: TextFormField(
-                            focusNode: addressFocus,
-                            onFieldSubmitted: (done) {
-                              localAddress = done;
+                            focusNode: index == 1 ? addressLine1 : addressLine2,
+                            onChanged: (value) {
+                              if (index == 1) {
+                                if (address == 0) {
+                                  addressPrimaryLine1.text = value;
+                                } else {
+                                  addressSecondaryLine1.text = value;
+                                }
+                              } else {
+                                if (address == 0) {
+                                  addressPrimaryLine2.text = value;
+                                } else {
+                                  addressSecondaryLine2.text = value;
+                                }
+                              }
                             },
-                            initialValue: localAddress,
+                            onFieldSubmitted: (done) {
+                              if (index == 1) {
+                                Focus.of(context).requestFocus(addressLine2);
+                              }
+                            },
                             style: authInputTextStyle,
                             textAlign: TextAlign.center,
                             keyboardType: TextInputType.text,
                             textInputAction: TextInputAction.next,
                             decoration: authInputFieldDecoration.copyWith(
-                                hintText: 'House #, House name, Street name')),
+                                hintText: index == 1
+                                    ? 'House No, Street Name'
+                                    : 'City')),
                       ),
                     );
                   } else if (index == 3) {
@@ -441,11 +458,13 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                         child: GestureDetector(
                       onTap: () {
                         if (address == 0) {
-                          addressPrimary.text =
-                              localAddress + ',' + addressArea;
+                          print(addressPrimaryLine1.text +
+                              ' ' +
+                              addressPrimaryLine2.text);
                         } else if (address == 1) {
-                          addressSecondary.text =
-                              localAddress + ',' + addressArea;
+                          print(addressSecondaryLine1.text +
+                              ' ' +
+                              addressSecondaryLine2.text);
                         }
                         setState(() {});
                         Navigator.pop(context);
@@ -455,9 +474,7 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                         color: defaultGreen,
                         child: Center(
                             child: Text(
-                          localAddress.length > 0 || addressArea != null
-                              ? 'Update'
-                              : 'ADD',
+                          'Update',
                           style: TextStyle(fontWeight: FontWeight.w600),
                         )),
                       ),
@@ -488,6 +505,11 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                   fieldName: 'Password',
                   text: 'Change',
                   onPress: () {
+                    setState(() {
+                      curPassword.clear();
+                      newConfPassword.clear();
+                      newPassword.clear();
+                    });
                     getPassBottomSheet();
                   }),
               generateStaticTextField(
@@ -496,16 +518,20 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                   fieldName: 'Email', fieldValue: email.text),
               generateOnTapFields(
                   fieldName: 'Address',
-                  text: addressPrimary.text.isNotEmpty
-                      ? addressPrimary.text
+                  text: addressPrimaryLine1.text.isNotEmpty
+                      ? addressPrimaryLine1.text +
+                          ' ' +
+                          addressPrimaryLine2.text
                       : 'Address',
                   onPress: () {
                     getBottomSheet(address: 0);
                   }),
               generateOnTapFields(
                   fieldName: 'Secondary Address',
-                  text: addressSecondary.text.isNotEmpty
-                      ? addressSecondary.text
+                  text: addressSecondaryLine1.text.isNotEmpty
+                      ? addressSecondaryLine1.text +
+                          ' ' +
+                          addressSecondaryLine2.text
                       : 'Address',
                   onPress: () {
                     getBottomSheet(address: 1);
@@ -522,14 +548,16 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
               lastName: nameBreak[nameBreak.length - 1],
               email: email.text,
               mobile: mobileNo.text,
-              address: addressPrimary.text,
-              addressSecondary: addressSecondary.text,
+              addressLine1: addressPrimaryLine1.text,
+              addressSecondary1: addressSecondaryLine1.text,
+              addressLine2: addressPrimaryLine2.text,
+              addressSecondary2: addressSecondaryLine2.text,
               password: passwordUpdated ? newConfPassword.text : info.password,
             );
             updateUserData.show();
-            _apiCall
+            /*_apiCall
                 .putUserInfo(updateUserData)
-                .whenComplete(() => getUserInfo());
+                .whenComplete(() => getUserInfo());*/
             setState(() {});
             Scaffold.of(context).showSnackBar(
                 SnackBar(content: Text('User Info Updated Successfully')));

@@ -9,25 +9,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  intl: ^0.16.1
   pin_code_text_field: ^1.7.1
-  flutter_rounded_date_picker: ^1.0.5
+  flutter_rounded_date_picker: ^1.0.5+1
   email_validator: ^1.0.6
   oauth2: ^1.6.3
-  cupertino_icons: ^1.0.0
-  bubble: ^1.1.9+1
-  page_view_indicators: ^1.4.0
   flutter_spinkit: ^4.1.2+1
   shared_preferences: ^0.5.12+4
   firebase_core: ^0.7.0
   firebase_auth: ^0.20.0+1
-  sms_autofill: ^1.2.7
   flutter_open_whatsapp: ^0.1.2
   flutter_dropdown: ^0.0.8
-  oauth2_client: ^1.6.1
   date_format: ^1.0.9
   cached_network_image: ^2.5.0
-  carousel_slider: ^3.0.0
 
 dev_dependencies:
   flutter_test:
