@@ -228,7 +228,7 @@ class Api {
     }
   }
 
-  Future<List<MealModel>> getMealPlanWithDuration(int duration) async {
+  Future<List<MealModel>> getMealPlanWithDuration(int id) async {
     try {
       itemsMeal = [];
       Map<String, String> headers = {
@@ -236,13 +236,12 @@ class Api {
         HttpHeaders.authorizationHeader: "Bearer $token"
       };
       final response = await http.get(
-          uri + '/api/v1/meal-plans?duration_id=$duration&sortOrder=desc',
+          uri + '/api/v1/meal-plans?duration_id=$id&sortOrder=desc',
           headers: headers);
       if (response.statusCode == 200) {
-        print('Success getting meal plans with duration $duration');
+        print('Success getting meal plans with duration $id');
         var body = convert.jsonDecode(response.body);
         List data = body['data'];
-        print(body);
         data.forEach((element) {
           MealModel item = MealModel.fromMap(element);
           itemsMeal.add(item);

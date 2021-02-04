@@ -30,10 +30,10 @@ class _HomeScreenState extends State<HomeScreen> {
     durations = await _apiCall.getDurations();
     for (int i = 0; i < durations.length;) {
       List<MealModel> meal = await _apiCall
-          .getMealPlanWithDuration(durations[i].duration)
+          .getMealPlanWithDuration(durations[i].id)
           .whenComplete(() => i++);
       mealPackages.add(meal);
-      print(mealPackages[i].length);
+      print(mealPackages[i - 1].length);
     }
   }
 
@@ -41,7 +41,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     testApiData().whenComplete(() {
-      print(durations.length);
       if (mounted) {
         setState(() {
           isLoaded = true;
@@ -173,7 +172,6 @@ class _HomeScreenState extends State<HomeScreen> {
         child: InkWell(
           splashColor: defaultGreen.withAlpha(30),
           onTap: () {
-            print(mealPackages[pos]);
             Navigator.push(
                 context,
                 CupertinoPageRoute(

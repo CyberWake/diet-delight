@@ -387,13 +387,13 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
         title: Text('Subscribe your meal plan', style: appBarTextStyle),
       ),
       body: Container(
-        padding: const EdgeInsets.only(left: 30.0,right: 20),
+        padding: const EdgeInsets.only(left: 30.0, right: 20),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              flex: 3,
+            Flexible(
+              fit: FlexFit.loose,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 mainAxisSize: MainAxisSize.min,
@@ -402,25 +402,31 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                     flex: 15,
                     fit: FlexFit.loose,
                     child: Padding(
-                      padding: const EdgeInsets.only(right : 10.0),
+                      padding: const EdgeInsets.only(right: 10.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Flexible(
                             flex: 2,
                             fit: FlexFit.loose,
                             child: Text(widget.mealPackage.name,
-                                style:
-                                selectedTab.copyWith(fontSize: 18)
-                            ),
+                                style: selectedTab.copyWith(fontSize: 18)),
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           Flexible(
                               flex: 2,
                               fit: FlexFit.tight,
-                              child: Text(widget.mealPackage.details,style: descriptionTextStyle,maxLines: 4,)),
-                        Flexible(flex: 1, child: Text(widget.categories.trim())),
+                              child: Text(
+                                widget.mealPackage.details,
+                                style: descriptionTextStyle,
+                                maxLines: 4,
+                              )),
+                          Flexible(
+                              flex: 1, child: Text(widget.categories.trim())),
                         ],
                       ),
                     ),
@@ -429,7 +435,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                     flex: 5,
                     fit: FlexFit.loose,
                     child: CachedNetworkImage(
-                      imageUrl: widget.mealPackage.picture,
+                      imageUrl: widget.mealPackage.picture??"http://via.placeholder.com/350x150",
                       imageBuilder: (context, imageProvider) => Container(
                         height: 100,
                         decoration: BoxDecoration(
@@ -448,49 +454,106 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                 ],
               ),
             ),
-            Expanded(
-              flex: 7,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Days of the week',
-                    style: selectedTab,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15.0,top : 5, right: 0, bottom: 20),
-                    child: Text(
-                      'Days of the week you want your food to be delivered.',
-                      style: selectedTab.copyWith(color: Colors.grey, fontSize: 14),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 0.0, right: 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: List.generate(
-                          4,
-                              (index) => GestureDetector(
-                            onTap: () {
-                              if (selectedDays[index] == true) {
-                                print('unmarking');
+            SizedBox(height: 20),
+            Text(
+              'Days of the week',
+              style: selectedTab,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 15.0, top: 5, right: 0, bottom: 20),
+              child: Text(
+                'Days of the week you want your food to be delivered.',
+                style: selectedTab.copyWith(color: Colors.grey, fontSize: 14),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 0.0, right: 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(
+                    4,
+                    (index) => GestureDetector(
+                          onTap: () {
+                            if (selectedDays[index] == true) {
+                              print('unmarking');
+                              setState(() {
+                                selectedDays[index] = false;
+                                count--;
+                              });
+                            } else if (selectedDays[index] == false) {
+                              if (count < widget.weekDaysSelected) {
+                                print('marking');
                                 setState(() {
-                                  selectedDays[index] = false;
-                                  count--;
+                                  selectedDays[index] = true;
+                                  count++;
                                 });
-                              } else if (selectedDays[index] == false) {
-                                if (count < widget.weekDaysSelected) {
-                                  print('marking');
+                              } else {
+                                _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                    content: Text(
+                                        'Change the Meal Subscription plan to with weekends or change the week days selected')));
+                              }
+                            }
+                          },
+                          child: Container(
+                            height: 45,
+                            width: 45,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color:
+                                    selectedDays[index] ? defaultGreen : white,
+                                border: Border.all(
+                                    color: selectedDays[index]
+                                        ? white
+                                        : defaultGreen)),
+                            child: Center(
+                              child: Text(
+                                days[index],
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: selectedDays[index]
+                                        ? Colors.white
+                                        : defaultGreen),
+                              ),
+                            ),
+                          ),
+                        )),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 45.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(
+                    3,
+                    (index) => Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              if (widget.weekDaysSelected > index + 4) {
+                                if (selectedDays[index + 4] == true) {
+                                  print('unmarking');
                                   setState(() {
-                                    selectedDays[index] = true;
-                                    count++;
+                                    selectedDays[index + 4] = false;
+                                    count--;
                                   });
-                                } else {
-                                  _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                      content: Text(
-                                          'Change the Meal Subscription plan to with weekends or change the week days selected')));
+                                } else if (selectedDays[index + 4] == false) {
+                                  if (count < widget.weekDaysSelected) {
+                                    print('marking');
+                                    setState(() {
+                                      selectedDays[index + 4] = true;
+                                      count++;
+                                    });
+                                  } else {
+                                    _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                        content: Text(
+                                            'Change the Meal Subscription plan to with weekends or change the week days selected')));
+                                  }
                                 }
+                              } else {
+                                _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                    content: Text(
+                                        'Change the Meal Subscription plan to with weekends')));
                               }
                             },
                             child: Container(
@@ -498,257 +561,194 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                               width: 45,
                               decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: selectedDays[index] ? defaultGreen : white,
+                                  color: selectedDays[index + 4]
+                                      ? defaultGreen
+                                      : white,
                                   border: Border.all(
-                                      color: selectedDays[index]
+                                      color: selectedDays[index + 4]
                                           ? white
                                           : defaultGreen)),
                               child: Center(
                                 child: Text(
-                                  days[index],
+                                  days[index + 4],
                                   style: TextStyle(
                                       fontSize: 18,
-                                      color: selectedDays[index]
+                                      color: selectedDays[index + 4]
                                           ? Colors.white
                                           : defaultGreen),
                                 ),
                               ),
                             ),
-                          )),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 45.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: List.generate(
-                          3,
-                              (index) => Padding(
-                            padding: const EdgeInsets.only(top : 10.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                if (widget.weekDaysSelected > index + 4) {
-                                  if (selectedDays[index + 4] == true) {
-                                    print('unmarking');
-                                    setState(() {
-                                      selectedDays[index + 4] = false;
-                                      count--;
-                                    });
-                                  } else if (selectedDays[index + 4] == false) {
-                                    if (count < widget.weekDaysSelected) {
-                                      print('marking');
-                                      setState(() {
-                                        selectedDays[index + 4] = true;
-                                        count++;
-                                      });
-                                    } else {
-                                      _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                          content: Text(
-                                              'Change the Meal Subscription plan to with weekends or change the week days selected')));
-                                    }
-                                  }
-                                } else {
-                                  _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                      content: Text(
-                                          'Change the Meal Subscription plan to with weekends')));
-                                }
-                              },
-                              child: Container(
-                                height: 45,
-                                width: 45,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: selectedDays[index + 4]
-                                        ? defaultGreen
-                                        : white,
-                                    border: Border.all(
-                                        color: selectedDays[index + 4]
-                                            ? white
-                                            : defaultGreen)),
-                                child: Center(
-                                  child: Text(
-                                    days[index + 4],
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        color: selectedDays[index + 4]
-                                            ? Colors.white
-                                            : defaultGreen),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Select Starting date',
-                          style: selectedTab,
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            DateTime selectedDateTime = await showRoundedDatePicker(
-                                context: context,
-                                background: Colors.white,
-                                styleDatePicker: MaterialRoundedDatePickerStyle(
-                                  textStyleMonthYearHeader: TextStyle(
-                                      fontSize: 18,
-                                      color: defaultPurple,
-                                      fontWeight: FontWeight.normal),
-                                  paddingMonthHeader: EdgeInsets.only(top: 10),
-                                  colorArrowNext: defaultPurple,
-                                  colorArrowPrevious: defaultPurple,
-                                  textStyleButtonPositive: TextStyle(
-                                      fontSize: 14,
-                                      color: defaultPurple,
-                                      fontWeight: FontWeight.bold),
-                                  textStyleButtonNegative: TextStyle(
-                                      fontSize: 14,
-                                      color: inactivePurple,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                theme: ThemeData(
-                                  primaryColor: defaultPurple,
-                                  accentColor: defaultGreen,
-                                  dialogBackgroundColor: Colors.white,
-                                  textTheme: TextTheme(
-                                    caption: TextStyle(color: defaultPurple),
-                                  ),
-                                  disabledColor: formFill,
-                                  accentTextTheme: TextTheme(),
-                                ),
-                                initialDate:
-                                dateSelected ?? today.add(Duration(days: 2)),
-                                firstDate: today.add(Duration(days: 2)));
-                            setState(() {
-                              dateSelected = selectedDateTime;
-                              date =
-                              '${dateSelected.year.toString()}-${dateSelected.month.toString().padLeft(2, '0')}-${dateSelected.day.toString().padLeft(2, '0')}';
-                            });
-                            print(date);
-                          },
-                          child: Material(
-                              elevation: 2.0,
-                              borderRadius: BorderRadius.circular(2.0),
-                              child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 5, horizontal: 10),
-                                  child: Container(
-                                    child: Text(
-                                      DateFormat.E().format(dateSelected ??
-                                          today.add(Duration(days: 2))) +
-                                          ', ' +
-                                          DateFormat.MMM()
-                                              .add_d()
-                                              .format(dateSelected ?? today),
-                                      style: TextStyle(
-                                          fontFamily: 'RobotoCondensedReg',
-                                          fontSize: 12,
-                                          color: Color(0xFF303030)),
-                                    ),
-                                  ))),
-                        ),
-                      ],
-                    ),
-                  ),
+                          ),
+                        )),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   Text(
-                    'Shipping Address',
-                    style: selectedTab.copyWith(fontStyle: FontStyle.italic),
+                    'Select Starting date',
+                    style: selectedTab,
                   ),
-                  Container(
-                    margin: EdgeInsets.only(top : 20, bottom: 20),
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 4,
-                            color: Colors.black.withOpacity(0.25),
-                            spreadRadius: 0,
-                            offset: const Offset(0.0, 0.0),
-                          )
-                        ],
-                        borderRadius: BorderRadius.circular(8.0),
-                        border: Border.all(width: 1, color: Colors.grey),
-                        color: white),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Jane Doe',
-                              style: selectedTab,
+                  GestureDetector(
+                    onTap: () async {
+                      DateTime selectedDateTime = await showRoundedDatePicker(
+                          context: context,
+                          background: Colors.white,
+                          styleDatePicker: MaterialRoundedDatePickerStyle(
+                            textStyleMonthYearHeader: TextStyle(
+                                fontSize: 18,
+                                color: defaultPurple,
+                                fontWeight: FontWeight.normal),
+                            paddingMonthHeader: EdgeInsets.only(top: 10),
+                            colorArrowNext: defaultPurple,
+                            colorArrowPrevious: defaultPurple,
+                            textStyleButtonPositive: TextStyle(
+                                fontSize: 14,
+                                color: defaultPurple,
+                                fontWeight: FontWeight.bold),
+                            textStyleButtonNegative: TextStyle(
+                                fontSize: 14,
+                                color: inactivePurple,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          theme: ThemeData(
+                            primaryColor: defaultPurple,
+                            accentColor: defaultGreen,
+                            dialogBackgroundColor: Colors.white,
+                            textTheme: TextTheme(
+                              caption: TextStyle(color: defaultPurple),
                             ),
-                            GestureDetector(
-                              onTap: getBottomSheet,
-                              child: Text('Change',
-                                  style: unSelectedTab.copyWith(color: defaultGreen)),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                                '3 NewBridge Court\nChino Hills, CA 91709, United States',
-                                style: unSelectedTab)
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50.0,
-                    child: TextButton(
-                      onPressed: () {
-                        print('pressed');
-                        if (date != null) {
-                          selDays = [];
-                          for (int i = 0; i < selectedDays.length; i++) {
-                            if (selectedDays[i]) {
-                              selDays.add(days[i]);
-                            }
-                          }
-                          Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (context) => PrePaymentMealPlan(
-                                    categories: widget.categories,
-                                    selectedDate: dateSelected,
-                                    selectedDays: selDays,
-                                    mealPlan: widget.mealPackage,
-                                  )));
-                        } else {
-                          _scaffoldKey.currentState.showSnackBar(
-                              SnackBar(content: Text('Select a date first.')));
-                        }
-                      },
-                      child: Text(
-                        'Continue',
-                        style: TextStyle(
-                          fontFamily: 'RobotoCondensedReg',
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.white,
-                        ),
-                      ),
-                      style: TextButton.styleFrom(
-                          backgroundColor: defaultGreen,
-                          shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)))),
-                    ),
+                            disabledColor: formFill,
+                            accentTextTheme: TextTheme(),
+                          ),
+                          initialDate:
+                              dateSelected ?? today.add(Duration(days: 2)),
+                          firstDate: today.add(Duration(days: 2)));
+                      setState(() {
+                        dateSelected = selectedDateTime;
+                        date =
+                            '${dateSelected.year.toString()}-${dateSelected.month.toString().padLeft(2, '0')}-${dateSelected.day.toString().padLeft(2, '0')}';
+                      });
+                      print(date);
+                    },
+                    child: Material(
+                        elevation: 2.0,
+                        borderRadius: BorderRadius.circular(2.0),
+                        child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 10),
+                            child: Container(
+                              child: Text(
+                                DateFormat.E().format(dateSelected ??
+                                        today.add(Duration(days: 2))) +
+                                    ', ' +
+                                    DateFormat.MMM()
+                                        .add_d()
+                                        .format(dateSelected ?? today),
+                                style: TextStyle(
+                                    fontFamily: 'RobotoCondensedReg',
+                                    fontSize: 12,
+                                    color: Color(0xFF303030)),
+                              ),
+                            ))),
                   ),
                 ],
               ),
-            )
+            ),
+            Text(
+              'Shipping Address',
+              style: selectedTab.copyWith(fontStyle: FontStyle.italic),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 20, bottom: 20),
+              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+              decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 4,
+                      color: Colors.black.withOpacity(0.25),
+                      spreadRadius: 0,
+                      offset: const Offset(0.0, 0.0),
+                    )
+                  ],
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(width: 1, color: Colors.grey),
+                  color: white),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Jane Doe',
+                        style: selectedTab,
+                      ),
+                      GestureDetector(
+                        onTap: getBottomSheet,
+                        child: Text('Change',
+                            style: unSelectedTab.copyWith(color: defaultGreen)),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                          '3 NewBridge Court\nChino Hills, CA 91709, United States',
+                          style: unSelectedTab)
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              height: 50.0,
+              child: TextButton(
+                onPressed: () {
+                  print('pressed');
+                  if (date != null) {
+                    selDays = [];
+                    for (int i = 0; i < selectedDays.length; i++) {
+                      if (selectedDays[i]) {
+                        selDays.add(days[i]);
+                      }
+                    }
+                    Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                            builder: (context) => PrePaymentMealPlan(
+                                  categories: widget.categories,
+                                  selectedDate: dateSelected,
+                                  selectedDays: selDays,
+                                  mealPlan: widget.mealPackage,
+                                )));
+                  } else {
+                    _scaffoldKey.currentState.showSnackBar(
+                        SnackBar(content: Text('Select a date first.')));
+                  }
+                },
+                child: Text(
+                  'Continue',
+                  style: TextStyle(
+                    fontFamily: 'RobotoCondensedReg',
+                    fontSize: 16,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.white,
+                  ),
+                ),
+                style: TextButton.styleFrom(
+                    backgroundColor: defaultGreen,
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)))),
+              ),
+            ),
           ],
         ),
       ),
