@@ -24,7 +24,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: SplashScreen(navigateAfterSeconds: AfterSplash()),
+      child: Questionnaire(username : "AMAR"),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:diet_delight/Models/consultationModel.dart';
+import 'package:diet_delight/Models/optionsFile.dart';
 import 'package:diet_delight/Models/questionnaireModel.dart';
 import 'package:diet_delight/Screens/Consultation/bookConsultation.dart';
 import 'package:diet_delight/konstants.dart';
@@ -26,23 +27,13 @@ class _QuestionnaireState extends State<Questionnaire>
   bool notAnswered = true;
   int chatLength = 0;
   List<QuestionnaireModel> questions;
+  List<OptionsModel> options;
   TextEditingController answer = TextEditingController();
-  List<List<String>> options = [
-    [
-      'Weight Loss',
-      'Weight Gain/Bodybuilding',
-      'Medical Reason',
-      'Healthy Lifestyle/Food Convenience'
-    ],
-    ['YES. Please specify:', 'NO'],
-    ['Please specify:'],
-    ['YES', 'NO'],
-    ['YES. Please specify:', 'NO'],
-    ['YES. Please specify:', 'NO'],
-  ];
+
 
   Future getQuestions() async {
     questions = await _apiCall.getQuestions();
+    options = await _apiCall.getOptions(questions);
     consultationPackages = await _apiCall.getConsultationPackages();
     print(questions.length);
     _currentIndex = 0;
@@ -96,24 +87,26 @@ class _QuestionnaireState extends State<Questionnaire>
 
   int indexSelected = -1;
 
+  int optionIndex = 0;
+
   Widget buildOptions(int index) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
       child: ListView.builder(
-        itemCount: options[index].length,
+        itemCount: questions[index].type == 1 ? 2 : questions[index].type== 2 ? options[index].option.toString().split(",").length : 1,
         physics: NeverScrollableScrollPhysics(),
         scrollDirection: Axis.vertical,
         reverse: true,
         shrinkWrap: true,
         itemBuilder: (BuildContext context, int optionIndex) {
+          print(optionIndex);
           return Container(
             alignment: Alignment.centerLeft,
-            child: !options[index][optionIndex].contains("Please specify:")
+            child: questions[index].type == 1 || questions[index].type == 2
                 ? Padding(
                     padding: const EdgeInsets.only(top: 4.0, bottom: 4),
                     child: GestureDetector(
                       onTap: () {
-
                         setState(() {
                           show = false;
                           indexSelected = optionIndex;
@@ -126,7 +119,7 @@ class _QuestionnaireState extends State<Questionnaire>
                             EdgeInsets.symmetric(horizontal: 8.0, vertical: 15),
                         child: Center(
                             child: Text(
-                          options[index][optionIndex],
+                          options[index].option.toString().split(",")[optionIndex],
                           style: TextStyle(
                             color: indexSelected == optionIndex
                                 ? Colors.black
@@ -146,7 +139,7 @@ class _QuestionnaireState extends State<Questionnaire>
                 : Padding(
                     padding: const EdgeInsets.only(top: 4.0, bottom: 4),
                     child: Container(
-                      height: 100,
+                      height: 120,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -167,7 +160,7 @@ class _QuestionnaireState extends State<Questionnaire>
                                     horizontal: 8.0, vertical: 15),
                                 child: Center(
                                   child: Text(
-                                    options[index][optionIndex],
+                                    "Please Specify",
                                     style: TextStyle(
                                       color: indexSelected == optionIndex
                                           ? Colors.black
@@ -184,13 +177,12 @@ class _QuestionnaireState extends State<Questionnaire>
                               ),
                             ),
                           ),
+                          Expanded(flex: 3,child: Container(),),
                           Expanded(
                             flex: 9,
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 10,left: 4,right: 4),
-                              child: !show
-                                  ? Container()
-                                  : Container(
+                            child: Container(
+                              margin: EdgeInsets.only(top: 0,left: 4,right: 4),
+                              child:  !show ? Container() : Container(
                                       width: double.infinity,
                                       height: 40.0,
                                       decoration: authFieldDecoration,
@@ -203,6 +195,7 @@ class _QuestionnaireState extends State<Questionnaire>
                                                 _pageController.animateTo(
                                                     _pageController.index + 1);
                                                 setState(() {
+                                                  indexSelected = -1;
                                                   show = false;
                                                 });
                                               }
@@ -383,8 +376,20 @@ class _QuestionnaireState extends State<Questionnaire>
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(horizontal : 10.0,vertical: 5),
                                           child: GestureDetector(
-                                            onTap: () {
-                                              setState(() {
+                                            onTap: () async {
+                                              // await _apiCall.sendOptionsAnswers(
+                                              //     answerId: options[_pageController.index].id,
+                                              //     questionId: options[_pageController.index].question_Id,
+                                              //     additionalText: questions[_pageController.index].additionText,
+                                              //     answer: options[_pageController.index].toString().split(",")[indexSelected],
+                                              //     question: questions[_pageController.index].question,
+                                              //     type: questions[_pageController.index].type,
+                                              //     optionSelected: options[_pageController.index].toString().split(",")[indexSelected]
+                                              // );
+                                              setState(() async {
+
+                                                show = false;
+                                                indexSelected = -1;
                                                 _pageController.animateTo(_pageController.index + 1);
                                               });
                                             },
