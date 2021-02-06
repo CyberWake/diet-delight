@@ -11,6 +11,7 @@ import 'package:diet_delight/Models/mealPlanDurationsModel.dart';
 import 'package:diet_delight/Models/mealPurchaseModel.dart';
 import 'package:diet_delight/Models/menuCategoryModel.dart';
 import 'package:diet_delight/Models/menuModel.dart';
+import 'package:diet_delight/Models/optionsFile.dart';
 import 'package:diet_delight/Models/questionnaireModel.dart';
 import 'package:diet_delight/Models/registrationModel.dart';
 import 'package:http/http.dart' as http;
@@ -650,5 +651,53 @@ class Api {
       print(e.toString());
       return null;
     }
+  }
+
+  Future<List<OptionsModel>> getOptions(questions) async {
+    List<OptionsModel> options = [];
+
+    print(questions.length);
+    for (int i = 0; i < questions.length; i++) {
+      try {
+        Map<String, String> headers = {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer $token"
+        };
+        int type = questions[i].type;
+        int id = questions[i].id;
+        if (questions[i].type == 0) {
+          OptionsModel model = OptionsModel(question_Id: id);
+          options.add(model);
+        } else if (questions[i].type == 1) {
+          OptionsModel model = OptionsModel(question_Id: id, option: "Yes,No");
+          options.add(model);
+        } else if (questions[i].type == 3) {
+          OptionsModel model = OptionsModel(question_Id: id);
+          options.add(model);
+        } else {
+          final response = await http.get(uri + "/api/v1/answer-options/$id",
+              headers: headers);
+
+          if (response.statusCode == 200) {
+            print('Success getting Options');
+            print(response.statusCode);
+            print(response.body);
+            var body = convert.jsonDecode(response.body);
+            var data = body['data'];
+            OptionsModel model = OptionsModel.fromMap(data);
+            options.add(model);
+          } else {
+            print(response.statusCode);
+            print(response.body);
+            return [];
+          }
+        }
+      } on Exception catch (e) {
+        print(e.toString());
+        return [];
+      }
+    }
+    print(options);
+    return options;
   }
 }

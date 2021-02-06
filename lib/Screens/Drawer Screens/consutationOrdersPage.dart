@@ -116,7 +116,7 @@ class _ConsultationOrderHistoryPageState
                                   fit: FlexFit.loose,
                                   child: FlatButton(
                                       child: Text(
-                                        "Re-Book",
+                                        "Re-Buy",
                                         style: selectedTab.copyWith(
                                             color: Colors.green),
                                       ),
