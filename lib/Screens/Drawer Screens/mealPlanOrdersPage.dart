@@ -85,30 +85,40 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
                             children: [
                               Flexible(child: Text('Menu Plan')),
                               Flexible(
-                                  child: FlatButton(
-                                      child: Text(
-                                        "Re-Buy",
-                                        style: selectedTab.copyWith(
-                                            color: Colors.green),
-                                      ),
-                                      onPressed: () async {
-                                        MealModel getMealPackage =
-                                            await _apiCall.getMealPlan(
-                                                purchasedMeal[index]
-                                                    .mealPlanId);
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (BuildContext
-                                                        context) =>
-                                                    MealSubscriptionPage(
-                                                      weekDaysSelected:
-                                                          purchasedMeal[index]
-                                                              .weekdays
-                                                              .length,
-                                                      mealPackage:
-                                                          getMealPackage,
-                                                    )));
-                                      })),
+                                  child: PopupMenuButton<int>(
+                                child:
+                                    Icon(Icons.more_vert, color: Colors.black),
+                                onSelected: (int pos) async {
+                                  if (pos == 0) {
+                                    MealModel getMealPackage =
+                                        await _apiCall.getMealPlan(
+                                            purchasedMeal[index].mealPlanId);
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (BuildContext context) =>
+                                                MealSubscriptionPage(
+                                                  weekDaysSelected:
+                                                      purchasedMeal[index]
+                                                          .weekdays
+                                                          .length,
+                                                  mealPackage: getMealPackage,
+                                                )));
+                                  } else {
+                                    Navigator.pop(context);
+                                  }
+                                },
+                                itemBuilder: (BuildContext context) =>
+                                    <PopupMenuEntry<int>>[
+                                  const PopupMenuItem<int>(
+                                    value: 0,
+                                    child: Text('Renew'),
+                                  ),
+                                  const PopupMenuItem<int>(
+                                    value: 1,
+                                    child: Text('Download Invoice'),
+                                  ),
+                                ],
+                              )),
                             ],
                           ),
                         )),

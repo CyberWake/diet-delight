@@ -34,8 +34,8 @@ class _BookConsultationState extends State<BookConsultation>
   String date;
   List<List> timeChart = [
     [9, 10, 11],
-    [12, 1, 2, 3, 4],
-    [5, 6, 7, 8]
+    [12, 1, 2],
+    [3, 4, 5]
   ];
 
   getSubTime(int index, int rowIndex) {
@@ -142,334 +142,342 @@ class _BookConsultationState extends State<BookConsultation>
           ),
           title: Text('Book an Appointment', style: appBarTextStyle),
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(30, 15, 30, 0),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  DropdownButton<Widget>(
-                    value: ddItems[consultationIndex],
-                    elevation: 16,
-                    onChanged: (Widget newValue) {
-                      setState(() {
-                        print(ddItems.indexOf(newValue));
-                        consultationIndex = ddItems.indexOf(newValue);
-                      });
-                    },
-                    items:
-                        ddItems.map<DropdownMenuItem<Widget>>((Widget value) {
-                      return DropdownMenuItem<Widget>(
-                        value: value,
-                        child: value,
-                      );
-                    }).toList(),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 15.0, 0, 0),
-                    child: Text(
-                      widget.consultation[consultationIndex].details,
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontFamily: 'RobotoCondensedReg',
-                        fontSize: 11,
-                        fontWeight: FontWeight.normal,
-                        color: cardGray,
+        body: Padding(
+          padding: const EdgeInsets.only(top: 30.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DropdownButton<Widget>(
+                      value: ddItems[consultationIndex],
+                      elevation: 16,
+                      onChanged: (Widget newValue) {
+                        setState(() {
+                          print(ddItems.indexOf(newValue));
+                          consultationIndex = ddItems.indexOf(newValue);
+                        });
+                      },
+                      items:
+                          ddItems.map<DropdownMenuItem<Widget>>((Widget value) {
+                        return DropdownMenuItem<Widget>(
+                          value: value,
+                          child: value,
+                        );
+                      }).toList(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 15.0, 0, 0),
+                      child: Text(
+                        widget.consultation[consultationIndex].details,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontFamily: 'RobotoCondensedReg',
+                          fontSize: 11,
+                          fontWeight: FontWeight.normal,
+                          color: cardGray,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(30, 40, 30, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Select appointment date',
-                    style: TextStyle(
-                      fontFamily: 'RobotoCondensedReg',
-                      fontSize: 20,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.black,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(30, 40, 30, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Select appointment date',
+                      style: TextStyle(
+                        fontFamily: 'RobotoCondensedReg',
+                        fontSize: 20,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.black,
+                      ),
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      DateTime selectedDateTime = await showRoundedDatePicker(
-                          context: context,
-                          background: Colors.white,
-                          styleDatePicker: MaterialRoundedDatePickerStyle(
-                            textStyleMonthYearHeader: TextStyle(
-                                fontSize: 18,
-                                color: defaultPurple,
-                                fontWeight: FontWeight.normal),
-                            paddingMonthHeader: EdgeInsets.only(top: 10),
-                            colorArrowNext: defaultPurple,
-                            colorArrowPrevious: defaultPurple,
-                            textStyleButtonPositive: TextStyle(
-                                fontSize: 14,
-                                color: defaultPurple,
-                                fontWeight: FontWeight.bold),
-                            textStyleButtonNegative: TextStyle(
-                                fontSize: 14,
-                                color: inactivePurple,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          theme: ThemeData(
-                            primaryColor: defaultPurple,
-                            accentColor: defaultGreen,
-                            dialogBackgroundColor: Colors.white,
-                            textTheme: TextTheme(
-                              caption: TextStyle(color: defaultPurple),
+                    GestureDetector(
+                      onTap: () async {
+                        DateTime selectedDateTime = await showRoundedDatePicker(
+                            context: context,
+                            background: Colors.white,
+                            styleDatePicker: MaterialRoundedDatePickerStyle(
+                              textStyleMonthYearHeader: TextStyle(
+                                  fontSize: 18,
+                                  color: defaultPurple,
+                                  fontWeight: FontWeight.normal),
+                              paddingMonthHeader: EdgeInsets.only(top: 10),
+                              colorArrowNext: defaultPurple,
+                              colorArrowPrevious: defaultPurple,
+                              textStyleButtonPositive: TextStyle(
+                                  fontSize: 14,
+                                  color: defaultPurple,
+                                  fontWeight: FontWeight.bold),
+                              textStyleButtonNegative: TextStyle(
+                                  fontSize: 14,
+                                  color: inactivePurple,
+                                  fontWeight: FontWeight.bold),
                             ),
-                            disabledColor: formFill,
-                            accentTextTheme: TextTheme(),
-                          ),
-                          initialDate: dateSelected ?? today,
-                          firstDate: today.subtract(Duration(days: 1)));
-                      setState(() {
-                        dateSelected = selectedDateTime ?? dateSelected;
-                        date = formatDate(dateSelected, format);
-                      });
-                      print(date);
-                    },
-                    child: Material(
-                        elevation: 2.0,
-                        borderRadius: BorderRadius.circular(2.0),
-                        child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 5, horizontal: 10),
-                            child: Container(
-                              child: Text(
-                                DateFormat.E().format(dateSelected ?? today) +
-                                    ', ' +
-                                    DateFormat.MMM()
-                                        .add_d()
-                                        .format(dateSelected ?? today),
-                                style: TextStyle(
-                                    fontFamily: 'RobotoCondensedReg',
-                                    fontSize: 12,
-                                    color: Color(0xFF303030)),
+                            theme: ThemeData(
+                              primaryColor: defaultPurple,
+                              accentColor: defaultGreen,
+                              dialogBackgroundColor: Colors.white,
+                              textTheme: TextTheme(
+                                caption: TextStyle(color: defaultPurple),
                               ),
-                            ))),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(30, 20, 30, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    'Select preferred time slot',
-                    style: TextStyle(
-                      fontFamily: 'RobotoCondensedReg',
-                      fontSize: 20,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.black,
+                              disabledColor: formFill,
+                              accentTextTheme: TextTheme(),
+                            ),
+                            initialDate: dateSelected ?? today,
+                            firstDate: today.subtract(Duration(days: 1)));
+                        setState(() {
+                          dateSelected = selectedDateTime ?? dateSelected;
+                          date = formatDate(dateSelected, format);
+                        });
+                        print(date);
+                      },
+                      child: Material(
+                          elevation: 2.0,
+                          borderRadius: BorderRadius.circular(2.0),
+                          child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 10),
+                              child: Container(
+                                child: Text(
+                                  DateFormat.E().format(dateSelected ?? today) +
+                                      ', ' +
+                                      DateFormat.MMM()
+                                          .add_d()
+                                          .format(dateSelected ?? today),
+                                  style: TextStyle(
+                                      fontFamily: 'RobotoCondensedReg',
+                                      fontSize: 12,
+                                      color: Color(0xFF303030)),
+                                ),
+                              ))),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
-              child: Column(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    child: TabBar(
-                        indicatorColor: Colors.transparent,
-                        indicatorWeight: 1.0,
-                        indicatorSize: TabBarIndicatorSize.label,
-                        labelColor: defaultGreen,
-                        labelPadding: EdgeInsets.symmetric(horizontal: 13),
-                        unselectedLabelColor: inactiveGreen,
-                        controller: _tabController,
-                        tabs: List.generate(3, (index) {
-                          return Tab(
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Column(
-                                children: [
-                                  Material(
-                                      elevation: _tabController.index == index
-                                          ? 0.0
-                                          : 2.0,
-                                      borderRadius: BorderRadius.circular(2.0),
-                                      color: _tabController.index == index
-                                          ? defaultGreen
-                                          : Colors.white,
-                                      child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 5, horizontal: 15),
-                                          child: Container(
-                                            child: Text(
-                                              index == 0
-                                                  ? 'Morning'
-                                                  : index == 1
-                                                      ? 'Afternoon'
-                                                      : 'Evening',
-                                              style: tabTextStyle.copyWith(
-                                                  color: _tabController.index ==
-                                                          index
-                                                      ? Colors.white
-                                                      : Color(0xFF303030)),
-                                            ),
-                                          ))),
-                                  SizedBox(
-                                    height: 5.0,
-                                  ),
-                                  Text(
-                                      index == 0
-                                          ? '9AM to 12PM'
-                                          : index == 1
-                                              ? '12PM to 5PM'
-                                              : '5PM to 9PM',
-                                      style: dateTabTextStyle.copyWith(
-                                          color: _tabController.index == index
-                                              ? defaultGreen
-                                              : inactiveTime)),
-                                ],
-                              ),
-                            ),
-                          );
-                        })),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Container(
+              Padding(
+                padding: EdgeInsets.fromLTRB(30, 20, 30, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Select preferred time slot',
+                      style: TextStyle(
+                        fontFamily: 'RobotoCondensedReg',
+                        fontSize: 20,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
+                child: Column(
+                  children: [
+                    Container(
                       width: double.infinity,
-                      height: 200,
-                      child: TabBarView(
+                      child: TabBar(
+                          indicatorColor: Colors.transparent,
+                          indicatorWeight: 1.0,
+                          indicatorSize: TabBarIndicatorSize.label,
+                          labelColor: defaultGreen,
+                          labelPadding: EdgeInsets.symmetric(horizontal: 13),
+                          unselectedLabelColor: inactiveGreen,
                           controller: _tabController,
-                          children: List.generate(3, (index) {
-                            return Container(
-                              height: 300.0,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(0, 20.0, 0, 0),
-                                child: ListView.builder(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                                  itemCount: timeChart[index].length,
-                                  scrollDirection: Axis.horizontal,
-                                  itemBuilder: (BuildContext context, int pos) {
-                                    return Column(
-                                        children: List.generate(4, (rowIndex) {
-                                      return Padding(
-                                        padding: EdgeInsets.all(10),
-                                        child: GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                time =
-                                                    '${timeChart[index][pos]}${getSubTime(index, rowIndex)}';
-                                                print(time);
-                                              });
-                                            },
-                                            child: Material(
-                                                elevation: 0,
-                                                borderRadius:
-                                                    BorderRadius.circular(2.0),
-                                                color: time ==
-                                                        showSlots(index, pos,
-                                                            rowIndex)
-                                                    ? defaultGreen
-                                                    : Colors.white,
-                                                child: Padding(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            vertical: 5,
-                                                            horizontal:
-                                                                index == 1
-                                                                    ? 2
-                                                                    : 10),
-                                                    child: Container(
-                                                      width: 40.0,
-                                                      child: Text(
-                                                        showSlots(index, pos,
-                                                            rowIndex),
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: dateTabTextStyle.copyWith(
-                                                            fontSize: 11,
-                                                            color: time ==
-                                                                    showSlots(
-                                                                        index,
-                                                                        pos,
-                                                                        rowIndex)
-                                                                ? Colors.white
-                                                                : Color(
-                                                                    0xFF303030)),
-                                                      ),
-                                                    )))),
-                                      );
-                                    }));
-                                  },
+                          tabs: List.generate(3, (index) {
+                            return Tab(
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Column(
+                                  children: [
+                                    Material(
+                                        elevation: _tabController.index == index
+                                            ? 0.0
+                                            : 2.0,
+                                        borderRadius:
+                                            BorderRadius.circular(2.0),
+                                        color: _tabController.index == index
+                                            ? defaultGreen
+                                            : Colors.white,
+                                        child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 5, horizontal: 15),
+                                            child: Container(
+                                              child: Text(
+                                                index == 0
+                                                    ? 'Morning'
+                                                    : index == 1
+                                                        ? 'Afternoon'
+                                                        : 'Evening',
+                                                style: tabTextStyle.copyWith(
+                                                    color: _tabController
+                                                                .index ==
+                                                            index
+                                                        ? Colors.white
+                                                        : Color(0xFF303030)),
+                                              ),
+                                            ))),
+                                    SizedBox(
+                                      height: 5.0,
+                                    ),
+                                    Text(
+                                        index == 0
+                                            ? '9AM to 12PM'
+                                            : index == 1
+                                                ? '12PM to 3PM'
+                                                : '3PM to 6PM',
+                                        style: dateTabTextStyle.copyWith(
+                                            color: _tabController.index == index
+                                                ? defaultGreen
+                                                : inactiveTime)),
+                                  ],
                                 ),
                               ),
                             );
                           })),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(50, 10, 50, 0),
-              child: SizedBox(
-                width: double.infinity,
-                height: 50.0,
-                child: TextButton(
-                  onPressed: () {
-                    print('consultationIndex: $consultationIndex');
-                    print('selectedDate: $date');
-                    print('consultationTime: $time');
-                    if (date != null && time != null) {
-                      Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                              builder: (context) => ConfirmConsultation(
-                                    package: consultationIndex,
-                                    selectedDate: dateSelected,
-                                    consultationTime: time,
-                                    consultation: widget.consultation,
-                                  )));
-                    } else {
-                      if (date == null) {
-                        _scaffoldKey.currentState.showSnackBar(SnackBar(
-                            content:
-                                Text('Please select date of appointment')));
-                      } else {
-                        _scaffoldKey.currentState.showSnackBar(SnackBar(
-                            content:
-                                Text('Please select time of appointment')));
-                      }
-                    }
-                  },
-                  child: Text(
-                    'NEXT',
-                    style: TextStyle(
-                      fontFamily: 'RobotoCondensedReg',
-                      fontSize: 16,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.white,
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Container(
+                        width: double.infinity,
+                        height: 200,
+                        child: TabBarView(
+                            controller: _tabController,
+                            children: List.generate(3, (index) {
+                              return Container(
+                                height: 300.0,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 20.0, 0, 0),
+                                  child: ListView.builder(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                    itemCount: timeChart[index].length,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder:
+                                        (BuildContext context, int pos) {
+                                      return Column(
+                                          children:
+                                              List.generate(4, (rowIndex) {
+                                        return Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 10, horizontal: 20),
+                                          child: GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  time =
+                                                      '${timeChart[index][pos]}${getSubTime(index, rowIndex)}';
+                                                  print(time);
+                                                });
+                                              },
+                                              child: Material(
+                                                  elevation: 0,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          2.0),
+                                                  color: time ==
+                                                          showSlots(index, pos,
+                                                              rowIndex)
+                                                      ? defaultGreen
+                                                      : Colors.white,
+                                                  child: Padding(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 5,
+                                                              horizontal: 10),
+                                                      child: Container(
+                                                        width: 60.0,
+                                                        child: Text(
+                                                          showSlots(index, pos,
+                                                              rowIndex),
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: dateTabTextStyle.copyWith(
+                                                              fontSize: 12,
+                                                              color: time ==
+                                                                      showSlots(
+                                                                          index,
+                                                                          pos,
+                                                                          rowIndex)
+                                                                  ? Colors.white
+                                                                  : Color(
+                                                                      0xFF303030)),
+                                                        ),
+                                                      )))),
+                                        );
+                                      }));
+                                    },
+                                  ),
+                                ),
+                              );
+                            })),
+                      ),
                     ),
-                  ),
-                  style: TextButton.styleFrom(
-                      backgroundColor: defaultGreen,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)))),
+                  ],
                 ),
               ),
-            ),
-          ],
+              Spacer(),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(50, 10, 50, 30),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 50.0,
+                  child: TextButton(
+                    onPressed: () {
+                      print('consultationIndex: $consultationIndex');
+                      print('selectedDate: $date');
+                      print('consultationTime: $time');
+                      if (date != null && time != null) {
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (context) => ConfirmConsultation(
+                                      package: consultationIndex,
+                                      selectedDate: dateSelected,
+                                      consultationTime: time,
+                                      consultation: widget.consultation,
+                                    )));
+                      } else {
+                        if (date == null) {
+                          _scaffoldKey.currentState.showSnackBar(SnackBar(
+                              content:
+                                  Text('Please select date of appointment')));
+                        } else {
+                          _scaffoldKey.currentState.showSnackBar(SnackBar(
+                              content:
+                                  Text('Please select time of appointment')));
+                        }
+                      }
+                    },
+                    child: Text(
+                      'NEXT',
+                      style: TextStyle(
+                        fontFamily: 'RobotoCondensedReg',
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.white,
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                        backgroundColor: defaultGreen,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10)))),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

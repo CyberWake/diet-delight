@@ -114,24 +114,36 @@ class _ConsultationOrderHistoryPageState
                                   child: Text('Consultation')),
                               Flexible(
                                   fit: FlexFit.loose,
-                                  child: FlatButton(
-                                      child: Text(
-                                        "Re-Buy",
-                                        style: selectedTab.copyWith(
-                                            color: Colors.green),
+                                  child: PopupMenuButton<int>(
+                                    child: Icon(Icons.more_vert,
+                                        color: Colors.black),
+                                    onSelected: (int pos) {
+                                      print(packageIndex);
+                                      pos == 0
+                                          ? Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          BookConsultation(
+                                                            packageIndex:
+                                                                packageIndex,
+                                                            consultation:
+                                                                consultationData,
+                                                          )))
+                                          : Navigator.pop(context);
+                                    },
+                                    itemBuilder: (BuildContext context) =>
+                                        <PopupMenuEntry<int>>[
+                                      const PopupMenuItem<int>(
+                                        value: 0,
+                                        child: Text('Renew'),
                                       ),
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        BookConsultation(
-                                                          packageIndex:
-                                                              packageIndex,
-                                                          consultation:
-                                                              consultationData,
-                                                        )));
-                                      })),
+                                      const PopupMenuItem<int>(
+                                        value: 1,
+                                        child: Text('Download Invoice'),
+                                      ),
+                                    ],
+                                  )),
                             ],
                           ),
                         )),

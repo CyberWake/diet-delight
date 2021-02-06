@@ -67,11 +67,18 @@ const appBarTextStyle = TextStyle(
   color: Colors.black,
 );
 
-const descriptionTextStyle =   TextStyle(
-fontFamily: 'RobotoCondensedReg',
-fontSize: 12,
-fontWeight: FontWeight.w400,
+const billingTextStyle = TextStyle(
+  fontFamily: 'ABeeZeeReg',
+  fontSize: 20,
+  fontStyle: FontStyle.italic,
+  fontWeight: FontWeight.normal,
+  color: Colors.black,
+);
 
+const descriptionTextStyle = TextStyle(
+  fontFamily: 'RobotoCondensedReg',
+  fontSize: 12,
+  fontWeight: FontWeight.w400,
 );
 
 BoxDecoration authFieldDecoration = BoxDecoration(
@@ -116,8 +123,8 @@ List<Widget> ddItems = List.generate(
                 index == 0
                     ? 'SILVER'
                     : index == 1
-                        ? 'Platinum'
-                        : 'Gold',
+                        ? 'PLATINUM'
+                        : 'GOLD',
                 style: TextStyle(
                   fontFamily: 'RobotoCondensedReg',
                   fontSize: 15,

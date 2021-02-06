@@ -38,3 +38,6 @@ flutter:
     - family: RobotoCondensedReg
       fonts:
         - asset: fonts/RobotoCondensed-Regular.ttf
+    - family: ABeeZeeReg
+      fonts:
+        - asset: fonts/ABeeZee-Regular.ttf
