@@ -21,6 +21,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Api {
   static var client;
   static List<QuestionnaireModel> itemsQuestionnaire = List();
+  static List<OptionsModel> itemsOptions = List();
   static List<ConsultationModel> itemsConsultation = List();
   static List<MenuModel> itemsMenu = List();
   static List<MealModel> itemsMeal = List();
@@ -142,6 +143,7 @@ class Api {
   }
 
   Future<List<ConsultationModel>> getConsultationPackages() async {
+    //  token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIyIiwianRpIjoiMTU0NzJkNWQ0ZWMwYzIyMGFmZTZiZGE2NTZjY2Q5Nzk1NjZlNjY4ZTVmYmNmZDdlOWQwNTY0MWYxODQ1ZjdlYTk3ZDEwODRjYTM1OGE5NTEiLCJpYXQiOjE2MTI0NTAyMDcsIm5iZiI6MTYxMjQ1MDIwNywiZXhwIjoxNjQzOTg2MjA3LCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.uX1UKBSQKvkN28ub5A3TXcOwgI_EvWWZ5B6FS13jqfz8vlI7UP6kEI--LofVf_2yUT7HxUUEVE2t5zIVzSzyHDvekWvCVdLsqPJQT6f0hPqeC36ODRWRrQsL7c-DhWv716HzuKUYfifnP9IBglyfRKDwkpDwyINFGPbHjdI8CaRxDj_pyCMdekSoZ9w8TQ4TgIuVekXAiIM3SttuPNK2ijuOGf6aQKs-dgbXK5YbPy_uSDIOWT4Ais_0GL8rJL4vKd4trAeQ1J96Im3smaikAmBuJRYrUeQsz44qHszFWsC2lUh8ECwgOUrEyO0w2p1BqOEd4PKiOqGpnewSgXiDsXJ1LOgZWNS-W-s5f9rcL9c__esV5WGvuw1128a2qu-iOw4iiy-8-YtBkU43XEEVeeXiMz7voJcYGMblNnDLRHPm_A9kbvT5XGdRwcx7DxaMJaJgwQLNs65z6coF5KfivNLTY7vC7gxyhyzciEp0T3kBG0SHL-J7xXZQjcoxzJCzvoimhzErbSI7hQR0vMgcJ-Jusv9MuYA7jYjoIozjfMQdAVywO7ogG0rT9qyLT43r6wOnfgr7F4CiWJdTxIPJ3nm11mPCp--E1oKbj-V_7hnzRkTZGGH_1SndpQuhsGzQAdqmy-XtWWSFIx0lgeZt4AWWpsKCN3MRGId1IxZki98";
     try {
       itemsConsultation = [];
       Map<String, String> headers = {
@@ -151,6 +153,8 @@ class Api {
       final response = await http.get(
           uri + '/api/v1/consultation-packages?sortOrder=desc',
           headers: headers);
+      print(response.body);
+      print(response.statusCode);
       if (response.statusCode == 200) {
         print('Success getting consultation packages');
         var body = convert.jsonDecode(response.body);
@@ -286,6 +290,9 @@ class Api {
   }
 
   Future<List<QuestionnaireModel>> getQuestions() async {
+    //  token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIyIiwianRpIjoiMTU0NzJkNWQ0ZWMwYzIyMGFmZTZiZGE2NTZjY2Q5Nzk1NjZlNjY4ZTVmYmNmZDdlOWQwNTY0MWYxODQ1ZjdlYTk3ZDEwODRjYTM1OGE5NTEiLCJpYXQiOjE2MTI0NTAyMDcsIm5iZiI6MTYxMjQ1MDIwNywiZXhwIjoxNjQzOTg2MjA3LCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.uX1UKBSQKvkN28ub5A3TXcOwgI_EvWWZ5B6FS13jqfz8vlI7UP6kEI--LofVf_2yUT7HxUUEVE2t5zIVzSzyHDvekWvCVdLsqPJQT6f0hPqeC36ODRWRrQsL7c-DhWv716HzuKUYfifnP9IBglyfRKDwkpDwyINFGPbHjdI8CaRxDj_pyCMdekSoZ9w8TQ4TgIuVekXAiIM3SttuPNK2ijuOGf6aQKs-dgbXK5YbPy_uSDIOWT4Ais_0GL8rJL4vKd4trAeQ1J96Im3smaikAmBuJRYrUeQsz44qHszFWsC2lUh8ECwgOUrEyO0w2p1BqOEd4PKiOqGpnewSgXiDsXJ1LOgZWNS-W-s5f9rcL9c__esV5WGvuw1128a2qu-iOw4iiy-8-YtBkU43XEEVeeXiMz7voJcYGMblNnDLRHPm_A9kbvT5XGdRwcx7DxaMJaJgwQLNs65z6coF5KfivNLTY7vC7gxyhyzciEp0T3kBG0SHL-J7xXZQjcoxzJCzvoimhzErbSI7hQR0vMgcJ-Jusv9MuYA7jYjoIozjfMQdAVywO7ogG0rT9qyLT43r6wOnfgr7F4CiWJdTxIPJ3nm11mPCp--E1oKbj-V_7hnzRkTZGGH_1SndpQuhsGzQAdqmy-XtWWSFIx0lgeZt4AWWpsKCN3MRGId1IxZki98";
+
+    var questionOptions = [];
     try {
       itemsQuestionnaire = [];
       Map<String, String> headers = {
@@ -294,14 +301,19 @@ class Api {
       };
       final response = await http.get(uri + '/api/v1/questions?sortOrder=desc',
           headers: headers);
+      print(response.statusCode);
+      print(response.body);
       if (response.statusCode == 200) {
         print('Success getting question');
         var body = convert.jsonDecode(response.body);
         List data = body['data'];
+        print("||||||||||||||||||");
+        print(data);
         data.forEach((element) {
           QuestionnaireModel item = QuestionnaireModel.fromMap(element);
           itemsQuestionnaire.add(item);
         });
+
         return itemsQuestionnaire;
       } else {
         print(response.statusCode);
@@ -314,6 +326,59 @@ class Api {
     }
   }
 
+  Future<void> sendOptionsAnswers(
+      {answerId,
+      optionSelected,
+      questionId,
+      answer,
+      type,
+      question,
+      additionalText}) async {
+    print("sendOptionsAnswers");
+    var userId = userInfo.id;
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+      Map<String, String> body = {
+        "user_id": userId,
+        "question_id": "1",
+        "answer_option_id": "1",
+        "answer": "My diet is ...",
+        "question_question": "What is Gender?",
+        "question_type": "0",
+        "question_additional_text": "0",
+        "answer_option_option": "Male"
+      };
+      //
+      // Map<String,String> body = {
+      //   "user_id": userId,
+      //   "question_id": questionId,
+      //   "answer_option_id": answerId.toString(),
+      //   "answer": answer,
+      //   "question_question": question,
+      //   "question_type": type.toString(),
+      //   "question_additional_text": additionalText.toString(),
+      //   "answer_option_option": optionSelected.toString()
+      // };
+
+      final response = await http.post(uri + '/api/v1/my-answers',
+          headers: headers, body: body.toString());
+      print(response.statusCode);
+      print(response.body);
+      if (response.statusCode == 200) {
+        print('Success getting question');
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        //  return itemsQuestionnaire;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+    }
+  }
+
   Future<List<MenuCategoryModel>> getCategories(int menuId) async {
     try {
       itemsMenuCategory = [];
@@ -321,6 +386,8 @@ class Api {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token"
       };
+      print("||||||||||||||");
+      print(token);
       final response = await http.get(
           uri + '/api/v1/menu-categories?menu_id=$menuId&sortOrder=desc',
           headers: headers);
@@ -352,6 +419,8 @@ class Api {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token"
       };
+      print("printing token");
+      print(token);
       final response = await http.get(
           uri +
               '/api/v1/menu-items?menu_id=$menuId&menu_category_id=$categoryId&sortOrder=desc',
