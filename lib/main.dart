@@ -1,4 +1,4 @@
-import 'package:diet_delight/Screens/Auth%20Screens/login_signup_form.dart';
+import 'package:diet_delight/splashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +21,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: AfterSplash());
+    return SafeArea(child: SplashScreen());
   }
 }

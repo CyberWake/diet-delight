@@ -370,7 +370,7 @@ class _HomeScreenState extends State<HomeScreen> {
             shrinkWrap: true,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(0, 30.0, 0, 20.0),
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 20.0),
                 child: Container(
                   height: 100,
                   width: double.infinity,
@@ -432,35 +432,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                         color: Colors.black),
                                   ]),
                             ),
-                            /*Container(
-                              height: 120,
-                              width: double.infinity,
-                              child: CarouselSlider(
-                                  items: [1, 2, 3, 4, 5].map((i) {
-                                    return Builder(
-                                      builder: (BuildContext context) {
-                                        return Container(
-                                            child: Image.asset(
-                                          'images/banner.jpg',
-                                          fit: BoxFit.fitWidth,
-                                        ));
-                                      },
-                                    );
-                                  }).toList(),
-                                  options: CarouselOptions(
-                                    viewportFraction: 0.7,
-                                    initialPage: 0,
-                                    enableInfiniteScroll: true,
-                                    reverse: false,
-                                    autoPlay: true,
-                                    autoPlayInterval: Duration(seconds: 8),
-                                    autoPlayAnimationDuration:
-                                        Duration(milliseconds: 800),
-                                    autoPlayCurve: Curves.fastOutSlowIn,
-                                    enlargeCenterPage: true,
-                                    scrollDirection: Axis.horizontal,
-                                  )),
-                            )*/
                           ],
                         ),
                       ),
