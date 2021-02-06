@@ -198,19 +198,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.white,
                       ),
                     )),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 10.0),
-                  child: Text(
-                    durations[pos].subTitle ?? 'Not Provided',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'RobotoCondensedReg',
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+                durations[pos].subTitle == null
+                    ? SizedBox()
+                    : Padding(
+                        padding: EdgeInsets.only(bottom: 10.0),
+                        child: Text(
+                          durations[pos].subTitle ?? 'Not Provided',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'RobotoCondensedReg',
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                 Flexible(
                   fit: FlexFit.loose,
                   child: Padding(
