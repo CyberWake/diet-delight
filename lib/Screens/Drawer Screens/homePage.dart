@@ -284,7 +284,7 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Padding(
-                    padding: EdgeInsets.only(bottom: 10.0, top: 10),
+                    padding: EdgeInsets.only(bottom: 5, top: 0),
                     child: Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -305,7 +305,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           )),
                     )),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(5.0, 10, 5, 0),
+                  padding: EdgeInsets.fromLTRB(5.0, 0, 5, 0),
                   child: Text(
                     consultationPackages[pos].subtitle,
                     textAlign: TextAlign.center,
@@ -318,7 +318,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(5.0, 10, 5, 0),
+                  padding: EdgeInsets.fromLTRB(5.0, 0, 5, 0),
                   child: Text(
                     consultationPackages[pos].price + ' BHD',
                     textAlign: TextAlign.center,
@@ -331,7 +331,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
