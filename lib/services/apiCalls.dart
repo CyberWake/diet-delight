@@ -11,6 +11,7 @@ import 'package:diet_delight/Models/mealPlanDurationsModel.dart';
 import 'package:diet_delight/Models/mealPurchaseModel.dart';
 import 'package:diet_delight/Models/menuCategoryModel.dart';
 import 'package:diet_delight/Models/menuModel.dart';
+import 'package:diet_delight/Models/menuOrdersModel.dart';
 import 'package:diet_delight/Models/optionsFile.dart';
 import 'package:diet_delight/Models/questionnaireModel.dart';
 import 'package:diet_delight/Models/registrationModel.dart';
@@ -396,8 +397,6 @@ class Api {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token"
       };
-      print("printing token");
-      print(token);
       final response = await http.get(
           uri +
               '/api/v1/menu-items?menu_id=$menuId&menu_category_id=$categoryId&sortOrder=desc',
@@ -594,7 +593,6 @@ class Api {
       print('success getting present meal purchases');
       var body = convert.jsonDecode(response.body);
       List data = body['data'];
-      //print(data);
       data.forEach((element) {
         MealPurchaseModel item = MealPurchaseModel.fromMap(element);
         print(item.endDate);
@@ -628,6 +626,32 @@ class Api {
         var data = body['data'];
         ConsultationModel item = ConsultationModel.fromMap(data);
         return item;
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        return null;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+  Future<int> postMenuOrder(MenuOrderModel item) async {
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+      String body = convert.jsonEncode(item.toMap());
+      final response = await http.post(uri + '/api/v1/my-menu-orders',
+          headers: headers, body: body);
+      if (response.statusCode == 201) {
+        print('Success posting meal menu order');
+        var body = convert.jsonDecode(response.body);
+        var data = body['data'];
+        int id = data['id'];
+        return id;
       } else {
         print(response.statusCode);
         print(response.body);
@@ -718,8 +742,6 @@ class Api {
 
           if (response.statusCode == 200) {
             print('Success getting Options');
-            print(response.statusCode);
-            print(response.body);
             var body = convert.jsonDecode(response.body);
             var data = body['data'];
             OptionsModel model = OptionsModel.fromMap(data);
