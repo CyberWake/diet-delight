@@ -19,6 +19,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
   final _apiCall = Api.instance;
   List<MealPurchaseModel> orders = List();
   List<MealModel> plans = List();
+  List<bool> ordersPresent = List();
   bool loaded = false;
   List<String> format = [dd, ' ', 'M', ', ', yyyy];
 
@@ -31,6 +32,12 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
           .getMealPlan(orders[i].mealPlanId)
           .whenComplete(() => i++));
     }
+    for (int i = 0; i < orders.length;) {
+      ordersPresent.add(await _apiCall
+          .getCurrentMealPlanOrders(orders[i].id)
+          .whenComplete(() => i++));
+    }
+
     setState(() {
       loaded = true;
     });
@@ -52,6 +59,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                 shrinkWrap: true,
                 itemCount: orders.length,
                 itemBuilder: (BuildContext context, int index) {
+                  firstVisit = ordersPresent[index];
                   return GestureDetector(
                     onTap: () {
                       if (firstVisit) {
@@ -68,9 +76,10 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                         Navigator.push(
                             context,
                             CupertinoPageRoute(
-                                builder: (BuildContext context) => PresentMealMenu(
-                                    purchaseDetails: orders[index],
-                                    plan: plans[index])));
+                                builder: (BuildContext context) =>
+                                    PresentMealMenu(
+                                        purchaseDetails: orders[index],
+                                        plan: plans[index])));
                       }
                     },
                     child: Container(
@@ -150,7 +159,8 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                                     radius: 45,
                                     backgroundColor: white,
                                     child: CachedNetworkImage(
-                                      imageUrl: plans[index].picture??"http://via.placeholder.com/350x150",
+                                      imageUrl: plans[index].picture ??
+                                          "http://via.placeholder.com/350x150",
                                       imageBuilder: (context, imageProvider) =>
                                           Container(
                                         decoration: BoxDecoration(
