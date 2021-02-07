@@ -117,11 +117,6 @@ class _EditMealMenuState extends State<EditMealMenu>
     });
   }
 
-  getFoodItems(int categoryId) async {
-    expansionFoodItems = await _apiCall.getCategoryFoodItems(
-        menuId.toString(), categoryId.toString());
-  }
-
   getDates() {
     dates = [];
     int count = 0;
@@ -918,6 +913,10 @@ class _EditMealMenuState extends State<EditMealMenu>
                                       ],
                                     ),
                                     child: TextFormField(
+                                      controller: notes,
+                                      onChanged: (value) {
+                                        notes.text = value;
+                                      },
                                       decoration:
                                           authInputFieldDecoration.copyWith(
                                               hintText: 'Enter your note here'),

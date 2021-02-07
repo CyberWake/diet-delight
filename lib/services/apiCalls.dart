@@ -29,6 +29,7 @@ class Api {
   static List<MenuCategoryModel> itemsMenuCategory = List();
   static List<ConsPurchaseModel> itemsConsultationPurchases = List();
   static List<FoodItemModel> itemsFood = List();
+  static List<MenuOrderModel> itemsOrderedFood = List();
   static List<ConsAppointmentModel> itemAppointments = List();
   static List<MealPurchaseModel> itemMealPurchases = List();
   static List<MealPurchaseModel> itemPresentMealPurchases = List();
@@ -414,6 +415,39 @@ class Api {
         print(response.statusCode);
         print(response.body);
         return itemsFood;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return [];
+    }
+  }
+
+  Future<List<MenuOrderModel>> getCurrentMealCategoryOrdersFoodItems(
+      String categoryId, String purchaseId) async {
+    try {
+      itemsOrderedFood = [];
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+      final response = await http.get(
+          uri +
+              '/api/v1/my-menu-orders?menu_category_id=$categoryId&meal_purchase_id=$purchaseId&sortOrder=desc',
+          headers: headers);
+      if (response.statusCode == 200) {
+        print('Success getting menu order category items');
+        var body = convert.jsonDecode(response.body);
+        List data = body['data'];
+        print(data);
+        data.forEach((element) {
+          MenuOrderModel item = MenuOrderModel.fromMap(element);
+          itemsOrderedFood.add(item);
+        });
+        return itemsOrderedFood;
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        return itemsOrderedFood;
       }
     } on Exception catch (e) {
       print(e.toString());
