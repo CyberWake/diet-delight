@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:core';
 
+import 'package:diet_delight/Screens/Auth%20Screens/login_signup_form.dart';
 import 'package:diet_delight/landingPage.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,11 +10,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
-  final dynamic navigateAfterSeconds;
-  SplashScreen({
-    this.navigateAfterSeconds,
-  });
-
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -31,8 +27,8 @@ class _SplashScreenState extends State<SplashScreen>
             CupertinoPageRoute(builder: (BuildContext context) => HomePage()));
       });
     } else {
-      Navigator.of(context).pushReplacement(CupertinoPageRoute(
-          builder: (BuildContext context) => widget.navigateAfterSeconds));
+      Navigator.of(context).pushReplacement(
+          CupertinoPageRoute(builder: (BuildContext context) => AfterSplash()));
     }
   }
 

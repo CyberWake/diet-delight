@@ -41,6 +41,7 @@ class _EditMealMenuState extends State<EditMealMenu>
   bool isLoaded = false;
   bool addressSelected = false;
   String addressArea = '';
+  String deliveryAddress;
   String localAddress = '';
   String addressType = 'Home';
   MenuOrderModel foodItemOrder;
@@ -305,8 +306,8 @@ class _EditMealMenuState extends State<EditMealMenu>
         });
   }
 
-  Future<bool> getBottomSheet({FoodItemModel foodItem}) async {
-    Future<bool> modalSheet = showModalBottomSheet<bool>(
+  getBottomSheet() async {
+    showModalBottomSheet<bool>(
         context: context,
         isScrollControlled: true,
         isDismissible: false,
@@ -327,7 +328,6 @@ class _EditMealMenuState extends State<EditMealMenu>
                       return Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            String deliveryAddress;
                             if (addressSelected) {
                               if (selectedAddress == 0) {
                                 deliveryAddress = addressPrimaryLine1.text +
@@ -338,21 +338,8 @@ class _EditMealMenuState extends State<EditMealMenu>
                                     ' ' +
                                     addressSecondaryLine2.text;
                               }
-                              print(foodItem.categoryId);
-                              foodItemOrder = MenuOrderModel(
-                                  foodItemId: foodItem.id,
-                                  foodItemCategoryId: foodItem.categoryId,
-                                  mealPurchaseId:
-                                      int.parse(widget.purchaseDetails.id),
-                                  menuItemDate: foodItem.date,
-                                  menuItemDay: foodItem.day,
-                                  foodItemName: foodItem.foodName,
-                                  deliveryAddress: deliveryAddress,
-                                  note:
-                                      notes.text.isEmpty ? "null" : notes.text);
-                              Navigator.pop(context, true);
                             }
-                            Navigator.pop(context, false);
+                            Navigator.pop(context);
                           },
                           child: Container(
                             margin: EdgeInsets.only(top: 20),
@@ -488,7 +475,6 @@ class _EditMealMenuState extends State<EditMealMenu>
             );
           });
         });
-    return modalSheet;
   }
 
   @override
@@ -593,7 +579,24 @@ class _EditMealMenuState extends State<EditMealMenu>
               ),
             ),
             Expanded(
-                flex: 1, child: Text('${widget.purchaseDetails.kCal} Calorie')),
+                flex: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text('${widget.purchaseDetails.kCal} Calorie'),
+                    TextButton(
+                        onPressed: () {
+                          getBottomSheet();
+                        },
+                        child: Text(
+                          'Address',
+                          style: TextStyle(
+                            color: darkGreen,
+                            decoration: TextDecoration.underline,
+                          ),
+                        )),
+                  ],
+                )),
             Expanded(
               flex: 1,
               child: Container(
@@ -754,12 +757,18 @@ class _EditMealMenuState extends State<EditMealMenu>
                       child: TextButton(
                         onPressed: () async {
                           if (!item.isSelected) {
-                            setState(() {
-                              addressSelected = false;
-                            });
-                            bool sheetClosed =
-                                await getBottomSheet(foodItem: item);
-                            if (sheetClosed) {
+                            if (addressSelected) {
+                              foodItemOrder = MenuOrderModel(
+                                  foodItemId: item.id,
+                                  foodItemCategoryId: item.categoryId,
+                                  mealPurchaseId:
+                                      int.parse(widget.purchaseDetails.id),
+                                  menuItemDate: item.date,
+                                  menuItemDay: item.day,
+                                  foodItemName: item.foodName,
+                                  deliveryAddress: deliveryAddress,
+                                  note:
+                                      notes.text.isEmpty ? "null" : notes.text);
                               String body =
                                   convert.jsonEncode(foodItemOrder.toMap());
                               print(body);
@@ -770,20 +779,15 @@ class _EditMealMenuState extends State<EditMealMenu>
                                 item.change(true);
                                 setState(() {});
                               }
+                            } else {
+                              _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                  content: Text('Select address first')));
                             }
                           } else {
                             // TODO: delete selected item
                             item.change(false);
                             setState(() {});
                           }
-
-/*
-                            if (item.isSelected == false) {
-                              item.change(true);
-                            } else if (item.isSelected == true) {
-                              item.change(false);
-                            }
-*/
                         },
                         child: Text(item.isSelected ? 'Selected' : 'Select',
                             style: selectedTab.copyWith(

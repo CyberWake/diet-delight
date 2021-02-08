@@ -7,10 +7,7 @@ import 'package:flutter/widgets.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: MyApp(),
-  ));
+  return runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -21,6 +18,12 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: SplashScreen());
+    return MaterialApp(
+      initialRoute: '/',
+      routes: {
+        '/': (context) => SafeArea(child: SplashScreen()),
+      },
+      debugShowCheckedModeBanner: false,
+    );
   }
 }

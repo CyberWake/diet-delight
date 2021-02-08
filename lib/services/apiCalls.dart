@@ -91,6 +91,7 @@ class Api {
       token = body['accessToken'];
       prefs.setString('accessToken', body['accessToken']);
       prefs.setString('refreshToken', body['refreshToken']);
+      prefs.setString('password', loginData.password);
       await getUserInfo();
       return true;
     } on Exception catch (e) {
@@ -122,24 +123,27 @@ class Api {
   }
 
   Future<bool> putUserInfo(RegModel user) async {
-    try {
-      final String result = await client.write(
-        uri + '/api/v1/menus?sortOrder=desc',
-      );
-      if (result.isNotEmpty) {
-        var body = convert.jsonDecode(result);
-        List data = body['data'];
-        data.forEach((element) {
-          MenuModel item = MenuModel.fromMap(element);
-          itemsMenu.add(item);
-        });
-        print('data received menu');
-        return true;
-      } else {
-        return false;
-      }
-    } on Exception catch (e) {
-      print(e.toString());
+    print('logged id');
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    String body = convert.jsonEncode(user.toMap());
+    print(body);
+    final response =
+        await http.put(uri + '/api/v1/user', headers: headers, body: body);
+    if (response.statusCode == 200) {
+      print('Success updating user info');
+      var body = convert.jsonDecode(response.body);
+      userInfo = null;
+      userInfo = RegModel.fromMap(body);
+      return true;
+    } else if (response.statusCode == 400) {
+      print(response.statusCode);
+      return false;
+    } else {
+      print(response.statusCode);
+      print(response.body);
       return false;
     }
   }

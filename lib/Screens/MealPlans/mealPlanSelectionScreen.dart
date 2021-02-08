@@ -17,7 +17,9 @@ class MealPlanPage extends StatefulWidget {
   _MealPlanPageState createState() => _MealPlanPageState();
 }
 
-class _MealPlanPageState extends State<MealPlanPage> {
+class _MealPlanPageState extends State<MealPlanPage>
+    with SingleTickerProviderStateMixin {
+  TabController _pageController1;
   List<List<MenuCategoryModel>> categoryItems = List();
   List<List<MenuCategoryModel>> tempItems = List();
   List<MenuCategoryModel> temp = List();
@@ -29,6 +31,7 @@ class _MealPlanPageState extends State<MealPlanPage> {
 
   void initState() {
     super.initState();
+    _pageController1 = TabController(length: 2, vsync: this);
     linkMealWithMenu();
   }
 
@@ -73,6 +76,188 @@ class _MealPlanPageState extends State<MealPlanPage> {
     return displayCategories;
   }
 
+  Widget mealPlanCard(int index) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      width: double.infinity,
+      height: 355,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(5),
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 4,
+            color: Colors.black.withAlpha(63),
+            spreadRadius: 0,
+            offset: const Offset(0, 4),
+          )
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 3,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 15.0),
+              child: Row(
+                children: [
+                  Expanded(
+                      flex: 11,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            widget.mealPlans[index].name,
+                            style: selectedTab.copyWith(
+                                fontWeight: FontWeight.w400, fontSize: 20),
+                          ),
+                          Text(
+                            widget.mealPlans[index].price + ' BHD',
+                            style: selectedTab.copyWith(
+                                fontWeight: FontWeight.w400, fontSize: 20),
+                          ),
+                          Text(widget.mealPlans[index].type == 0
+                              ? 'With Weekends'
+                              : 'Without Weekends'),
+                        ],
+                      )),
+                  Expanded(
+                      flex: 9,
+                      child: Column(
+                        children: [
+                          Expanded(
+                              flex: 8,
+                              child: CachedNetworkImage(
+                                imageUrl: widget.mealPlans[index].picture ??
+                                    "http://via.placeholder.com/350x150",
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                placeholder: (context, url) =>
+                                    CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
+                              )),
+                          SizedBox(height: 5),
+                          Expanded(
+                              flex: 2,
+                              child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                            builder: (context) => Menu(
+                                                  menu: menus[index],
+                                                )));
+                                  },
+                                  child: Text(
+                                    'View Menu',
+                                    style: TextStyle(
+                                      fontFamily: 'RobotoCondensedReg',
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400,
+                                      color: defaultGreen,
+                                    ),
+                                  )))
+                        ],
+                      ))
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
+                    child: Text(
+                      getCategories(index),
+                      style: selectedTab.copyWith(
+                          fontSize: 16, fontWeight: FontWeight.w400),
+                    ),
+                  ),
+                ),
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
+                    child: Text(
+                      '- ' + menus[index].description,
+                      style: selectedTab.copyWith(
+                          fontSize: 16, fontWeight: FontWeight.w400),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+              margin: EdgeInsets.only(
+                  right: MediaQuery.of(context).size.width * 0.18,
+                  left: MediaQuery.of(context).size.width * 0.18,
+                  bottom: 15),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: defaultGreen,
+                  borderRadius: BorderRadius.all(Radius.circular(15))),
+              child: Center(
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                            builder: (context) => MealSubscriptionPage(
+                                categories: getCategories(index)
+                                    .toString()
+                                    .substring(1),
+                                mealPackage: widget.mealPlans[index],
+                                weekDaysSelected:
+                                    widget.mealPlans[index].type == 0
+                                        ? 7
+                                        : 5)));
+                  },
+                  child: Text(
+                    'Buy Subscription',
+                    style: TextStyle(
+                      fontFamily: 'RobotoCondensedReg',
+                      fontSize: 20,
+                      fontWeight: FontWeight.normal,
+                      color: white,
+                    ),
+                  ),
+                  style: TextButton.styleFrom(
+                      backgroundColor: defaultGreen,
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20)))),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,211 +276,49 @@ class _MealPlanPageState extends State<MealPlanPage> {
           ),
         ),
         title: Text('Choose your meal plan', style: appBarTextStyle),
+        bottom: TabBar(
+            controller: _pageController1,
+            isScrollable: false,
+            onTap: (index) async {},
+            labelStyle: selectedTab.copyWith(
+                fontSize: 18, color: Colors.black, fontWeight: FontWeight.w600),
+            indicatorColor: Colors.transparent,
+            indicatorWeight: 3.0,
+            indicatorSize: TabBarIndicatorSize.label,
+            labelColor: Colors.black,
+            labelPadding: EdgeInsets.symmetric(horizontal: 13),
+            unselectedLabelStyle: unSelectedTab.copyWith(
+                fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w400),
+            unselectedLabelColor: Colors.grey,
+            tabs: List.generate(2, (index) {
+              return Tab(
+                text: index == 0 ? 'With Weekends' : 'Without Weekends',
+              );
+            })),
       ),
       body: isLoaded
-          ? ListView.builder(
-              itemCount: widget.mealPlans.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  width: double.infinity,
-                  height: 355,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(5),
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 4,
-                        color: Colors.black.withAlpha(63),
-                        spreadRadius: 0,
-                        offset: const Offset(0, 4),
-                      )
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 15.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                  flex: 11,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        widget.mealPlans[index].name,
-                                        style: selectedTab.copyWith(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 20),
-                                      ),
-                                      Text(
-                                        widget.mealPlans[index].price + ' BHD',
-                                        style: selectedTab.copyWith(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 20),
-                                      ),
-                                      Text(widget.mealPlans[index].type == 0
-                                          ? 'With Weekends'
-                                          : 'Without Weekends'),
-                                    ],
-                                  )),
-                              Expanded(
-                                  flex: 9,
-                                  child: Column(
-                                    children: [
-                                      Expanded(
-                                          flex: 8,
-                                          child: CachedNetworkImage(
-                                            imageUrl: widget
-                                                    .mealPlans[index].picture ??
-                                                "http://via.placeholder.com/350x150",
-                                            imageBuilder:
-                                                (context, imageProvider) =>
-                                                    Container(
-                                              height: 30,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                image: DecorationImage(
-                                                  image: imageProvider,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                            placeholder: (context, url) =>
-                                                CircularProgressIndicator(),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    Icon(Icons.error),
-                                          )),
-                                      SizedBox(height: 5),
-                                      Expanded(
-                                          flex: 2,
-                                          child: InkWell(
-                                              onTap: () {
-                                                Navigator.push(
-                                                    context,
-                                                    CupertinoPageRoute(
-                                                        builder: (context) =>
-                                                            Menu(
-                                                              menu:
-                                                                  menus[index],
-                                                            )));
-                                              },
-                                              child: Text(
-                                                'View Menu',
-                                                style: TextStyle(
-                                                  fontFamily:
-                                                      'RobotoCondensedReg',
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: defaultGreen,
-                                                ),
-                                              )))
-                                    ],
-                                  ))
-                            ],
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Flexible(
-                              fit: FlexFit.loose,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
-                                child: Text(
-                                  getCategories(index),
-                                  style: selectedTab.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ),
-                            ),
-                            Flexible(
-                              fit: FlexFit.loose,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
-                                child: Text(
-                                  '- ' + menus[index].description,
-                                  style: selectedTab.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          margin: EdgeInsets.only(
-                              right: MediaQuery.of(context).size.width * 0.18,
-                              left: MediaQuery.of(context).size.width * 0.18,
-                              bottom: 15),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              color: defaultGreen,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
-                          child: Center(
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) =>
-                                            MealSubscriptionPage(
-                                                categories: getCategories(index)
-                                                    .toString()
-                                                    .substring(1),
-                                                mealPackage:
-                                                    widget.mealPlans[index],
-                                                weekDaysSelected: widget
-                                                            .mealPlans[index]
-                                                            .type ==
-                                                        0
-                                                    ? 7
-                                                    : 5)));
-                              },
-                              child: Text(
-                                'Buy Subscription',
-                                style: TextStyle(
-                                  fontFamily: 'RobotoCondensedReg',
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.normal,
-                                  color: white,
-                                ),
-                              ),
-                              style: TextButton.styleFrom(
-                                  backgroundColor: defaultGreen,
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(20)))),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+          ? TabBarView(
+              controller: _pageController1,
+              children: List.generate(2, (indexTab) {
+                return ListView.builder(
+                  itemCount: widget.mealPlans.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    if (indexTab == 0) {
+                      if (widget.mealPlans[index].type == 0) {
+                        return mealPlanCard(index);
+                      } else {
+                        return Container();
+                      }
+                    } else {
+                      if (widget.mealPlans[index].type == 1) {
+                        return mealPlanCard(index);
+                      } else {
+                        return Container();
+                      }
+                    }
+                  },
                 );
-              },
-            )
+              }))
           : Center(child: CircularProgressIndicator()),
     );
   }

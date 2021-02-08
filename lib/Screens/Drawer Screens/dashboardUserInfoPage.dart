@@ -3,6 +3,7 @@ import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DashBoardUserInfoPage extends StatefulWidget {
   @override
@@ -438,6 +439,13 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                                 }
                               }
                             },
+                            initialValue: address == 0
+                                ? index == 1
+                                    ? addressPrimaryLine1.text
+                                    : addressPrimaryLine2.text
+                                : index == 1
+                                    ? addressSecondaryLine1.text
+                                    : addressSecondaryLine2.text,
                             onFieldSubmitted: (done) {
                               if (index == 1) {
                                 Focus.of(context).requestFocus(addressLine2);
@@ -540,7 +548,10 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
           ),
         ),
         GestureDetector(
-          onTap: () {
+          onTap: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            String password = prefs.getString('password');
+            setState(() {});
             List<String> nameBreak = name.text.split(' ');
             RegModel updateUserData = RegModel(
               name: name.text,
@@ -548,19 +559,22 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
               lastName: nameBreak[nameBreak.length - 1],
               email: email.text,
               mobile: mobileNo.text,
+              password: password,
               addressLine1: addressPrimaryLine1.text,
               addressSecondary1: addressSecondaryLine1.text,
               addressLine2: addressPrimaryLine2.text,
               addressSecondary2: addressSecondaryLine2.text,
-              password: passwordUpdated ? newConfPassword.text : info.password,
             );
             updateUserData.show();
-            /*_apiCall
-                .putUserInfo(updateUserData)
-                .whenComplete(() => getUserInfo());*/
+            bool result = await _apiCall.putUserInfo(updateUserData);
             setState(() {});
-            Scaffold.of(context).showSnackBar(
-                SnackBar(content: Text('User Info Updated Successfully')));
+            if (result) {
+              Scaffold.of(context).showSnackBar(
+                  SnackBar(content: Text('User Info Updated Successfully')));
+            } else {
+              Scaffold.of(context).showSnackBar(
+                  SnackBar(content: Text('User Info Update Failed')));
+            }
           },
           child: Container(
             height: 45,

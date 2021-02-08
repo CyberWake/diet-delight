@@ -21,13 +21,29 @@ class RegModel {
       this.firstName,
       this.lastName,
       this.mobile,
-      this.addressLine1 = "test",
-      this.addressLine2 = 'test',
-      this.addressSecondary1 = "test",
-      this.addressSecondary2 = 'test'});
+      this.addressLine1,
+      this.addressLine2,
+      this.addressSecondary1,
+      this.addressSecondary2});
 
   Map<String, dynamic> toMap() {
     // ignore: unnecessary_cast
+    if (addressLine1 != null) {
+      print('working');
+      return {
+        'status': this.status,
+        'name': this.name,
+        'email': this.email,
+        'first_name': this.firstName,
+        'last_name': this.lastName,
+        'mobile': this.mobile,
+        'password': this.password,
+        'primary_address_line1': this.addressLine1,
+        'primary_address_line2': this.addressLine2,
+        'secondary_address_line1': this.addressSecondary1,
+        'secondary_address_line2': this.addressSecondary2,
+      };
+    }
     return {
       'status': this.status,
       'name': this.name,
@@ -36,11 +52,7 @@ class RegModel {
       'first_name': this.firstName,
       'last_name': this.lastName,
       'mobile': this.mobile,
-      'primary_address_line1': this.addressLine1,
-      'primary_address_line2': this.addressLine2,
-      'secondary_address_line1': this.addressSecondary1,
-      'secondary_address_line2': this.addressSecondary2,
-    } as Map<String, dynamic>;
+    };
   }
 
   factory RegModel.fromMap(Map item) {
@@ -54,7 +66,7 @@ class RegModel {
         lastName: item['last_name'],
         mobile: item['mobile'],
         addressLine1: item['primary_address_line1'],
-        addressLine2: item['primary_address_line1'],
+        addressLine2: item['primary_address_line2'],
         addressSecondary1: item['secondary_address_line1'],
         addressSecondary2: item['secondary_address_line2']);
   }
