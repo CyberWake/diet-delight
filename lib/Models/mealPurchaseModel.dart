@@ -83,6 +83,10 @@ class MealPurchaseModel {
     return days;
   }
 
+  setEndDate(String endDate) {
+    this.endDate = endDate;
+  }
+
   show() {
     print('id: $id');
     print('userId: $userId');

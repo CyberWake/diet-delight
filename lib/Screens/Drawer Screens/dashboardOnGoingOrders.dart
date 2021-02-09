@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:date_format/date_format.dart';
 import 'package:diet_delight/Models/mealModel.dart';
 import 'package:diet_delight/Models/mealPurchaseModel.dart';
-import 'package:diet_delight/Screens/Menu/editMyMealPlanMenuItems.dart';
-import 'package:diet_delight/Screens/Menu/myOngoingMealMenuItems.dart';
+import 'package:diet_delight/Screens/Menu/placeMealMenuOrders.dart';
+import 'package:diet_delight/Screens/Menu/placedMealMenuOrders.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,7 +15,7 @@ class DashBoardOngoingOrders extends StatefulWidget {
 }
 
 class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
-  bool firstVisit = true;
+  bool orderPresent = true;
   final _apiCall = Api.instance;
   List<MealPurchaseModel> orders = List();
   List<MealModel> plans = List();
@@ -26,7 +26,6 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
   getData() async {
     DateTime today = DateTime.now();
     orders = await _apiCall.getOngoingMealPurchases(today);
-    print(orders.length);
     for (int i = 0; i < orders.length;) {
       plans.add(await _apiCall
           .getMealPlan(orders[i].mealPlanId)
@@ -59,27 +58,23 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                 shrinkWrap: true,
                 itemCount: orders.length,
                 itemBuilder: (BuildContext context, int index) {
-                  firstVisit = ordersPresent[index];
                   return GestureDetector(
                     onTap: () {
-                      if (firstVisit) {
-                        Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                                builder: (BuildContext context) => EditMealMenu(
-                                    purchaseDetails: orders[index],
-                                    plan: plans[index])));
-                        setState(() {
-                          firstVisit = false;
-                        });
-                      } else {
+                      if (ordersPresent[index]) {
                         Navigator.push(
                             context,
                             CupertinoPageRoute(
                                 builder: (BuildContext context) =>
-                                    PresentMealMenu(
+                                    PlacedMealMenuOrders(
                                         purchaseDetails: orders[index],
                                         plan: plans[index])));
+                      } else {
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (BuildContext context) => PlaceMealMenuOrders(
+                                    purchaseDetails: orders[index],
+                                    plan: plans[index])));
                       }
                     },
                     child: Container(
@@ -87,7 +82,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                       padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: firstVisit ? white : defaultGreen,
+                        color: !ordersPresent[index] ? white : defaultGreen,
                         boxShadow: [
                           BoxShadow(
                             blurRadius: 4,
@@ -117,7 +112,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                                         fit: FlexFit.loose,
                                         child: Text(orders[index].mealPlanName,
                                             style: selectedTab.copyWith(
-                                                color: firstVisit
+                                                color: !ordersPresent[index]
                                                     ? Colors.black
                                                     : white,
                                                 fontSize: 24)),
@@ -133,7 +128,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                                           child: Text(
                                             plans[index].details,
                                             style: TextStyle(
-                                                color: firstVisit
+                                                color: !ordersPresent[index]
                                                     ? Colors.black
                                                     : white),
                                           ),
@@ -199,7 +194,9 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                                       ? "With Weekends"
                                       : "Without Weekends"),
                               style: TextStyle(
-                                  color: firstVisit ? Colors.black : white),
+                                  color: !ordersPresent[index]
+                                      ? Colors.black
+                                      : white),
                             ),
                           ),
                           Padding(
@@ -211,13 +208,17 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                                 Text(
                                   orders[index].kCal,
                                   style: TextStyle(
-                                      color: firstVisit ? Colors.black : white),
+                                      color: !ordersPresent[index]
+                                          ? Colors.black
+                                          : white),
                                 ),
                                 Spacer(),
                                 Text(
                                   'Start Date - ${formatDate(DateTime.parse(orders[index].startDate), format)}',
                                   style: TextStyle(
-                                      color: firstVisit ? Colors.black : white),
+                                      color: !ordersPresent[index]
+                                          ? Colors.black
+                                          : white),
                                 ),
                                 Spacer()
                               ],
@@ -227,30 +228,27 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                             alignment: Alignment.centerRight,
                             child: TextButton(
                                 onPressed: () {
-                                  if (firstVisit) {
+                                  if (ordersPresent[index]) {
                                     Navigator.push(
                                         context,
                                         CupertinoPageRoute(
                                             builder: (BuildContext context) =>
-                                                EditMealMenu(
+                                                PlacedMealMenuOrders(
                                                     purchaseDetails:
                                                         orders[index],
                                                     plan: plans[index])));
-                                    setState(() {
-                                      firstVisit = false;
-                                    });
                                   } else {
                                     Navigator.push(
                                         context,
                                         CupertinoPageRoute(
                                             builder: (BuildContext context) =>
-                                                PresentMealMenu(
+                                                PlaceMealMenuOrders(
                                                     purchaseDetails:
                                                         orders[index],
                                                     plan: plans[index])));
                                   }
                                 },
-                                child: firstVisit
+                                child: !ordersPresent[index]
                                     ? Text(
                                         'Select Menu',
                                         style: selectedTab.copyWith(

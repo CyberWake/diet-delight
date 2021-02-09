@@ -478,18 +478,18 @@ class Api {
           itemsOrderedFood.add(item);
         });
         if (itemsOrderedFood.length > 0) {
-          return false;
-        } else {
           return true;
+        } else {
+          return false;
         }
       } else {
         print(response.statusCode);
         print(response.body);
-        return true;
+        return false;
       }
     } on Exception catch (e) {
       print(e.toString());
-      return true;
+      return false;
     }
   }
 
@@ -667,14 +667,12 @@ class Api {
       List data = body['data'];
       data.forEach((element) {
         MealPurchaseModel item = MealPurchaseModel.fromMap(element);
-        print(item.endDate);
         if (item.endDate != null) {
           if (DateTime.parse(item.endDate).compareTo(endDate) > 0) {
             itemPresentMealPurchases.add(item);
           }
         }
       });
-      print('present plans: ${itemPresentMealPurchases.length}');
       return itemPresentMealPurchases;
     } else {
       print(response.statusCode);
