@@ -1,3 +1,4 @@
+import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
 
 const Color defaultGreen = Color(0xFF8BC53F);
@@ -175,3 +176,13 @@ var faqAnswers = [
   "Contact the provided phone number or try placing an order after some time.",
   "Contact the provided phone number or try placing an order after some time.",
 ];
+
+int selectedAddressIndex;
+bool isAddressSelected;
+String concatenatedAddress;
+String selectedAddressLine1;
+String selectedAddressLine2;
+String primaryAddressLine1 = Api.userInfo.addressLine1 ?? '';
+String primaryAddressLine2 = Api.userInfo.addressLine2 ?? '';
+String secondaryAddressLine1 = Api.userInfo.addressSecondary1 ?? '';
+String secondaryAddressLine2 = Api.userInfo.addressSecondary2 ?? '';

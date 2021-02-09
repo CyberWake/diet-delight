@@ -44,9 +44,11 @@ class _MealPlanPageState extends State<MealPlanPage>
       }
     }
     getMenuData().whenComplete(() {
-      setState(() {
-        isLoaded = true;
-      });
+      if (mounted) {
+        setState(() {
+          isLoaded = true;
+        });
+      }
     });
   }
 

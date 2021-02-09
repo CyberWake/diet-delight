@@ -8,10 +8,10 @@ import 'package:diet_delight/Models/mealPurchaseModel.dart';
 import 'package:diet_delight/Models/menuCategoryModel.dart';
 import 'package:diet_delight/Models/menuModel.dart';
 import 'package:diet_delight/Models/menuOrdersModel.dart';
+import 'package:diet_delight/Widgets/getAddressModalSheet.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dropdown/flutter_dropdown.dart';
 
 class PlaceMealMenuOrders extends StatefulWidget {
   final MealPurchaseModel purchaseDetails;
@@ -25,43 +25,24 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ScrollController _scrollController = new ScrollController();
-  TabController _pageController;
   TextEditingController notes = TextEditingController();
-  TextEditingController addressPrimaryLine1 = TextEditingController();
-  TextEditingController addressSecondaryLine1 = TextEditingController();
-  TextEditingController addressPrimaryLine2 = TextEditingController();
-  TextEditingController addressSecondaryLine2 = TextEditingController();
-  FocusNode addressLine1 = FocusNode();
-  FocusNode addressLine2 = FocusNode();
-  final _apiCall = Api.instance;
-  int menuId = 0;
-  int selectedAddress;
-  double _height = 300;
-  int items = 4;
-  bool isLoaded = false;
-  String addressArea = '';
-  bool addressSelected = false;
-  String deliveryAddress;
-  String localAddress = '';
-  String addressType = 'Home';
-  MenuOrderModel foodItemOrder;
-  List<String> types = ['Home', 'Work'];
-  List<MenuModel> menuItems = List();
-  List<MenuCategoryModel> categoryItems = List();
+  List<List<MenuCategoryModel>> subCategoryItems = List();
   List<MenuCategoryModel> mainCategoryItems = List();
   List<MenuCategoryModel> tempCategoryItems = List();
-  List<List<MenuCategoryModel>> subCategoryItems = List();
+  List<FoodItemModel> expansionFoodItems = List();
+  List<MenuCategoryModel> categoryItems = List();
   List<List<FoodItemModel>> foodItems = List();
   List<FoodItemModel> itemsFood = List();
-  List<FoodItemModel> expansionFoodItems = List();
+  List<MenuModel> menuItems = List();
   List<String> dates = [];
+  final _apiCall = Api.instance;
+  TabController _pageController;
+  MenuOrderModel foodItemOrder;
+  bool isLoaded = false;
+  int menuId = 0;
 
   getData() async {
     await getMenuCategories(menuId);
-    addressPrimaryLine1.text = Api.userInfo.addressLine1;
-    addressPrimaryLine2.text = Api.userInfo.addressLine2;
-    addressSecondaryLine1.text = Api.userInfo.addressSecondary1;
-    addressSecondaryLine2.text = Api.userInfo.addressSecondary2;
   }
 
   getMenuCategories(int menuId) async {
@@ -139,37 +120,10 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
 
   void initState() {
     super.initState();
+    isAddressSelected = false;
+    concatenatedAddress = '';
+    selectedAddressIndex = -1;
     menuId = widget.plan.menuId;
-    addressLine1.addListener(() {
-      if (addressLine1.hasFocus) {
-        print('height increased');
-        setState(() {
-          items = 5;
-          _height = 550;
-        });
-      } else if (!addressLine1.hasFocus) {
-        print('height decreased');
-        setState(() {
-          items = 4;
-          _height = 300;
-        });
-      }
-    });
-    addressLine2.addListener(() {
-      if (addressLine2.hasFocus) {
-        print('height increased');
-        setState(() {
-          items = 5;
-          _height = 550;
-        });
-      } else if (!addressLine2.hasFocus) {
-        print('height decreased');
-        setState(() {
-          items = 4;
-          _height = 300;
-        });
-      }
-    });
     _pageController = TabController(
         length: int.parse(widget.purchaseDetails.mealPlanDuration),
         vsync: this);
@@ -177,301 +131,10 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     getData();
   }
 
-  void addAddressBottomSheet({int address}) {
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        builder: (builder) {
-          return Container(
-            height: _height,
-            color: Colors.transparent,
-            child: Container(
-                padding: EdgeInsets.only(top: 30),
-                child: Column(
-                    children: List.generate(items, (index) {
-                  if (index == 0) {
-                    return Expanded(
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                          color: white,
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 4,
-                              color: Colors.black.withOpacity(0.25),
-                              spreadRadius: 0,
-                              offset: const Offset(0.0, 0.0),
-                            )
-                          ],
-                        ),
-                        child: DropDown<String>(
-                          showUnderline: false,
-                          items: types,
-                          onChanged: (String choice) {
-                            addressType = choice;
-                          },
-                          initialValue: addressType,
-                          isExpanded: true,
-                        ),
-                      ),
-                    );
-                  } else if (index < 3) {
-                    return Expanded(
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                          color: white,
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 4,
-                              color: Colors.black.withOpacity(0.25),
-                              spreadRadius: 0,
-                              offset: const Offset(0.0, 0.0),
-                            )
-                          ],
-                        ),
-                        child: TextFormField(
-                            focusNode: index == 1 ? addressLine1 : addressLine2,
-                            onChanged: (value) {
-                              if (index == 1) {
-                                if (address == 0) {
-                                  addressPrimaryLine1.text = value;
-                                } else {
-                                  addressSecondaryLine1.text = value;
-                                }
-                              } else {
-                                if (address == 0) {
-                                  addressPrimaryLine2.text = value;
-                                } else {
-                                  addressSecondaryLine2.text = value;
-                                }
-                              }
-                            },
-                            onFieldSubmitted: (done) {
-                              if (index == 1) {
-                                Focus.of(context).requestFocus(addressLine2);
-                              }
-                            },
-                            style: authInputTextStyle,
-                            textAlign: TextAlign.center,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            decoration: authInputFieldDecoration.copyWith(
-                                hintText: index == 1
-                                    ? 'House No, Street Name'
-                                    : 'City')),
-                      ),
-                    );
-                  } else if (index == 3) {
-                    return Expanded(
-                        child: GestureDetector(
-                      onTap: () {
-                        if (address == 0) {
-                          print(addressPrimaryLine1.text +
-                              ' ' +
-                              addressPrimaryLine2.text);
-                        } else if (address == 1) {
-                          print(addressSecondaryLine1.text +
-                              ' ' +
-                              addressSecondaryLine2.text);
-                        }
-                        setState(() {});
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(top: 20),
-                        color: defaultGreen,
-                        child: Center(
-                            child: Text(
-                          'Update',
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        )),
-                      ),
-                    ));
-                  } else {
-                    return SizedBox(
-                      height: 250,
-                    );
-                  }
-                }))),
-          );
-        });
-  }
-
-  getBottomSheet() async {
-    showModalBottomSheet<bool>(
-        context: context,
-        isScrollControlled: true,
-        isDismissible: false,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        builder: (builder) {
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter modalStateUpdate) {
-            return Container(
-              height: 380,
-              color: Colors.transparent,
-              child: Container(
-                  padding: EdgeInsets.only(top: 10),
-                  child: Column(
-                      children: List.generate(3, (index) {
-                    if (index == 2) {
-                      return Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            if (addressSelected) {
-                              if (selectedAddress == 0) {
-                                deliveryAddress = addressPrimaryLine1.text +
-                                    ' ' +
-                                    addressPrimaryLine2.text;
-                              } else if (selectedAddress == 1) {
-                                deliveryAddress = addressSecondaryLine1.text +
-                                    ' ' +
-                                    addressSecondaryLine2.text;
-                              }
-                            }
-                            Navigator.pop(context);
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(top: 20),
-                            color: defaultGreen,
-                            child: Center(
-                                child: Text(
-                              'Done',
-                              style: TextStyle(fontWeight: FontWeight.w600),
-                            )),
-                          ),
-                        ),
-                      );
-                    }
-                    if (index == 0 &&
-                        addressPrimaryLine1.text.isNotEmpty &&
-                        addressPrimaryLine2.text.isNotEmpty) {
-                      localAddress = addressPrimaryLine1.text;
-                      addressArea = addressPrimaryLine2.text;
-                    } else if (index == 1 &&
-                        addressSecondaryLine1.text.isNotEmpty &&
-                        addressSecondaryLine2.text.isNotEmpty) {
-                      addressArea = addressSecondaryLine2.text;
-                      localAddress = addressSecondaryLine1.text;
-                    } else {
-                      localAddress = '';
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40.0, vertical: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 15.0, bottom: 10),
-                            child: Text(
-                              index == 0
-                                  ? 'Primary Address'
-                                  : 'Secondary Address',
-                              style: selectedTab.copyWith(
-                                  color:
-                                      index == 0 ? defaultGreen : Colors.black,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              if (index == 0) {
-                                if (addressPrimaryLine1.text.isNotEmpty &&
-                                    addressPrimaryLine2.text.isNotEmpty) {
-                                  modalStateUpdate(() {
-                                    selectedAddress = index;
-                                    addressSelected = true;
-                                  });
-                                }
-                              } else if (index == 1) {
-                                if (addressSecondaryLine1.text.isNotEmpty &&
-                                    addressSecondaryLine2.text.isNotEmpty) {
-                                  modalStateUpdate(() {
-                                    selectedAddress = index;
-                                    addressSelected = true;
-                                  });
-                                }
-                              }
-                            },
-                            child: Container(
-                                height: 100,
-                                decoration: BoxDecoration(
-                                    color: selectedAddress == index
-                                        ? defaultGreen
-                                        : white,
-                                    border: Border.all(color: defaultGreen),
-                                    borderRadius: BorderRadius.circular(15)),
-                                child: localAddress.length > 0
-                                    ? Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(15.0),
-                                                child: Text(
-                                                  localAddress +
-                                                      ',\n' +
-                                                      addressArea,
-                                                  style: selectedTab.copyWith(
-                                                      color: selectedAddress ==
-                                                              index
-                                                          ? white
-                                                          : defaultGreen,
-                                                      fontWeight:
-                                                          FontWeight.w400),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      )
-                                    : Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              TextButton(
-                                                child: Text('Add',
-                                                    style: TextStyle(
-                                                      color: darkGreen,
-                                                    )),
-                                                onPressed: () {
-                                                  Navigator.pop(context, false);
-                                                  addAddressBottomSheet(
-                                                      address: index);
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [Text('Not Available')],
-                                          )
-                                        ],
-                                      )),
-                          )
-                        ],
-                      ),
-                    );
-                  }))),
-            );
-          });
-        });
+  callback(address){
+    setState(() {
+      concatenatedAddress=address;
+    });
   }
 
   @override
@@ -582,14 +245,15 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                   children: [
                     Text('${widget.purchaseDetails.kCal} Calorie'),
                     TextButton(
-                        onPressed: () {
-                          getBottomSheet();
-                        },
-                        child: Text(
-                          'Address',
-                          style: TextStyle(
-                            color: darkGreen,
-                            decoration: TextDecoration.underline,
+                        onPressed: () {},
+                        child: AddressButtonWithModal(
+                          callBackFunction: callback,
+                          child: Text(
+                            'Address',
+                            style: TextStyle(
+                              color: darkGreen,
+                              decoration: TextDecoration.underline,
+                            ),
                           ),
                         )),
                   ],
@@ -754,7 +418,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                       child: TextButton(
                         onPressed: () async {
                           if (!item.isSelected) {
-                            if (addressSelected) {
+                            if (isAddressSelected) {
                               foodItemOrder = MenuOrderModel(
                                   foodItemId: item.id,
                                   foodItemCategoryId: item.categoryId,
@@ -763,7 +427,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                   menuItemDate: item.date,
                                   menuItemDay: item.day,
                                   foodItemName: item.foodName,
-                                  deliveryAddress: deliveryAddress,
+                                  deliveryAddress: concatenatedAddress,
                                   note:
                                       notes.text.isEmpty ? "null" : notes.text);
                               String body =
