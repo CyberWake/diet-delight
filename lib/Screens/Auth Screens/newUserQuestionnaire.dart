@@ -28,16 +28,24 @@ class _QuestionnaireState extends State<Questionnaire>
   int chatLength = 0;
   List<QuestionnaireModel> questions;
   List<OptionsModel> options;
-  TextEditingController answer = TextEditingController();
+  var answer;
 
 
   Future getQuestions() async {
+    await _apiCall.getUserInfo();
     questions = await _apiCall.getQuestions();
     options = await _apiCall.getOptions(questions);
     consultationPackages = await _apiCall.getConsultationPackages();
     print(questions.length);
     _currentIndex = 0;
-
+    for(int i =0;i<questions.length;i++){
+      print(questions[i].id);
+    }
+    print("printing option");
+    for(int i =0;i<options.length;i++){
+      print(options[i].question_id);
+    }
+    print("done printing option");
     _pageController = TabController(length: questions.length + 1, vsync: this);
     _pageController.addListener(() {
       setState(() {
@@ -79,37 +87,73 @@ class _QuestionnaireState extends State<Questionnaire>
     });
   }
 
-  List<String> quest = [
-    "How are you feeling today ?",
-    "Do you feel good",
-    "Do you feel bad ?"
+  List<String> opt = [
+    "Yes",
+    "No",
   ];
 
   int indexSelected = -1;
-
-  int optionIndex = 0;
+  int optionId;
 
   Widget buildOptions(int index) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
       child: ListView.builder(
-        itemCount: questions[index].type == 1 ? 2 : questions[index].type== 2 ? options[index].option.toString().split(",").length : 1,
+        itemCount: questions[index].type == 1 ? 2 : questions[index].type== 2 ? options.length : 1,
         physics: NeverScrollableScrollPhysics(),
         scrollDirection: Axis.vertical,
         reverse: true,
         shrinkWrap: true,
         itemBuilder: (BuildContext context, int optionIndex) {
-          print(optionIndex);
+
+          print(options[optionIndex].question_id);
+          print(questions[index].id);
           return Container(
             alignment: Alignment.centerLeft,
-            child: questions[index].type == 1 || questions[index].type == 2
-                ? Padding(
+            child:
+            questions[index].type == 1 ?  Padding(
+              padding: const EdgeInsets.only(top: 4.0, bottom: 4),
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    show = false;
+                    indexSelected = optionIndex;
+                    optionId = 0;
+                  });
+                },
+                child: Container(
+                  height: 50,
+                  width: double.infinity,
+                  padding:
+                  EdgeInsets.symmetric(horizontal: 8.0, vertical: 15),
+                  child: Center(
+                      child: Text(
+                        opt[optionIndex],
+                        style: TextStyle(
+                          color: indexSelected == optionIndex
+                              ? Colors.black
+                              : Colors.white,
+                        ),
+                      )),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: indexSelected == optionIndex
+                          ? Colors.white
+                          : defaultGreen,
+                      border: Border.all(width: 2,color: defaultGreen)
+                  ),
+                ),
+              ),
+            ) :
+            questions[index].type == 2 && questions[index].id == options[optionIndex].question_id ?
+            Padding(
                     padding: const EdgeInsets.only(top: 4.0, bottom: 4),
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
                           show = false;
                           indexSelected = optionIndex;
+                          optionId = options[optionIndex].id;
                         });
                       },
                       child: Container(
@@ -119,7 +163,7 @@ class _QuestionnaireState extends State<Questionnaire>
                             EdgeInsets.symmetric(horizontal: 8.0, vertical: 15),
                         child: Center(
                             child: Text(
-                          options[index].option.toString().split(",")[optionIndex],
+                              options[optionIndex].option,
                           style: TextStyle(
                             color: indexSelected == optionIndex
                                 ? Colors.black
@@ -151,6 +195,7 @@ class _QuestionnaireState extends State<Questionnaire>
                                 setState(() {
                                   show = true;
                                   indexSelected = optionIndex;
+                                  optionId = 0;
                                 });
                               },
                               child: Container(
@@ -190,6 +235,11 @@ class _QuestionnaireState extends State<Questionnaire>
                                         padding: const EdgeInsets.fromLTRB(
                                             20, 3, 20, 3),
                                         child: TextFormField(
+                                          onChanged: (value){
+                                            setState(() {
+                                              answer = value;
+                                            });
+                                          },
                                             onFieldSubmitted: (done) {
                                               if (done.isNotEmpty) {
                                                 _pageController.animateTo(
@@ -230,11 +280,14 @@ class _QuestionnaireState extends State<Questionnaire>
     fontWeight: FontWeight.bold,
   );
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     var keyboard = MediaQuery.of(context).viewInsets.bottom;
 
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: defaultGreen,
         // appBar: AppBar(
         //   automaticallyImplyLeading: false,
@@ -376,22 +429,38 @@ class _QuestionnaireState extends State<Questionnaire>
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(horizontal : 10.0,vertical: 5),
                                           child: GestureDetector(
-                                            onTap: () async {
-                                              // await _apiCall.sendOptionsAnswers(
-                                              //     answerId: options[_pageController.index].id,
-                                              //     questionId: options[_pageController.index].question_Id,
-                                              //     additionalText: questions[_pageController.index].additionText,
-                                              //     answer: options[_pageController.index].toString().split(",")[indexSelected],
-                                              //     question: questions[_pageController.index].question,
-                                              //     type: questions[_pageController.index].type,
-                                              //     optionSelected: options[_pageController.index].toString().split(",")[indexSelected]
-                                              // );
-                                              setState(() async {
+                                            onTap: indexSelected <0 ? () {
+                                              _scaffoldKey.currentState
+                                                  .showSnackBar(SnackBar(content: Text('Please pick an option')));
 
-                                                show = false;
-                                                indexSelected = -1;
-                                                _pageController.animateTo(_pageController.index + 1);
-                                              });
+                                            } :  () async {
+                                              var orderId = questions[_pageController.index].type !=2 ?  0 : options[indexSelected].id;
+                                              var ans = questions[_pageController.index].type == 0 || questions[_pageController.index].type == 3 ? answer :
+                                              questions[_pageController.index].type == 1 ? opt[indexSelected] :  options[indexSelected].option;
+                                              var addText =  questions[_pageController.index].additionText == null ? "0" :  questions[_pageController.index].additionText;
+                                              print(ans);
+                                              if(ans == null){
+                                                _scaffoldKey.currentState
+                                                    .showSnackBar(SnackBar(content: Text('Please enter some value')));
+                                              }else{
+                                                await _apiCall.sendOptionsAnswers(
+                                                    answerId: orderId,
+                                                    questionId: questions[_pageController.index].id,
+                                                    additionalText: addText,
+                                                    answer: ans,
+                                                    question: questions[_pageController.index].question,
+                                                    type: questions[_pageController.index].type,
+                                                    optionSelected: ans
+
+                                                );
+                                                answer = null;
+                                                setState(()  {
+
+                                                  show = false;
+                                                  indexSelected = -1;
+                                                  _pageController.animateTo(_pageController.index + 1);
+                                                });
+                                              }
                                             },
                                             child: Text(
                                                 "Submit",style: TextStyle(color: Colors.black),
