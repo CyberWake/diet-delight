@@ -1,8 +1,3 @@
-import 'dart:convert';
-import 'dart:ui';
-import 'dart:io';
-import 'package:intl/intl.dart';
-import 'dart:isolate';
 import 'package:date_format/date_format.dart';
 import 'package:diet_delight/Models/consultationAppointmentModel.dart';
 import 'package:diet_delight/Models/consultationModel.dart';
@@ -12,10 +7,6 @@ import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class ConsultationOrderHistoryPage extends StatefulWidget {
   @override
@@ -31,33 +22,6 @@ class _ConsultationOrderHistoryPageState
   List<ConsAppointmentModel> appointments = List();
   bool loaded = false;
   List<String> format = [hh, ':', nn, ' ', am, '\n', dd, ' ', 'M', ', ', yyyy];
-  ReceivePort _port = ReceivePort();
-  bool _permissionReady = false;
-
-  Future<void> DownloadFile(String key, String fileName) async {
-    _permissionReady = await _checkPermission();
-    _checkPermission().then((hasGranted) {
-      setState(() {
-        _permissionReady = hasGranted;
-      });
-    });
-    String downloadUrl1 = key;
-    Directory appDocDir = await getExternalStorageDirectory();
-    String appDocPath = appDocDir.path;
-    print(key);
-    print(downloadUrl1);
-    print(appDocPath);
-
-    final taskId = await FlutterDownloader.enqueue(
-      url: downloadUrl1,
-      fileName: fileName,
-      savedDir: appDocPath,
-      showNotification:
-          true, // show download progress in status bar (for Android)
-      openFileFromNotification:
-          true, // click on notification to open downloaded file (for Android)
-    );
-  }
 
   Widget dataField({String fieldName, String fieldValue}) {
     return Flexible(
@@ -67,46 +31,9 @@ class _ConsultationOrderHistoryPageState
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                  flex: 2,
-                  child: Text(fieldName, style: orderHistoryCardStyle)),
+              Expanded(flex: 2, child: Text(fieldName)),
               Expanded(child: Container()),
-              Expanded(
-                  flex: 3,
-                  child: Text(fieldValue, style: orderHistoryCardStyle)),
-              Expanded(child: Container())
-            ],
-          ),
-        ));
-  }
-
-  Widget meetingDataField({String fieldName, String fieldValue}) {
-    return Flexible(
-        fit: FlexFit.loose,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                  flex: 2,
-                  child: Text(fieldName, style: orderHistoryCardStyle)),
-              Expanded(child: Container()),
-              Expanded(
-                  flex: 3,
-                  child: GestureDetector(
-                      onTap: () async {
-                        if (await canLaunch(fieldValue)) {
-                          await launch(fieldValue);
-                        } else {
-                          throw 'Could not launch $fieldName';
-                        }
-                      },
-                      child: Text(
-                        fieldValue,
-                        style:
-                            orderHistoryCardStyle.copyWith(color: defaultGreen),
-                      ))),
+              Expanded(flex: 3, child: Text(fieldValue)),
               Expanded(child: Container())
             ],
           ),
@@ -135,50 +62,9 @@ class _ConsultationOrderHistoryPageState
   @override
   void initState() {
     super.initState();
-    IsolateNameServer.registerPortWithName(
-        _port.sendPort, 'downloader_send_port');
-    _port.listen((dynamic data) {
-      String id = data[0];
-      DownloadTaskStatus status = data[1];
-      int progress = data[2];
-    });
     if (mounted) {
       getData();
     }
-    FlutterDownloader.registerCallback(downloadCallback);
-  }
-
-  @override
-  void dispose() {
-    IsolateNameServer.removePortNameMapping('downloader_send_port');
-    super.dispose();
-  }
-
-  static void downloadCallback(
-      String id, DownloadTaskStatus status, int progress) {
-    final SendPort send =
-        IsolateNameServer.lookupPortByName('downloader_send_port');
-    send.send([id, status, progress]);
-  }
-
-  Future<bool> _checkPermission() async {
-    if (Theme.of(context).platform == TargetPlatform.android) {
-      PermissionStatus permission = await PermissionHandler()
-          .checkPermissionStatus(PermissionGroup.storage);
-      if (permission != PermissionStatus.granted) {
-        Map<PermissionGroup, PermissionStatus> permissions =
-            await PermissionHandler()
-                .requestPermissions([PermissionGroup.storage]);
-        if (permissions[PermissionGroup.storage] == PermissionStatus.granted) {
-          return true;
-        }
-      } else {
-        return true;
-      }
-    } else {
-      return true;
-    }
-    return false;
   }
 
   @override
@@ -225,92 +111,56 @@ class _ConsultationOrderHistoryPageState
                             children: [
                               Flexible(
                                   fit: FlexFit.loose,
-                                  child: Text(
-                                      (consultationData[index].name)
-                                              .toString() +
-                                          ' Consultation Package',
-                                      style: orderHistoryCardStyle.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14))),
+                                  child: Text('Consultation')),
                               Flexible(
                                   fit: FlexFit.loose,
                                   child: PopupMenuButton<int>(
                                     child: Icon(Icons.more_vert,
                                         color: Colors.black),
-                                    itemBuilder: (BuildContext context) =>
-                                        <PopupMenuEntry<int>>[
-                                      PopupMenuItem<int>(
-                                        value: 0,
-                                        child: Material(
-                                          color: Colors.white,
-                                          child: ListTile(
-                                            onTap: () {
-                                              Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                      builder: (BuildContext
-                                                              context) =>
+                                    onSelected: (int pos) {
+                                      print(packageIndex);
+                                      pos == 0
+                                          ? Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder:
+                                                      (BuildContext context) =>
                                                           BookConsultation(
                                                             packageIndex:
                                                                 packageIndex,
                                                             consultation:
                                                                 consultationData,
-                                                          )));
-                                            },
-                                            leading: Icon(
-                                              Icons.autorenew,
-                                              size: 24,
-                                              color: Colors.black,
-                                            ),
-//                                            new Image.asset(
-//                                              "images/renew-purchase.svg",
-//                                              width: 30,
-//                                              height: 30,
-//                                            ),
-                                            title: Text(
-                                              'Renew Purchase',
-                                              style: orderHistoryPopUpStyle,
-                                            ),
-                                          ),
-                                        ),
+                                                          )))
+                                          : Navigator.pop(context);
+                                    },
+                                    itemBuilder: (BuildContext context) =>
+                                        <PopupMenuEntry<int>>[
+                                      const PopupMenuItem<int>(
+                                        value: 0,
+                                        child: Text('Renew'),
                                       ),
-                                      PopupMenuItem<int>(
+                                      const PopupMenuItem<int>(
                                         value: 1,
-                                        child: Material(
-                                          color: Colors.white,
-                                          child: ListTile(
-                                            onTap: () async {
-                                              await DownloadFile(
-                                                  'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-                                                  'Dummy PDF.pdf');
-                                              Navigator.pop(context);
-                                            },
-                                            leading: Icon(
-                                              Icons.file_download,
-                                              size: 24,
-                                              color: Colors.black,
-                                            ),
-//                                            new Image.asset(
-//                                                "images/download_invoice.png",
-//                                                width: 20),
-                                            title: Text(
-                                              'Download Invoice',
-                                              style: orderHistoryPopUpStyle,
-                                            ),
-                                          ),
-                                        ),
+                                        child: Text('Download Invoice'),
                                       ),
                                     ],
                                   )),
                             ],
                           ),
                         )),
+                    Flexible(
+                        fit: FlexFit.loose,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child:
+                              Text((consultationData[index].name).toString()),
+                        )),
                     dataField(
                       fieldName: 'Appointment:',
                       fieldValue: formatDate(appointmentDateTime, format),
                     ),
-                    meetingDataField(
+                    dataField(
                       fieldName: 'Meeting Link:',
-                      fieldValue: 'https://www.google.com',
+                      fieldValue: 'meet.google.com....',
                     ),
                     dataField(
                       fieldName: 'Consultant:',
@@ -327,13 +177,10 @@ class _ConsultationOrderHistoryPageState
                               SizedBox(
                                 width: 10,
                               ),
-                              Text(formatDate(createdDateTime, format),
-                                  style: orderHistoryCardStyle),
+                              Text(formatDate(createdDateTime, format)),
                               Spacer(),
-                              Text(
-                                  consultationPurchases[index].amountPaid +
-                                      ' BHD',
-                                  style: orderHistoryCardStyle)
+                              Text(consultationPurchases[index].amountPaid +
+                                  ' BHD')
                             ],
                           ),
                         )),

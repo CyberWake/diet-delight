@@ -5,7 +5,6 @@ import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:diet_delight/Models/registrationModel.dart';
-import 'package:diet_delight/Widgets/getAddressModalSheet.dart';
 
 class PrePayment extends StatefulWidget {
   final ConsAppointmentModel appointment;
@@ -37,8 +36,6 @@ class _PrePaymentState extends State<PrePayment> {
   List<String> areas2 = ['Bahrain', 'India'];
   String addressType = 'Primary';
 
-  bool isButtonEnabled = true;
-
   RegModel info;
   String name;
   String mobileNo;
@@ -66,15 +63,6 @@ class _PrePaymentState extends State<PrePayment> {
     super.initState();
     order = widget.orderDetails;
     _appointment = widget.appointment;
-    concatenatedAddress = '';
-    isAddressSelected = false;
-    selectedAddressIndex = -1;
-  }
-
-  callback(address) {
-    setState(() {
-      concatenatedAddress = address;
-    });
   }
 
   void addAddress({int address}) {
@@ -274,9 +262,8 @@ class _PrePaymentState extends State<PrePayment> {
                                   ? 'Primary Address'
                                   : 'Secondary Address',
                               style: billingTextStyle.copyWith(
-                                  color: index == 0
-                                      ? defaultGreen
-                                      : Color(0xFF222222)),
+                                  color:
+                                      index == 0 ? defaultGreen : Colors.black),
                             ),
                           ),
                           GestureDetector(
@@ -319,11 +306,8 @@ class _PrePaymentState extends State<PrePayment> {
                                             children: [
                                               Text(
                                                 '${name}',
-                                                style:
-                                                    billingTextStyle.copyWith(
-                                                        fontSize: 14,
-                                                        color:
-                                                            Color(0xFF222222)),
+                                                style: billingTextStyle
+                                                    .copyWith(fontSize: 14),
                                               ),
                                               Text('Select',
                                                   style:
@@ -350,7 +334,7 @@ class _PrePaymentState extends State<PrePayment> {
                                                       color: selectedAddress ==
                                                               index
                                                           ? white
-                                                          : Color(0xFF222222),
+                                                          : defaultGreen,
                                                     )),
                                               ),
                                             ],
@@ -364,7 +348,7 @@ class _PrePaymentState extends State<PrePayment> {
                                                 MainAxisAlignment.end,
                                             children: [
                                               TextButton(
-                                                child: Text('ADD',
+                                                child: Text('Add',
                                                     style: billingTextStyle
                                                         .copyWith(
                                                             fontSize: 14,
@@ -386,9 +370,7 @@ class _PrePaymentState extends State<PrePayment> {
                                                       billingTextStyle.copyWith(
                                                           fontSize: 14,
                                                           fontStyle:
-                                                              FontStyle.normal,
-                                                          color: Color(
-                                                              0xFF4E4848)))
+                                                              FontStyle.normal))
                                             ],
                                           )
                                         ],
@@ -411,7 +393,7 @@ class _PrePaymentState extends State<PrePayment> {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: white,
-        centerTitle: false,
+        centerTitle: true,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -436,20 +418,15 @@ class _PrePaymentState extends State<PrePayment> {
                 style: billingTextStyle,
               ),
             ),
-            Material(
-              borderRadius: BorderRadius.circular(5.0),
-              shadowColor: Color(0x26000000),
-              elevation: 2,
-              color: Colors.white,
+            GestureDetector(
+              onTap: getBottomSheet,
               child: Container(
                 margin: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
                 decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(color: Color(0x26000000), blurRadius: 5)
-                    ],
-                    borderRadius: BorderRadius.circular(5.0),
-                    color: Colors.white),
+                    borderRadius: BorderRadius.circular(3.0),
+                    border: Border.all(width: 0.5, color: formLinks),
+                    color: white),
                 child: addressPrimaryLine1 == null
                     ? Padding(
                         padding: const EdgeInsets.only(bottom: 15.0),
@@ -458,13 +435,9 @@ class _PrePaymentState extends State<PrePayment> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                AddressButtonWithModal(
-                                  addNewAddressOnly: true,
-                                  callBackFunction: callback,
-                                  child: Text('ADD',
-                                      style: billingTextStyle.copyWith(
-                                          fontSize: 14, color: defaultGreen)),
-                                ),
+                                Text('Add',
+                                    style: billingTextStyle.copyWith(
+                                        fontSize: 14, color: defaultGreen)),
                               ],
                             ),
                             Row(
@@ -473,8 +446,7 @@ class _PrePaymentState extends State<PrePayment> {
                                 Text('Not Available',
                                     style: billingTextStyle.copyWith(
                                         fontSize: 14,
-                                        fontStyle: FontStyle.normal,
-                                        color: Color(0xFF4E4848)))
+                                        fontStyle: FontStyle.normal))
                               ],
                             ),
                           ],
@@ -489,12 +461,9 @@ class _PrePaymentState extends State<PrePayment> {
                                 '${name}',
                                 style: billingTextStyle.copyWith(fontSize: 14),
                               ),
-                              AddressButtonWithModal(
-                                callBackFunction: callback,
-                                child: Text('Change',
-                                    style: billingTextStyle.copyWith(
-                                        fontSize: 14, color: defaultGreen)),
-                              ),
+                              Text('Change',
+                                  style: billingTextStyle.copyWith(
+                                      fontSize: 14, color: defaultGreen)),
                             ],
                           ),
                           SizedBox(
@@ -505,10 +474,8 @@ class _PrePaymentState extends State<PrePayment> {
                             children: [
                               Text('$addressPrimaryLine1\n$addressPrimaryLine2',
                                   style: billingTextStyle.copyWith(
-                                    fontSize: 14,
-                                    fontStyle: FontStyle.normal,
-                                    color: Color(0xFF222222),
-                                  ))
+                                      fontSize: 14,
+                                      fontStyle: FontStyle.normal))
                             ],
                           ),
                         ],
@@ -546,44 +513,20 @@ class _PrePaymentState extends State<PrePayment> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Material(
-                        borderRadius: BorderRadius.circular(5.0),
-                        shadowColor: Color(0x26000000),
-                        elevation: 2,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.3,
-                          height: MediaQuery.of(context).size.height * 0.1,
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Color(0x26000000), blurRadius: 5)
-                              ],
-                              borderRadius: BorderRadius.circular(5.0),
-                              color: Colors.white),
-                          child: Center(
-                            child: Image.asset(
-                              'images/card.png',
-                              width: MediaQuery.of(context).size.width * 0.15,
-                              height:
-                                  MediaQuery.of(context).size.height * 0.075,
-                            ),
-                          ),
-                        ),
-                      ),
-//                      Material(
-//                          elevation: 2.0,
-//                          borderRadius: BorderRadius.circular(2.0),
-//                          color: Colors.white,
-//                          child: Padding(
-//                              padding: EdgeInsets.symmetric(
-//                                  vertical: 15, horizontal: 30),
-//                              child: Container(
-//                                height: 55,
-//                                width: 75,
-//                                child: Image.asset(
-//                                  'images/card.png',
-//                                  fit: BoxFit.fill,
-//                                ),
-//                              ))),
+                          elevation: 2.0,
+                          borderRadius: BorderRadius.circular(2.0),
+                          color: Colors.white,
+                          child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 30),
+                              child: Container(
+                                height: 55,
+                                width: 75,
+                                child: Image.asset(
+                                  'images/card.png',
+                                  fit: BoxFit.fill,
+                                ),
+                              ))),
                       Padding(
                         padding: const EdgeInsets.only(left: 20.0),
                         child: Text('**** **** **** 3947',
@@ -600,34 +543,28 @@ class _PrePaymentState extends State<PrePayment> {
               padding: const EdgeInsets.fromLTRB(50, 50, 50, 30),
               child: SizedBox(
                 width: double.infinity,
-                height: 40.0,
+                height: 50.0,
                 child: TextButton(
-                  onPressed: isButtonEnabled
-                      ? () async {
-                          setState(() {
-                            isButtonEnabled = false;
-                          });
-                          print('pressed');
-                          order.setUserPaymentDetails(
-                              userId: Api.userInfo.id, paymentId: '11487');
-                          String id =
-                              await _apiCall.postConsultationPurchase(order);
-                          if (id != null) {
-                            _appointment.putId(packagePurchaseId: id);
-                            bool success =
-                                await _apiCall.postAppointment(_appointment);
-                            if (success) {
-                              _scaffoldKey.currentState.showSnackBar(
-                                  SnackBar(content: Text('Appointment Added')));
-                            }
-                            _scaffoldKey.currentState.showSnackBar(
-                                SnackBar(content: Text('Purchase Successful')));
-                          } else {
-                            _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                content: Text('Something went wrong')));
-                          }
-                        }
-                      : {},
+                  onPressed: () async {
+                    print('pressed');
+                    order.setUserPaymentDetails(
+                        userId: Api.userInfo.id, paymentId: '11487');
+                    String id = await _apiCall.postConsultationPurchase(order);
+                    if (id != null) {
+                      _appointment.putId(packagePurchaseId: id);
+                      bool success =
+                          await _apiCall.postAppointment(_appointment);
+                      if (success) {
+                        _scaffoldKey.currentState.showSnackBar(
+                            SnackBar(content: Text('Appointment Added')));
+                      }
+                      _scaffoldKey.currentState.showSnackBar(
+                          SnackBar(content: Text('Purchase Successful')));
+                    } else {
+                      _scaffoldKey.currentState.showSnackBar(
+                          SnackBar(content: Text('Something went wrong')));
+                    }
+                  },
                   child: Text(
                     'PAY NOW',
                     style: TextStyle(

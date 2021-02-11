@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diet_delight/Models/mealModel.dart';
 import 'package:diet_delight/Screens/MealPlans/prePaymentMealPlan.dart';
+import 'package:diet_delight/Widgets/getAddressModalSheet.dart';
 import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -32,27 +33,19 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
   List<String> selDays = List();
   List<bool> selectedDays = [false, false, false, false, false, false, false];
   List<String> days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
-  TextEditingController addressPrimary = TextEditingController();
-  TextEditingController addressSecondary = TextEditingController();
-  FocusNode addressFocus = FocusNode();
-  String addressArea = 'Bahrain';
-  String localAddress = '';
-  double _height = 350;
-  int items = 4;
-  int selectedAddress = -1;
-  List<String> types = ['Home', 'Work'];
-  List<String> areas = ['Bahrain', 'India'];
-  List<String> areas2 = ['Bahrain', 'India'];
-  String addressType = 'Home';
 
   @override
   void initState() {
     super.initState();
+    concatenatedAddress = '';
+    isAddressSelected = false;
+    selectedAddressIndex = -1;
     if (widget.categories == null) {
       widget.categories = 'Breakfast, Lunch, Dinner';
       widget.description = 'aiduhFIUOYARHOCWYJFIOWEGFCNINYRFAESOITCUBQW';
     }
     today = new DateTime.now();
+    count = widget.weekDaysSelected;
     widget.weekDaysSelected == 7
         ? selectedDays = [
             true,
@@ -64,305 +57,12 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
             true,
           ]
         : selectedDays = [true, true, true, true, true, false, false];
-    addressFocus.addListener(() {
-      if (addressFocus.hasFocus) {
-        setState(() {
-          items = 5;
-          _height = 600;
-        });
-      } else if (!addressFocus.hasFocus) {
-        setState(() {
-          items = 4;
-          _height = 350;
-        });
-      }
+  }
+
+  callback(address) {
+    setState(() {
+      concatenatedAddress = address;
     });
-  }
-
-  void addAddress({int address}) {
-    if (address == 0 && addressPrimary.text.isNotEmpty) {
-      var separatedAddress = addressPrimary.text.split(',');
-      addressArea = separatedAddress[separatedAddress.length - 1];
-      localAddress = separatedAddress[0];
-    } else if (address == 1 && addressSecondary.text.isNotEmpty) {
-      var separatedAddress = addressSecondary.text.split(',');
-      addressArea = separatedAddress[separatedAddress.length - 1];
-      localAddress = separatedAddress[0];
-    } else {
-      localAddress = '';
-    }
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        builder: (builder) {
-          return StatefulBuilder(builder:
-              (BuildContext context, StateSetter addressModalStateUpdate) {
-            return Container(
-              height: _height,
-              color:
-                  Colors.transparent, //could change this to Color(0xFF737373),
-              //so you don't have to change MaterialApp canvasColor
-              child: Container(
-                  padding: EdgeInsets.only(top: 30),
-                  child: Column(
-                      children: List.generate(items, (index) {
-                    if (index < 2) {
-                      return Expanded(
-                        child: Container(
-                          margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          decoration: BoxDecoration(
-                            color: white,
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 4,
-                                color: Colors.black.withOpacity(0.25),
-                                spreadRadius: 0,
-                                offset: const Offset(0.0, 0.0),
-                              )
-                            ],
-                          ),
-                          child: DropDown<String>(
-                            showUnderline: false,
-                            items: index == 0 ? types : areas,
-                            onChanged: (String choice) {
-                              if (index == 0) {
-                                addressType = choice;
-                              } else if (index == 1) {
-                                addressArea = choice;
-                              }
-                              print(choice);
-                              addressModalStateUpdate(() {});
-                            },
-                            isExpanded: true,
-                          ),
-                        ),
-                      );
-                    } else if (index == 2) {
-                      return Expanded(
-                        child: Container(
-                          margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          decoration: BoxDecoration(
-                            color: white,
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 4,
-                                color: Colors.black.withOpacity(0.25),
-                                spreadRadius: 0,
-                                offset: const Offset(0.0, 0.0),
-                              )
-                            ],
-                          ),
-                          child: TextFormField(
-                              controller: address == 0
-                                  ? addressPrimary
-                                  : addressSecondary,
-                              focusNode: addressFocus,
-                              onFieldSubmitted: (done) {
-                                localAddress = done;
-                              },
-                              style: authInputTextStyle,
-                              textAlign: TextAlign.center,
-                              keyboardType: TextInputType.text,
-                              textInputAction: TextInputAction.next,
-                              decoration: authInputFieldDecoration.copyWith(
-                                  hintText:
-                                      'House #, House name, Street name')),
-                        ),
-                      );
-                    } else if (index == 3) {
-                      return Expanded(
-                          child: GestureDetector(
-                        onTap: () {
-                          print(addressArea);
-                          if (address == 0) {
-                            addressPrimary.text += ', ' + addressArea;
-                            print(addressPrimary.text);
-                          } else if (address == 1) {
-                            addressSecondary.text += ', ' + addressArea;
-                          }
-                          setState(() {});
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          margin: EdgeInsets.only(top: 20),
-                          color: defaultGreen,
-                          child: Center(
-                              child: Text(
-                            localAddress.length > 0 || addressArea != null
-                                ? 'Update'
-                                : 'ADD',
-                            style: TextStyle(fontWeight: FontWeight.w600),
-                          )),
-                        ),
-                      ));
-                    } else {
-                      return SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.35,
-                      );
-                    }
-                  }))),
-            );
-          });
-        });
-  }
-
-  void getBottomSheet() {
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        builder: (builder) {
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter modalStateUpdate) {
-            return Container(
-              height: 380,
-              color: Colors.transparent,
-              child: Container(
-                  padding: EdgeInsets.only(top: 10),
-                  child: Column(
-                      children: List.generate(3, (index) {
-                    if (index == 2) {
-                      return Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(top: 20),
-                            color: defaultGreen,
-                            child: Center(
-                                child: Text(
-                              'Done',
-                              style: TextStyle(fontWeight: FontWeight.w600),
-                            )),
-                          ),
-                        ),
-                      );
-                    }
-                    if (index == 0 && addressPrimary.text.isNotEmpty) {
-                      var separatedAddress = addressPrimary.text.split(',');
-                      addressArea =
-                          separatedAddress[separatedAddress.length - 1];
-                      localAddress = separatedAddress[0];
-                    } else if (index == 1 && addressSecondary.text.isNotEmpty) {
-                      var separatedAddress = addressSecondary.text.split(',');
-                      addressArea =
-                          separatedAddress[separatedAddress.length - 1];
-                      localAddress = separatedAddress[0];
-                    } else {
-                      localAddress = '';
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40.0, vertical: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 15.0, bottom: 10),
-                            child: Text(
-                              index == 0
-                                  ? 'Primary Address'
-                                  : 'Secondary Address',
-                              style: selectedTab.copyWith(
-                                  color:
-                                      index == 0 ? defaultGreen : Colors.black,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              if (index == 0) {
-                                if (addressPrimary.text.isNotEmpty) {
-                                  modalStateUpdate(() {
-                                    selectedAddress = index;
-                                  });
-                                }
-                              } else if (index == 1) {
-                                if (addressSecondary.text.isNotEmpty) {
-                                  modalStateUpdate(() {
-                                    selectedAddress = index;
-                                  });
-                                }
-                              }
-                            },
-                            child: Container(
-                                height: 100,
-                                decoration: BoxDecoration(
-                                    color: selectedAddress == index
-                                        ? defaultGreen
-                                        : white,
-                                    border: Border.all(color: defaultGreen),
-                                    borderRadius: BorderRadius.circular(15)),
-                                child: localAddress.length > 0
-                                    ? Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(15.0),
-                                                child: Text(
-                                                  localAddress +
-                                                      ',\n' +
-                                                      addressArea,
-                                                  style: selectedTab.copyWith(
-                                                      color: selectedAddress ==
-                                                              index
-                                                          ? white
-                                                          : defaultGreen,
-                                                      fontWeight:
-                                                          FontWeight.w400),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      )
-                                    : Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              TextButton(
-                                                child: Text('Add',
-                                                    style: TextStyle(
-                                                      color: darkGreen,
-                                                    )),
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                  addAddress(address: index);
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [Text('Not Available')],
-                                          )
-                                        ],
-                                      )),
-                          )
-                        ],
-                      ),
-                    );
-                  }))),
-            );
-          });
-        });
   }
 
   @override
@@ -435,7 +135,8 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                     flex: 5,
                     fit: FlexFit.loose,
                     child: CachedNetworkImage(
-                      imageUrl: widget.mealPackage.picture??"http://via.placeholder.com/350x150",
+                      imageUrl: widget.mealPackage.picture ??
+                          "http://via.placeholder.com/350x150",
                       imageBuilder: (context, imageProvider) => Container(
                         height: 100,
                         decoration: BoxDecoration(
@@ -476,18 +177,18 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                     (index) => GestureDetector(
                           onTap: () {
                             if (selectedDays[index] == true) {
-                              print('unmarking');
                               setState(() {
                                 selectedDays[index] = false;
                                 count--;
                               });
+                              print('unmarking $count');
                             } else if (selectedDays[index] == false) {
                               if (count < widget.weekDaysSelected) {
-                                print('marking');
                                 setState(() {
                                   selectedDays[index] = true;
                                   count++;
                                 });
+                                print('marking $count');
                               } else {
                                 _scaffoldKey.currentState.showSnackBar(SnackBar(
                                     content: Text(
@@ -530,30 +231,24 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                           padding: const EdgeInsets.only(top: 10.0),
                           child: GestureDetector(
                             onTap: () {
-                              if (widget.weekDaysSelected > index + 4) {
-                                if (selectedDays[index + 4] == true) {
-                                  print('unmarking');
+                              if (selectedDays[index + 4] == true) {
+                                setState(() {
+                                  selectedDays[index + 4] = false;
+                                  count--;
+                                });
+                                print('unmarking $count');
+                              } else if (selectedDays[index + 4] == false) {
+                                if (count < widget.weekDaysSelected) {
                                   setState(() {
-                                    selectedDays[index + 4] = false;
-                                    count--;
+                                    selectedDays[index + 4] = true;
+                                    count++;
                                   });
-                                } else if (selectedDays[index + 4] == false) {
-                                  if (count < widget.weekDaysSelected) {
-                                    print('marking');
-                                    setState(() {
-                                      selectedDays[index + 4] = true;
-                                      count++;
-                                    });
-                                  } else {
-                                    _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                        content: Text(
-                                            'Change the Meal Subscription plan to with weekends or change the week days selected')));
-                                  }
+                                  print('marking $count');
+                                } else {
+                                  _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                      content: Text(
+                                          'Change the Meal Subscription plan to with weekends or change the week days selected')));
                                 }
-                              } else {
-                                _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                    content: Text(
-                                        'Change the Meal Subscription plan to with weekends')));
                               }
                             },
                             child: Container(
@@ -627,11 +322,13 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                           initialDate:
                               dateSelected ?? today.add(Duration(days: 2)),
                           firstDate: today.add(Duration(days: 2)));
-                      setState(() {
-                        dateSelected = selectedDateTime;
-                        date =
-                            '${dateSelected.year.toString()}-${dateSelected.month.toString().padLeft(2, '0')}-${dateSelected.day.toString().padLeft(2, '0')}';
-                      });
+                      if (selectedDateTime != null) {
+                        setState(() {
+                          dateSelected = selectedDateTime;
+                          date =
+                              '${dateSelected.year.toString()}-${dateSelected.month.toString().padLeft(2, '0')}-${dateSelected.day.toString().padLeft(2, '0')}';
+                        });
+                      }
                       print(date);
                     },
                     child: Material(
@@ -645,9 +342,9 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                                 DateFormat.E().format(dateSelected ??
                                         today.add(Duration(days: 2))) +
                                     ', ' +
-                                    DateFormat.MMM()
-                                        .add_d()
-                                        .format(dateSelected ?? today),
+                                    DateFormat.MMM().add_d().format(
+                                        dateSelected ??
+                                            today.add(Duration(days: 2))),
                                 style: TextStyle(
                                     fontFamily: 'RobotoCondensedReg',
                                     fontSize: 12,
@@ -677,35 +374,65 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                   borderRadius: BorderRadius.circular(8.0),
                   border: Border.all(width: 1, color: Colors.grey),
                   color: white),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Jane Doe',
-                        style: selectedTab,
-                      ),
-                      GestureDetector(
-                        onTap: getBottomSheet,
-                        child: Text('Change',
-                            style: unSelectedTab.copyWith(color: defaultGreen)),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                          '3 NewBridge Court\nChino Hills, CA 91709, United States',
-                          style: unSelectedTab)
-                    ],
-                  ),
-                ],
-              ),
+              child: isAddressSelected
+                  ? Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              Api.userInfo.firstName +
+                                  ' ' +
+                                  Api.userInfo.lastName,
+                              style: selectedTab,
+                            ),
+                            AddressButtonWithModal(
+                              callBackFunction: callback,
+                              child: Text('Change',
+                                  style: unSelectedTab.copyWith(
+                                      color: defaultGreen)),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(concatenatedAddress, style: unSelectedTab)
+                          ],
+                        ),
+                      ],
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            AddressButtonWithModal(
+                              callBackFunction: callback,
+                              child: Text('Select',
+                                  style: unSelectedTab.copyWith(
+                                      color: defaultGreen)),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text('Select An Address', style: unSelectedTab)
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                      ],
+                    ),
             ),
             SizedBox(
               width: double.infinity,
@@ -713,25 +440,30 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
               child: TextButton(
                 onPressed: () {
                   print('pressed');
-                  if (date != null) {
-                    selDays = [];
-                    for (int i = 0; i < selectedDays.length; i++) {
-                      if (selectedDays[i]) {
-                        selDays.add(days[i]);
+                  if (isAddressSelected) {
+                    if (date != null) {
+                      selDays = [];
+                      for (int i = 0; i < selectedDays.length; i++) {
+                        if (selectedDays[i]) {
+                          selDays.add(days[i]);
+                        }
                       }
+                      Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) => PrePaymentMealPlan(
+                                    categories: widget.categories,
+                                    selectedDate: dateSelected,
+                                    selectedDays: selDays,
+                                    mealPlan: widget.mealPackage,
+                                  )));
+                    } else {
+                      _scaffoldKey.currentState.showSnackBar(
+                          SnackBar(content: Text('Select a date first.')));
                     }
-                    Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                            builder: (context) => PrePaymentMealPlan(
-                                  categories: widget.categories,
-                                  selectedDate: dateSelected,
-                                  selectedDays: selDays,
-                                  mealPlan: widget.mealPackage,
-                                )));
                   } else {
-                    _scaffoldKey.currentState.showSnackBar(
-                        SnackBar(content: Text('Select a date first.')));
+                    _scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text('Select a Shipping address first')));
                   }
                 },
                 child: Text(

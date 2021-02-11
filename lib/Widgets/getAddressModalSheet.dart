@@ -28,13 +28,8 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
   double _height = 300;
   int whichAddress;
   int items = 4;
-  RegModel info;
-  String name;
 
   getUserInfo() async {
-//    info = Api.userInfo;
-//    name = info.firstName + ' ' + info.lastName;
-    name = Api.userInfo.name;
     addressPrimaryLine1.text = Api.userInfo.addressLine1;
     addressSecondaryLine1.text = Api.userInfo.addressSecondary1;
     addressPrimaryLine2.text = Api.userInfo.addressLine2;
@@ -216,12 +211,8 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                         color: defaultGreen,
                         child: Center(
                             child: Text(
-                          'UPDATE',
-                          style: TextStyle(
-                              fontFamily: 'RobotoReg',
-                              fontSize: 20,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
+                          'Update',
+                          style: TextStyle(fontWeight: FontWeight.w600),
                         )),
                       ),
                     ));
@@ -285,12 +276,8 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                             color: defaultGreen,
                             child: Center(
                                 child: Text(
-                              'DONE',
-                              style: TextStyle(
-                                  fontFamily: 'RobotoReg',
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
+                              'Done',
+                              style: TextStyle(fontWeight: FontWeight.w600),
                             )),
                           ),
                         ),
@@ -309,10 +296,10 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                               index == 0
                                   ? 'Primary Address'
                                   : 'Secondary Address',
-                              style: billingTextStyle.copyWith(
-                                  color: index == 0
-                                      ? defaultGreen
-                                      : Color(0xFF222222)),
+                              style: selectedTab.copyWith(
+                                  color:
+                                      index == 0 ? defaultGreen : Colors.black,
+                                  fontWeight: FontWeight.w400),
                             ),
                           ),
                           GestureDetector(
@@ -335,138 +322,81 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                                 }
                               }
                             },
-                            child: Material(
-                                borderRadius: BorderRadius.circular(5.0),
-                                shadowColor: Color(0x26000000),
-                                elevation: 2,
-                                color: Colors.white,
-                                child: Container(
-                                    height: 100.0,
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 20, horizontal: 25),
-                                    decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: Color(0x26000000),
-                                              blurRadius: 5)
+                            child: Container(
+                                height: 100,
+                                decoration: BoxDecoration(
+                                    color: selectedAddressIndex == index
+                                        ? defaultGreen
+                                        : white,
+                                    border: Border.all(color: defaultGreen),
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: (addressPrimaryLine1.text.isNotEmpty ||
+                                            addressSecondaryLine1
+                                                .text.isNotEmpty) &&
+                                        (addressPrimaryLine2.text.isNotEmpty ||
+                                            addressSecondaryLine2
+                                                .text.isNotEmpty)
+                                    ? Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(15.0),
+                                                child: Text(
+                                                  index == 0
+                                                      ? addressPrimaryLine1
+                                                              .text +
+                                                          ',\n' +
+                                                          addressPrimaryLine2
+                                                              .text
+                                                      : addressSecondaryLine1
+                                                              .text +
+                                                          ',\n' +
+                                                          addressSecondaryLine2
+                                                              .text,
+                                                  style: selectedTab.copyWith(
+                                                      color:
+                                                          selectedAddressIndex ==
+                                                                  index
+                                                              ? white
+                                                              : defaultGreen,
+                                                      fontWeight:
+                                                          FontWeight.w400),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ],
-                                        borderRadius:
-                                            BorderRadius.circular(5.0),
-                                        color: selectedAddressIndex == index
-                                            ? defaultGreen
-                                            : Colors.white),
-                                    child: (addressPrimaryLine1
-                                                    .text.isNotEmpty ||
-                                                addressSecondaryLine1
-                                                    .text.isNotEmpty) &&
-                                            (addressPrimaryLine2
-                                                    .text.isNotEmpty ||
-                                                addressSecondaryLine2
-                                                    .text.isNotEmpty)
-                                        ? Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                      )
+                                    : Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
                                             children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    '${name}',
-                                                    style: billingTextStyle
-                                                        .copyWith(
-                                                      fontSize: 14,
-                                                      color:
-                                                          selectedAddressIndex ==
-                                                                  index
-                                                              ? white
-                                                              : Color(
-                                                                  0xFF222222),
-                                                    ),
-                                                  ),
-                                                  Text('Select',
-                                                      style: billingTextStyle
-                                                          .copyWith(
-                                                              fontSize: 14,
-                                                              color:
-                                                                  defaultGreen)),
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    index == 0
-                                                        ? addressPrimaryLine1
-                                                                .text +
-                                                            ',\n' +
-                                                            addressPrimaryLine2
-                                                                .text
-                                                        : addressSecondaryLine1
-                                                                .text +
-                                                            ',\n' +
-                                                            addressSecondaryLine2
-                                                                .text,
-                                                    style: billingTextStyle
-                                                        .copyWith(
-                                                      fontSize: 14,
-                                                      fontStyle:
-                                                          FontStyle.normal,
-                                                      color:
-                                                          selectedAddressIndex ==
-                                                                  index
-                                                              ? white
-                                                              : Color(
-                                                                  0xFF222222),
-                                                    ),
-                                                  ),
-                                                ],
+                                              TextButton(
+                                                child: Text('Add',
+                                                    style: TextStyle(
+                                                      color: darkGreen,
+                                                    )),
+                                                onPressed: () {
+                                                  Navigator.pop(context, false);
+                                                  addAddressBottomSheet();
+                                                },
                                               ),
                                             ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [Text('Not Available')],
                                           )
-                                        : Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  TextButton(
-                                                    child: Text('ADD',
-                                                        style: billingTextStyle
-                                                            .copyWith(
-                                                                fontSize: 14,
-                                                                color:
-                                                                    defaultGreen)),
-                                                    onPressed: () {
-                                                      Navigator.pop(
-                                                          context, false);
-                                                      addAddressBottomSheet();
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text('Not Available',
-                                                      style: billingTextStyle
-                                                          .copyWith(
-                                                              fontSize: 14,
-                                                              fontStyle:
-                                                                  FontStyle
-                                                                      .normal,
-                                                              color: Color(
-                                                                  0xFF4E4848)))
-                                                ],
-                                              )
-                                            ],
-                                          ))),
+                                        ],
+                                      )),
                           )
                         ],
                       ),

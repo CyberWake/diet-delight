@@ -1,8 +1,9 @@
 import 'package:diet_delight/Models/registrationModel.dart';
+import 'package:diet_delight/Widgets/getAddressModalSheet.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dropdown/flutter_dropdown.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DashBoardUserInfoPage extends StatefulWidget {
   @override
@@ -13,8 +14,6 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
   FocusNode fullName = FocusNode();
   FocusNode phoneNo = FocusNode();
   FocusNode mail = FocusNode();
-  FocusNode addressLine1 = FocusNode();
-  FocusNode addressLine2 = FocusNode();
   FocusNode passCur = FocusNode();
   FocusNode passNew = FocusNode();
   FocusNode passNewConf = FocusNode();
@@ -22,16 +21,9 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
   TextEditingController name = TextEditingController();
   TextEditingController mobileNo = TextEditingController();
   TextEditingController email = TextEditingController();
-  TextEditingController addressPrimaryLine1 = TextEditingController();
-  TextEditingController addressSecondaryLine1 = TextEditingController();
-  TextEditingController addressPrimaryLine2 = TextEditingController();
-  TextEditingController addressSecondaryLine2 = TextEditingController();
   TextEditingController curPassword = TextEditingController();
   TextEditingController newPassword = TextEditingController();
   TextEditingController newConfPassword = TextEditingController();
-  String addressType = 'Home';
-  List<String> types = ['Home', 'Work'];
-
   double _height = 300;
   int items = 4;
   RegModel info;
@@ -43,46 +35,18 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
     name.text = info.firstName + ' ' + info.lastName;
     mobileNo.text = info.mobile;
     email.text = info.email;
-    addressPrimaryLine1.text = info.addressLine1;
-    addressSecondaryLine1.text = info.addressSecondary1;
-    addressPrimaryLine2.text = info.addressLine2;
-    addressSecondaryLine2.text = info.addressSecondary2;
+  }
+
+  callback(address) {
+    setState(() {
+      concatenatedAddress = address;
+    });
   }
 
   @override
   void initState() {
     getUserInfo();
     super.initState();
-    addressLine1.addListener(() {
-      if (addressLine1.hasFocus) {
-        print('height increased');
-        setState(() {
-          items = 5;
-          _height = 550;
-        });
-      } else if (!addressLine1.hasFocus) {
-        print('height decreased');
-        setState(() {
-          items = 4;
-          _height = 300;
-        });
-      }
-    });
-    addressLine2.addListener(() {
-      if (addressLine2.hasFocus) {
-        print('height increased');
-        setState(() {
-          items = 5;
-          _height = 550;
-        });
-      } else if (!addressLine2.hasFocus) {
-        print('height decreased');
-        setState(() {
-          items = 4;
-          _height = 300;
-        });
-      }
-    });
     passCur.addListener(() {
       if (passCur.hasFocus) {
         print('height increased');
@@ -219,7 +183,17 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                       padding: const EdgeInsets.only(top: 5, bottom: 5),
                       child: Center(
                         child: Text(
-                          text,
+                          fieldName == 'Password'
+                              ? text
+                              : fieldName == 'Address'
+                                  ? primaryAddressLine1 +
+                                      ',\n' +
+                                      primaryAddressLine2
+                                  : fieldName == 'Secondary Address'
+                                      ? secondaryAddressLine1 +
+                                          ',\n' +
+                                          secondaryAddressLine2
+                                      : 'Not available',
                           style: TextStyle(
                               color: defaultGreen,
                               fontSize: 18,
@@ -229,12 +203,21 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                     ),
                   ),
                   Flexible(
-                    child: IconButton(
-                        icon: Icon(
-                          Icons.edit,
-                          size: 15,
-                        ),
-                        onPressed: onPress),
+                    child: fieldName == 'Address' ||
+                            fieldName == 'Secondary Address'
+                        ? AddressButtonWithModal(
+                            addNewAddressOnly: true,
+                            callBackFunction: callback,
+                            child: Icon(
+                              Icons.edit,
+                              size: 15,
+                            ))
+                        : IconButton(
+                            icon: Icon(
+                              Icons.edit,
+                              size: 15,
+                            ),
+                            onPressed: onPress),
                   )
                 ],
               ))
@@ -363,132 +346,6 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
         });
   }
 
-  void getBottomSheet({int address}) {
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        builder: (builder) {
-          return Container(
-            height: _height,
-            color: Colors.transparent,
-            child: Container(
-                padding: EdgeInsets.only(top: 30),
-                child: Column(
-                    children: List.generate(items, (index) {
-                  if (index == 0) {
-                    return Expanded(
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                          color: white,
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 4,
-                              color: Colors.black.withOpacity(0.25),
-                              spreadRadius: 0,
-                              offset: const Offset(0.0, 0.0),
-                            )
-                          ],
-                        ),
-                        child: DropDown<String>(
-                          showUnderline: false,
-                          items: types,
-                          onChanged: (String choice) {
-                            addressType = choice;
-                          },
-                          initialValue: addressType,
-                          isExpanded: true,
-                        ),
-                      ),
-                    );
-                  } else if (index < 3) {
-                    return Expanded(
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                          color: white,
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 4,
-                              color: Colors.black.withOpacity(0.25),
-                              spreadRadius: 0,
-                              offset: const Offset(0.0, 0.0),
-                            )
-                          ],
-                        ),
-                        child: TextFormField(
-                            focusNode: index == 1 ? addressLine1 : addressLine2,
-                            onChanged: (value) {
-                              if (index == 1) {
-                                if (address == 0) {
-                                  addressPrimaryLine1.text = value;
-                                } else {
-                                  addressSecondaryLine1.text = value;
-                                }
-                              } else {
-                                if (address == 0) {
-                                  addressPrimaryLine2.text = value;
-                                } else {
-                                  addressSecondaryLine2.text = value;
-                                }
-                              }
-                            },
-                            onFieldSubmitted: (done) {
-                              if (index == 1) {
-                                Focus.of(context).requestFocus(addressLine2);
-                              }
-                            },
-                            style: authInputTextStyle,
-                            textAlign: TextAlign.center,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            decoration: authInputFieldDecoration.copyWith(
-                                hintText: index == 1
-                                    ? 'House No, Street Name'
-                                    : 'City')),
-                      ),
-                    );
-                  } else if (index == 3) {
-                    return Expanded(
-                        child: GestureDetector(
-                      onTap: () {
-                        if (address == 0) {
-                          print(addressPrimaryLine1.text +
-                              ' ' +
-                              addressPrimaryLine2.text);
-                        } else if (address == 1) {
-                          print(addressSecondaryLine1.text +
-                              ' ' +
-                              addressSecondaryLine2.text);
-                        }
-                        setState(() {});
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(top: 20),
-                        color: defaultGreen,
-                        child: Center(
-                            child: Text(
-                          'Update',
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        )),
-                      ),
-                    ));
-                  } else {
-                    return SizedBox(
-                      height: 250,
-                    );
-                  }
-                }))),
-          );
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -517,30 +374,19 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
               generateStaticTextField(
                   fieldName: 'Email', fieldValue: email.text),
               generateOnTapFields(
-                  fieldName: 'Address',
-                  text: addressPrimaryLine1.text.isNotEmpty
-                      ? addressPrimaryLine1.text +
-                          ' ' +
-                          addressPrimaryLine2.text
-                      : 'Address',
-                  onPress: () {
-                    getBottomSheet(address: 0);
-                  }),
+                  fieldName: 'Address', text: 'Address', onPress: () {}),
               generateOnTapFields(
                   fieldName: 'Secondary Address',
-                  text: addressSecondaryLine1.text.isNotEmpty
-                      ? addressSecondaryLine1.text +
-                          ' ' +
-                          addressSecondaryLine2.text
-                      : 'Address',
-                  onPress: () {
-                    getBottomSheet(address: 1);
-                  }),
+                  text: 'Address',
+                  onPress: () {}),
             ],
           ),
         ),
         GestureDetector(
-          onTap: () {
+          onTap: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            String password = prefs.getString('password');
+            setState(() {});
             List<String> nameBreak = name.text.split(' ');
             RegModel updateUserData = RegModel(
               name: name.text,
@@ -548,19 +394,22 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
               lastName: nameBreak[nameBreak.length - 1],
               email: email.text,
               mobile: mobileNo.text,
-              addressLine1: addressPrimaryLine1.text,
-              addressSecondary1: addressSecondaryLine1.text,
-              addressLine2: addressPrimaryLine2.text,
-              addressSecondary2: addressSecondaryLine2.text,
-              password: passwordUpdated ? newConfPassword.text : info.password,
+              password: password,
+              addressLine1: primaryAddressLine1,
+              addressSecondary1: secondaryAddressLine1,
+              addressLine2: primaryAddressLine2,
+              addressSecondary2: secondaryAddressLine2,
             );
             updateUserData.show();
-            /*_apiCall
-                .putUserInfo(updateUserData)
-                .whenComplete(() => getUserInfo());*/
+            bool result = await _apiCall.putUserInfo(updateUserData);
             setState(() {});
-            Scaffold.of(context).showSnackBar(
-                SnackBar(content: Text('User Info Updated Successfully')));
+            if (result) {
+              Scaffold.of(context).showSnackBar(
+                  SnackBar(content: Text('User Info Updated Successfully')));
+            } else {
+              Scaffold.of(context).showSnackBar(
+                  SnackBar(content: Text('User Info Update Failed')));
+            }
           },
           child: Container(
             height: 45,
