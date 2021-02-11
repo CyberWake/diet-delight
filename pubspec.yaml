@@ -25,6 +25,10 @@ dependencies:
   syncfusion_flutter_datepicker: ^18.4.41-beta
   font_awesome_flutter: ^8.11.0
   url_launcher: ^5.7.10
+  flutter_downloader: ^1.5.2
+  path_provider: ^1.6.9
+  permission_handler: ^4.0.0
+#  flutter_svg: ^0.17.1
 
 dev_dependencies:
   flutter_test:
@@ -45,3 +49,6 @@ flutter:
     - family: ABeeZeeReg
       fonts:
         - asset: fonts/ABeeZee-Regular.ttf
+    - family: MontserratMed
+      fonts:
+        - asset: fonts/Montserrat-Medium.ttf

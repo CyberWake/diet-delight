@@ -156,14 +156,13 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
               flex: 3,
               child: Container(
                 margin: EdgeInsets.only(right: 20),
-                decoration: authFieldDecoration,
                 child: CachedNetworkImage(
                   imageUrl:
                       foodItem.picture ?? "http://via.placeholder.com/350x150",
                   imageBuilder: (context, imageProvider) => Container(
                     height: 60,
                     decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
+                      shape: BoxShape.circle,
                       image: DecorationImage(
                         image: imageProvider,
                         fit: BoxFit.cover,
@@ -191,7 +190,7 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
         appBar: AppBar(
           elevation: 0.0,
           backgroundColor: white,
-          centerTitle: true,
+          centerTitle: false,
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -267,12 +266,17 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                                     decoration: BoxDecoration(
                                       boxShadow: [
                                         BoxShadow(
-                                          blurRadius: 4,
-                                          color: Colors.grey[500],
-                                          spreadRadius: 0,
-                                          offset: const Offset(0.0, 0.0),
-                                        )
+                                            color: Color(0x26000000),
+                                            blurRadius: 5)
                                       ],
+//                                      boxShadow: [
+//                                        BoxShadow(
+//                                          blurRadius: 4,
+//                                          color: Colors.grey[500],
+//                                          spreadRadius: 0,
+//                                          offset: const Offset(0.0, 0.0),
+//                                        )
+//                                      ],
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
                                         image: imageProvider,
@@ -298,13 +302,16 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                       decoration: BoxDecoration(
                         color: white,
                         boxShadow: [
-                          BoxShadow(
-                            blurRadius: 4,
-                            color: Colors.black.withOpacity(0.25),
-                            spreadRadius: 0,
-                            offset: const Offset(0.0, 0.0),
-                          )
+                          BoxShadow(color: Color(0x26000000), blurRadius: 5)
                         ],
+//                        boxShadow: [
+//                          BoxShadow(
+//                            blurRadius: 4,
+//                            color: Colors.black.withOpacity(0.25),
+//                            spreadRadius: 0,
+//                            offset: const Offset(0.0, 0.0),
+//                          )
+//                        ],
                       ),
                       child: Center(
                         child: TabBar(
@@ -316,7 +323,7 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                           indicatorWeight: 3.0,
                           indicatorSize: TabBarIndicatorSize.label,
                           labelColor: Colors.black,
-                          labelPadding: EdgeInsets.symmetric(horizontal: 50),
+                          labelPadding: EdgeInsets.symmetric(horizontal: 30),
                           unselectedLabelStyle: pageViewTabSelected,
                           unselectedLabelColor: Colors.grey,
                           tabs:
@@ -370,7 +377,7 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                     onExpansionChanged: (bool expanded) {
                       print(parentId + index);
                     },
-                    initiallyExpanded: index == 0 ? true : false,
+                    initiallyExpanded: true,
                     tilePadding: EdgeInsets.all(0),
                     title: Padding(
                       padding: const EdgeInsets.only(left: 15.0),
