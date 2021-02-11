@@ -78,7 +78,8 @@ class _FavouritesPageState extends State<FavouritesPage> {
                   margin: EdgeInsets.only(right: 20),
                   decoration: authFieldDecoration,
                   child: CachedNetworkImage(
-                    imageUrl: foodItem.picture ?? "a",
+                    imageUrl: foodItem.picture ??
+                        "http://via.placeholder.com/350x150",
                     imageBuilder: (context, imageProvider) => Container(
                       height: 60,
                       decoration: BoxDecoration(

@@ -34,33 +34,6 @@ class _EditMealMenuState extends State<EditMealMenu>
   List<FoodItemModel> items = List();
   List<FoodItemModel> expansionFoodItems = List();
   List<String> dates = [];
-  List<String> time = ['Breakfast', 'Lunch', 'Dinner'];
-  List<List<FoodItemModel>> category = [
-    [
-      FoodItemModel(
-          isVeg: true, foodName: 'Crunchy Chickpea Salad', isSelected: true),
-      FoodItemModel(
-          isVeg: true, foodName: 'Crunchy Chickpea Salad', isSelected: false),
-      FoodItemModel(
-          isVeg: true, foodName: 'Crunchy Chickpea Salad', isSelected: false),
-    ],
-    [
-      FoodItemModel(
-          isVeg: true, foodName: 'Crunchy Chickpea Salad', isSelected: false),
-      FoodItemModel(
-          isVeg: true, foodName: 'Crunchy Chickpea Salad', isSelected: true),
-      FoodItemModel(
-          isVeg: true, foodName: 'Crunchy Chickpea Salad', isSelected: false),
-    ],
-    [
-      FoodItemModel(
-          isVeg: true, foodName: 'Crunchy Chickpea Salad', isSelected: false),
-      FoodItemModel(
-          isVeg: true, foodName: 'Crunchy Chickpea Salad', isSelected: false),
-      FoodItemModel(
-          isVeg: true, foodName: 'Crunchy Chickpea Salad', isSelected: true),
-    ]
-  ];
 
   void initState() {
     super.initState();
@@ -237,7 +210,8 @@ class _EditMealMenuState extends State<EditMealMenu>
                           radius: 45,
                           backgroundColor: Colors.white,
                           child: CachedNetworkImage(
-                            imageUrl: widget.plan.picture,
+                            imageUrl: widget.plan.picture ??
+                                "http://via.placeholder.com/350x150",
                             imageBuilder: (context, imageProvider) => Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
@@ -296,8 +270,11 @@ class _EditMealMenuState extends State<EditMealMenu>
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('Day ${(index + 1).toString()}'),
-                          Text(dates[index])
+                          Flexible(
+                              fit: FlexFit.loose,
+                              child: Text('Day ${(index + 1).toString()}')),
+                          Flexible(
+                              fit: FlexFit.loose, child: Text(dates[index]))
                         ],
                       ),
                     );
@@ -307,17 +284,17 @@ class _EditMealMenuState extends State<EditMealMenu>
             ),
             Expanded(
               flex: 9,
-              child: TabBarView(
-                  controller: _pageController,
-                  physics:
-                      ScrollPhysics(parent: NeverScrollableScrollPhysics()),
-                  children: List.generate(
-                      int.parse(widget.purchaseDetails.mealPlanDuration),
-                      (index) {
-                    return Container(
-                      child: menuUi(),
-                    );
-                  })),
+              child: isLoaded
+                  ? TabBarView(
+                      controller: _pageController,
+                      children: List.generate(
+                          int.parse(widget.purchaseDetails.mealPlanDuration),
+                          (index) {
+                        return Container(
+                          child: menuUi(day: index + 1),
+                        );
+                      }))
+                  : Center(child: CircularProgressIndicator()),
             )
           ]),
         ));
@@ -443,19 +420,19 @@ class _EditMealMenuState extends State<EditMealMenu>
     );
   }
 
-  Widget menuUi() {
+  Widget menuUi({int day}) {
     return ListView.separated(
       controller: _scrollController,
       shrinkWrap: true,
       itemCount: mainCategoryItems.length,
       itemBuilder: (BuildContext context, int indexMajor) {
         items = foodItems[indexMajor];
-        print(foodItems.length);
         return ExpansionTile(
             title: Text(
               mainCategoryItems[indexMajor].name,
               style: selectedTab.copyWith(fontSize: 28),
             ),
+            initiallyExpanded: indexMajor == 0 ? true : false,
             children: subCategoryItems[indexMajor].length == 0
                 ? List.generate(items.length + 1, (index) {
                     if (index == items.length) {
@@ -493,7 +470,10 @@ class _EditMealMenuState extends State<EditMealMenu>
                         ],
                       );
                     }
-                    return foodItemCard(items[index]);
+                    if (items[index].day == day) {
+                      return foodItemCard(items[index]);
+                    }
+                    return Container();
                   })
                 : List.generate(subCategoryItems[indexMajor].length,
                     (int indexMinor) {
@@ -511,6 +491,7 @@ class _EditMealMenuState extends State<EditMealMenu>
                           subCategoryItems[indexMajor][indexMinor].name,
                           style: selectedTab.copyWith(fontSize: 20),
                         ),
+                        initiallyExpanded: indexMinor == 0 ? true : false,
                         children: List.generate(items.length + 1, (index) {
                           if (index == items.length) {
                             return Column(
@@ -550,7 +531,10 @@ class _EditMealMenuState extends State<EditMealMenu>
                               ],
                             );
                           }
-                          return foodItemCard(items[index]);
+                          if (items[index].day == day) {
+                            return foodItemCard(items[index]);
+                          }
+                          return Container();
                         }));
                   }));
       },

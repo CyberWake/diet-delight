@@ -156,8 +156,9 @@ class _MealPlanPageState extends State<MealPlanPage> {
                                       Expanded(
                                           flex: 8,
                                           child: CachedNetworkImage(
-                                            imageUrl:
-                                                widget.mealPlans[index].picture,
+                                            imageUrl: widget
+                                                    .mealPlans[index].picture ??
+                                                "http://via.placeholder.com/350x150",
                                             imageBuilder:
                                                 (context, imageProvider) =>
                                                     Container(

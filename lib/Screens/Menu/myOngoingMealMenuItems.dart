@@ -149,7 +149,7 @@ class _PresentMealMenuState extends State<PresentMealMenu>
                   padding: EdgeInsets.only(top: 30),
                   child: Column(
                       children: List.generate(items, (index) {
-                    if (index < 2) {
+                    if (index < 1) {
                       return Expanded(
                         child: Container(
                           margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
@@ -185,7 +185,7 @@ class _PresentMealMenuState extends State<PresentMealMenu>
                           ),
                         ),
                       );
-                    } else if (index == 2) {
+                    } else if (index > 0) {
                       return Expanded(
                         child: Container(
                           margin: EdgeInsets.fromLTRB(50, 10, 50, 10),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:diet_delight/Screens/Auth%20Screens/login_signup_form.dart';
+import 'package:diet_delight/Screens/Auth%20Screens/newUserQuestionnaire.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/consutationOrdersPage.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/dashboardOnGoingOrders.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/dashboardUserInfoPage.dart';
@@ -142,7 +143,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   SizedBox(
                     width: 20,
                   ),
-                  /*GestureDetector(
+                  GestureDetector(
                     onTap: () {
                       Navigator.push(
                           context,
@@ -158,7 +159,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ),
                   SizedBox(
                     width: 10,
-                  ),*/
+                  ),
                 ]
               : [],
           bottom: page == 1 || page == 3 || page == 5

@@ -7,8 +7,10 @@ class RegModel {
   String firstName;
   String lastName;
   String mobile;
-  String address;
-  String addressSecondary;
+  String addressLine1;
+  String addressLine2;
+  String addressSecondary1;
+  String addressSecondary2;
 
   RegModel(
       {this.status = "0",
@@ -19,8 +21,10 @@ class RegModel {
       this.firstName,
       this.lastName,
       this.mobile,
-      this.address = "test",
-      this.addressSecondary = "test"});
+      this.addressLine1 = "test",
+      this.addressLine2 = 'test',
+      this.addressSecondary1 = "test",
+      this.addressSecondary2 = 'test'});
 
   Map<String, dynamic> toMap() {
     // ignore: unnecessary_cast
@@ -32,8 +36,10 @@ class RegModel {
       'first_name': this.firstName,
       'last_name': this.lastName,
       'mobile': this.mobile,
-      'address': this.address,
-      'address_secondary': this.addressSecondary,
+      'primary_address_line1': this.addressLine1,
+      'primary_address_line2': this.addressLine2,
+      'secondary_address_line1': this.addressSecondary1,
+      'secondary_address_line2': this.addressSecondary2,
     } as Map<String, dynamic>;
   }
 
@@ -47,8 +53,10 @@ class RegModel {
         firstName: item['first_name'],
         lastName: item['last_name'],
         mobile: item['mobile'],
-        address: item['address'],
-        addressSecondary: item['address_secondary']);
+        addressLine1: item['primary_address_line1'],
+        addressLine2: item['primary_address_line1'],
+        addressSecondary1: item['secondary_address_line1'],
+        addressSecondary2: item['secondary_address_line2']);
   }
 
   show() {
@@ -60,7 +68,9 @@ class RegModel {
     print('firstName: $firstName');
     print('lastName: $lastName');
     print('mobile: $mobile');
-    print('address: $address');
-    print('addressSecondary: $addressSecondary');
+    print('addressLine1: $addressLine1');
+    print('addressLine2: $addressLine2');
+    print('addressSecondaryLine1: $addressSecondary1');
+    print('addressSecondaryLine2: $addressSecondary2');
   }
 }

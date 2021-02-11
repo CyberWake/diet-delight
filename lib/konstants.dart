@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:diet_delight/services/apiCalls.dart';
 
 const Color defaultGreen = Color(0xFF8BC53F);
 const Color darkGreen = Color(0xFF079404);
@@ -56,7 +57,7 @@ const TextStyle tabTextStyle = TextStyle(
 );
 const TextStyle dateTabTextStyle = TextStyle(
   fontFamily: 'RobotoCondensedReg',
-  fontSize: 12,
+  fontSize: 11,
   fontWeight: FontWeight.normal,
 );
 
@@ -67,11 +68,39 @@ const appBarTextStyle = TextStyle(
   color: Colors.black,
 );
 
-const descriptionTextStyle =   TextStyle(
-fontFamily: 'RobotoCondensedReg',
-fontSize: 12,
-fontWeight: FontWeight.w400,
+const billingTextStyle = TextStyle(
+  fontFamily: 'ABeeZeeReg',
+  fontSize: 20,
+  fontStyle: FontStyle.italic,
+  fontWeight: FontWeight.normal,
+  color: Color(0xFF222222),
+);
 
+const descriptionTextStyle = TextStyle(
+  fontFamily: 'RobotoCondensedReg',
+  fontSize: 12,
+  fontWeight: FontWeight.w400,
+);
+
+const consultationSelectStyle = TextStyle(
+  fontFamily: 'MontserratMed',
+  fontSize: 15,
+  fontWeight: FontWeight.bold,
+  color: Colors.black,
+);
+
+const orderHistoryCardStyle = TextStyle(
+  fontFamily: 'RobotoReg',
+  fontSize: 13,
+  fontWeight: FontWeight.normal,
+  color: Colors.black,
+);
+
+const orderHistoryPopUpStyle = TextStyle(
+  fontFamily: 'MontserratMed',
+  fontSize: 16,
+  fontWeight: FontWeight.normal,
+  color: Colors.black,
 );
 
 BoxDecoration authFieldDecoration = BoxDecoration(
@@ -116,8 +145,8 @@ List<Widget> ddItems = List.generate(
                 index == 0
                     ? 'SILVER'
                     : index == 1
-                        ? 'Platinum'
-                        : 'Gold',
+                        ? 'PLATINUM'
+                        : 'GOLD',
                 style: TextStyle(
                   fontFamily: 'RobotoCondensedReg',
                   fontSize: 15,
@@ -168,3 +197,13 @@ var faqAnswers = [
   "Contact the provided phone number or try placing an order after some time.",
   "Contact the provided phone number or try placing an order after some time.",
 ];
+
+int selectedAddressIndex;
+bool isAddressSelected;
+String concatenatedAddress;
+String selectedAddressLine1;
+String selectedAddressLine2;
+String primaryAddressLine1 = Api.userInfo.addressLine1 ?? '';
+String primaryAddressLine2 = Api.userInfo.addressLine2 ?? '';
+String secondaryAddressLine1 = Api.userInfo.addressSecondary1 ?? '';
+String secondaryAddressLine2 = Api.userInfo.addressSecondary2 ?? '';
