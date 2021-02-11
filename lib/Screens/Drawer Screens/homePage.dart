@@ -283,10 +283,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 border: Border.all(width: 2.0, color: defaultGreen)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                    padding: EdgeInsets.only(bottom: 5, top: 0),
+                    padding: EdgeInsets.only(bottom: 15, top: 15),
                     child: Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -319,6 +319,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
+                Spacer(),
                 Padding(
                   padding: EdgeInsets.fromLTRB(5.0, 0, 5, 0),
                   child: Text(
@@ -333,7 +334,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 15),
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
