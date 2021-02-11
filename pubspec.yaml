@@ -13,6 +13,7 @@ dependencies:
   flutter_rounded_date_picker: ^1.0.5+1
   email_validator: ^1.0.6
   oauth2: ^1.6.3
+  flutter_secure_storage: ^3.3.5
   flutter_spinkit: ^4.1.2+1
   shared_preferences: ^0.5.12+4
   firebase_core: ^0.7.0

@@ -59,9 +59,13 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
   verifyPhoneNo() async {
     PhoneVerificationCompleted verificationCompleted =
         (PhoneAuthCredential phoneAuthCredential) async {
-      await _auth.signInWithCredential(phoneAuthCredential);
-      registerUser();
-      showSnackBar("Phone number automatically verified");
+      final User user =
+          (await _auth.signInWithCredential(phoneAuthCredential)).user;
+      if (user != null) {
+        widget.regDetails.setUid(user.uid);
+        registerUser();
+        showSnackBar("Phone number automatically verified");
+      }
     };
     print('ver complete check');
     PhoneVerificationFailed verificationFailed =
@@ -107,6 +111,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
 
       final User user = (await _auth.signInWithCredential(credential)).user;
       if (user != null) {
+        widget.regDetails.setUid(user.uid);
         registerUser();
       }
     } catch (e) {

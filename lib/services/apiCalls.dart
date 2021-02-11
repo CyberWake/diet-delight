@@ -1,4 +1,5 @@
 import 'dart:convert' as convert;
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:diet_delight/Models/consultationAppointmentModel.dart';
@@ -15,9 +16,14 @@ import 'package:diet_delight/Models/menuOrdersModel.dart';
 import 'package:diet_delight/Models/optionsFile.dart';
 import 'package:diet_delight/Models/questionnaireModel.dart';
 import 'package:diet_delight/Models/registrationModel.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:shared_preferences/shared_preferences.dart';
+
+var currentMealPlanCache = [];
+var mealPlanCacheData = [];
+var onGoingMealPurchaseCacheData = [];
 
 class Api {
   static var client;
@@ -41,6 +47,12 @@ class Api {
   Api._privateConstructor();
 
   static final Api instance = Api._privateConstructor();
+
+  reset() {
+    currentMealPlanCache = [];
+    mealPlanCacheData = [];
+    onGoingMealPurchaseCacheData = [];
+  }
 
   Future autoLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -113,7 +125,7 @@ class Api {
         userInfo = RegModel.fromMap(body);
         return userInfo;
       } else {
-        print(response.statusCode);
+        print(response.statusCode.toString() + 'error');
         return null;
       }
     } on Exception catch (e) {
@@ -279,6 +291,11 @@ class Api {
         print('Success getting meal plans');
         var body = convert.jsonDecode(response.body);
         var data = body['data'];
+
+        mealPlanCacheData.add(data);
+        await FlutterSecureStorage()
+            .write(key: 'plansData', value: jsonEncode(mealPlanCacheData));
+
         MealModel item = MealModel.fromMap(data);
         return item;
       } else {
@@ -307,6 +324,8 @@ class Api {
         print('Success getting question');
         var body = convert.jsonDecode(response.body);
         List data = body['data'];
+        print("||||||||||||||||||");
+        print(data);
         data.forEach((element) {
           QuestionnaireModel item = QuestionnaireModel.fromMap(element);
           itemsQuestionnaire.add(item);
@@ -324,7 +343,46 @@ class Api {
     }
   }
 
-  Future<void> postAnswerOptions(
+  /*Future<List<OptionsModel>> getOptions(questions) async {
+    List<OptionsModel> options = [];
+
+    print(questions.length);
+
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+
+      final response =
+          await http.get(uri + "/api/v1/answer-options", headers: headers);
+
+      if (response.statusCode == 200) {
+        print('Success getting Options');
+        print(response.statusCode);
+        print(response.body);
+
+        var body = convert.jsonDecode(response.body);
+        var data = body['data'];
+        data.forEach((element) {
+          OptionsModel item = OptionsModel.fromMap(element);
+          options.add(item);
+        });
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        //return [];
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return [];
+    }
+
+    print(options);
+    return options;
+  }*/
+
+  Future<void> sendOptionsAnswers(
       {answerId,
       optionSelected,
       questionId,
@@ -332,6 +390,7 @@ class Api {
       type,
       question,
       additionalText}) async {
+    print("sendOptionsAnswers");
     var userId = userInfo.id;
     try {
       Map<String, String> headers = {
@@ -339,17 +398,31 @@ class Api {
         HttpHeaders.authorizationHeader: "Bearer $token"
       };
       Map<String, String> body = {
-        "user_id": userId,
-        "question_id": "1",
-        "answer_option_id": "1",
-        "answer": "My diet is ...",
-        "question_question": "What is Gender?",
-        "question_type": "0",
-        "question_additional_text": "0",
-        "answer_option_option": "Male"
+        "user_id": userId.toString(),
+        "question_id": questionId.toString(),
+        "answer_option_id": answerId.toString(),
+        "answer": answer,
+        "question_question": question,
+        "question_type": type.toString(),
+        "question_additional_text": additionalText,
+        "answer_option_option": answer
       };
+      print(body);
+      String encodedBody = convert.jsonEncode(body);
+      //
+      // Map<String,String> body = {
+      //   "user_id": userId,
+      //   "question_id": questionId,
+      //   "answer_option_id": answerId.toString(),
+      //   "answer": answer,
+      //   "question_question": question,
+      //   "question_type": type.toString(),
+      //   "question_additional_text": additionalText.toString(),
+      //   "answer_option_option": optionSelected.toString()
+      // };
+
       final response = await http.post(uri + '/api/v1/my-answers',
-          headers: headers, body: body.toString());
+          headers: headers, body: encodedBody);
       print(response.statusCode);
       print(response.body);
       if (response.statusCode == 200) {
@@ -478,8 +551,16 @@ class Api {
           itemsOrderedFood.add(item);
         });
         if (itemsOrderedFood.length > 0) {
+          currentMealPlanCache.add(true);
+          await FlutterSecureStorage().write(
+              key: 'ordersPresentData',
+              value: jsonEncode(currentMealPlanCache));
           return true;
         } else {
+          currentMealPlanCache.add(false);
+          await FlutterSecureStorage().write(
+              key: 'ordersPresentData',
+              value: jsonEncode(currentMealPlanCache));
           return false;
         }
       } else {
@@ -655,6 +736,7 @@ class Api {
   Future<List<MealPurchaseModel>> getOngoingMealPurchases(
       DateTime endDate) async {
     itemPresentMealPurchases = [];
+    var cachedData = [];
     Map<String, String> headers = {
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.authorizationHeader: "Bearer $token"
@@ -665,14 +747,21 @@ class Api {
       print('success getting present meal purchases');
       var body = convert.jsonDecode(response.body);
       List data = body['data'];
+      onGoingMealPurchaseCacheData.add(data);
+      await FlutterSecureStorage().write(
+          key: 'ordersData',
+          value: convert.jsonEncode(onGoingMealPurchaseCacheData));
       data.forEach((element) {
         MealPurchaseModel item = MealPurchaseModel.fromMap(element);
         if (item.endDate != null) {
           if (DateTime.parse(item.endDate).compareTo(endDate) > 0) {
+            cachedData.add(element);
             itemPresentMealPurchases.add(item);
           }
         }
       });
+      await FlutterSecureStorage().write(
+          key: 'onGoingOrdersDataMain', value: convert.jsonEncode(cachedData));
       return itemPresentMealPurchases;
     } else {
       print(response.statusCode);

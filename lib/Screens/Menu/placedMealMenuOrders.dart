@@ -297,88 +297,52 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter updateBottomSheet) {
             return Container(
-              height: MediaQuery.of(context).size.height * 0.8,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Row(
+                height: MediaQuery.of(context).size.height * 0.8,
+                child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.max,
                     children: [
-                      addressCard(
-                          whichAddress: 'Primary Address',
-                          addressIndex: 0,
-                          update: updateBottomSheet),
-                      addressCard(
-                          whichAddress: 'Secondary Address',
-                          addressIndex: 1,
-                          update: updateBottomSheet),
-                    ],
-                  ),
-                  SfDateRangePicker(
-                    showNavigationArrow: true,
-                    todayHighlightColor: defaultGreen,
-                    toggleDaySelection: true,
-                    headerHeight: 60,
-                    initialSelectedDates: addressCalendar
-                        ? selectedAddressIndex == 0
-                            ? deliverPrimary
-                            : deliverSecondary
-                        : breakDates,
-                    selectionColor: defaultGreen,
-                    monthCellStyle: DateRangePickerMonthCellStyle(
-                        todayCellDecoration: BoxDecoration(
-                            border: Border.all(color: defaultGreen),
-                            shape: BoxShape.circle),
-                        todayTextStyle: TextStyle(
-                          color: defaultGreen,
-                        ),
-                        specialDatesDecoration: BoxDecoration(
-                            color: Colors.deepPurple,
-                            border: Border.all(color: defaultGreen),
-                            shape: BoxShape.circle),
-                        blackoutDateTextStyle: const TextStyle(
-                            color: Colors.grey,
-                            decoration: TextDecoration.lineThrough)),
-                    monthViewSettings: DateRangePickerMonthViewSettings(
-                        numberOfWeeksInView:
-                            ((DateTime.parse(widget.purchaseDetails.endDate))
-                                            .difference(startDate)
-                                            .inDays /
-                                        7)
-                                    .round() +
-                                1,
-                        specialDates: addressCalendar
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          addressCard(
+                              whichAddress: 'Primary Address',
+                              addressIndex: 0,
+                              update: updateBottomSheet),
+                          addressCard(
+                              whichAddress: 'Secondary Address',
+                              addressIndex: 1,
+                              update: updateBottomSheet),
+                        ],
+                      ),
+                      SfDateRangePicker(
+                        showNavigationArrow: true,
+                        todayHighlightColor: defaultGreen,
+                        toggleDaySelection: true,
+                        headerHeight: 60,
+                        initialSelectedDates: addressCalendar
                             ? selectedAddressIndex == 0
                                 ? deliverPrimary
                                 : deliverSecondary
                             : breakDates,
-                        blackoutDates: planSelectedOffDays),
-                    enablePastDates: false,
-                    minDate: DateTime.parse(widget.purchaseDetails.startDate),
-                    maxDate: DateTime.parse(widget.purchaseDetails.endDate),
-                    view: DateRangePickerView.month,
-                    onSelectionChanged:
-                        (DateRangePickerSelectionChangedArgs args) {
-                      if (args.value != null) {
-                        _onSelectionChanged(args, addressCalendar);
-                      } else {
-                        setState(() {
-                          breakDates = [];
-                        });
-                      }
-                    },
-                    selectionMode: DateRangePickerSelectionMode.multiple,
-                  ),
-                  RaisedButton(
-                    onPressed: () {
-                      Navigator.pop(context, true);
-                    },
-                    child: Text('Done'),
-                  )
-                ],
-              ),
-            );
+                        enablePastDates: false,
+                        minDate:
+                            DateTime.parse(widget.purchaseDetails.startDate),
+                        maxDate: DateTime.parse(widget.purchaseDetails.endDate),
+                        view: DateRangePickerView.month,
+                        onSelectionChanged:
+                            (DateRangePickerSelectionChangedArgs args) {
+                          if (args.value != null) {
+                            _onSelectionChanged(args, addressCalendar);
+                          } else {
+                            setState(() {
+                              breakDates = [];
+                            });
+                          }
+                        },
+                        selectionMode: DateRangePickerSelectionMode.multiple,
+                      ),
+                    ]));
           });
         });
     done.then((value) {
@@ -545,17 +509,16 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      TextButton(
-                          onPressed: () async {
-                            await showCalendar(addressCalendar: false);
-                          },
-                          child: Text(
-                            'Address',
-                            style: TextStyle(
-                              color: darkGreen,
-                              decoration: TextDecoration.underline,
-                            ),
-                          )),
+                      AddressButtonWithModal(
+                        callBackFunction: callback,
+                        child: Text(
+                          'Address',
+                          style: TextStyle(
+                            color: darkGreen,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
                       Text('${widget.purchaseDetails.kCal} Calorie'),
                       TextButton(
                           onPressed: () async {

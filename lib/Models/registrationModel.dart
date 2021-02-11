@@ -1,6 +1,7 @@
 class RegModel {
   String status;
   String id;
+  String firebaseUid;
   String name;
   String email;
   String password;
@@ -15,6 +16,7 @@ class RegModel {
   RegModel(
       {this.status = "0",
       this.id,
+      this.firebaseUid,
       this.name,
       this.email,
       this.password,
@@ -33,6 +35,7 @@ class RegModel {
       return {
         'status': this.status,
         'name': this.name,
+        'firebase_uid': this.firebaseUid,
         'email': this.email,
         'first_name': this.firstName,
         'last_name': this.lastName,
@@ -46,6 +49,7 @@ class RegModel {
     }
     return {
       'status': this.status,
+      'firebase_uid': this.firebaseUid,
       'name': this.name,
       'email': this.email,
       'password': this.password,
@@ -59,6 +63,7 @@ class RegModel {
     return RegModel(
         status: item['status'].toString(),
         id: item['id'].toString(),
+        firebaseUid: item['firebase_uid'].toString(),
         name: item['name'],
         email: item['email'],
         password: item['password'],
@@ -74,6 +79,7 @@ class RegModel {
   show() {
     print('status: $status');
     print('id: $id');
+    print('firebase id: $firebaseUid');
     print('name: $name');
     print('email: $email');
     print('password: $password');
@@ -84,5 +90,9 @@ class RegModel {
     print('addressLine2: $addressLine2');
     print('addressSecondaryLine1: $addressSecondary1');
     print('addressSecondaryLine2: $addressSecondary2');
+  }
+
+  setUid(String uId) {
+    this.firebaseUid = uId;
   }
 }
