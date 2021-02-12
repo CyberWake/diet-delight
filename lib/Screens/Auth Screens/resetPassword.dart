@@ -1,11 +1,16 @@
 import 'dart:ui';
 
+import 'package:diet_delight/Models/registrationModel.dart';
+import 'package:diet_delight/Screens/Auth%20Screens/login_signup_form.dart';
 import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class ResetPassword extends StatefulWidget {
+  final RegModel userInfo;
+  ResetPassword({this.userInfo});
   @override
   _ResetPasswordState createState() => new _ResetPasswordState();
 }
@@ -14,17 +19,11 @@ class _ResetPasswordState extends State<ResetPassword> {
   TextEditingController password = TextEditingController();
   TextEditingController confirmPass = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  FocusNode pass;
-  FocusNode conPass;
-  FocusNode submit;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    pass = FocusNode();
-    conPass = FocusNode();
-    submit = FocusNode();
-  }
+  final _apiCall = Api.instance;
+  FocusNode pass = FocusNode();
+  FocusNode conPass = FocusNode();
+  FocusNode submit = FocusNode();
+  bool initialised = false;
 
   @override
   Widget build(BuildContext context) {
@@ -179,31 +178,59 @@ class _ResetPasswordState extends State<ResetPassword> {
                         width: double.infinity,
                         child: TextButton(
                           focusNode: submit,
-                          onPressed: () {
-                            if (password.text.isNotEmpty &&
-                                confirmPass.text.isNotEmpty) {
-                              if (password.text == confirmPass.text) {
-                                Navigator.pop(context);
-                                Navigator.pop(context);
+                          onPressed: () async {
+                            if (!initialised) {
+                              setState(() {
+                                initialised = true;
+                              });
+                              if (password.text.isNotEmpty &&
+                                  confirmPass.text.isNotEmpty) {
+                                if (password.text == confirmPass.text) {
+                                  widget.userInfo.setPassword(confirmPass.text);
+                                  widget.userInfo.show();
+                                  bool result = await _apiCall
+                                      .resetPassword(widget.userInfo);
+                                  if (result) {
+                                    _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                        content: Text(
+                                            'Password reset successful. Please Login')));
+                                    Future.delayed(Duration(milliseconds: 1500))
+                                        .then((value) {
+                                      Navigator.pushReplacement(
+                                          context,
+                                          CupertinoPageRoute(
+                                              builder: (context) =>
+                                                  AfterSplash()));
+                                    });
+                                  } else {
+                                    setState(() {
+                                      initialised = true;
+                                    });
+                                  }
+                                } else {
+                                  _scaffoldKey.currentState.showSnackBar(
+                                      SnackBar(
+                                          content:
+                                              Text('Passwords do not match')));
+                                }
                               } else {
                                 _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                    content: Text('Passwords do not match')));
+                                    content: Text(
+                                        'Passwords can\'t be left empty')));
                               }
-                            } else {
-                              _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                  content:
-                                      Text('Passwords can\'t be left empty')));
                             }
                           },
-                          child: Text(
-                            'CONFIRM',
-                            style: TextStyle(
-                              fontFamily: 'RobotoCondensedReg',
-                              fontSize: 20,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.white,
-                            ),
-                          ),
+                          child: !initialised
+                              ? Text(
+                                  'CONFIRM',
+                                  style: TextStyle(
+                                    fontFamily: 'RobotoCondensedReg',
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : CircularProgressIndicator(),
                           style: TextButton.styleFrom(
                               backgroundColor: defaultGreen,
                               shape: const RoundedRectangleBorder(

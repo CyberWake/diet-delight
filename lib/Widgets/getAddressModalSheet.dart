@@ -73,6 +73,7 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
   }
 
   void addAddressBottomSheet() {
+    whichAddress = 0;
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -184,6 +185,7 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                             await SharedPreferences.getInstance();
                         String password = prefs.getString('password');
                         RegModel updateUserData = RegModel(
+                          firebaseUid: Api.userInfo.firebaseUid,
                           name: Api.userInfo.firstName +
                               ' ' +
                               Api.userInfo.lastName,
@@ -198,13 +200,14 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                           addressSecondary2: secondaryAddressLine2,
                         );
                         updateUserData.show();
-                        Navigator.pop(context);
                         bool result = false;
                         if (!widget.addNewAddressOnly) {
                           result = await _apiCall.putUserInfo(updateUserData);
                         }
                         setState(() {});
+
                         widget.callBackFunction(concatenatedAddress);
+                        Navigator.pop(context);
                       },
                       child: Container(
                         margin: EdgeInsets.only(top: 20),

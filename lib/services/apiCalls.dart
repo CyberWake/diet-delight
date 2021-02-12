@@ -160,6 +160,27 @@ class Api {
     }
   }
 
+  Future<bool> resetPassword(RegModel user) async {
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+    };
+    String body = convert.jsonEncode(user.toMapForPassword());
+    print(body);
+    final response = await http.post(uri + '/api/v1/reset-password',
+        headers: headers, body: body);
+    if (response.statusCode == 200) {
+      print('Success resetting password');
+      return true;
+    } else if (response.statusCode == 400) {
+      print(response.statusCode);
+      return false;
+    } else {
+      print(response.statusCode);
+      print(response.body);
+      return false;
+    }
+  }
+
   Future<List<ConsultationModel>> getConsultationPackages() async {
     try {
       itemsConsultation = [];

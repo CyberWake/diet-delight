@@ -59,6 +59,15 @@ class RegModel {
     };
   }
 
+  Map<String, dynamic> toMapForPassword() {
+    // ignore: unnecessary_cast
+    return {
+      'firebase_uid': this.firebaseUid,
+      'username': this.mobile,
+      'new_password': this.password,
+    };
+  }
+
   factory RegModel.fromMap(Map item) {
     return RegModel(
         status: item['status'].toString(),
@@ -94,5 +103,9 @@ class RegModel {
 
   setUid(String uId) {
     this.firebaseUid = uId;
+  }
+
+  setPassword(String pass) {
+    this.password = pass;
   }
 }
