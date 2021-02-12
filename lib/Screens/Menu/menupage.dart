@@ -6,10 +6,6 @@ import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
 
-import '../../konstants.dart';
-import '../../konstants.dart';
-import '../../konstants.dart';
-
 class Menu extends StatefulWidget {
   final MenuModel menu;
   Menu({this.menu});
@@ -136,7 +132,8 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                     ),
                     Text(
                       foodItem.foodName,
-                      style: appBarTextStyle.copyWith(fontSize: 12,fontWeight: FontWeight.w400),
+                      style: appBarTextStyle.copyWith(
+                          fontSize: 12, fontWeight: FontWeight.w400),
                     ),
                     SizedBox(
                       height: 4,
@@ -145,7 +142,11 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                       alignment: Alignment.bottomRight,
                       padding: EdgeInsets.only(right: 10),
                       child: IconButton(
-                          onPressed: () {}, icon: Icon(Icons.favorite_border,size: 13,)),
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.favorite_border,
+                            size: 13,
+                          )),
                     )
                   ],
                 ),
@@ -209,7 +210,8 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                   Expanded(
                     flex: 3,
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 10.0, top: 5,bottom: 5,left: 35),
+                      padding: const EdgeInsets.only(
+                          right: 10.0, top: 5, bottom: 5, left: 35),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -228,18 +230,24 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                                         style:
                                             selectedTab.copyWith(fontSize: 18)),
                                   ),
-                                  SizedBox(height: 10,),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
                                   Flexible(
                                     fit: FlexFit.loose,
                                     child: Padding(
                                       padding: const EdgeInsets.only(
                                           left: 10.0, right: 10.0),
-                                      child: Text(widget.menu.description+widget.menu.description,style:  TextStyle(
-                                        fontFamily: 'RobotoCondensedReg',
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400,
-
-                                      ),maxLines: 3,),
+                                      child: Text(
+                                        widget.menu.description +
+                                            widget.menu.description,
+                                        style: TextStyle(
+                                          fontFamily: 'RobotoCondensedReg',
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                        maxLines: 3,
+                                      ),
                                     ),
                                   )
                                 ],
@@ -347,12 +355,17 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                 controller: _scrollController,
                 itemCount: subCategoryItems[parentId].length,
                 itemBuilder: (BuildContext context, int index) {
-                  if (parentId == 4) {
-                    itemIndex =
-                        parentId * subCategoryItems[parentId].length - 1;
+                  if (parentId == 2 && index == 0) {
+                    expansionFoodItems = foodItems[4];
+                  } else if (parentId == 2 && index == 1) {
+                    expansionFoodItems = foodItems[5];
+                  } else if (parentId == 4 && index == 0) {
+                    expansionFoodItems = foodItems[7];
+                  } else if (parentId == 4 && index == 1) {
+                    expansionFoodItems = foodItems[8];
+                  } else {
+                    expansionFoodItems = foodItems[parentId];
                   }
-                  expansionFoodItems = foodItems[itemIndex ?? parentId + index];
-                  print("||||||||||||||||||||||||||" + subCategoryItems[parentId][index].name);
                   return ExpansionTile(
                     onExpansionChanged: (bool expanded) {
                       print(parentId + index);
@@ -360,7 +373,7 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                     initiallyExpanded: index == 0 ? true : false,
                     tilePadding: EdgeInsets.all(0),
                     title: Padding(
-                      padding: const EdgeInsets.only(left : 15.0),
+                      padding: const EdgeInsets.only(left: 15.0),
                       child: Text(subCategoryItems[parentId][index].name,
                           style: selectedTab.copyWith(
                               fontSize: 14,

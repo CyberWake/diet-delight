@@ -9,7 +9,7 @@ class OptionsModel {
   factory OptionsModel.fromMap(Map item) {
     return OptionsModel(
         id: item['id'],
-        question_Id: item['question'],
+        question_Id: item['question_id'],
         option: item['option'],
         order: item['order']);
   }

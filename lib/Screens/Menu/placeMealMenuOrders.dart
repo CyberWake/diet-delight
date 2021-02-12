@@ -1,3 +1,5 @@
+import 'dart:convert' as convert;
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:date_format/date_format.dart';
 import 'package:diet_delight/Models/foodItemModel.dart';
@@ -5,45 +7,40 @@ import 'package:diet_delight/Models/mealModel.dart';
 import 'package:diet_delight/Models/mealPurchaseModel.dart';
 import 'package:diet_delight/Models/menuCategoryModel.dart';
 import 'package:diet_delight/Models/menuModel.dart';
+import 'package:diet_delight/Models/menuOrdersModel.dart';
+import 'package:diet_delight/Widgets/getAddressModalSheet.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
 
-class EditMealMenu extends StatefulWidget {
+class PlaceMealMenuOrders extends StatefulWidget {
   final MealPurchaseModel purchaseDetails;
   final MealModel plan;
-  EditMealMenu({this.purchaseDetails, this.plan});
+  PlaceMealMenuOrders({this.purchaseDetails, this.plan});
   @override
-  _EditMealMenuState createState() => _EditMealMenuState();
+  _PlaceMealMenuOrdersState createState() => _PlaceMealMenuOrdersState();
 }
 
-class _EditMealMenuState extends State<EditMealMenu>
+class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ScrollController _scrollController = new ScrollController();
-  TabController _pageController;
-  final _apiCall = Api.instance;
-  int menuId = 0;
-  bool isLoaded = false;
-  List<MenuModel> menuItems = List();
-  List<MenuCategoryModel> categoryItems = List();
+  TextEditingController notes = TextEditingController();
+  List<List<MenuCategoryModel>> subCategoryItems = List();
   List<MenuCategoryModel> mainCategoryItems = List();
   List<MenuCategoryModel> tempCategoryItems = List();
-  List<List<MenuCategoryModel>> subCategoryItems = List();
-  List<List<FoodItemModel>> foodItems = List();
-  List<FoodItemModel> items = List();
   List<FoodItemModel> expansionFoodItems = List();
+  List<MenuCategoryModel> categoryItems = List();
+  List<List<FoodItemModel>> foodItems = List();
+  List<FoodItemModel> itemsFood = List();
+  List<MenuModel> menuItems = List();
   List<String> dates = [];
-
-  void initState() {
-    super.initState();
-    menuId = widget.plan.menuId;
-    _pageController = TabController(
-        length: int.parse(widget.purchaseDetails.mealPlanDuration),
-        vsync: this);
-    getDates();
-    getData();
-  }
+  FocusNode note = FocusNode();
+  final _apiCall = Api.instance;
+  TabController _pageController;
+  MenuOrderModel foodItemOrder;
+  bool isLoaded = false;
+  int menuId = 0;
 
   getData() async {
     await getMenuCategories(menuId);
@@ -93,19 +90,11 @@ class _EditMealMenuState extends State<EditMealMenu>
             .whenComplete(() => i++));
       }
     }
-    print('subCategoryItems.length: ${subCategoryItems.length}');
-    print('mainCategoryItems.length: ${mainCategoryItems.length}');
-    print('categoryItems.length: ${categoryItems.length}');
-    print('foodCategories.length: ${foodItems.length}');
-
-    setState(() {
-      isLoaded = true;
-    });
-  }
-
-  getFoodItems(int categoryId) async {
-    expansionFoodItems = await _apiCall.getCategoryFoodItems(
-        menuId.toString(), categoryId.toString());
+    if (mounted) {
+      setState(() {
+        isLoaded = true;
+      });
+    }
   }
 
   getDates() {
@@ -130,6 +119,25 @@ class _EditMealMenuState extends State<EditMealMenu>
     }
   }
 
+  void initState() {
+    super.initState();
+    isAddressSelected = false;
+    concatenatedAddress = '';
+    selectedAddressIndex = -1;
+    menuId = widget.plan.menuId;
+    _pageController = TabController(
+        length: int.parse(widget.purchaseDetails.mealPlanDuration),
+        vsync: this);
+    getDates();
+    getData();
+  }
+
+  callback(address) {
+    setState(() {
+      concatenatedAddress = address;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,154 +157,176 @@ class _EditMealMenuState extends State<EditMealMenu>
               color: defaultGreen,
             ),
           ),
-          title: Text('Meal Plan', style: appBarTextStyle),
+          title: Text('Place meal orders', style: appBarTextStyle),
         ),
-        body: Container(
-          child: Column(children: [
-            Expanded(
-              flex: 4,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    flex: 7,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex: 3,
-                            child: Text(
-                              widget.purchaseDetails.mealPlanName,
-                              style: TextStyle(
-                                fontFamily: 'RobotoCondensedReg',
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 7,
-                            child: ClipRect(
+        body: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.876,
+            child: Column(children: [
+              Expanded(
+                flex: 4,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      flex: 7,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 3,
                               child: Text(
-                                widget.plan.details,
-                                style: authInputTextStyle.copyWith(
-                                    fontSize: 14, color: Colors.black),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                      flex: 3,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 4,
-                              color: Colors.grey[500],
-                              spreadRadius: 0,
-                              offset: const Offset(0.0, 0.0),
-                            )
-                          ],
-                        ),
-                        child: CircleAvatar(
-                          radius: 45,
-                          backgroundColor: Colors.white,
-                          child: CachedNetworkImage(
-                            imageUrl: widget.plan.picture ??
-                                "http://via.placeholder.com/350x150",
-                            imageBuilder: (context, imageProvider) => Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
+                                widget.purchaseDetails.mealPlanName,
+                                style: TextStyle(
+                                  fontFamily: 'RobotoCondensedReg',
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
-                            placeholder: (context, url) =>
-                                CircularProgressIndicator(),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
-                          ),
+                            Expanded(
+                              flex: 7,
+                              child: ClipRect(
+                                child: Text(
+                                  widget.plan.details,
+                                  style: authInputTextStyle.copyWith(
+                                      fontSize: 14, color: Colors.black),
+                                ),
+                              ),
+                            )
+                          ],
                         ),
-                      ))
-                ],
-              ),
-            ),
-            Expanded(
-                flex: 1, child: Text('${widget.purchaseDetails.kCal} Calorie')),
-            Expanded(
-              flex: 1,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: white,
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 4,
-                      color: Colors.black.withOpacity(0.25),
-                      spreadRadius: 0,
-                      offset: const Offset(0.0, 0.0),
-                    )
+                      ),
+                    ),
+                    Expanded(
+                        flex: 3,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 4,
+                                color: Colors.grey[500],
+                                spreadRadius: 0,
+                                offset: const Offset(0.0, 0.0),
+                              )
+                            ],
+                          ),
+                          child: CircleAvatar(
+                            radius: 45,
+                            backgroundColor: Colors.white,
+                            child: CachedNetworkImage(
+                              imageUrl: widget.plan.picture ??
+                                  "http://via.placeholder.com/350x150",
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              placeholder: (context, url) =>
+                                  CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
+                            ),
+                          ),
+                        ))
                   ],
                 ),
-                child: TabBar(
-                  isScrollable: true,
-                  controller: _pageController,
-                  onTap: (index) {},
-                  labelStyle:
-                      selectedTab.copyWith(color: Colors.black, fontSize: 14),
-                  indicatorColor: Colors.transparent,
-                  indicatorWeight: 3.0,
-                  indicatorSize: TabBarIndicatorSize.label,
-                  labelColor: Colors.black,
-                  labelPadding: EdgeInsets.symmetric(horizontal: 10),
-                  unselectedLabelStyle:
-                      unSelectedTab.copyWith(color: Colors.grey),
-                  unselectedLabelColor: Colors.grey,
-                  tabs: List.generate(
-                      int.parse(widget.purchaseDetails.mealPlanDuration),
-                      (index) {
-                    return Tab(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Flexible(
-                              fit: FlexFit.loose,
-                              child: Text('Day ${(index + 1).toString()}')),
-                          Flexible(
-                              fit: FlexFit.loose, child: Text(dates[index]))
-                        ],
-                      ),
-                    );
-                  }),
+              ),
+              Expanded(
+                  flex: 1,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('${widget.purchaseDetails.kCal} Calorie'),
+                      TextButton(
+                          onPressed: () {},
+                          child: AddressButtonWithModal(
+                            callBackFunction: callback,
+                            child: Text(
+                              'Address',
+                              style: TextStyle(
+                                color: darkGreen,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          )),
+                    ],
+                  )),
+              Expanded(
+                flex: 1,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: white,
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 4,
+                        color: Colors.black.withOpacity(0.25),
+                        spreadRadius: 0,
+                        offset: const Offset(0.0, 0.0),
+                      )
+                    ],
+                  ),
+                  child: TabBar(
+                    isScrollable: true,
+                    controller: _pageController,
+                    onTap: (index) {},
+                    labelStyle:
+                        selectedTab.copyWith(color: Colors.black, fontSize: 14),
+                    indicatorColor: Colors.transparent,
+                    indicatorWeight: 3.0,
+                    indicatorSize: TabBarIndicatorSize.label,
+                    labelColor: Colors.black,
+                    labelPadding: EdgeInsets.symmetric(horizontal: 10),
+                    unselectedLabelStyle:
+                        unSelectedTab.copyWith(color: Colors.grey),
+                    unselectedLabelColor: Colors.grey,
+                    tabs: List.generate(
+                        int.parse(widget.purchaseDetails.mealPlanDuration),
+                        (index) {
+                      return Tab(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                                fit: FlexFit.loose,
+                                child: Text('Day ${(index + 1).toString()}')),
+                            Flexible(
+                                fit: FlexFit.loose, child: Text(dates[index]))
+                          ],
+                        ),
+                      );
+                    }),
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 9,
-              child: isLoaded
-                  ? TabBarView(
-                      controller: _pageController,
-                      children: List.generate(
-                          int.parse(widget.purchaseDetails.mealPlanDuration),
-                          (index) {
-                        return Container(
-                          child: menuUi(day: index + 1),
-                        );
-                      }))
-                  : Center(child: CircularProgressIndicator()),
-            )
-          ]),
+              Expanded(
+                flex: 9,
+                child: isLoaded
+                    ? TabBarView(
+                        controller: _pageController,
+                        children: List.generate(
+                            int.parse(widget.purchaseDetails.mealPlanDuration),
+                            (index) {
+                          return Container(
+                            child: menuUi(day: index + 1),
+                          );
+                        }))
+                    : Center(child: CircularProgressIndicator()),
+              )
+            ]),
+          ),
         ));
   }
 
@@ -332,11 +362,29 @@ class _EditMealMenuState extends State<EditMealMenu>
                   SizedBox(
                     height: 4,
                   ),
-                  Container(
-                    alignment: Alignment.bottomRight,
-                    padding: EdgeInsets.only(right: 10),
-                    child: IconButton(
-                        onPressed: () {}, icon: Icon(Icons.favorite_border)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        alignment: Alignment.bottomLeft,
+                        padding: EdgeInsets.only(right: 10),
+                        child: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                notes.clear();
+                              });
+                              FocusScope.of(context).requestFocus(note);
+                            },
+                            icon: Icon(Icons.add_comment_outlined)),
+                      ),
+                      Container(
+                        alignment: Alignment.bottomRight,
+                        padding: EdgeInsets.only(right: 10),
+                        child: IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.favorite_border)),
+                      ),
+                    ],
                   )
                 ],
               ),
@@ -392,13 +440,38 @@ class _EditMealMenuState extends State<EditMealMenu>
                       ),
                       child: TextButton(
                         onPressed: () async {
-                          setState(() {
-                            if (item.isSelected == false) {
-                              item.change(true);
-                            } else if (item.isSelected == true) {
-                              item.change(false);
+                          if (!item.isSelected) {
+                            if (isAddressSelected) {
+                              foodItemOrder = MenuOrderModel(
+                                  foodItemId: item.id,
+                                  foodItemCategoryId: item.categoryId,
+                                  mealPurchaseId:
+                                      int.parse(widget.purchaseDetails.id),
+                                  menuItemDate: item.date,
+                                  menuItemDay: item.day,
+                                  foodItemName: item.foodName,
+                                  deliveryAddress: concatenatedAddress,
+                                  note:
+                                      notes.text.isEmpty ? "null" : notes.text);
+                              String body =
+                                  convert.jsonEncode(foodItemOrder.toMap());
+                              print(body);
+                              int result =
+                                  await _apiCall.postMenuOrder(foodItemOrder);
+                              if (result != null) {
+                                item.updateOrderItemId(result);
+                                item.change(true);
+                                setState(() {});
+                              }
+                            } else {
+                              _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                  content: Text('Select address first')));
                             }
-                          });
+                          } else {
+                            // TODO: delete selected item
+                            item.change(false);
+                            setState(() {});
+                          }
                         },
                         child: Text(item.isSelected ? 'Selected' : 'Select',
                             style: selectedTab.copyWith(
@@ -426,7 +499,7 @@ class _EditMealMenuState extends State<EditMealMenu>
       shrinkWrap: true,
       itemCount: mainCategoryItems.length,
       itemBuilder: (BuildContext context, int indexMajor) {
-        items = foodItems[indexMajor];
+        itemsFood = foodItems[indexMajor];
         return ExpansionTile(
             title: Text(
               mainCategoryItems[indexMajor].name,
@@ -434,8 +507,8 @@ class _EditMealMenuState extends State<EditMealMenu>
             ),
             initiallyExpanded: indexMajor == 0 ? true : false,
             children: subCategoryItems[indexMajor].length == 0
-                ? List.generate(items.length + 1, (index) {
-                    if (index == items.length) {
+                ? List.generate(itemsFood.length + 1, (index) {
+                    if (index == itemsFood.length) {
                       return Column(
                         children: [
                           Divider(),
@@ -464,27 +537,30 @@ class _EditMealMenuState extends State<EditMealMenu>
                                 ],
                               ),
                               child: TextFormField(
+                                focusNode: note,
+                                controller: notes,
+                                textDirection: TextDirection.ltr,
                                 decoration: authInputFieldDecoration.copyWith(
                                     hintText: 'Enter your note here'),
                               )),
                         ],
                       );
                     }
-                    if (items[index].day == day) {
-                      return foodItemCard(items[index]);
+                    if (itemsFood[index].day == day) {
+                      return foodItemCard(itemsFood[index]);
                     }
                     return Container();
                   })
                 : List.generate(subCategoryItems[indexMajor].length,
                     (int indexMinor) {
                     if (indexMajor == 2 && indexMinor == 0) {
-                      items = foodItems[4];
+                      itemsFood = foodItems[4];
                     } else if (indexMajor == 2 && indexMinor == 1) {
-                      items = foodItems[5];
+                      itemsFood = foodItems[5];
                     } else if (indexMajor == 4 && indexMinor == 0) {
-                      items = foodItems[7];
+                      itemsFood = foodItems[7];
                     } else if (indexMajor == 4 && indexMinor == 1) {
-                      items = foodItems[8];
+                      itemsFood = foodItems[8];
                     }
                     return ExpansionTile(
                         title: Text(
@@ -492,8 +568,8 @@ class _EditMealMenuState extends State<EditMealMenu>
                           style: selectedTab.copyWith(fontSize: 20),
                         ),
                         initiallyExpanded: indexMinor == 0 ? true : false,
-                        children: List.generate(items.length + 1, (index) {
-                          if (index == items.length) {
+                        children: List.generate(itemsFood.length + 1, (index) {
+                          if (index == itemsFood.length) {
                             return Column(
                               children: [
                                 Divider(),
@@ -524,6 +600,8 @@ class _EditMealMenuState extends State<EditMealMenu>
                                       ],
                                     ),
                                     child: TextFormField(
+                                      focusNode: note,
+                                      controller: notes,
                                       decoration:
                                           authInputFieldDecoration.copyWith(
                                               hintText: 'Enter your note here'),
@@ -531,8 +609,8 @@ class _EditMealMenuState extends State<EditMealMenu>
                               ],
                             );
                           }
-                          if (items[index].day == day) {
-                            return foodItemCard(items[index]);
+                          if (itemsFood[index].day == day) {
+                            return foodItemCard(itemsFood[index]);
                           }
                           return Container();
                         }));

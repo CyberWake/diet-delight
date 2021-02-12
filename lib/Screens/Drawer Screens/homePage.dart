@@ -33,7 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
           .getMealPlanWithDuration(durations[i].id)
           .whenComplete(() => i++);
       mealPackages.add(meal);
-      print(mealPackages[i - 1].length);
     }
   }
 
