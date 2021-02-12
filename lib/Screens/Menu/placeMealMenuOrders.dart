@@ -40,6 +40,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
   TabController _pageController;
   MenuOrderModel foodItemOrder;
   bool isLoaded = false;
+  double _height = 250;
   int menuId = 0;
 
   getData() async {
@@ -52,7 +53,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     setState(() {
       isLoaded = false;
     });
-    categoryItems = await _apiCall.getCategories(menuId);
+    categoryItems = await _apiCall.getMenuCategories(menuId);
     for (int i = 0; i < categoryItems.length; i++) {
       categoryItems[i].showNew();
       if (categoryItems[i].parent == 0) {
@@ -85,7 +86,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     if (categoryItems.isNotEmpty) {
       for (int i = 0; i < categoryItems.length;) {
         foodItems.add(await _apiCall
-            .getCategoryFoodItems(
+            .getMenuCategoryFoodItems(
                 menuId.toString(), categoryItems[i].id.toString())
             .whenComplete(() => i++));
       }
@@ -125,6 +126,19 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     concatenatedAddress = '';
     selectedAddressIndex = -1;
     menuId = widget.plan.menuId;
+    notes.addListener(() {
+      if (note.hasFocus) {
+        print('height increased');
+        setState(() {
+          _height = 495;
+        });
+      } else if (!note.hasFocus) {
+        print('height decreased');
+        setState(() {
+          _height = 250;
+        });
+      }
+    });
     _pageController = TabController(
         length: int.parse(widget.purchaseDetails.mealPlanDuration),
         vsync: this);
@@ -161,7 +175,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
         ),
         body: SingleChildScrollView(
           child: Container(
-            height: MediaQuery.of(context).size.height * 0.876,
+            height: MediaQuery.of(context).size.height * 0.88,
             child: Column(children: [
               Expanded(
                 flex: 4,
@@ -331,6 +345,27 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
   }
 
   Widget foodItemCard(FoodItemModel item) {
+    Widget button = GestureDetector(
+      onTap: () {
+        if (notes.text.isNotEmpty) {
+          print('note present');
+          setState(() {
+            print('note added');
+            item.updateNote(notes.text);
+          });
+        }
+        Navigator.pop(context);
+      }, //buttonFunction,
+      child: Container(
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height * 0.07,
+          color: defaultGreen,
+          child: Center(
+              child: Text(
+            'DONE',
+            style: selectedTab.copyWith(color: white),
+          ))),
+    );
     return Container(
       height: 123,
       margin: EdgeInsets.symmetric(horizontal: 10),
@@ -369,14 +404,59 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                         alignment: Alignment.bottomLeft,
                         padding: EdgeInsets.only(right: 10),
                         child: IconButton(
-                            onPressed: () {
+                            onPressed: () async {
                               setState(() {
                                 notes.clear();
                               });
-                              FocusScope.of(context).requestFocus(note);
+                              if (item.noteAdded != null) {
+                                setState(() {
+                                  notes.text = item.noteAdded;
+                                });
+                              }
+                              showModalBottomSheet(
+                                  context: context,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(50.0),
+                                        topRight: Radius.circular(50.0)),
+                                  ),
+                                  isScrollControlled: true,
+                                  builder: (BuildContext context) {
+                                    return noteModalSheet(button: button);
+                                  });
                             },
                             icon: Icon(Icons.add_comment_outlined)),
                       ),
+                      item.noteAdded != null
+                          ? GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  notes.clear();
+                                });
+                                if (item.noteAdded != null) {
+                                  setState(() {
+                                    notes.text = item.noteAdded;
+                                  });
+                                }
+                                showModalBottomSheet(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(50.0),
+                                          topRight: Radius.circular(50.0)),
+                                    ),
+                                    context: context,
+                                    isScrollControlled: true,
+                                    builder: (BuildContext context) {
+                                      return noteModalSheet(button: button);
+                                    });
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.only(right: 10),
+                                child: Text('Note added'),
+                              ),
+                            )
+                          : Container(),
                       Container(
                         alignment: Alignment.bottomRight,
                         padding: EdgeInsets.only(right: 10),
@@ -451,8 +531,9 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                   menuItemDay: item.day,
                                   foodItemName: item.foodName,
                                   deliveryAddress: concatenatedAddress,
-                                  note:
-                                      notes.text.isEmpty ? "null" : notes.text);
+                                  note: item.noteAdded.length == 0
+                                      ? "null"
+                                      : item.noteAdded);
                               String body =
                                   convert.jsonEncode(foodItemOrder.toMap());
                               print(body);
@@ -469,7 +550,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                             }
                           } else {
                             // TODO: delete selected item
-                            item.change(false);
+                            //item.change(false);
                             setState(() {});
                           }
                         },
@@ -493,6 +574,48 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     );
   }
 
+  noteModalSheet({Widget button}) {
+    return Container(
+      height: _height,
+      decoration: BoxDecoration(
+        color: white,
+        borderRadius: BorderRadius.only(
+            topRight: Radius.circular(50), topLeft: Radius.circular(50)),
+      ),
+      child: Column(
+        mainAxisAlignment:
+            _height == 250 ? MainAxisAlignment.end : MainAxisAlignment.start,
+        children: [
+          Container(
+              margin: EdgeInsets.all(30),
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              height: MediaQuery.of(context).size.height * 0.2,
+              decoration: BoxDecoration(
+                color: white,
+                borderRadius: BorderRadius.circular(5),
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 4,
+                    color: Colors.black.withOpacity(0.25),
+                    spreadRadius: 0,
+                    offset: const Offset(0.0, 0.0),
+                  )
+                ],
+              ),
+              child: TextFormField(
+                autofocus: true,
+                focusNode: note,
+                controller: notes,
+                textDirection: TextDirection.ltr,
+                decoration: authInputFieldDecoration.copyWith(
+                    hintText: 'Enter your note here'),
+              )),
+          button
+        ],
+      ),
+    );
+  }
+
   Widget menuUi({int day}) {
     return ListView.separated(
       controller: _scrollController,
@@ -507,45 +630,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
             ),
             initiallyExpanded: indexMajor == 0 ? true : false,
             children: subCategoryItems[indexMajor].length == 0
-                ? List.generate(itemsFood.length + 1, (index) {
-                    if (index == itemsFood.length) {
-                      return Column(
-                        children: [
-                          Divider(),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 15.0),
-                            child: Text(
-                              'Let us know if there is something you’d want us to know about your menu, we’ll pass it on to the chef.',
-                              style: authInputTextStyle.copyWith(
-                                  fontSize: 20, color: Colors.black),
-                            ),
-                          ),
-                          Container(
-                              margin: EdgeInsets.all(15),
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              height: MediaQuery.of(context).size.height * 0.15,
-                              decoration: BoxDecoration(
-                                color: white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    blurRadius: 4,
-                                    color: Colors.black.withOpacity(0.25),
-                                    spreadRadius: 0,
-                                    offset: const Offset(0.0, 0.0),
-                                  )
-                                ],
-                              ),
-                              child: TextFormField(
-                                focusNode: note,
-                                controller: notes,
-                                textDirection: TextDirection.ltr,
-                                decoration: authInputFieldDecoration.copyWith(
-                                    hintText: 'Enter your note here'),
-                              )),
-                        ],
-                      );
-                    }
+                ? List.generate(itemsFood.length, (index) {
                     if (itemsFood[index].day == day) {
                       return foodItemCard(itemsFood[index]);
                     }
@@ -568,47 +653,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                           style: selectedTab.copyWith(fontSize: 20),
                         ),
                         initiallyExpanded: indexMinor == 0 ? true : false,
-                        children: List.generate(itemsFood.length + 1, (index) {
-                          if (index == itemsFood.length) {
-                            return Column(
-                              children: [
-                                Divider(),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15.0),
-                                  child: Text(
-                                    'Let us know if there is something you’d want us to know about your menu, we’ll pass it on to the chef.',
-                                    style: authInputTextStyle.copyWith(
-                                        fontSize: 20, color: Colors.black),
-                                  ),
-                                ),
-                                Container(
-                                    margin: EdgeInsets.all(15),
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 10),
-                                    height: MediaQuery.of(context).size.height *
-                                        0.15,
-                                    decoration: BoxDecoration(
-                                      color: white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          blurRadius: 4,
-                                          color: Colors.black.withOpacity(0.25),
-                                          spreadRadius: 0,
-                                          offset: const Offset(0.0, 0.0),
-                                        )
-                                      ],
-                                    ),
-                                    child: TextFormField(
-                                      focusNode: note,
-                                      controller: notes,
-                                      decoration:
-                                          authInputFieldDecoration.copyWith(
-                                              hintText: 'Enter your note here'),
-                                    )),
-                              ],
-                            );
-                          }
+                        children: List.generate(itemsFood.length, (index) {
                           if (itemsFood[index].day == day) {
                             return foodItemCard(itemsFood[index]);
                           }

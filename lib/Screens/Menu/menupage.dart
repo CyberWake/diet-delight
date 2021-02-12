@@ -48,7 +48,7 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
     setState(() {
       isLoaded = false;
     });
-    categoryItems = await _apiCall.getCategories(menuId);
+    categoryItems = await _apiCall.getMenuCategories(menuId);
     for (int i = 0; i < categoryItems.length; i++) {
       categoryItems[i].showNew();
       if (categoryItems[i].parent == 0) {
@@ -83,7 +83,7 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
     if (categoryItems.isNotEmpty) {
       for (int i = 0; i < categoryItems.length;) {
         foodItems.add(await _apiCall
-            .getCategoryFoodItems(
+            .getMenuCategoryFoodItems(
                 menuId.toString(), categoryItems[i].id.toString())
             .whenComplete(() => i++));
       }
@@ -99,7 +99,7 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
   }
 
   getFoodItems(int categoryId) async {
-    expansionFoodItems = await _apiCall.getCategoryFoodItems(
+    expansionFoodItems = await _apiCall.getMenuCategoryFoodItems(
         menuId.toString(), categoryId.toString());
   }
 

@@ -1,9 +1,11 @@
 import 'package:diet_delight/Models/mealModel.dart';
 import 'package:diet_delight/Models/mealPurchaseModel.dart';
 import 'package:diet_delight/Models/menuCategoryModel.dart';
+import 'package:diet_delight/Screens/Menu/placedMealMenuOrders.dart';
 import 'package:diet_delight/Widgets/getAddressModalSheet.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -12,8 +14,15 @@ class PrePaymentMealPlan extends StatefulWidget {
   final DateTime selectedDate;
   final List<String> selectedDays;
   final String categories;
+  final String shippingAddressLine1;
+  final String shippingAddressLine2;
   PrePaymentMealPlan(
-      {this.categories, this.selectedDate, this.selectedDays, this.mealPlan});
+      {this.categories,
+      this.selectedDate,
+      this.selectedDays,
+      this.mealPlan,
+      this.shippingAddressLine1,
+      this.shippingAddressLine2});
   @override
   _PrePaymentMealPlanState createState() => _PrePaymentMealPlanState();
 }
@@ -357,18 +366,31 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                           weekdays: widget.selectedDays,
                           billingAddressLine1: selectedAddressLine1,
                           billingAddressLine2: selectedAddressLine2,
+                          shippingAddressLine1: widget.shippingAddressLine1,
+                          shippingAddressLine2: widget.shippingAddressLine2,
                         );
-                        print(orderDetails.billingAddressLine1);
-                        print(orderDetails.billingAddressLine2);
-                        bool success = false;
-                        /*=
+                        MealPurchaseModel success =
                             await _apiCall.postMealPurchase(orderDetails);
-                        */
-                        if (success) {
+                        if (success != null) {
                           _scaffoldKey.currentState.showSnackBar(SnackBar(
                               content:
                                   Text('Meal Plan Purchased Successfully')));
+                          Future.delayed(Duration(seconds: 1)).whenComplete(() {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => PlacedMealMenuOrders(
+                                          plan: widget.mealPlan,
+                                          purchaseDetails: success,
+                                        )));
+                          });
                         } else {
+                          setState(() {
+                            progress = false;
+                          });
                           _scaffoldKey.currentState.showSnackBar(
                               SnackBar(content: Text('Something went wrong')));
                         }

@@ -77,7 +77,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
     setState(() {
       isLoaded = false;
     });
-    categoryItems = await _apiCall.getCategories(menuId);
+    categoryItems = await _apiCall.getMenuCategories(menuId);
     for (int i = 0; i < categoryItems.length; i++) {
       if (categoryItems[i].parent == 0) {
         mainCategoryItems.add(categoryItems[i]);

@@ -553,7 +553,7 @@ class _PrePaymentState extends State<PrePayment> {
                     if (id != null) {
                       _appointment.putId(packagePurchaseId: id);
                       bool success =
-                          await _apiCall.postAppointment(_appointment);
+                          await _apiCall.postConsultationAppointment(_appointment);
                       if (success) {
                         _scaffoldKey.currentState.showSnackBar(
                             SnackBar(content: Text('Appointment Added')));

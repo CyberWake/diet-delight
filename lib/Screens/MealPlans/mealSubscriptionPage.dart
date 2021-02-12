@@ -456,6 +456,8 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                                     selectedDate: dateSelected,
                                     selectedDays: selDays,
                                     mealPlan: widget.mealPackage,
+                                    shippingAddressLine1: selectedAddressLine1,
+                                    shippingAddressLine2: selectedAddressLine2,
                                   )));
                     } else {
                       _scaffoldKey.currentState.showSnackBar(

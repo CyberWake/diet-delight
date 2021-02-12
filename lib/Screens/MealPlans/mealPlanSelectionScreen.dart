@@ -55,7 +55,10 @@ class _MealPlanPageState extends State<MealPlanPage>
   Future getMenuData() async {
     for (int i = 0; i < menus.length;) {
       categoryItems.insert(
-          i, await _apiCall.getCategories(menus[i].id).whenComplete(() => i++));
+          i,
+          await _apiCall
+              .getMenuCategories(menus[i].id)
+              .whenComplete(() => i++));
     }
     for (int i = 0; i < categoryItems.length; i++) {
       temp = [];

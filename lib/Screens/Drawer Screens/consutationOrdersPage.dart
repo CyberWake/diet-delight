@@ -42,7 +42,7 @@ class _ConsultationOrderHistoryPageState
 
   getData() async {
     consultationPurchases = await _apiCall.getConsultationPurchases();
-    appointments = await _apiCall.getAppointments();
+    appointments = await _apiCall.getConsultationAppointments();
     for (int i = 0; i < consultationPurchases.length;) {
       consultationData.add(await _apiCall
           .getConsultationData(consultationPurchases[i].consultationPackageId)

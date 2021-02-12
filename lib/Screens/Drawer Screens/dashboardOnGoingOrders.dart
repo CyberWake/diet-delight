@@ -92,7 +92,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
     }
     for (int i = 0; i < activeMealPurchasesCache.length;) {
       ordersInActivePlansCache.add(await _apiCall
-          .getCurrentMealPlanOrders(activeMealPurchasesCache[i].id)
+          .getCurrentMealPlanOrdersAvailability(activeMealPurchasesCache[i].id)
           .whenComplete(() => i++));
     }
 
