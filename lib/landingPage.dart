@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:diet_delight/Screens/Auth%20Screens/login_signup_form.dart';
 import 'package:diet_delight/Screens/Auth%20Screens/newUserQuestionnaire.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/consutationOrdersPage.dart';
+import 'package:diet_delight/Screens/Drawer%20Screens/contactUsPage.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/dashboardOnGoingOrders.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/dashboardUserInfoPage.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/favouritesPage.dart';
@@ -40,6 +41,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     'Order History',
     'Notifications',
     'Settings',
+    'Contact Us',
     'Logout'
   ];
 
@@ -50,15 +52,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     ['Consultation Orders', 'Meal Plan Orders'],
     [],
     ['Terms and Conditions', 'FAQ', 'Privacy Policy'],
+    [],
   ];
 
   List<String> pageTitle = [
     '',
     'Dashboard',
     'Favourites',
-    'Order History Page',
+    'Order History',
     'Notifications',
     'Settings',
+    'Contact Us'
   ];
 
   Future<void> initPlatformState() async {
@@ -85,14 +89,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   drawerOnTaps(int index) async {
     if (index == page) {
       Navigator.pop(context);
-    } else if (index != 6) {
+    } else if (index != 7) {
       Navigator.pop(context);
       setState(() {
         page = index;
       });
       print(page);
     }
-    if (index == 6) {
+    if (index == 7) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       bool result = await prefs.clear();
       if (result) {
@@ -188,36 +192,46 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   }))
               : PreferredSize(child: Container(), preferredSize: Size(0, 0)),
         ),
-        drawer: Drawer(
-          child: Padding(
-            padding:
-                EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1),
-            child: ListView(
-                children: List.generate(8, (index) {
-              if (index == 0) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
-                  child: Image.asset(
-                    'images/Group 57.png',
-                    height: 80.0,
-                    fit: BoxFit.fitHeight,
-                  ),
-                );
-              }
-              return Padding(
-                padding: EdgeInsets.only(top: 5.0),
-                child: ListTile(
-                    onTap: () {
-                      drawerOnTaps(index - 1);
-                    },
-                    title: Center(
-                        child: Text(
-                      drawerItems[index],
-                      style: selectedTab.copyWith(
-                          fontWeight: FontWeight.normal, fontSize: 28),
-                    ))),
-              );
-            })),
+        drawer: ClipRRect(
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(30.0),
+              bottomRight: Radius.circular(30.0)),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.65,
+            child: Drawer(
+              child: Padding(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.01),
+                child: ListView(
+                    shrinkWrap: true,
+                    children: List.generate(drawerItems.length, (index) {
+                      if (index == 0) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 10.0),
+                          child: Image.asset(
+                            'images/Group 57.png',
+                            height: 80.0,
+                            fit: BoxFit.fitHeight,
+                          ),
+                        );
+                      }
+                      return Padding(
+                        padding: EdgeInsets.only(
+                            top: index + 1 == drawerItems.length ? 50 : 0.0),
+                        child: ListTile(
+                            onTap: () {
+                              drawerOnTaps(index - 1);
+                            },
+                            title: Center(
+                                child: Text(
+                              drawerItems[index],
+                              style: selectedTab.copyWith(
+                                  fontWeight: FontWeight.normal, fontSize: 28),
+                            ))),
+                      );
+                    })),
+              ),
+            ),
           ),
         ),
         body: IndexedStack(
@@ -242,6 +256,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 SettingsPrivacyPolicyPage(),
               ],
             ),
+            ContactUsPage(),
           ],
         ),
       ),

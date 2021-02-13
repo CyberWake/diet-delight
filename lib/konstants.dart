@@ -95,18 +95,18 @@ List<List<Color>> itemColors = [
     Color(0xFF999999)
   ],
   [
-    Color(0xFF8080A1),
-    Color(0xFFE0E0FF),
-    Color(0xFFE8E8FF),
-    Color(0xFFDFDFFF),
-    Color(0xFF9999BA)
-  ],
-  [
     Color(0xFFA3784B),
     Color(0xFFFEDF97),
     Color(0xFFFCE7B3),
     Color(0xFFFFDD8F),
     Color(0xFFBA9360)
+  ],
+  [
+    Color(0xFF8080A1),
+    Color(0xFFE0E0FF),
+    Color(0xFFE8E8FF),
+    Color(0xFFDFDFFF),
+    Color(0xFF9999BA)
   ],
 ];
 List<Widget> ddItems = List.generate(
