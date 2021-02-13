@@ -1,5 +1,6 @@
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
+import 'package:diet_delight/services/apiCalls.dart';
 
 const Color defaultGreen = Color(0xFF8BC53F);
 const Color darkGreen = Color(0xFF079404);
@@ -57,7 +58,7 @@ const TextStyle tabTextStyle = TextStyle(
 );
 const TextStyle dateTabTextStyle = TextStyle(
   fontFamily: 'RobotoCondensedReg',
-  fontSize: 12,
+  fontSize: 11,
   fontWeight: FontWeight.normal,
 );
 
@@ -73,13 +74,34 @@ const billingTextStyle = TextStyle(
   fontSize: 20,
   fontStyle: FontStyle.italic,
   fontWeight: FontWeight.normal,
-  color: Colors.black,
+  color: Color(0xFF222222),
 );
 
 const descriptionTextStyle = TextStyle(
   fontFamily: 'RobotoCondensedReg',
   fontSize: 12,
   fontWeight: FontWeight.w400,
+);
+
+const consultationSelectStyle = TextStyle(
+  fontFamily: 'MontserratMed',
+  fontSize: 15,
+  fontWeight: FontWeight.bold,
+  color: Colors.black,
+);
+
+const orderHistoryCardStyle = TextStyle(
+  fontFamily: 'RobotoReg',
+  fontSize: 13,
+  fontWeight: FontWeight.normal,
+  color: Colors.black,
+);
+
+const orderHistoryPopUpStyle = TextStyle(
+  fontFamily: 'MontserratMed',
+  fontSize: 16,
+  fontWeight: FontWeight.normal,
+  color: Colors.black,
 );
 
 BoxDecoration authFieldDecoration = BoxDecoration(
@@ -95,18 +117,18 @@ List<List<Color>> itemColors = [
     Color(0xFF999999)
   ],
   [
-    Color(0xFF8080A1),
-    Color(0xFFE0E0FF),
-    Color(0xFFE8E8FF),
-    Color(0xFFDFDFFF),
-    Color(0xFF9999BA)
-  ],
-  [
     Color(0xFFA3784B),
     Color(0xFFFEDF97),
     Color(0xFFFCE7B3),
     Color(0xFFFFDD8F),
     Color(0xFFBA9360)
+  ],
+  [
+    Color(0xFF8080A1),
+    Color(0xFFE0E0FF),
+    Color(0xFFE8E8FF),
+    Color(0xFFDFDFFF),
+    Color(0xFF9999BA)
   ],
 ];
 List<Widget> ddItems = List.generate(

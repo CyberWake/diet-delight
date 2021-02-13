@@ -37,6 +37,8 @@ class _BookConsultationState extends State<BookConsultation>
     [12, 1, 2],
     [3, 4, 5]
   ];
+  int selectedIndex;
+  List<String> opt = ['Silver', 'Platinum', 'Gold'];
 
   getSubTime(int index, int rowIndex) {
     String suffix;
@@ -91,6 +93,7 @@ class _BookConsultationState extends State<BookConsultation>
   @override
   void initState() {
     super.initState();
+    selectedIndex = widget.packageIndex;
     today = new DateTime.now().add(Duration(days: 2));
     dateSelected = today;
     date = formatDate(dateSelected, format);
@@ -123,13 +126,402 @@ class _BookConsultationState extends State<BookConsultation>
 
   @override
   Widget build(BuildContext context) {
+//    Dialog SelectionDialog = Dialog(
+//      shape: RoundedRectangleBorder(
+//          borderRadius: BorderRadius.circular(12.0)), //this right here
+//      child: Container(
+//        height: opt.length.toDouble() * 56,
+//        width: MediaQuery.of(context).size.width * 0.5,
+//        child: ListView.builder(
+//            itemCount: opt.length,
+//            itemBuilder: (context, int index) {
+//              if (selectedIndex == index && index == 0) {
+//                return Container(
+//                  decoration: BoxDecoration(
+//                    color: defaultGreen,
+//                    borderRadius: BorderRadius.only(
+//                      topLeft: const Radius.circular(10),
+//                      topRight: const Radius.circular(10),
+//                    ),
+//                  ),
+//                  child: Material(
+//                    color: Colors.transparent,
+//                    child: ListTile(
+//                      leading: new CircleAvatar(
+//                        radius: 12.0,
+//                        child: Container(
+//                          decoration: BoxDecoration(
+//                            shape: BoxShape.circle,
+//                            gradient: LinearGradient(
+//                                begin: Alignment.centerLeft,
+//                                end: Alignment.centerRight,
+//                                colors: itemColors[index]),
+//                          ),
+//                        ),
+//                      ),
+//                      title: Text(
+//                        opt[index],
+//                        style: consultationSelectStyle.copyWith(
+//                            color: Colors.white),
+//                      ),
+//                      onTap: () {
+//                        setState(() {
+//                          selectedIndex = index;
+//                          consultationIndex = index;
+//                        });
+//                        Navigator.pop(context);
+//                      },
+//                    ),
+//                  ),
+//                );
+//              } else if (index == 0) {
+//                return Container(
+//                  decoration: BoxDecoration(
+//                    color: Colors.white,
+//                    borderRadius: BorderRadius.only(
+//                      topLeft: const Radius.circular(10),
+//                      topRight: const Radius.circular(10),
+//                    ),
+//                  ),
+//                  child: Material(
+//                    color: Colors.transparent,
+//                    child: ListTile(
+//                      leading: new CircleAvatar(
+//                        radius: 12.0,
+//                        child: Container(
+//                          decoration: BoxDecoration(
+//                            shape: BoxShape.circle,
+//                            gradient: LinearGradient(
+//                                begin: Alignment.centerLeft,
+//                                end: Alignment.centerRight,
+//                                colors: itemColors[index]),
+//                          ),
+//                        ),
+//                      ),
+//                      title: Text(
+//                        opt[index],
+//                        style: consultationSelectStyle,
+//                      ),
+//                      onTap: () {
+//                        setState(() {
+//                          selectedIndex = index;
+//                          consultationIndex = index;
+//                        });
+//                        Navigator.pop(context);
+//                      },
+//                    ),
+//                  ),
+//                );
+//              }
+//              if (selectedIndex == index && index == opt.length - 1) {
+//                return Container(
+//                  decoration: BoxDecoration(
+//                    color: defaultGreen,
+//                    borderRadius: BorderRadius.only(
+//                      bottomLeft: const Radius.circular(10),
+//                      bottomRight: const Radius.circular(10),
+//                    ),
+//                  ),
+//                  child: Material(
+//                    color: Colors.transparent,
+//                    child: ListTile(
+//                      leading: new CircleAvatar(
+//                        radius: 12.0,
+//                        child: Container(
+//                          decoration: BoxDecoration(
+//                            shape: BoxShape.circle,
+//                            gradient: LinearGradient(
+//                                begin: Alignment.centerLeft,
+//                                end: Alignment.centerRight,
+//                                colors: itemColors[index]),
+//                          ),
+//                        ),
+//                      ),
+//                      title: Text(
+//                        opt[index],
+//                        style: consultationSelectStyle.copyWith(
+//                            color: Colors.white),
+//                      ),
+//                      onTap: () {
+//                        setState(() {
+//                          selectedIndex = index;
+//                          consultationIndex = index;
+//                        });
+//                        Navigator.pop(context);
+//                      },
+//                    ),
+//                  ),
+//                );
+//              } else if (selectedIndex == index) {
+//                return Container(
+//                  color: defaultGreen,
+//                  child: Material(
+//                    color: Colors.transparent,
+//                    child: ListTile(
+//                      leading: new CircleAvatar(
+//                        radius: 12.0,
+//                        child: Container(
+//                          decoration: BoxDecoration(
+//                            shape: BoxShape.circle,
+//                            gradient: LinearGradient(
+//                                begin: Alignment.centerLeft,
+//                                end: Alignment.centerRight,
+//                                colors: itemColors[index]),
+//                          ),
+//                        ),
+//                      ),
+//                      title: Text(
+//                        opt[index],
+//                        style: consultationSelectStyle.copyWith(
+//                            color: Colors.white),
+//                      ),
+//                      onTap: () {
+//                        setState(() {
+//                          selectedIndex = index;
+//                          consultationIndex = index;
+//                        });
+//                        Navigator.pop(context);
+//                      },
+//                    ),
+//                  ),
+//                );
+//              } else if (index == opt.length - 1) {
+//                return Container(
+//                  decoration: BoxDecoration(
+//                    color: Colors.white,
+//                    borderRadius: BorderRadius.only(
+//                      bottomLeft: const Radius.circular(10),
+//                      bottomRight: const Radius.circular(10),
+//                    ),
+//                  ),
+//                  child: Material(
+//                    color: Colors.transparent,
+//                    child: ListTile(
+//                      leading: new CircleAvatar(
+//                        radius: 12.0,
+//                        child: Container(
+//                          decoration: BoxDecoration(
+//                            shape: BoxShape.circle,
+//                            gradient: LinearGradient(
+//                                begin: Alignment.centerLeft,
+//                                end: Alignment.centerRight,
+//                                colors: itemColors[index]),
+//                          ),
+//                        ),
+//                      ),
+//                      title: Text(
+//                        opt[index],
+//                        style: consultationSelectStyle,
+//                      ),
+//                      onTap: () {
+//                        setState(() {
+//                          selectedIndex = index;
+//                          consultationIndex = index;
+//                        });
+//                        Navigator.pop(context);
+//                      },
+//                    ),
+//                  ),
+//                );
+//              } else {
+//                return Container(
+//                  color: Colors.white,
+//                  child: Material(
+//                    color: Colors.transparent,
+//                    child: ListTile(
+//                      leading: new CircleAvatar(
+//                        radius: 12.0,
+//                        child: Container(
+//                          decoration: BoxDecoration(
+//                            shape: BoxShape.circle,
+//                            gradient: LinearGradient(
+//                                begin: Alignment.centerLeft,
+//                                end: Alignment.centerRight,
+//                                colors: itemColors[index]),
+//                          ),
+//                        ),
+//                      ),
+//                      title: Text(
+//                        opt[index],
+//                        style: consultationSelectStyle,
+//                      ),
+//                      onTap: () {
+//                        setState(() {
+//                          selectedIndex = index;
+//                          consultationIndex = index;
+//                        });
+//                        Navigator.pop(context);
+//                      },
+//                    ),
+//                  ),
+//                );
+//              }
+//            }),
+//      ),
+//    );
+    Dialog SelectDialog = Dialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0)), //this right here
+      child: Container(
+        height: opt.length.toDouble() * 56,
+        width: MediaQuery.of(context).size.width * 0.5,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedIndex = 0;
+                      consultationIndex = 0;
+                    });
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 60.0,
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                  colors: itemColors[0]),
+                              borderRadius:
+                                  BorderRadius.all(Radius.elliptical(100, 70))),
+                          height: 40,
+                        ),
+                        SizedBox(height: 3.0),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              opt[0],
+                              style: consultationSelectStyle,
+                            ),
+                            selectedIndex == 0
+                                ? Icon(
+                                    Icons.check_circle_outline,
+                                    size: 22,
+                                    color: defaultGreen,
+                                  )
+                                : SizedBox()
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedIndex = 2;
+                      consultationIndex = 2;
+                    });
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 60.0,
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                  colors: itemColors[2]),
+                              borderRadius:
+                                  BorderRadius.all(Radius.elliptical(100, 70))),
+                          height: 40,
+                        ),
+                        SizedBox(height: 3.0),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              opt[2],
+                              style: consultationSelectStyle,
+                            ),
+                            selectedIndex == 2
+                                ? Icon(
+                                    Icons.check_circle_outline,
+                                    size: 22,
+                                    color: defaultGreen,
+                                  )
+                                : SizedBox()
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ]),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedIndex = 1;
+                        consultationIndex = 1;
+                      });
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 60.0,
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                    colors: itemColors[1]),
+                                borderRadius: BorderRadius.all(
+                                    Radius.elliptical(100, 70))),
+                            height: 40,
+                          ),
+                          SizedBox(height: 3.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                opt[1],
+                                style: consultationSelectStyle,
+                              ),
+                              selectedIndex == 1
+                                  ? Icon(
+                                      Icons.check_circle_outline,
+                                      size: 22,
+                                      color: defaultGreen,
+                                    )
+                                  : SizedBox()
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
           elevation: 0.0,
           backgroundColor: Colors.transparent,
-          centerTitle: true,
+          centerTitle: false,
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -153,23 +545,31 @@ class _BookConsultationState extends State<BookConsultation>
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    DropdownButton<Widget>(
-                      value: ddItems[consultationIndex],
-                      elevation: 16,
-                      onChanged: (Widget newValue) {
-                        setState(() {
-                          print(ddItems.indexOf(newValue));
-                          consultationIndex = ddItems.indexOf(newValue);
-                        });
+                    TextButton(
+                      child: ddItems[consultationIndex],
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) => SelectDialog);
                       },
-                      items:
-                          ddItems.map<DropdownMenuItem<Widget>>((Widget value) {
-                        return DropdownMenuItem<Widget>(
-                          value: value,
-                          child: value,
-                        );
-                      }).toList(),
                     ),
+//                    DropdownButton<Widget>(
+//                      value: ddItems[consultationIndex],
+//                      elevation: 16,
+//                      onChanged: (Widget newValue) {
+//                        setState(() {
+//                          print(ddItems.indexOf(newValue));
+//                          consultationIndex = ddItems.indexOf(newValue);
+//                        });
+//                      },
+//                      items:
+//                          ddItems.map<DropdownMenuItem<Widget>>((Widget value) {
+//                        return DropdownMenuItem<Widget>(
+//                          value: value,
+//                          child: value,
+//                        );
+//                      }).toList(),
+//                    ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 15.0, 0, 0),
                       child: Text(
@@ -361,7 +761,7 @@ class _BookConsultationState extends State<BookConsultation>
                                       const EdgeInsets.fromLTRB(0, 20.0, 0, 0),
                                   child: ListView.builder(
                                     physics: NeverScrollableScrollPhysics(),
-                                    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                     itemCount: timeChart[index].length,
                                     scrollDirection: Axis.horizontal,
                                     itemBuilder:
@@ -431,7 +831,7 @@ class _BookConsultationState extends State<BookConsultation>
                 padding: const EdgeInsets.fromLTRB(50, 10, 50, 30),
                 child: SizedBox(
                   width: double.infinity,
-                  height: 50.0,
+                  height: 40.0,
                   child: TextButton(
                     onPressed: () {
                       print('consultationIndex: $consultationIndex');
