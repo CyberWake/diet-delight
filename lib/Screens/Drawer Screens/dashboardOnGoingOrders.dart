@@ -32,7 +32,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
 
     if (isCached.toString() == 'true') {
       print('true');
-      _apiCall.reset();
+      _apiCall.resetOnGoingMealPlanCache();
       var ordersTemp = await FlutterSecureStorage().read(key: 'ordersData');
       var plansDataTemp = await FlutterSecureStorage().read(key: 'plansData');
       var ordersPresentDataTemp =

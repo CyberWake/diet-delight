@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diet_delight/Models/mealModel.dart';
 import 'package:diet_delight/Models/menuCategoryModel.dart';
@@ -8,6 +10,7 @@ import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class MealPlanPage extends StatefulWidget {
   final List<MenuModel> menus;
@@ -43,34 +46,71 @@ class _MealPlanPageState extends State<MealPlanPage>
         }
       }
     }
-    getMenuData().whenComplete(() {
-      if (mounted) {
+    getCacheData();
+  }
+
+  getCacheData() async {
+    var isCached = await FlutterSecureStorage().read(key: "menuCategories");
+    if (isCached.toString() == 'true') {
+      print('running');
+      _apiCall.resetMealPlanMenuCategories();
+      var tempMenuCategories =
+          await FlutterSecureStorage().read(key: 'categoriesData');
+      var decodedListMenuCategories = jsonDecode(tempMenuCategories);
+      for (int i = 0; i < decodedListMenuCategories.length; i++) {
+        var menuCategories = decodedListMenuCategories[i];
+        temp = [];
+        for (int j = 0; j < menuCategories.length; j++) {
+          MenuCategoryModel item = MenuCategoryModel.fromMap(menuCategories[j]);
+          temp.add(item);
+        }
         setState(() {
-          isLoaded = true;
+          categoryItems.insert(i, temp);
         });
       }
-    });
+      for (int i = 0; i < categoryItems.length; i++) {
+        temp = [];
+        for (int j = 0; j < categoryItems[i].length; j++) {
+          if (categoryItems[i][j].parent == 0) {
+            temp.add(categoryItems[i][j]);
+          }
+        }
+        tempItems.insert(i, temp);
+      }
+      categoryItems = tempItems;
+      setState(() {
+        isLoaded = true;
+      });
+      getMenuData();
+    }else{
+      getMenuData();
+    }
   }
 
   Future getMenuData() async {
+    List<List<MenuCategoryModel>> tempMenuCategories = List();
+    await FlutterSecureStorage().write(key: 'menuCategories', value: 'true');
     for (int i = 0; i < menus.length;) {
-      categoryItems.insert(
+      tempMenuCategories.insert(
           i,
           await _apiCall
               .getMenuCategories(menus[i].id)
               .whenComplete(() => i++));
     }
-    for (int i = 0; i < categoryItems.length; i++) {
+    for (int i = 0; i < tempMenuCategories.length; i++) {
       temp = [];
-      for (int j = 0; j < categoryItems[i].length; j++) {
-        if (categoryItems[i][j].parent == 0) {
-          temp.add(categoryItems[i][j]);
+      for (int j = 0; j < tempMenuCategories[i].length; j++) {
+        if (tempMenuCategories[i][j].parent == 0) {
+          temp.add(tempMenuCategories[i][j]);
         }
       }
       tempItems.insert(i, temp);
     }
-    categoryItems = tempItems;
-    return true;
+    if (mounted) {
+      setState(() {
+        categoryItems = tempItems;
+      });
+    }
   }
 
   getCategories(index) {

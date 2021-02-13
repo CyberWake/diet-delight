@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:diet_delight/konstants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
@@ -17,6 +19,39 @@ class _ContactUsPageState extends State<ContactUsPage> {
   TextEditingController name = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController comment = TextEditingController();
+  List<String> urls = [
+    'tel: +917985434482',
+    '',
+    'https://www.instagram.com/ritik_kumar_srivastava/',
+    'https://twitter.com/ritikfbd',
+    'https://www.youtube.com/'
+  ];
+
+  List<Widget> iconButtons = [
+    Transform.rotate(
+      angle: pi * 2.5,
+      child: FaIcon(
+        FontAwesomeIcons.phone,
+        size: 25.0,
+      ),
+    ),
+    FaIcon(
+      FontAwesomeIcons.whatsapp,
+      size: 28.0,
+    ),
+    FaIcon(
+      FontAwesomeIcons.instagram,
+      size: 28.0,
+    ),
+    FaIcon(
+      FontAwesomeIcons.twitter,
+      size: 28.0,
+    ),
+    FaIcon(
+      FontAwesomeIcons.youtube,
+      size: 28.0,
+    ),
+  ];
 
   Widget inputField({String hint, int index, double height}) {
     return Container(
@@ -124,85 +159,27 @@ class _ContactUsPageState extends State<ContactUsPage> {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
             child: Row(
-              children: [
-                bottomButtons(
-                  onPress: () {},
-                  child: Icon(
-                    Icons.phone,
-                    size: 28.0,
-                  ),
-                  shapeWithBorder: true,
-                ),
-                bottomButtons(
-                    onPress: () {
-                      FlutterOpenWhatsapp.sendSingleMessage(
-                          "917985434482", "Hello");
-                    },
-                    child: Image.asset(
-                      'images/Group 22.png',
-                      width: 35.0,
-                      height: 35.0,
-                    ),
-                    shapeWithBorder: false),
-                bottomButtons(
-                  onPress: () async {
-                    var url =
-                        'https://www.instagram.com/ritik_kumar_srivastava/';
-                    if (await canLaunch(url)) {
+                children: List.generate(5, (index) {
+              return bottomButtons(
+                onPress: () async {
+                  if (index != 1) {
+                    if (await canLaunch(urls[index])) {
                       await launch(
-                        url,
+                        urls[index],
                         universalLinksOnly: true,
                       );
                     } else {
-                      throw 'There was a problem to open the url: $url';
+                      throw 'There was a problem to open the url: ${urls[index]}';
                     }
-                  },
-                  child: FaIcon(
-                    FontAwesomeIcons.instagram,
-                    size: 28.0,
-                  ),
-                  shapeWithBorder: true,
-                ),
-                bottomButtons(
-                  onPress: () async {
-                    var url =
-                        'https://www.instagram.com/ritik_kumar_srivastava/';
-                    if (await canLaunch(url)) {
-                      await launch(
-                        url,
-                        universalLinksOnly: true,
-                      );
-                    } else {
-                      throw 'There was a problem to open the url: $url';
-                    }
-                  },
-                  child: FaIcon(
-                    FontAwesomeIcons.twitter,
-                    size: 28.0,
-                  ),
-                  shapeWithBorder: true,
-                ),
-                bottomButtons(
-                  onPress: () async {
-                    var url =
-                        'https://www.instagram.com/ritik_kumar_srivastava/';
-                    if (await canLaunch(url)) {
-                      await launch(
-                        url,
-                        universalLinksOnly: true,
-                      );
-                    } else {
-                      throw 'There was a problem to open the url: $url';
-                    }
-                  },
-                  child: FaIcon(
-                    FontAwesomeIcons.youtube,
-                    size: 28.0,
-                  ),
-                  shapeWithBorder: true,
-                )
-              ],
-            ),
+                  } else {
+                    FlutterOpenWhatsapp.sendSingleMessage(
+                        "917985434482", "Hello");
+                  }
+                },
+                child: iconButtons[index],
+                shapeWithBorder: false,
+              );
+            })),
           ),
         ],
       ),

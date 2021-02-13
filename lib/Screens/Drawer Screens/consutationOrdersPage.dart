@@ -134,17 +134,17 @@ class _ConsultationOrderHistoryPageState
   @override
   void initState() {
     super.initState();
-    IsolateNameServer.registerPortWithName(
+    /*IsolateNameServer.registerPortWithName(
         _port.sendPort, 'downloader_send_port');
     _port.listen((dynamic data) {
       String id = data[0];
       DownloadTaskStatus status = data[1];
       int progress = data[2];
-    });
+    });*/
     if (mounted) {
       getData();
     }
-    FlutterDownloader.registerCallback(downloadCallback);
+    //FlutterDownloader.registerCallback(downloadCallback);
   }
 
   @override

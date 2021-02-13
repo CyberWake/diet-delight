@@ -24,6 +24,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 var currentMealPlanCache = [];
 var mealPlanCacheData = [];
 var onGoingMealPurchaseCacheData = [];
+var menuCategoryCacheData = [];
 
 class Api {
   static var client;
@@ -48,10 +49,14 @@ class Api {
 
   static final Api instance = Api._privateConstructor();
 
-  reset() {
+  resetOnGoingMealPlanCache() {
     currentMealPlanCache = [];
     mealPlanCacheData = [];
     onGoingMealPurchaseCacheData = [];
+  }
+
+  resetMealPlanMenuCategories() {
+    menuCategoryCacheData = [];
   }
 
   Future autoLogin() async {
@@ -273,6 +278,7 @@ class Api {
   Future<List<MenuCategoryModel>> getMenuCategories(int menuId) async {
     try {
       itemsMenuCategory = [];
+      var cachedData = [];
       Map<String, String> headers = {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token"
@@ -284,6 +290,9 @@ class Api {
         print('Success getting menu categories');
         var body = convert.jsonDecode(response.body);
         List data = body['data'];
+        menuCategoryCacheData.add(data);
+        await FlutterSecureStorage().write(
+            key: 'categoriesData', value: jsonEncode(menuCategoryCacheData));
         data.forEach((element) {
           MenuCategoryModel item = MenuCategoryModel.fromMap(element);
           itemsMenuCategory.add(item);
@@ -583,8 +592,8 @@ class Api {
           }
         }
       });
-      await FlutterSecureStorage().write(
-          key: 'onGoingOrdersDataMain', value: convert.jsonEncode(cachedData));
+      /*await FlutterSecureStorage().write(
+          key: 'onGoingOrdersDataMain', value: convert.jsonEncode(cachedData));*/
       return itemPresentMealPurchases;
     } else {
       print(response.statusCode);
