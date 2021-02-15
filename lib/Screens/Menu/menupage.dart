@@ -4,6 +4,7 @@ import 'package:diet_delight/Models/menuCategoryModel.dart';
 import 'package:diet_delight/Models/menuModel.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
+import 'package:diet_delight/Models/addFavouritesModel.dart';
 import 'package:flutter/material.dart';
 
 class Menu extends StatefulWidget {
@@ -24,6 +25,8 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
   List<List<MenuCategoryModel>> subCategoryItems = List();
   List<List<FoodItemModel>> foodItems = List();
   List<FoodItemModel> expansionFoodItems = List();
+  List<List> favourites = List();
+  List<int> favPressed = List();
   final _apiCall = Api.instance;
   int menuId = 0;
   bool isLoaded = false;
@@ -39,6 +42,7 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
   }
 
   getData() async {
+    await getFavourites();
     await getMenuCategories(menuId);
   }
 
@@ -103,6 +107,10 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
         menuId.toString(), categoryId.toString());
   }
 
+  getFavourites() async {
+    favourites = await _apiCall.getFavourites();
+  }
+
   Widget item(FoodItemModel foodItem) {
     return InkWell(
       onTap: () {},
@@ -142,11 +150,28 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                       alignment: Alignment.bottomRight,
                       padding: EdgeInsets.only(right: 10),
                       child: IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.favorite_border,
-                            size: 13,
-                          )),
+                          onPressed: () async {
+                            setState(() {
+                              favPressed.add(foodItem.id);
+                            });
+                            int userId = int.parse(Api.userInfo.id);
+                            AddFavouritesModel details = AddFavouritesModel(
+                              menuItemId: foodItem.id,
+                              userId: userId,
+                            );
+                            await _apiCall.addFavourites(details);
+                          },
+                          icon: favourites[0].contains(foodItem.id) ||
+                                  favPressed.contains(foodItem.id)
+                              ? Icon(
+                                  Icons.favorite,
+                                  size: 13,
+                                  color: Colors.black,
+                                )
+                              : Icon(
+                                  Icons.favorite_border,
+                                  size: 13,
+                                )),
                     )
                   ],
                 ),

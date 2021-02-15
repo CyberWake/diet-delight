@@ -10,6 +10,8 @@ import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:diet_delight/Models/foodItemModel.dart';
+import 'package:diet_delight/Models/addFavouritesModel.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -21,11 +23,16 @@ class _HomeScreenState extends State<HomeScreen> {
   List<ConsultationModel> consultationPackages = List();
   List<DurationModel> durations = List();
   List<MenuModel> menus = List();
+  List<FoodItemModel> featuredMenu = List();
   List<List<MealModel>> mealPackages = List();
+  List<List> favourites = List();
+  List<int> favPressed = List();
   bool isLoaded = false;
 
   Future testApiData() async {
     consultationPackages = await _apiCall.getConsultationPackages();
+    featuredMenu = await _apiCall.getFeaturedMenuItems();
+    favourites = await _apiCall.getFavourites();
     menus = await _apiCall.getMenuPackages();
     durations = await _apiCall.getDurations();
     for (int i = 0; i < durations.length;) {
@@ -569,7 +576,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           height: 0.45 * devWidth,
                           child: ListView.builder(
-                              itemCount: 5,
+                              itemCount: featuredMenu.length,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (BuildContext context, int pos) {
                                 return Padding(
@@ -594,17 +601,43 @@ class _HomeScreenState extends State<HomeScreen> {
                                               Padding(
                                                 padding: EdgeInsets.fromLTRB(
                                                     5.0, 5.0, 5.0, 5.0),
-                                                child: Image.asset(
-                                                  'images/Group 26.png',
-                                                  width: (0.4 * devWidth),
-                                                  height: (0.4 * devWidth) / 2,
+                                                child: CachedNetworkImage(
+                                                  imageUrl: featuredMenu[pos]
+                                                          .picture ??
+                                                      "http://via.placeholder.com/350x150",
+                                                  imageBuilder: (context,
+                                                          imageProvider) =>
+                                                      Container(
+                                                    width: (0.4 * devWidth),
+                                                    height:
+                                                        (0.4 * devWidth) / 2,
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.rectangle,
+                                                      image: DecorationImage(
+                                                        image: imageProvider,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  placeholder: (context, url) =>
+                                                      CircularProgressIndicator(),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          FlutterLogo(
+                                                    size: 60,
+                                                  ),
                                                 ),
+//                                                Image.asset(
+//                                                  'images/Group 26.png',
+//                                                  width: (0.4 * devWidth),
+//                                                  height: (0.4 * devWidth) / 2,
+//                                                ),
                                               ),
                                               Padding(
                                                 padding: EdgeInsets.fromLTRB(
                                                     5.0, 0, 5.0, 0),
                                                 child: Text(
-                                                  'Honey garlic Chicken Stir Fry',
+                                                  featuredMenu[pos].foodName,
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                     fontFamily:
@@ -630,11 +663,51 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     SizedBox(
                                                       width: 5,
                                                     ),
-                                                    Icon(
-                                                      Icons.favorite_border,
-                                                      size: 15,
-                                                      color: defaultPurple,
-                                                    )
+                                                    IconButton(
+                                                        onPressed: () async {
+                                                          setState(() {
+                                                            favPressed.add(
+                                                                featuredMenu[
+                                                                        pos]
+                                                                    .id);
+                                                          });
+                                                          int userId =
+                                                              int.parse(Api
+                                                                  .userInfo.id);
+                                                          AddFavouritesModel
+                                                              details =
+                                                              AddFavouritesModel(
+                                                            menuItemId:
+                                                                featuredMenu[
+                                                                        pos]
+                                                                    .id,
+                                                            userId: userId,
+                                                          );
+                                                          await _apiCall
+                                                              .addFavourites(
+                                                                  details);
+                                                        },
+                                                        icon: favourites[0].contains(
+                                                                    featuredMenu[
+                                                                            pos]
+                                                                        .id) ||
+                                                                favPressed.contains(
+                                                                    featuredMenu[
+                                                                            pos]
+                                                                        .id)
+                                                            ? Icon(
+                                                                Icons.favorite,
+                                                                size: 15,
+                                                                color:
+                                                                    defaultPurple,
+                                                              )
+                                                            : Icon(
+                                                                Icons
+                                                                    .favorite_border,
+                                                                size: 15,
+                                                                color:
+                                                                    defaultPurple,
+                                                              )),
                                                   ],
                                                 ),
                                               ),

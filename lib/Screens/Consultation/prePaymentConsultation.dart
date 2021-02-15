@@ -21,22 +21,6 @@ class _PrePaymentState extends State<PrePayment> {
   ConsAppointmentModel _appointment;
   ConsPurchaseModel order;
 
-  TextEditingController addressPrimary1 = TextEditingController();
-  TextEditingController addressPrimary2 = TextEditingController();
-  TextEditingController addressSecondary1 = TextEditingController();
-  TextEditingController addressSecondary2 = TextEditingController();
-  FocusNode addressFocus1 = FocusNode();
-  FocusNode addressFocus2 = FocusNode();
-  String addressArea = 'Bahrain';
-  String localAddress = '';
-  double _height = 350;
-  int items = 4;
-  int selectedAddress = -1;
-  List<String> types = ['Primary', 'Secondary'];
-  List<String> areas = ['Bahrain', 'India'];
-  List<String> areas2 = ['Bahrain', 'India'];
-  String addressType = 'Primary';
-
   bool isButtonEnabled = true;
 
   RegModel info;
@@ -77,334 +61,9 @@ class _PrePaymentState extends State<PrePayment> {
     });
   }
 
-  void addAddress({int address}) {
-    if (address == 0 && addressPrimary1.text.isNotEmpty) {
-      var separatedAddress = addressPrimary1.text.split(',');
-      addressArea = separatedAddress[separatedAddress.length - 1];
-      localAddress = separatedAddress[0];
-    } else if (address == 1 && addressSecondary1.text.isNotEmpty) {
-      var separatedAddress = addressSecondary1.text.split(',');
-      addressArea = separatedAddress[separatedAddress.length - 1];
-      localAddress = separatedAddress[0];
-    } else {
-      localAddress = '';
-    }
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        builder: (builder) {
-          return StatefulBuilder(builder:
-              (BuildContext context, StateSetter addressModalStateUpdate) {
-            return Container(
-              height: _height,
-              color:
-                  Colors.transparent, //could change this to Color(0xFF737373),
-              //so you don't have to change MaterialApp canvasColor
-              child: Container(
-                  padding: EdgeInsets.only(top: 30),
-                  child: Column(
-                      children: List.generate(items, (index) {
-                    if (index < 1) {
-                      return Expanded(
-                        child: Container(
-                          margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(3.0),
-                            border: Border.all(width: 0.5, color: formLinks),
-                            color: white,
-                          ),
-                          child: DropDown<String>(
-                            showUnderline: false,
-                            initialValue: types[index],
-                            items: index == 0 ? types : areas,
-                            onChanged: (String choice) {
-                              if (index == 0) {
-                                addressType = choice;
-                              } else if (index == 1) {
-                                addressArea = choice;
-                              }
-                              print(choice);
-                              addressModalStateUpdate(() {});
-                            },
-                            isExpanded: true,
-                          ),
-                        ),
-                      );
-                    } else if (index == 1 || index == 2) {
-                      return Expanded(
-                        child: Container(
-                          margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(3.0),
-                            border: Border.all(width: 0.5, color: formLinks),
-                            color: white,
-                          ),
-                          child: TextFormField(
-                              controller: address == 0
-                                  ? (index == 1
-                                      ? addressPrimary1
-                                      : addressPrimary2)
-                                  : (index == 1
-                                      ? addressSecondary1
-                                      : addressSecondary2),
-                              focusNode:
-                                  index == 1 ? addressFocus1 : addressFocus2,
-                              onFieldSubmitted: (done) {
-                                localAddress = done;
-                              },
-                              style: authInputTextStyle,
-                              textAlign: TextAlign.center,
-                              keyboardType: TextInputType.text,
-                              textInputAction: TextInputAction.next,
-                              decoration: authInputFieldDecoration.copyWith(
-                                  hintText: 'Address Line ${index}')),
-                        ),
-                      );
-                    } else if (index == 3) {
-                      return Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            print(addressArea);
-                            if (address == 0) {
-                              addressPrimary1.text += ', ' + addressArea;
-                              print(addressPrimary1.text);
-                            } else if (address == 1) {
-                              addressSecondary1.text += ', ' + addressArea;
-                            }
-                            setState(() {});
-                            Navigator.pop(context);
-                          },
-                          child: Container(
-                              margin: EdgeInsets.only(top: 20),
-                              color: defaultGreen,
-                              child: Center(
-                                child: Text(
-                                  localAddress.length > 0 || addressArea != null
-                                      ? 'UPDATE'
-                                      : 'ADD',
-                                  style: TextStyle(
-                                      fontFamily: 'RobotoReg',
-                                      fontSize: 20,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              )),
-                        ),
-                      );
-                    } else {
-                      return SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.35,
-                      );
-                    }
-                  }))),
-            );
-          });
-        });
-  }
-
-  void getBottomSheet() {
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        builder: (builder) {
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter modalStateUpdate) {
-            return Container(
-              height: 380,
-              color: Colors.transparent,
-              child: Container(
-                  padding: EdgeInsets.only(top: 10),
-                  child: Column(
-                      children: List.generate(3, (index) {
-                    if (index == 2) {
-                      return Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(top: 20),
-                            color: defaultGreen,
-                            child: Center(
-                                child: Text(
-                              'DONE',
-                              style: TextStyle(
-                                  fontFamily: 'RobotoReg',
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            )),
-                          ),
-                        ),
-                      );
-                    }
-                    if (index == 0 && addressPrimary1.text.isNotEmpty) {
-                      var separatedAddress = addressPrimary1.text.split(',');
-                      addressArea =
-                          separatedAddress[separatedAddress.length - 1];
-                      localAddress = separatedAddress[0];
-                    } else if (index == 1 &&
-                        addressSecondary1.text.isNotEmpty) {
-                      var separatedAddress = addressSecondary1.text.split(',');
-                      addressArea =
-                          separatedAddress[separatedAddress.length - 1];
-                      localAddress = separatedAddress[0];
-                    } else {
-                      localAddress = '';
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40.0, vertical: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 0.0, bottom: 10),
-                            child: Text(
-                              index == 0
-                                  ? 'Primary Address'
-                                  : 'Secondary Address',
-                              style: billingTextStyle.copyWith(
-                                  color: index == 0
-                                      ? defaultGreen
-                                      : Color(0xFF222222)),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              if (index == 0) {
-                                if (addressPrimary1.text.isNotEmpty) {
-                                  modalStateUpdate(() {
-                                    selectedAddress = index;
-                                  });
-                                }
-                              } else if (index == 1) {
-                                if (addressSecondary1.text.isNotEmpty) {
-                                  modalStateUpdate(() {
-                                    selectedAddress = index;
-                                  });
-                                }
-                              }
-                            },
-                            child: Container(
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(3.0),
-                                  border:
-                                      Border.all(width: 0.5, color: formLinks),
-                                  color: selectedAddress == index
-                                      ? defaultGreen
-                                      : white,
-                                ),
-                                child: localAddress.length > 0
-                                    ? Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            height: 10.0,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                '${name}',
-                                                style:
-                                                    billingTextStyle.copyWith(
-                                                        fontSize: 14,
-                                                        color:
-                                                            Color(0xFF222222)),
-                                              ),
-                                              Text('Select',
-                                                  style:
-                                                      billingTextStyle.copyWith(
-                                                          fontSize: 14,
-                                                          color: defaultGreen)),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(15.0),
-                                                child: Text(
-                                                    localAddress +
-                                                        ',\n' +
-                                                        addressArea,
-                                                    style: billingTextStyle
-                                                        .copyWith(
-                                                      fontSize: 14,
-                                                      fontStyle:
-                                                          FontStyle.normal,
-                                                      color: selectedAddress ==
-                                                              index
-                                                          ? white
-                                                          : Color(0xFF222222),
-                                                    )),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      )
-                                    : Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              TextButton(
-                                                child: Text('ADD',
-                                                    style: billingTextStyle
-                                                        .copyWith(
-                                                            fontSize: 14,
-                                                            color:
-                                                                defaultGreen)),
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                  addAddress(address: index);
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text('Not Available',
-                                                  style:
-                                                      billingTextStyle.copyWith(
-                                                          fontSize: 14,
-                                                          fontStyle:
-                                                              FontStyle.normal,
-                                                          color: Color(
-                                                              0xFF4E4848)))
-                                            ],
-                                          )
-                                        ],
-                                      )),
-                          )
-                        ],
-                      ),
-                    );
-                  }))),
-            );
-          });
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
+    var devWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
@@ -425,12 +84,13 @@ class _PrePaymentState extends State<PrePayment> {
         title: Text('Book an Appointment', style: appBarTextStyle),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 10.0),
+        padding: const EdgeInsets.only(top: 20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 30.0),
+              padding: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.width * 0.075),
               child: Text(
                 'Billing Address',
                 style: billingTextStyle,
@@ -442,7 +102,9 @@ class _PrePaymentState extends State<PrePayment> {
               elevation: 2,
               color: Colors.white,
               child: Container(
-                margin: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                margin: EdgeInsets.symmetric(
+                    vertical: 20,
+                    horizontal: MediaQuery.of(context).size.width * 0.075),
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
                 decoration: BoxDecoration(
                     boxShadow: [
@@ -516,7 +178,8 @@ class _PrePaymentState extends State<PrePayment> {
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+              padding: EdgeInsets.fromLTRB(
+                  MediaQuery.of(context).size.width * 0.075, 20, 0, 20),
               child: Column(
                 children: [
                   Row(
@@ -529,9 +192,13 @@ class _PrePaymentState extends State<PrePayment> {
                       Spacer(
                         flex: 7,
                       ),
-                      Text('Change',
-                          style: billingTextStyle.copyWith(
-                              fontSize: 14, color: defaultGreen)),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            right: MediaQuery.of(context).size.width * 0.075),
+                        child: Text('Change',
+                            style: billingTextStyle.copyWith(
+                                fontSize: 14, color: defaultGreen)),
+                      ),
                       Spacer(),
                       SizedBox(
                         width: 0,
@@ -585,7 +252,8 @@ class _PrePaymentState extends State<PrePayment> {
 //                                ),
 //                              ))),
                       Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
+                        padding: EdgeInsets.only(
+                            left: MediaQuery.of(context).size.width * 0.05),
                         child: Text('**** **** **** 3947',
                             style: billingTextStyle.copyWith(
                                 fontStyle: FontStyle.normal)),
@@ -614,8 +282,8 @@ class _PrePaymentState extends State<PrePayment> {
                               await _apiCall.postConsultationPurchase(order);
                           if (id != null) {
                             _appointment.putId(packagePurchaseId: id);
-                            bool success =
-                                await _apiCall.postConsultationAppointment(_appointment);
+                            bool success = await _apiCall
+                                .postConsultationAppointment(_appointment);
                             if (success) {
                               _scaffoldKey.currentState.showSnackBar(
                                   SnackBar(content: Text('Appointment Added')));
@@ -627,7 +295,7 @@ class _PrePaymentState extends State<PrePayment> {
                                 content: Text('Something went wrong')));
                           }
                         }
-                      : {},
+                      : () {},
                   child: Text(
                     'PAY NOW',
                     style: TextStyle(

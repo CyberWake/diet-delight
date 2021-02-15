@@ -38,7 +38,7 @@ class _BookConsultationState extends State<BookConsultation>
     [3, 4, 5]
   ];
   int selectedIndex;
-  List<String> opt = ['Silver', 'Platinum', 'Gold'];
+  List<String> opt = ['Silver', 'Gold', 'Platinum'];
 
   getSubTime(int index, int rowIndex) {
     String suffix;
@@ -49,16 +49,16 @@ class _BookConsultationState extends State<BookConsultation>
     }
     switch (rowIndex) {
       case 0:
-        return ':00$suffix';
+        return ':00 $suffix';
         break;
       case 1:
-        return ':15$suffix';
+        return ':15 $suffix';
         break;
       case 2:
-        return ':30$suffix';
+        return ':30 $suffix';
         break;
       case 3:
-        return ':45$suffix';
+        return ':45 $suffix';
         break;
     }
   }
@@ -73,16 +73,16 @@ class _BookConsultationState extends State<BookConsultation>
     }
     switch (rowIndex) {
       case 0:
-        displayTime = '${timeChart[index][pos]}:00$suffix';
+        displayTime = '${timeChart[index][pos]}:00 $suffix';
         break;
       case 1:
-        displayTime = '${timeChart[index][pos]}:15$suffix';
+        displayTime = '${timeChart[index][pos]}:15 $suffix';
         break;
       case 2:
-        displayTime = '${timeChart[index][pos]}:30$suffix';
+        displayTime = '${timeChart[index][pos]}:30 $suffix';
         break;
       case 3:
-        displayTime = '${timeChart[index][pos]}:45$suffix';
+        displayTime = '${timeChart[index][pos]}:45 $suffix';
         break;
       default:
         return "null";
@@ -514,6 +514,7 @@ class _BookConsultationState extends State<BookConsultation>
         ),
       ),
     );
+    var devWidth = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
@@ -540,7 +541,8 @@ class _BookConsultationState extends State<BookConsultation>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+                padding: EdgeInsets.fromLTRB(
+                    devWidth * 0.075, 0, devWidth * 0.075, 0),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -553,23 +555,6 @@ class _BookConsultationState extends State<BookConsultation>
                             builder: (BuildContext context) => SelectDialog);
                       },
                     ),
-//                    DropdownButton<Widget>(
-//                      value: ddItems[consultationIndex],
-//                      elevation: 16,
-//                      onChanged: (Widget newValue) {
-//                        setState(() {
-//                          print(ddItems.indexOf(newValue));
-//                          consultationIndex = ddItems.indexOf(newValue);
-//                        });
-//                      },
-//                      items:
-//                          ddItems.map<DropdownMenuItem<Widget>>((Widget value) {
-//                        return DropdownMenuItem<Widget>(
-//                          value: value,
-//                          child: value,
-//                        );
-//                      }).toList(),
-//                    ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 15.0, 0, 0),
                       child: Text(
@@ -587,7 +572,8 @@ class _BookConsultationState extends State<BookConsultation>
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(30, 40, 30, 0),
+                padding: EdgeInsets.fromLTRB(
+                    devWidth * 0.075, 40, devWidth * 0.075, 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -664,7 +650,11 @@ class _BookConsultationState extends State<BookConsultation>
                 ),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(30, 20, 30, 0),
+                padding: EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width * 0.075,
+                    20,
+                    MediaQuery.of(context).size.width * 0.075,
+                    0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -681,7 +671,11 @@ class _BookConsultationState extends State<BookConsultation>
                 ),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
+                padding: EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width * 0.025,
+                    30,
+                    MediaQuery.of(context).size.width * 0.025,
+                    0),
                 child: Column(
                   children: [
                     Container(
@@ -732,10 +726,10 @@ class _BookConsultationState extends State<BookConsultation>
                                     ),
                                     Text(
                                         index == 0
-                                            ? '9AM to 12PM'
+                                            ? '9 AM to 12 PM'
                                             : index == 1
-                                                ? '12PM to 3PM'
-                                                : '3PM to 6PM',
+                                                ? '12 PM to 3 PM'
+                                                : '3 PM to 6 PM',
                                         style: dateTabTextStyle.copyWith(
                                             color: _tabController.index == index
                                                 ? defaultGreen
@@ -770,8 +764,17 @@ class _BookConsultationState extends State<BookConsultation>
                                           children:
                                               List.generate(4, (rowIndex) {
                                         return Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 10, horizontal: 20),
+                                          padding: EdgeInsets.fromLTRB(
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.05,
+                                              10,
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.05,
+                                              10),
                                           child: GestureDetector(
                                               onTap: () {
                                                 setState(() {
@@ -796,7 +799,11 @@ class _BookConsultationState extends State<BookConsultation>
                                                               vertical: 5,
                                                               horizontal: 10),
                                                       child: Container(
-                                                        width: 60.0,
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.15,
                                                         child: Text(
                                                           showSlots(index, pos,
                                                               rowIndex),

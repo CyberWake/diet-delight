@@ -6,6 +6,13 @@ import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:isolate';
+import 'dart:io';
+import 'dart:ui';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class MealPlanOrderHistoryPage extends StatefulWidget {
   @override
@@ -18,6 +25,33 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
   final _apiCall = Api.instance;
   bool loaded = false;
   List<String> format = [hh, ':', nn, ' ', am, '\n', dd, ' ', 'M', ', ', yyyy];
+  ReceivePort _port = ReceivePort();
+  bool _permissionReady = false;
+
+  Future<void> DownloadFile(String key, String fileName) async {
+    _permissionReady = await _checkPermission();
+    _checkPermission().then((hasGranted) {
+      setState(() {
+        _permissionReady = hasGranted;
+      });
+    });
+    String downloadUrl1 = key;
+    Directory appDocDir = await getExternalStorageDirectory();
+    String appDocPath = appDocDir.path;
+    print(key);
+    print(downloadUrl1);
+    print(appDocPath);
+
+    final taskId = await FlutterDownloader.enqueue(
+      url: downloadUrl1,
+      fileName: fileName,
+      savedDir: appDocPath,
+      showNotification:
+          true, // show download progress in status bar (for Android)
+      openFileFromNotification:
+          true, // click on notification to open downloaded file (for Android)
+    );
+  }
 
   Widget dataField({String fieldName, String fieldValue}) {
     return Flexible(
@@ -28,8 +62,8 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(child: Text(fieldName)),
-              Expanded(child: Text(fieldValue)),
+              Expanded(child: Text(fieldName, style: orderHistoryCardStyle)),
+              Expanded(child: Text(fieldValue, style: orderHistoryCardStyle)),
             ],
           ),
         ));
@@ -48,7 +82,50 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
   @override
   void initState() {
     super.initState();
-    getData();
+    IsolateNameServer.registerPortWithName(
+        _port.sendPort, 'downloader_send_port');
+    _port.listen((dynamic data) {
+      String id = data[0];
+      DownloadTaskStatus status = data[1];
+      int progress = data[2];
+    });
+    if (mounted) {
+      getData();
+    }
+    FlutterDownloader.registerCallback(downloadCallback);
+  }
+
+  @override
+  void dispose() {
+    IsolateNameServer.removePortNameMapping('downloader_send_port');
+    super.dispose();
+  }
+
+  static void downloadCallback(
+      String id, DownloadTaskStatus status, int progress) {
+    final SendPort send =
+        IsolateNameServer.lookupPortByName('downloader_send_port');
+    send.send([id, status, progress]);
+  }
+
+  Future<bool> _checkPermission() async {
+    if (Theme.of(context).platform == TargetPlatform.android) {
+      PermissionStatus permission = await PermissionHandler()
+          .checkPermissionStatus(PermissionGroup.storage);
+      if (permission != PermissionStatus.granted) {
+        Map<PermissionGroup, PermissionStatus> permissions =
+            await PermissionHandler()
+                .requestPermissions([PermissionGroup.storage]);
+        if (permissions[PermissionGroup.storage] == PermissionStatus.granted) {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+    return false;
   }
 
   @override
@@ -83,50 +160,89 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Flexible(child: Text('Menu Plan')),
+                              Flexible(
+                                fit: FlexFit.loose,
+                                child: Text(purchasedMeal[index].mealPlanName,
+                                    style: orderHistoryCardStyle.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14)),
+                              ),
                               Flexible(
                                   child: PopupMenuButton<int>(
                                 child:
                                     Icon(Icons.more_vert, color: Colors.black),
-                                onSelected: (int pos) async {
-                                  if (pos == 0) {
-                                    MealModel getMealPackage =
-                                        await _apiCall.getMealPlan(
-                                            purchasedMeal[index].mealPlanId);
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                MealSubscriptionPage(
-                                                  weekDaysSelected:
-                                                      purchasedMeal[index]
-                                                          .weekdays
-                                                          .length,
-                                                  mealPackage: getMealPackage,
-                                                )));
-                                  } else {
-                                    Navigator.pop(context);
-                                  }
-                                },
                                 itemBuilder: (BuildContext context) =>
                                     <PopupMenuEntry<int>>[
-                                  const PopupMenuItem<int>(
+                                  PopupMenuItem<int>(
                                     value: 0,
-                                    child: Text('Renew'),
+                                    child: Material(
+                                      color: Colors.white,
+                                      child: ListTile(
+                                        onTap: () async {
+                                          MealModel getMealPackage =
+                                              await _apiCall.getMealPlan(
+                                                  purchasedMeal[index]
+                                                      .mealPlanId);
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (BuildContext
+                                                          context) =>
+                                                      MealSubscriptionPage(
+                                                        weekDaysSelected:
+                                                            purchasedMeal[index]
+                                                                .weekdays
+                                                                .length,
+                                                        mealPackage:
+                                                            getMealPackage,
+                                                      )));
+                                        },
+                                        leading: Icon(
+                                          Icons.autorenew,
+                                          size: 24,
+                                          color: Colors.black,
+                                        ),
+//                                            new Image.asset(
+//                                              "images/renew-purchase.svg",
+//                                              width: 30,
+//                                              height: 30,
+//                                            ),
+                                        title: Text(
+                                          'Renew Purchase',
+                                          style: orderHistoryPopUpStyle,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                  const PopupMenuItem<int>(
+                                  PopupMenuItem<int>(
                                     value: 1,
-                                    child: Text('Download Invoice'),
+                                    child: Material(
+                                      color: Colors.white,
+                                      child: ListTile(
+                                        onTap: () async {
+                                          await DownloadFile(
+                                              'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+                                              'Dummy PDF.pdf');
+                                          Navigator.pop(context);
+                                        },
+                                        leading: Icon(
+                                          Icons.file_download,
+                                          size: 24,
+                                          color: Colors.black,
+                                        ),
+//                                            new Image.asset(
+//                                                "images/download_invoice.png",
+//                                                width: 20),
+                                        title: Text(
+                                          'Download Invoice',
+                                          style: orderHistoryPopUpStyle,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ],
                               )),
                             ],
                           ),
-                        )),
-                    Flexible(
-                        fit: FlexFit.loose,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(purchasedMeal[index].mealPlanName),
                         )),
                     dataField(
                       fieldName: 'Subscription:',
@@ -149,12 +265,15 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
                               SizedBox(
                                 width: 10,
                               ),
-                              Text(formatDate(
-                                  DateTime.parse(
-                                      purchasedMeal[index].createdAt),
-                                  format)),
+                              Text(
+                                  formatDate(
+                                      DateTime.parse(
+                                          purchasedMeal[index].createdAt),
+                                      format),
+                                  style: orderHistoryCardStyle),
                               Spacer(),
-                              Text(purchasedMeal[index].amountPaid + ' BHD')
+                              Text(purchasedMeal[index].amountPaid + ' BHD',
+                                  style: orderHistoryCardStyle)
                             ],
                           ),
                         ))
