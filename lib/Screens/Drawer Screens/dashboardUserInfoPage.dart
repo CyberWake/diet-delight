@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DashBoardUserInfoPage extends StatefulWidget {
+  final GlobalKey<ScaffoldState> snackBarKey;
+  DashBoardUserInfoPage({this.snackBarKey});
   @override
   _DashBoardUserInfoPageState createState() => _DashBoardUserInfoPageState();
 }
@@ -29,6 +31,7 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
   RegModel info;
   final _apiCall = Api.instance;
   bool passwordUpdated = false;
+  bool updateInProgress = false;
 
   getUserInfo() async {
     info = Api.userInfo;
@@ -234,114 +237,140 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
           borderRadius: BorderRadius.circular(20.0),
         ),
         builder: (builder) {
-          return Container(
-            height: _height,
-            color: Colors.transparent,
-            child: Container(
-                padding: EdgeInsets.only(top: 30),
-                child: Column(
-                    children: List.generate(items, (index) {
-                  if (index < 3) {
-                    return Expanded(
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                          color: white,
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 4,
-                              color: Colors.black.withOpacity(0.25),
-                              spreadRadius: 0,
-                              offset: const Offset(0.0, 0.0),
-                            )
-                          ],
-                        ),
-                        child: TextFormField(
-                            controller: index == 0
-                                ? curPassword
-                                : index == 1
-                                    ? newPassword
-                                    : newConfPassword,
-                            focusNode: index == 0
-                                ? passCur
-                                : index == 1
-                                    ? passNew
-                                    : passNewConf,
-                            onFieldSubmitted: (done) {
-                              index == 0
-                                  ? curPassword.text = done
-                                  : index == 1
-                                      ? newPassword.text = done
-                                      : newConfPassword.text = done;
-                              if (index < 2) {
-                                FocusScope.of(context).requestFocus(
-                                    index == 0 ? passNew : passNewConf);
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter modalStateUpdate) {
+              return Container(
+                height: _height,
+                color: Colors.transparent,
+                child: Container(
+                    padding: EdgeInsets.only(top: 30),
+                    child: Column(
+                        children: List.generate(items, (index) {
+                      if (index < 3) {
+                        return Expanded(
+                          child: Container(
+                            margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            decoration: BoxDecoration(
+                              color: white,
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 4,
+                                  color: Colors.black.withOpacity(0.25),
+                                  spreadRadius: 0,
+                                  offset: const Offset(0.0, 0.0),
+                                )
+                              ],
+                            ),
+                            child: TextFormField(
+                                controller: index == 0
+                                    ? curPassword
+                                    : index == 1
+                                        ? newPassword
+                                        : newConfPassword,
+                                focusNode: index == 0
+                                    ? passCur
+                                    : index == 1
+                                        ? passNew
+                                        : passNewConf,
+                                onFieldSubmitted: (done) {
+                                  index == 0
+                                      ? curPassword.text = done
+                                      : index == 1
+                                          ? newPassword.text = done
+                                          : newConfPassword.text = done;
+                                  if (index < 2) {
+                                    FocusScope.of(context).requestFocus(
+                                        index == 0 ? passNew : passNewConf);
+                                  } else {
+                                    FocusScope.of(context)
+                                        .requestFocus(FocusNode());
+                                  }
+                                },
+                                style:
+                                    authInputTextStyle.copyWith(fontSize: 16),
+                                textAlign: TextAlign.left,
+                                obscureText: true,
+                                keyboardType: TextInputType.text,
+                                textInputAction: TextInputAction.next,
+                                decoration: authInputFieldDecoration.copyWith(
+                                  hintText: index == 0
+                                      ? 'Enter Current Password'
+                                      : index == 1
+                                          ? 'Enter New Password'
+                                          : 'Confirm New Password',
+                                )),
+                          ),
+                        );
+                      } else if (index == 3) {
+                        return Expanded(
+                            child: Container(
+                          margin: EdgeInsets.only(top: 20),
+                          color: defaultGreen,
+                          child: TextButton(
+                            focusNode: updatePass,
+                            onPressed: () async {
+                              if (curPassword.text.isNotEmpty) {
+                                if (newPassword.text == newConfPassword.text) {
+                                  modalStateUpdate(() {
+                                    updateInProgress = true;
+                                  });
+                                  bool result = await _apiCall.updatePassword(
+                                      curPassword.text, newPassword.text);
+                                  if (result) {
+                                    setState(() {
+                                      passwordUpdated = true;
+                                    });
+                                    modalStateUpdate(() {
+                                      updateInProgress = false;
+                                    });
+                                    widget.snackBarKey.currentState
+                                        .showSnackBar(SnackBar(
+                                            content: Text(
+                                                'Password updated Successfully')));
+                                    Navigator.pop(context);
+                                  } else {
+                                    Navigator.pop(context);
+                                  }
+                                } else {
+                                  setState(() {
+                                    passwordUpdated = false;
+                                  });
+                                  Navigator.pop(context);
+                                  widget.snackBarKey.currentState.showSnackBar(
+                                      SnackBar(
+                                          content:
+                                              Text('Passwords do not match')));
+                                }
                               } else {
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
+                                print(info.password);
+                                setState(() {
+                                  passwordUpdated = false;
+                                });
+                                Navigator.pop(context);
+                                widget.snackBarKey.currentState.showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            'Current Password Cannot be empty')));
                               }
                             },
-                            style: authInputTextStyle.copyWith(fontSize: 16),
-                            textAlign: TextAlign.left,
-                            obscureText: true,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            decoration: authInputFieldDecoration.copyWith(
-                              hintText: index == 0
-                                  ? 'Enter Current Password'
-                                  : index == 1
-                                      ? 'Enter New Password'
-                                      : 'Confirm New Password',
+                            child: Center(
+                                child: Text(
+                              updateInProgress ? 'Updating' : 'Update',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w600),
                             )),
-                      ),
-                    );
-                  } else if (index == 3) {
-                    return Expanded(
-                        child: Container(
-                      margin: EdgeInsets.only(top: 20),
-                      color: defaultGreen,
-                      child: TextButton(
-                        focusNode: updatePass,
-                        onPressed: () {
-                          if (curPassword.text == info.password) {
-                            if (newPassword.text == newConfPassword.text) {
-                              setState(() {
-                                passwordUpdated = true;
-                              });
-                              Navigator.pop(context);
-                            } else {
-                              setState(() {
-                                passwordUpdated = false;
-                              });
-                              Navigator.pop(context);
-                              Scaffold.of(context).showSnackBar(SnackBar(
-                                  content: Text('Passwords do not match')));
-                            }
-                          } else {
-                            print(info.password);
-                            setState(() {
-                              passwordUpdated = false;
-                            });
-                            Navigator.pop(context);
-                            Scaffold.of(context).showSnackBar(SnackBar(
-                                content: Text('Incorrect Current Password')));
-                          }
-                        },
-                        child: Center(
-                            child: Text(
-                          'Update',
-                          style: TextStyle(
-                              color: Colors.black, fontWeight: FontWeight.w600),
-                        )),
-                      ),
-                    ));
-                  } else {
-                    return SizedBox(
-                      height: 250,
-                    );
-                  }
-                }))),
+                          ),
+                        ));
+                      } else {
+                        return SizedBox(
+                          height: 250,
+                        );
+                      }
+                    }))),
+              );
+            },
           );
         });
   }

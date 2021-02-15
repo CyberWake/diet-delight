@@ -20,11 +20,11 @@ class _ContactUsPageState extends State<ContactUsPage> {
   TextEditingController email = TextEditingController();
   TextEditingController comment = TextEditingController();
   List<String> urls = [
-    'tel: +917985434482',
+    'tel: +917259384025',
     '',
-    'https://www.instagram.com/ritik_kumar_srivastava/',
-    'https://twitter.com/ritikfbd',
-    'https://www.youtube.com/'
+    'https://www.instagram.com/dietdelightbh/',
+    'https://twitter.com/dietdelightbh',
+    'https://www.facebook.com/DietDeligh-BH'
   ];
 
   List<Widget> iconButtons = [
@@ -48,7 +48,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
       size: 28.0,
     ),
     FaIcon(
-      FontAwesomeIcons.youtube,
+      FontAwesomeIcons.facebook,
       size: 28.0,
     ),
   ];
@@ -151,7 +151,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20)))),
             child: Text(
-              'Submit',
+              'Send',
               style: TextStyle(color: white),
             ),
             focusNode: submitButton,
@@ -173,7 +173,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                     }
                   } else {
                     FlutterOpenWhatsapp.sendSingleMessage(
-                        "917985434482", "Hello");
+                        "917259384025", "Hello");
                   }
                 },
                 child: iconButtons[index],

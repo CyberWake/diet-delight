@@ -2,6 +2,7 @@ import 'dart:convert' as convert;
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:diet_delight/Models/addFavouritesModel.dart';
 import 'package:diet_delight/Models/consultationAppointmentModel.dart';
 import 'package:diet_delight/Models/consultationModel.dart';
 import 'package:diet_delight/Models/consultationPurchaseModel.dart';
@@ -16,7 +17,6 @@ import 'package:diet_delight/Models/menuOrdersModel.dart';
 import 'package:diet_delight/Models/optionsFile.dart';
 import 'package:diet_delight/Models/questionnaireModel.dart';
 import 'package:diet_delight/Models/registrationModel.dart';
-import 'package:diet_delight/Models/addFavouritesModel.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:oauth2/oauth2.dart' as oauth2;
@@ -151,6 +151,32 @@ class Api {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
     String body = convert.jsonEncode(user.toMap());
+    print(body);
+    final response =
+        await http.put(uri + '/api/v1/user', headers: headers, body: body);
+    if (response.statusCode == 200) {
+      print('Success updating user info');
+      var body = convert.jsonDecode(response.body);
+      userInfo = null;
+      userInfo = RegModel.fromMap(body);
+      return true;
+    } else if (response.statusCode == 400) {
+      print(response.statusCode);
+      return false;
+    } else {
+      print(response.statusCode);
+      print(response.body);
+      return false;
+    }
+  }
+
+  Future<bool> updatePassword(String currentPass, String newPass) async {
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    String body = convert
+        .jsonEncode({'old_password': currentPass, 'new_password': newPass});
     print(body);
     final response =
         await http.put(uri + '/api/v1/user', headers: headers, body: body);

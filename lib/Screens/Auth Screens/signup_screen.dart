@@ -370,6 +370,7 @@ class _SignUpState extends State<SignUp> {
                             CupertinoPageRoute(
                                 builder: (context) => VerifyPhoneNumber(
                                       regDetails: signUpDetails,
+                                      from: FromPage.signUp,
                                     )));
                       } else {
                         if (confirmPass.text != password.text) {

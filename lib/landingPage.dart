@@ -136,7 +136,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   GestureDetector(
                     onTap: () {
                       FlutterOpenWhatsapp.sendSingleMessage(
-                          "917985434482", "Hello");
+                          "917259384025", "Hello");
                     },
                     child: Image.asset(
                       'images/Group 22.png',
@@ -239,7 +239,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           children: [
             HomeScreen(),
             TabBarView(controller: _pageController1, children: [
-              DashBoardUserInfoPage(),
+              DashBoardUserInfoPage(snackBarKey: _scaffoldKey),
               DashBoardOngoingOrders(),
             ]),
             FavouritesPage(),

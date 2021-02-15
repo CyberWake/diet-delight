@@ -1,7 +1,5 @@
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:diet_delight/services/apiCalls.dart';
 
 const Color defaultGreen = Color(0xFF8BC53F);
 const Color darkGreen = Color(0xFF079404);
@@ -210,17 +208,4 @@ String primaryAddressLine2 = Api.userInfo.addressLine2 ?? '';
 String secondaryAddressLine1 = Api.userInfo.addressSecondary1 ?? '';
 String secondaryAddressLine2 = Api.userInfo.addressSecondary2 ?? '';
 
-String displayDate(DateTime targetDate) {
-  var date;
-  var DT;
-  var formatter;
-  var time;
-  var result;
-  date = DateFormat.yMMMd().format(DT);
-  print(date);
-  formatter = new DateFormat.jm();
-  time = formatter.format(DT);
-  print(time);
-  result = date + ' ' + time;
-  return result;
-}
+enum FromPage { signUp, forgetPass }

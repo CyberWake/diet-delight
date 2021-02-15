@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:date_format/date_format.dart';
 import 'package:diet_delight/Models/consultationModel.dart';
 import 'package:diet_delight/Screens/Consultation/confirmConsultation.dart';
+import 'package:diet_delight/Widgets/consultation_pop_up.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,13 @@ class _BookConsultationState extends State<BookConsultation>
     [3, 4, 5]
   ];
   int selectedIndex;
-  List<String> opt = ['Silver', 'Gold', 'Platinum'];
+
+  updateSelectedConsultation(int index) {
+    setState(() {
+      selectedIndex = index;
+      consultationIndex = index;
+    });
+  }
 
   getSubTime(int index, int rowIndex) {
     String suffix;
@@ -126,394 +133,6 @@ class _BookConsultationState extends State<BookConsultation>
 
   @override
   Widget build(BuildContext context) {
-//    Dialog SelectionDialog = Dialog(
-//      shape: RoundedRectangleBorder(
-//          borderRadius: BorderRadius.circular(12.0)), //this right here
-//      child: Container(
-//        height: opt.length.toDouble() * 56,
-//        width: MediaQuery.of(context).size.width * 0.5,
-//        child: ListView.builder(
-//            itemCount: opt.length,
-//            itemBuilder: (context, int index) {
-//              if (selectedIndex == index && index == 0) {
-//                return Container(
-//                  decoration: BoxDecoration(
-//                    color: defaultGreen,
-//                    borderRadius: BorderRadius.only(
-//                      topLeft: const Radius.circular(10),
-//                      topRight: const Radius.circular(10),
-//                    ),
-//                  ),
-//                  child: Material(
-//                    color: Colors.transparent,
-//                    child: ListTile(
-//                      leading: new CircleAvatar(
-//                        radius: 12.0,
-//                        child: Container(
-//                          decoration: BoxDecoration(
-//                            shape: BoxShape.circle,
-//                            gradient: LinearGradient(
-//                                begin: Alignment.centerLeft,
-//                                end: Alignment.centerRight,
-//                                colors: itemColors[index]),
-//                          ),
-//                        ),
-//                      ),
-//                      title: Text(
-//                        opt[index],
-//                        style: consultationSelectStyle.copyWith(
-//                            color: Colors.white),
-//                      ),
-//                      onTap: () {
-//                        setState(() {
-//                          selectedIndex = index;
-//                          consultationIndex = index;
-//                        });
-//                        Navigator.pop(context);
-//                      },
-//                    ),
-//                  ),
-//                );
-//              } else if (index == 0) {
-//                return Container(
-//                  decoration: BoxDecoration(
-//                    color: Colors.white,
-//                    borderRadius: BorderRadius.only(
-//                      topLeft: const Radius.circular(10),
-//                      topRight: const Radius.circular(10),
-//                    ),
-//                  ),
-//                  child: Material(
-//                    color: Colors.transparent,
-//                    child: ListTile(
-//                      leading: new CircleAvatar(
-//                        radius: 12.0,
-//                        child: Container(
-//                          decoration: BoxDecoration(
-//                            shape: BoxShape.circle,
-//                            gradient: LinearGradient(
-//                                begin: Alignment.centerLeft,
-//                                end: Alignment.centerRight,
-//                                colors: itemColors[index]),
-//                          ),
-//                        ),
-//                      ),
-//                      title: Text(
-//                        opt[index],
-//                        style: consultationSelectStyle,
-//                      ),
-//                      onTap: () {
-//                        setState(() {
-//                          selectedIndex = index;
-//                          consultationIndex = index;
-//                        });
-//                        Navigator.pop(context);
-//                      },
-//                    ),
-//                  ),
-//                );
-//              }
-//              if (selectedIndex == index && index == opt.length - 1) {
-//                return Container(
-//                  decoration: BoxDecoration(
-//                    color: defaultGreen,
-//                    borderRadius: BorderRadius.only(
-//                      bottomLeft: const Radius.circular(10),
-//                      bottomRight: const Radius.circular(10),
-//                    ),
-//                  ),
-//                  child: Material(
-//                    color: Colors.transparent,
-//                    child: ListTile(
-//                      leading: new CircleAvatar(
-//                        radius: 12.0,
-//                        child: Container(
-//                          decoration: BoxDecoration(
-//                            shape: BoxShape.circle,
-//                            gradient: LinearGradient(
-//                                begin: Alignment.centerLeft,
-//                                end: Alignment.centerRight,
-//                                colors: itemColors[index]),
-//                          ),
-//                        ),
-//                      ),
-//                      title: Text(
-//                        opt[index],
-//                        style: consultationSelectStyle.copyWith(
-//                            color: Colors.white),
-//                      ),
-//                      onTap: () {
-//                        setState(() {
-//                          selectedIndex = index;
-//                          consultationIndex = index;
-//                        });
-//                        Navigator.pop(context);
-//                      },
-//                    ),
-//                  ),
-//                );
-//              } else if (selectedIndex == index) {
-//                return Container(
-//                  color: defaultGreen,
-//                  child: Material(
-//                    color: Colors.transparent,
-//                    child: ListTile(
-//                      leading: new CircleAvatar(
-//                        radius: 12.0,
-//                        child: Container(
-//                          decoration: BoxDecoration(
-//                            shape: BoxShape.circle,
-//                            gradient: LinearGradient(
-//                                begin: Alignment.centerLeft,
-//                                end: Alignment.centerRight,
-//                                colors: itemColors[index]),
-//                          ),
-//                        ),
-//                      ),
-//                      title: Text(
-//                        opt[index],
-//                        style: consultationSelectStyle.copyWith(
-//                            color: Colors.white),
-//                      ),
-//                      onTap: () {
-//                        setState(() {
-//                          selectedIndex = index;
-//                          consultationIndex = index;
-//                        });
-//                        Navigator.pop(context);
-//                      },
-//                    ),
-//                  ),
-//                );
-//              } else if (index == opt.length - 1) {
-//                return Container(
-//                  decoration: BoxDecoration(
-//                    color: Colors.white,
-//                    borderRadius: BorderRadius.only(
-//                      bottomLeft: const Radius.circular(10),
-//                      bottomRight: const Radius.circular(10),
-//                    ),
-//                  ),
-//                  child: Material(
-//                    color: Colors.transparent,
-//                    child: ListTile(
-//                      leading: new CircleAvatar(
-//                        radius: 12.0,
-//                        child: Container(
-//                          decoration: BoxDecoration(
-//                            shape: BoxShape.circle,
-//                            gradient: LinearGradient(
-//                                begin: Alignment.centerLeft,
-//                                end: Alignment.centerRight,
-//                                colors: itemColors[index]),
-//                          ),
-//                        ),
-//                      ),
-//                      title: Text(
-//                        opt[index],
-//                        style: consultationSelectStyle,
-//                      ),
-//                      onTap: () {
-//                        setState(() {
-//                          selectedIndex = index;
-//                          consultationIndex = index;
-//                        });
-//                        Navigator.pop(context);
-//                      },
-//                    ),
-//                  ),
-//                );
-//              } else {
-//                return Container(
-//                  color: Colors.white,
-//                  child: Material(
-//                    color: Colors.transparent,
-//                    child: ListTile(
-//                      leading: new CircleAvatar(
-//                        radius: 12.0,
-//                        child: Container(
-//                          decoration: BoxDecoration(
-//                            shape: BoxShape.circle,
-//                            gradient: LinearGradient(
-//                                begin: Alignment.centerLeft,
-//                                end: Alignment.centerRight,
-//                                colors: itemColors[index]),
-//                          ),
-//                        ),
-//                      ),
-//                      title: Text(
-//                        opt[index],
-//                        style: consultationSelectStyle,
-//                      ),
-//                      onTap: () {
-//                        setState(() {
-//                          selectedIndex = index;
-//                          consultationIndex = index;
-//                        });
-//                        Navigator.pop(context);
-//                      },
-//                    ),
-//                  ),
-//                );
-//              }
-//            }),
-//      ),
-//    );
-    Dialog SelectDialog = Dialog(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0)), //this right here
-      child: Container(
-        height: opt.length.toDouble() * 56,
-        width: MediaQuery.of(context).size.width * 0.5,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedIndex = 0;
-                      consultationIndex = 0;
-                    });
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 60.0,
-                          decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                  colors: itemColors[0]),
-                              borderRadius:
-                                  BorderRadius.all(Radius.elliptical(100, 70))),
-                          height: 40,
-                        ),
-                        SizedBox(height: 3.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              opt[0],
-                              style: consultationSelectStyle,
-                            ),
-                            selectedIndex == 0
-                                ? Icon(
-                                    Icons.check_circle_outline,
-                                    size: 22,
-                                    color: defaultGreen,
-                                  )
-                                : SizedBox()
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedIndex = 2;
-                      consultationIndex = 2;
-                    });
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 60.0,
-                          decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                  colors: itemColors[2]),
-                              borderRadius:
-                                  BorderRadius.all(Radius.elliptical(100, 70))),
-                          height: 40,
-                        ),
-                        SizedBox(height: 3.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              opt[2],
-                              style: consultationSelectStyle,
-                            ),
-                            selectedIndex == 2
-                                ? Icon(
-                                    Icons.check_circle_outline,
-                                    size: 22,
-                                    color: defaultGreen,
-                                  )
-                                : SizedBox()
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ]),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedIndex = 1;
-                        consultationIndex = 1;
-                      });
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 60.0,
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
-                                    colors: itemColors[1]),
-                                borderRadius: BorderRadius.all(
-                                    Radius.elliptical(100, 70))),
-                            height: 40,
-                          ),
-                          SizedBox(height: 3.0),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                opt[1],
-                                style: consultationSelectStyle,
-                              ),
-                              selectedIndex == 1
-                                  ? Icon(
-                                      Icons.check_circle_outline,
-                                      size: 22,
-                                      color: defaultGreen,
-                                    )
-                                  : SizedBox()
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
     var devWidth = MediaQuery.of(context).size.width;
 
     return SafeArea(
@@ -536,7 +155,7 @@ class _BookConsultationState extends State<BookConsultation>
           title: Text('Book an Appointment', style: appBarTextStyle),
         ),
         body: Padding(
-          padding: const EdgeInsets.only(top: 30.0),
+          padding: EdgeInsets.only(top: devWidth * 0.02),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -552,7 +171,11 @@ class _BookConsultationState extends State<BookConsultation>
                       onPressed: () {
                         showDialog(
                             context: context,
-                            builder: (BuildContext context) => SelectDialog);
+                            builder: (BuildContext context) =>
+                                ConsultationPopUp(
+                                  selectedIndex: selectedIndex,
+                                  callBackFunction: updateSelectedConsultation,
+                                ));
                       },
                     ),
                     Padding(

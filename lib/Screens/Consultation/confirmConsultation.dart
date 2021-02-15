@@ -4,6 +4,7 @@ import 'package:diet_delight/Models/consultationAppointmentModel.dart';
 import 'package:diet_delight/Models/consultationModel.dart';
 import 'package:diet_delight/Models/consultationPurchaseModel.dart';
 import 'package:diet_delight/Screens/Consultation/prePaymentConsultation.dart';
+import 'package:diet_delight/Widgets/consultation_pop_up.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,7 +32,13 @@ class _ConfirmConsultationState extends State<ConfirmConsultation> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int consultationIndex;
   int selectedIndex;
-  List<String> opt = ['Silver', 'Gold', 'Platinum'];
+
+  updateSelectedConsultation(int index) {
+    setState(() {
+      selectedIndex = index;
+      consultationIndex = index;
+    });
+  }
 
   Widget breakDownFields(String disc, String price, bool isGrandTotal) {
     return Row(
@@ -75,161 +82,6 @@ class _ConfirmConsultationState extends State<ConfirmConsultation> {
 
   @override
   Widget build(BuildContext context) {
-    Dialog SelectDialog = Dialog(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0)), //this right here
-      child: Container(
-        height: opt.length.toDouble() * 56,
-        width: MediaQuery.of(context).size.width * 0.5,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedIndex = 0;
-                      consultationIndex = 0;
-                    });
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 60.0,
-                          decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                  colors: itemColors[0]),
-                              borderRadius:
-                                  BorderRadius.all(Radius.elliptical(100, 70))),
-                          height: 40,
-                        ),
-                        SizedBox(height: 3.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              opt[0],
-                              style: consultationSelectStyle,
-                            ),
-                            selectedIndex == 0
-                                ? Icon(
-                                    Icons.check_circle_outline,
-                                    size: 22,
-                                    color: defaultGreen,
-                                  )
-                                : SizedBox()
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedIndex = 2;
-                      consultationIndex = 2;
-                    });
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 60.0,
-                          decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                  colors: itemColors[2]),
-                              borderRadius:
-                                  BorderRadius.all(Radius.elliptical(100, 70))),
-                          height: 40,
-                        ),
-                        SizedBox(height: 3.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              opt[2],
-                              style: consultationSelectStyle,
-                            ),
-                            selectedIndex == 2
-                                ? Icon(
-                                    Icons.check_circle_outline,
-                                    size: 22,
-                                    color: defaultGreen,
-                                  )
-                                : SizedBox()
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ]),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedIndex = 1;
-                        consultationIndex = 1;
-                      });
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 60.0,
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
-                                    colors: itemColors[1]),
-                                borderRadius: BorderRadius.all(
-                                    Radius.elliptical(100, 70))),
-                            height: 40,
-                          ),
-                          SizedBox(height: 3.0),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                opt[1],
-                                style: consultationSelectStyle,
-                              ),
-                              selectedIndex == 1
-                                  ? Icon(
-                                      Icons.check_circle_outline,
-                                      size: 22,
-                                      color: defaultGreen,
-                                    )
-                                  : SizedBox()
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
@@ -266,25 +118,13 @@ class _ConfirmConsultationState extends State<ConfirmConsultation> {
                       onPressed: () {
                         showDialog(
                             context: context,
-                            builder: (BuildContext context) => SelectDialog);
+                            builder: (BuildContext context) =>
+                                ConsultationPopUp(
+                                  selectedIndex: selectedIndex,
+                                  callBackFunction: updateSelectedConsultation,
+                                ));
                       },
                     ),
-//                    DropdownButton<Widget>(
-//                      value: ddItems[widget.package],
-//                      elevation: 16,
-//                      onChanged: (Widget newValue) {
-//                        setState(() {
-//                          widget.package = ddItems.indexOf(newValue);
-//                        });
-//                      },
-//                      items:
-//                          ddItems.map<DropdownMenuItem<Widget>>((Widget value) {
-//                        return DropdownMenuItem<Widget>(
-//                          value: value,
-//                          child: value,
-//                        );
-//                      }).toList(),
-//                    ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 15.0, 0, 0),
                       child: Text(

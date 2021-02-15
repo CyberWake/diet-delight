@@ -3,7 +3,6 @@ import 'package:diet_delight/Models/consultationPurchaseModel.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:diet_delight/Models/registrationModel.dart';
 import 'package:diet_delight/Widgets/getAddressModalSheet.dart';
 
@@ -63,7 +62,6 @@ class _PrePaymentState extends State<PrePayment> {
 
   @override
   Widget build(BuildContext context) {
-    var devWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
@@ -148,7 +146,7 @@ class _PrePaymentState extends State<PrePayment> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '${name}',
+                                '$name',
                                 style: billingTextStyle.copyWith(fontSize: 14),
                               ),
                               AddressButtonWithModal(
@@ -236,21 +234,6 @@ class _PrePaymentState extends State<PrePayment> {
                           ),
                         ),
                       ),
-//                      Material(
-//                          elevation: 2.0,
-//                          borderRadius: BorderRadius.circular(2.0),
-//                          color: Colors.white,
-//                          child: Padding(
-//                              padding: EdgeInsets.symmetric(
-//                                  vertical: 15, horizontal: 30),
-//                              child: Container(
-//                                height: 55,
-//                                width: 75,
-//                                child: Image.asset(
-//                                  'images/card.png',
-//                                  fit: BoxFit.fill,
-//                                ),
-//                              ))),
                       Padding(
                         padding: EdgeInsets.only(
                             left: MediaQuery.of(context).size.width * 0.05),
