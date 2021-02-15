@@ -17,6 +17,8 @@ class MealPurchaseModel {
   String createdAt;
   String billingAddressLine1;
   String billingAddressLine2;
+  String shippingAddressLine1;
+  String shippingAddressLine2;
 
   MealPurchaseModel(
       {this.id,
@@ -34,7 +36,9 @@ class MealPurchaseModel {
       this.portions = "0",
       this.createdAt,
       this.billingAddressLine1,
-      this.billingAddressLine2});
+      this.billingAddressLine2,
+      this.shippingAddressLine1,
+      this.shippingAddressLine2});
 
   Map<String, dynamic> toMap() {
     // ignore: unnecessary_cast
@@ -53,6 +57,8 @@ class MealPurchaseModel {
       'portions': this.portions,
       'billing_address_line1': this.billingAddressLine1,
       'billing_address_line2': this.billingAddressLine2,
+      'shipping_address_line1': this.shippingAddressLine1,
+      'shipping_address_line2': this.shippingAddressLine2,
     } as Map<String, dynamic>;
   }
 
@@ -74,7 +80,9 @@ class MealPurchaseModel {
         portions: item['portions'].toString(),
         createdAt: item['created_at'].toString(),
         billingAddressLine1: item['billing_address_line1'],
-        billingAddressLine2: item['billing_address_line2']);
+        billingAddressLine2: item['billing_address_line2'],
+        shippingAddressLine1: item['shipping_address_line1'],
+        shippingAddressLine2: item['shipping_address_line2']);
   }
 
   showWeek() {

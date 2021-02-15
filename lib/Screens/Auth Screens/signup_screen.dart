@@ -363,7 +363,7 @@ class _SignUpState extends State<SignUp> {
                             lastName: lastName.text,
                             email: email.text,
                             password: password.text,
-                            mobile: countryCode.text + ' ' + mobileNo.text);
+                            mobile: countryCode.text + mobileNo.text);
                         signUpDetails.show();
                         Navigator.push(
                             context,

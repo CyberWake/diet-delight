@@ -10,6 +10,7 @@ class FoodItemModel {
   String date;
   int day;
   String des;
+  String noteAdded;
   FoodItemModel(
       {this.foodName,
       this.orderItemId,
@@ -21,7 +22,7 @@ class FoodItemModel {
       this.day,
       this.date,
       this.des,
-      this.picture});
+      this.picture,this.noteAdded});
   factory FoodItemModel.fromMap(Map item) {
     return FoodItemModel(
       id: item['id'],
@@ -41,5 +42,9 @@ class FoodItemModel {
 
   updateOrderItemId(int id) {
     this.orderItemId = id;
+  }
+
+  updateNote(String note){
+    this.noteAdded = note;
   }
 }

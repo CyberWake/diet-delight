@@ -28,12 +28,23 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
   double _height = 300;
   int whichAddress;
   int items = 4;
+  String name;
 
   getUserInfo() async {
-    addressPrimaryLine1.text = Api.userInfo.addressLine1;
-    addressSecondaryLine1.text = Api.userInfo.addressSecondary1;
-    addressPrimaryLine2.text = Api.userInfo.addressLine2;
-    addressSecondaryLine2.text = Api.userInfo.addressSecondary2;
+    name = Api.userInfo.firstName + ' ' + Api.userInfo.lastName;
+    if (Api.userInfo.addressLine1 != null) {
+      addressPrimaryLine1.text = Api.userInfo.addressLine1;
+    }
+    if (Api.userInfo.addressLine2 != null) {
+      addressPrimaryLine2.text = Api.userInfo.addressLine2;
+    }
+    if (Api.userInfo.addressSecondary1 != null) {
+      addressSecondaryLine1.text = Api.userInfo.addressSecondary1;
+    }
+    if (Api.userInfo.addressSecondary2 != null) {
+      addressSecondaryLine2.text = Api.userInfo.addressSecondary2;
+    }
+    setState(() {});
   }
 
   @override
@@ -72,7 +83,8 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
     });
   }
 
-  void addAddressBottomSheet() {
+  void addAddressBottomSheet(int index) {
+    whichAddress = index;
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -184,6 +196,7 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                             await SharedPreferences.getInstance();
                         String password = prefs.getString('password');
                         RegModel updateUserData = RegModel(
+                          firebaseUid: Api.userInfo.firebaseUid,
                           name: Api.userInfo.firstName +
                               ' ' +
                               Api.userInfo.lastName,
@@ -198,13 +211,18 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                           addressSecondary2: secondaryAddressLine2,
                         );
                         updateUserData.show();
-                        Navigator.pop(context);
                         bool result = false;
-                        if (!widget.addNewAddressOnly) {
-                          result = await _apiCall.putUserInfo(updateUserData);
-                        }
                         setState(() {});
                         widget.callBackFunction(concatenatedAddress);
+                        if (!widget.addNewAddressOnly) {
+                          result = await _apiCall.putUserInfo(updateUserData);
+                          Navigator.pop(context);
+                          if (result) {
+                            print('User Address Updated');
+                          }
+                        } else {
+                          Navigator.pop(context);
+                        }
                       },
                       child: Container(
                         margin: EdgeInsets.only(top: 20),
@@ -224,6 +242,67 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                 }))),
           );
         });
+  }
+
+  selectionAddressCard(int index) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 15.0, left: 15.0),
+          child: Text(name,
+              style: selectedTab.copyWith(
+                  color: selectedAddressIndex == index ? white : defaultGreen,
+                  fontWeight: FontWeight.w400)),
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 5.0),
+              child: Text(
+                index == 0
+                    ? addressPrimaryLine1.text +
+                        ',\n' +
+                        addressPrimaryLine2.text
+                    : addressSecondaryLine1.text +
+                        ',\n' +
+                        addressSecondaryLine2.text,
+                style: selectedTab.copyWith(
+                    color: selectedAddressIndex == index ? white : defaultGreen,
+                    fontWeight: FontWeight.w400),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  addAddressCard(int index) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            TextButton(
+              child: Text('Add',
+                  style: TextStyle(
+                    color: darkGreen,
+                  )),
+              onPressed: () {
+                Navigator.pop(context, false);
+                addAddressBottomSheet(index);
+              },
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [Text('Not Available')],
+        )
+      ],
+    );
   }
 
   getBottomSheet() async {
@@ -255,7 +334,6 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                                     addressPrimaryLine2.text;
                                 selectedAddressLine1 = addressPrimaryLine1.text;
                                 selectedAddressLine2 = addressPrimaryLine2.text;
-
                                 widget.callBackFunction(concatenatedAddress);
                               } else if (selectedAddressIndex == 1) {
                                 concatenatedAddress =
@@ -330,73 +408,16 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                                         : white,
                                     border: Border.all(color: defaultGreen),
                                     borderRadius: BorderRadius.circular(15)),
-                                child: (addressPrimaryLine1.text.isNotEmpty ||
-                                            addressSecondaryLine1
-                                                .text.isNotEmpty) &&
-                                        (addressPrimaryLine2.text.isNotEmpty ||
+                                child: index == 0
+                                    ? addressPrimaryLine1.text.isNotEmpty &&
+                                            addressPrimaryLine2.text.isNotEmpty
+                                        ? selectionAddressCard(index)
+                                        : addAddressCard(index)
+                                    : addressSecondaryLine1.text.isNotEmpty &&
                                             addressSecondaryLine2
-                                                .text.isNotEmpty)
-                                    ? Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(15.0),
-                                                child: Text(
-                                                  index == 0
-                                                      ? addressPrimaryLine1
-                                                              .text +
-                                                          ',\n' +
-                                                          addressPrimaryLine2
-                                                              .text
-                                                      : addressSecondaryLine1
-                                                              .text +
-                                                          ',\n' +
-                                                          addressSecondaryLine2
-                                                              .text,
-                                                  style: selectedTab.copyWith(
-                                                      color:
-                                                          selectedAddressIndex ==
-                                                                  index
-                                                              ? white
-                                                              : defaultGreen,
-                                                      fontWeight:
-                                                          FontWeight.w400),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      )
-                                    : Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              TextButton(
-                                                child: Text('Add',
-                                                    style: TextStyle(
-                                                      color: darkGreen,
-                                                    )),
-                                                onPressed: () {
-                                                  Navigator.pop(context, false);
-                                                  addAddressBottomSheet();
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [Text('Not Available')],
-                                          )
-                                        ],
-                                      )),
+                                                .text.isNotEmpty
+                                        ? selectionAddressCard(index)
+                                        : addAddressCard(index)),
                           )
                         ],
                       ),
@@ -412,7 +433,7 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
     return GestureDetector(
       onTap: () {
         if (widget.addNewAddressOnly) {
-          addAddressBottomSheet();
+          addAddressBottomSheet(0);
         } else {
           getBottomSheet();
         }

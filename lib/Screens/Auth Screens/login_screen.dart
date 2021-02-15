@@ -154,6 +154,8 @@ class _LoginState extends State<Login> {
                         try {
                           var value = double.parse(emailOrMobileNo.text);
                           var mobile = value.toStringAsFixed(0);
+                          mobile = '+91' + mobile;
+                          print(mobile);
                           LogModel loginDetails = LogModel(
                             mobile: mobile,
                             password: password.text,

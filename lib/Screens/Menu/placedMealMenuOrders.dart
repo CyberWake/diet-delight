@@ -32,10 +32,14 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
   bool isLoaded = false;
   DateTime startDate;
   int menuId = 0;
+  int primary = 0;
+  int secondary = 1;
+  int selected = -1;
   List<DateTime> breakDates = List();
   List<DateTime> planSelectedOffDays = List();
   List<DateTime> deliverPrimary = List();
   List<DateTime> deliverSecondary = List();
+  List<DateTime> blackoutsAddressCalendar = List();
   List<MenuModel> menuItems = List();
   List<MenuCategoryModel> categoryItems = List();
   List<MenuCategoryModel> mainCategoryItems = List();
@@ -73,7 +77,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
     setState(() {
       isLoaded = false;
     });
-    categoryItems = await _apiCall.getCategories(menuId);
+    categoryItems = await _apiCall.getMenuCategories(menuId);
     for (int i = 0; i < categoryItems.length; i++) {
       if (categoryItems[i].parent == 0) {
         mainCategoryItems.add(categoryItems[i]);
@@ -145,103 +149,359 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
       print(date);
       count++;
     }
+    blackoutsAddressCalendar = breakDates + planSelectedOffDays;
+    blackoutsAddressCalendar = blackoutsAddressCalendar.toSet().toList();
     widget.purchaseDetails.setEndDate(date.toString());
     print('end Date: ${widget.purchaseDetails.endDate}');
   }
 
-  void _onSelectionChanged(
-      DateRangePickerSelectionChangedArgs args, bool address) {
-    if (!address) {
-      print(args.value);
-      breakDates = [];
-      breakDates = args.value;
-    } else {
-      if (selectedAddressIndex == 0) {
-        deliverPrimary = args.value;
-        if (args.value != null) {
-          deliverPrimary = [];
-        }
-      } else if (selectedAddressIndex == 1) {
-        deliverSecondary = args.value;
-        if (args.value != null) {
-          deliverSecondary = [];
-        }
+  void _onSelectionChangedForAddress(
+      DateRangePickerSelectionChangedArgs args, int address) {
+    if (address == 0) {
+      deliverPrimary = args.value;
+      if (args.value == null) {
+        deliverPrimary = [];
+      }
+    } else if (address == 1) {
+      deliverSecondary = args.value;
+      if (args.value == null) {
+        deliverSecondary = [];
       }
     }
+    print('primary: $deliverPrimary');
+    print('secondary: $deliverSecondary');
   }
 
-  showCalendar({bool addressCalendar}) async {
-    await showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context) {
-          return Center(
-              child: Material(
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.65,
-              width: MediaQuery.of(context).size.width * 0.85,
-              child: SfDateRangePicker(
-                showNavigationArrow: true,
-                todayHighlightColor: defaultGreen,
-                toggleDaySelection: true,
-                headerHeight: 60,
-                initialSelectedDates: addressCalendar
-                    ? selectedAddressIndex == 0
-                        ? deliverPrimary
-                        : deliverSecondary
-                    : breakDates,
-                selectionColor: defaultGreen,
-                monthCellStyle: DateRangePickerMonthCellStyle(
-                    todayCellDecoration: BoxDecoration(
-                        border: Border.all(color: defaultGreen),
-                        shape: BoxShape.circle),
-                    todayTextStyle: TextStyle(
-                      color: defaultGreen,
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    print(args.value);
+    breakDates = [];
+    breakDates = args.value;
+  }
+
+  Widget addressCard(
+      {String whichAddress, int addressIndex, StateSetter update}) {
+    bool addressPresent;
+    if (addressIndex == 0) {
+      if (primaryAddressLine1 == '' || primaryAddressLine2 == '') {
+        update(() {
+          addressPresent = false;
+        });
+      } else {
+        update(() {
+          addressPresent = true;
+        });
+      }
+    } else if (addressIndex == 1) {
+      if (secondaryAddressLine1 == '' || secondaryAddressLine2 == '') {
+        update(() {
+          addressPresent = false;
+        });
+      } else {
+        update(() {
+          addressPresent = true;
+        });
+      }
+    }
+    updateCallback(address) {
+      setState(() {
+        concatenatedAddress = address;
+      });
+      update(() {
+        concatenatedAddress = address;
+      });
+    }
+
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+      height: MediaQuery.of(context).size.height * 0.15,
+      width: MediaQuery.of(context).size.width * 0.4,
+      decoration: BoxDecoration(
+          color: addressIndex == primary ? defaultGreen : fColor,
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(
+              color: Colors.black,
+              width: selected == addressIndex ? 2.0 : 0.5)),
+      child: addressPresent
+          ? GestureDetector(
+              onTap: () {
+                print('tapped');
+                if (addressPresent) {
+                  update(() {
+                    selected = addressIndex;
+                  });
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(left : 6.0,top : 5),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          whichAddress,
+                          style: adressCardTextStyle.copyWith(fontWeight:  selected == addressIndex
+                          ? FontWeight.bold
+                              : FontWeight.normal,),)
+                      ],
                     ),
-                    specialDatesDecoration: BoxDecoration(
-                        color: Colors.deepPurple,
-                        border: Border.all(color: defaultGreen),
-                        shape: BoxShape.circle),
-                    blackoutDateTextStyle: const TextStyle(
-                        color: Colors.grey,
-                        decoration: TextDecoration.lineThrough)),
-                monthViewSettings: DateRangePickerMonthViewSettings(
-                    numberOfWeeksInView:
-                        ((DateTime.parse(widget.purchaseDetails.endDate))
-                                        .difference(startDate)
-                                        .inDays /
-                                    7)
-                                .round() +
-                            1,
-                    specialDates: addressCalendar
-                        ? selectedAddressIndex == 0
-                            ? deliverPrimary
-                            : deliverSecondary
-                        : breakDates,
-                    blackoutDates: planSelectedOffDays),
-                enablePastDates: false,
-                minDate: DateTime.parse(widget.purchaseDetails.startDate),
-                maxDate: DateTime.parse(widget.purchaseDetails.endDate),
-                view: DateRangePickerView.month,
-                onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
-                  if (args.value != null) {
-                    _onSelectionChanged(args, addressCalendar);
-                  } else {
-                    setState(() {
-                      breakDates = [];
-                    });
-                  }
-                },
-                selectionMode: DateRangePickerSelectionMode.multiple,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        addressPresent
+                            ? Padding(
+                                padding: EdgeInsets.only(left: 10.0, top: 5),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(addressIndex == 0
+                                        ? primaryAddressLine1
+                                        : secondaryAddressLine1, style: adressCardTextStyle.copyWith(fontWeight:  selected == addressIndex
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,),),
+                                    SizedBox(height: 2,),
+                                    Text(addressIndex == 0
+                                        ? primaryAddressLine2
+                                        : secondaryAddressLine2, style: adressCardTextStyle.copyWith(fontWeight:  selected == addressIndex
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,),),
+                                  ],
+                                ),
+                              )
+                            : Center(
+                                child: Text('Not Available', style: adressCardTextStyle.copyWith(fontWeight:  selected == addressIndex
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,),),
+                              ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : AddressButtonWithModal(
+              callBackFunction: updateCallback,
+              addNewAddressOnly: true,
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.15,
+                width: MediaQuery.of(context).size.width * 0.4,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Text('Not Available', style: adressCardTextStyle.copyWith(fontWeight:  selected == addressIndex
+                        ? FontWeight.bold
+                        : FontWeight.normal,),),
+                    Text('Add', style: adressCardTextStyle.copyWith(fontWeight:  selected == addressIndex
+                        ? FontWeight.bold
+                        : FontWeight.normal,),),
+                  ],
+                ),
               ),
             ),
-          ));
-        }).then((value) {
+    );
+  }
+
+  showBreakCalendar() {
+    Future<bool> done = showModalBottomSheet(
+        context: context,
+        shape:  RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(topLeft : Radius.circular(25),topRight: Radius.circular(25)),
+        ),
+        isScrollControlled: true,
+        builder: (BuildContext context) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: Column(
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height * 0.04,),
+                Text('Breaks',style: appBarTextStyle.copyWith(color: Color.fromRGBO(119, 131, 143, 1),fontSize: 24,),),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.025,),
+                SfDateRangePicker(
+                  showNavigationArrow: true,
+                  todayHighlightColor: defaultGreen,
+                  toggleDaySelection: true,
+                  headerHeight: 60,
+                  initialSelectedDates: breakDates,
+                  selectionColor: Colors.grey,
+                  monthCellStyle: DateRangePickerMonthCellStyle(
+                      todayCellDecoration: BoxDecoration(
+                          border: Border.all(color: defaultGreen),
+                          shape: BoxShape.circle),
+                      todayTextStyle: TextStyle(
+                        color: defaultGreen,
+                      ),
+                      blackoutDateTextStyle: const TextStyle(
+                          color: Colors.grey,
+                          decoration: TextDecoration.lineThrough)),
+                  monthViewSettings: DateRangePickerMonthViewSettings(
+                      numberOfWeeksInView:
+                          ((DateTime.parse(widget.purchaseDetails.endDate))
+                                          .difference(startDate)
+                                          .inDays /
+                                      7)
+                                  .round() +
+                              1,
+                      blackoutDates: planSelectedOffDays),
+                  enablePastDates: false,
+                  minDate: DateTime.parse(widget.purchaseDetails.startDate),
+                  maxDate: DateTime.parse(widget.purchaseDetails.endDate),
+                  view: DateRangePickerView.month,
+                  onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
+                    if (args.value != null) {
+                      _onSelectionChanged(args);
+                    } else {
+                      setState(() {
+                        breakDates = [];
+                      });
+                    }
+                  },
+                  selectionMode: DateRangePickerSelectionMode.multiple,
+                ),
+              ],
+            ),
+          );
+        });
+    done.then((value) {
       getDates();
       setState(() {
         print(breakDates);
       });
     });
+  }
+
+  showAddressCalendar({bool addressCalendar}) async {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter updateBottomSheet) {
+            updateBottomSheet(() {});
+            return Container(
+                height: MediaQuery.of(context).size.height * 0.8,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          addressCard(
+                              whichAddress: 'Primary Address',
+                              addressIndex: 0,
+                              update: updateBottomSheet),
+                          addressCard(
+                              whichAddress: 'Secondary Address',
+                              addressIndex: 1,
+                              update: updateBottomSheet),
+                        ],
+                      ),
+                      selected == 0
+                          ? SfDateRangePicker(
+                              showNavigationArrow: true,
+                              todayHighlightColor: defaultGreen,
+                              toggleDaySelection: true,
+                              headerHeight: 60,
+                              initialSelectedDates: deliverPrimary,
+                              selectionColor: defaultGreen,
+                              monthCellStyle: DateRangePickerMonthCellStyle(
+                                  todayCellDecoration: BoxDecoration(
+                                      border: Border.all(color: defaultGreen),
+                                      shape: BoxShape.circle),
+                                  todayTextStyle: TextStyle(
+                                    color: defaultGreen,
+                                  ),
+                                  specialDatesDecoration: BoxDecoration(
+                                      color: defaultPurple,
+                                      border:
+                                          Border.all(color: Colors.deepPurple),
+                                      shape: BoxShape.circle),
+                                  blackoutDateTextStyle: const TextStyle(
+                                      color: Colors.grey,
+                                      decoration: TextDecoration.lineThrough)),
+                              monthViewSettings:
+                                  DateRangePickerMonthViewSettings(
+                                      numberOfWeeksInView: ((DateTime.parse(
+                                                          widget.purchaseDetails
+                                                              .endDate))
+                                                      .difference(startDate)
+                                                      .inDays /
+                                                  7)
+                                              .round() +
+                                          1,
+                                      specialDates: deliverSecondary,
+                                      blackoutDates: blackoutsAddressCalendar),
+                              enablePastDates: false,
+                              minDate: DateTime.parse(
+                                  widget.purchaseDetails.startDate),
+                              maxDate: DateTime.parse(
+                                  widget.purchaseDetails.endDate),
+                              view: DateRangePickerView.month,
+                              onSelectionChanged:
+                                  (DateRangePickerSelectionChangedArgs args) {
+                                if (args.value != null) {
+                                  _onSelectionChangedForAddress(args, selected);
+                                }
+                              },
+                              selectionMode:
+                                  DateRangePickerSelectionMode.multiple,
+                            )
+                          : SfDateRangePicker(
+                              showNavigationArrow: true,
+                              todayHighlightColor: defaultGreen,
+                              toggleDaySelection: true,
+                              headerHeight: 60,
+                              initialSelectedDates: deliverSecondary,
+                              selectionColor: Colors.deepPurple,
+                              monthCellStyle: DateRangePickerMonthCellStyle(
+                                  todayCellDecoration: BoxDecoration(
+                                      border: Border.all(color: defaultGreen),
+                                      shape: BoxShape.circle),
+                                  todayTextStyle: TextStyle(
+                                    color: defaultGreen,
+                                  ),
+                                  specialDatesDecoration: BoxDecoration(
+                                      color: defaultGreen,
+                                      border: Border.all(color: defaultGreen),
+                                      shape: BoxShape.circle),
+                                  blackoutDateTextStyle: const TextStyle(
+                                      color: Colors.grey,
+                                      decoration: TextDecoration.lineThrough)),
+                              monthViewSettings:
+                                  DateRangePickerMonthViewSettings(
+                                      numberOfWeeksInView: ((DateTime.parse(
+                                                          widget.purchaseDetails
+                                                              .endDate))
+                                                      .difference(startDate)
+                                                      .inDays /
+                                                  7)
+                                              .round() +
+                                          1,
+                                      specialDates: deliverPrimary,
+                                      blackoutDates: blackoutsAddressCalendar),
+                              enablePastDates: false,
+                              minDate: DateTime.parse(
+                                  widget.purchaseDetails.startDate),
+                              maxDate: DateTime.parse(
+                                  widget.purchaseDetails.endDate),
+                              view: DateRangePickerView.month,
+                              onSelectionChanged:
+                                  (DateRangePickerSelectionChangedArgs args) {
+                                if (args.value != null) {
+                                  _onSelectionChangedForAddress(args, selected);
+                                }
+                              },
+                              selectionMode:
+                                  DateRangePickerSelectionMode.multiple,
+                            ),
+                    ]));
+          });
+        });
   }
 
   @override
@@ -400,20 +660,21 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      AddressButtonWithModal(
-                        callBackFunction: callback,
-                        child: Text(
-                          'Address',
-                          style: TextStyle(
-                            color: darkGreen,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ),
+                      TextButton(
+                          onPressed: () async {
+                            await showAddressCalendar(addressCalendar: true);
+                          },
+                          child: Text(
+                            'Address',
+                            style: TextStyle(
+                              color: darkGreen,
+                              decoration: TextDecoration.underline,
+                            ),
+                          )),
                       Text('${widget.purchaseDetails.kCal} Calorie'),
                       TextButton(
                           onPressed: () async {
-                            await showCalendar(addressCalendar: false);
+                            await showBreakCalendar();
                           },
                           child: Text(
                             'Breaks',

@@ -35,10 +35,12 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
   List<FoodItemModel> itemsFood = List();
   List<MenuModel> menuItems = List();
   List<String> dates = [];
+  FocusNode note = FocusNode();
   final _apiCall = Api.instance;
   TabController _pageController;
   MenuOrderModel foodItemOrder;
   bool isLoaded = false;
+  double _height = 250;
   int menuId = 0;
 
   getData() async {
@@ -51,7 +53,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     setState(() {
       isLoaded = false;
     });
-    categoryItems = await _apiCall.getCategories(menuId);
+    categoryItems = await _apiCall.getMenuCategories(menuId);
     for (int i = 0; i < categoryItems.length; i++) {
       categoryItems[i].showNew();
       if (categoryItems[i].parent == 0) {
@@ -84,7 +86,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     if (categoryItems.isNotEmpty) {
       for (int i = 0; i < categoryItems.length;) {
         foodItems.add(await _apiCall
-            .getCategoryFoodItems(
+            .getMenuCategoryFoodItems(
                 menuId.toString(), categoryItems[i].id.toString())
             .whenComplete(() => i++));
       }
@@ -124,6 +126,19 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     concatenatedAddress = '';
     selectedAddressIndex = -1;
     menuId = widget.plan.menuId;
+    notes.addListener(() {
+      if (note.hasFocus) {
+        print('height increased');
+        setState(() {
+          _height = 495;
+        });
+      } else if (!note.hasFocus) {
+        print('height decreased');
+        setState(() {
+          _height = 250;
+        });
+      }
+    });
     _pageController = TabController(
         length: int.parse(widget.purchaseDetails.mealPlanDuration),
         vsync: this);
@@ -131,9 +146,9 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     getData();
   }
 
-  callback(address){
+  callback(address) {
     setState(() {
-      concatenatedAddress=address;
+      concatenatedAddress = address;
     });
   }
 
@@ -158,174 +173,199 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
           ),
           title: Text('Place meal orders', style: appBarTextStyle),
         ),
-        body: Container(
-          child: Column(children: [
-            Expanded(
-              flex: 4,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    flex: 7,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex: 3,
-                            child: Text(
-                              widget.purchaseDetails.mealPlanName,
-                              style: TextStyle(
-                                fontFamily: 'RobotoCondensedReg',
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 7,
-                            child: ClipRect(
+        body: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.88,
+            child: Column(children: [
+              Expanded(
+                flex: 4,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      flex: 7,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 3,
                               child: Text(
-                                widget.plan.details,
-                                style: authInputTextStyle.copyWith(
-                                    fontSize: 14, color: Colors.black),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                      flex: 3,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 4,
-                              color: Colors.grey[500],
-                              spreadRadius: 0,
-                              offset: const Offset(0.0, 0.0),
-                            )
-                          ],
-                        ),
-                        child: CircleAvatar(
-                          radius: 45,
-                          backgroundColor: Colors.white,
-                          child: CachedNetworkImage(
-                            imageUrl: widget.plan.picture ??
-                                "http://via.placeholder.com/350x150",
-                            imageBuilder: (context, imageProvider) => Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
+                                widget.purchaseDetails.mealPlanName,
+                                style: TextStyle(
+                                  fontFamily: 'RobotoCondensedReg',
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
-                            placeholder: (context, url) =>
-                                CircularProgressIndicator(),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
-                          ),
+                            Expanded(
+                              flex: 7,
+                              child: ClipRect(
+                                child: Text(
+                                  widget.plan.details,
+                                  style: authInputTextStyle.copyWith(
+                                      fontSize: 14, color: Colors.black),
+                                ),
+                              ),
+                            )
+                          ],
                         ),
-                      ))
-                ],
-              ),
-            ),
-            Expanded(
-                flex: 1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text('${widget.purchaseDetails.kCal} Calorie'),
-                    TextButton(
-                        onPressed: () {},
-                        child: AddressButtonWithModal(
-                          callBackFunction: callback,
-                          child: Text(
-                            'Address',
-                            style: TextStyle(
-                              color: darkGreen,
-                              decoration: TextDecoration.underline,
+                      ),
+                    ),
+                    Expanded(
+                        flex: 3,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 4,
+                                color: Colors.grey[500],
+                                spreadRadius: 0,
+                                offset: const Offset(0.0, 0.0),
+                              )
+                            ],
+                          ),
+                          child: CircleAvatar(
+                            radius: 45,
+                            backgroundColor: Colors.white,
+                            child: CachedNetworkImage(
+                              imageUrl: widget.plan.picture ??
+                                  "http://via.placeholder.com/350x150",
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              placeholder: (context, url) =>
+                                  CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
                             ),
                           ),
-                        )),
+                        ))
                   ],
-                )),
-            Expanded(
-              flex: 1,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: white,
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 4,
-                      color: Colors.black.withOpacity(0.25),
-                      spreadRadius: 0,
-                      offset: const Offset(0.0, 0.0),
-                    )
-                  ],
-                ),
-                child: TabBar(
-                  isScrollable: true,
-                  controller: _pageController,
-                  onTap: (index) {},
-                  labelStyle:
-                      selectedTab.copyWith(color: Colors.black, fontSize: 14),
-                  indicatorColor: Colors.transparent,
-                  indicatorWeight: 3.0,
-                  indicatorSize: TabBarIndicatorSize.label,
-                  labelColor: Colors.black,
-                  labelPadding: EdgeInsets.symmetric(horizontal: 10),
-                  unselectedLabelStyle:
-                      unSelectedTab.copyWith(color: Colors.grey),
-                  unselectedLabelColor: Colors.grey,
-                  tabs: List.generate(
-                      int.parse(widget.purchaseDetails.mealPlanDuration),
-                      (index) {
-                    return Tab(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Flexible(
-                              fit: FlexFit.loose,
-                              child: Text('Day ${(index + 1).toString()}')),
-                          Flexible(
-                              fit: FlexFit.loose, child: Text(dates[index]))
-                        ],
-                      ),
-                    );
-                  }),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 9,
-              child: isLoaded
-                  ? TabBarView(
-                      controller: _pageController,
-                      children: List.generate(
-                          int.parse(widget.purchaseDetails.mealPlanDuration),
-                          (index) {
-                        return Container(
-                          child: menuUi(day: index + 1),
-                        );
-                      }))
-                  : Center(child: CircularProgressIndicator()),
-            )
-          ]),
+              Expanded(
+                  flex: 1,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('${widget.purchaseDetails.kCal} Calorie'),
+                      TextButton(
+                          onPressed: () {},
+                          child: AddressButtonWithModal(
+                            callBackFunction: callback,
+                            child: Text(
+                              'Address',
+                              style: TextStyle(
+                                color: darkGreen,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          )),
+                    ],
+                  )),
+              Expanded(
+                flex: 1,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: white,
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 4,
+                        color: Colors.black.withOpacity(0.25),
+                        spreadRadius: 0,
+                        offset: const Offset(0.0, 0.0),
+                      )
+                    ],
+                  ),
+                  child: TabBar(
+                    isScrollable: true,
+                    controller: _pageController,
+                    onTap: (index) {},
+                    labelStyle:
+                        selectedTab.copyWith(color: Colors.black, fontSize: 14),
+                    indicatorColor: Colors.transparent,
+                    indicatorWeight: 3.0,
+                    indicatorSize: TabBarIndicatorSize.label,
+                    labelColor: Colors.black,
+                    labelPadding: EdgeInsets.symmetric(horizontal: 10),
+                    unselectedLabelStyle:
+                        unSelectedTab.copyWith(color: Colors.grey),
+                    unselectedLabelColor: Colors.grey,
+                    tabs: List.generate(
+                        int.parse(widget.purchaseDetails.mealPlanDuration),
+                        (index) {
+                      return Tab(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                                fit: FlexFit.loose,
+                                child: Text('Day ${(index + 1).toString()}')),
+                            Flexible(
+                                fit: FlexFit.loose, child: Text(dates[index]))
+                          ],
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 9,
+                child: isLoaded
+                    ? TabBarView(
+                        controller: _pageController,
+                        children: List.generate(
+                            int.parse(widget.purchaseDetails.mealPlanDuration),
+                            (index) {
+                          return Container(
+                            child: menuUi(day: index + 1),
+                          );
+                        }))
+                    : Center(child: CircularProgressIndicator()),
+              )
+            ]),
+          ),
         ));
   }
 
   Widget foodItemCard(FoodItemModel item) {
+    Widget button = GestureDetector(
+      onTap: () {
+        if (notes.text.isNotEmpty) {
+          print('note present');
+          setState(() {
+            print('note added');
+            item.updateNote(notes.text);
+          });
+        }
+        Navigator.pop(context);
+      }, //buttonFunction,
+      child: Container(
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height * 0.07,
+          color: defaultGreen,
+          child: Center(
+              child: Text(
+            'DONE',
+            style: selectedTab.copyWith(color: white),
+          ))),
+    );
     return Container(
       height: 123,
       margin: EdgeInsets.symmetric(horizontal: 10),
@@ -357,11 +397,74 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                   SizedBox(
                     height: 4,
                   ),
-                  Container(
-                    alignment: Alignment.bottomRight,
-                    padding: EdgeInsets.only(right: 10),
-                    child: IconButton(
-                        onPressed: () {}, icon: Icon(Icons.favorite_border)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        alignment: Alignment.bottomLeft,
+                        padding: EdgeInsets.only(right: 10),
+                        child: IconButton(
+                            onPressed: () async {
+                              setState(() {
+                                notes.clear();
+                              });
+                              if (item.noteAdded != null) {
+                                setState(() {
+                                  notes.text = item.noteAdded;
+                                });
+                              }
+                              showModalBottomSheet(
+                                  context: context,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(50.0),
+                                        topRight: Radius.circular(50.0)),
+                                  ),
+                                  isScrollControlled: true,
+                                  builder: (BuildContext context) {
+                                    return noteModalSheet(button: button);
+                                  });
+                            },
+                            icon: Icon(Icons.add_comment_outlined)),
+                      ),
+                      item.noteAdded != null
+                          ? GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  notes.clear();
+                                });
+                                if (item.noteAdded != null) {
+                                  setState(() {
+                                    notes.text = item.noteAdded;
+                                  });
+                                }
+                                showModalBottomSheet(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(50.0),
+                                          topRight: Radius.circular(50.0)),
+                                    ),
+                                    context: context,
+                                    isScrollControlled: true,
+                                    builder: (BuildContext context) {
+                                      return noteModalSheet(button: button);
+                                    });
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.only(right: 10),
+                                child: Text('Note added'),
+                              ),
+                            )
+                          : Container(),
+                      Container(
+                        alignment: Alignment.bottomRight,
+                        padding: EdgeInsets.only(right: 10),
+                        child: IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.favorite_border)),
+                      ),
+                    ],
                   )
                 ],
               ),
@@ -428,8 +531,9 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                   menuItemDay: item.day,
                                   foodItemName: item.foodName,
                                   deliveryAddress: concatenatedAddress,
-                                  note:
-                                      notes.text.isEmpty ? "null" : notes.text);
+                                  note: item.noteAdded.length == 0
+                                      ? "null"
+                                      : item.noteAdded);
                               String body =
                                   convert.jsonEncode(foodItemOrder.toMap());
                               print(body);
@@ -446,7 +550,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                             }
                           } else {
                             // TODO: delete selected item
-                            item.change(false);
+                            //item.change(false);
                             setState(() {});
                           }
                         },
@@ -470,6 +574,48 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     );
   }
 
+  noteModalSheet({Widget button}) {
+    return Container(
+      height: _height,
+      decoration: BoxDecoration(
+        color: white,
+        borderRadius: BorderRadius.only(
+            topRight: Radius.circular(50), topLeft: Radius.circular(50)),
+      ),
+      child: Column(
+        mainAxisAlignment:
+            _height == 250 ? MainAxisAlignment.end : MainAxisAlignment.start,
+        children: [
+          Container(
+              margin: EdgeInsets.all(30),
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              height: MediaQuery.of(context).size.height * 0.2,
+              decoration: BoxDecoration(
+                color: white,
+                borderRadius: BorderRadius.circular(5),
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 4,
+                    color: Colors.black.withOpacity(0.25),
+                    spreadRadius: 0,
+                    offset: const Offset(0.0, 0.0),
+                  )
+                ],
+              ),
+              child: TextFormField(
+                autofocus: true,
+                focusNode: note,
+                controller: notes,
+                textDirection: TextDirection.ltr,
+                decoration: authInputFieldDecoration.copyWith(
+                    hintText: 'Enter your note here'),
+              )),
+          button
+        ],
+      ),
+    );
+  }
+
   Widget menuUi({int day}) {
     return ListView.separated(
       controller: _scrollController,
@@ -484,46 +630,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
             ),
             initiallyExpanded: indexMajor == 0 ? true : false,
             children: subCategoryItems[indexMajor].length == 0
-                ? List.generate(itemsFood.length + 1, (index) {
-                    if (index == itemsFood.length) {
-                      return Column(
-                        children: [
-                          Divider(),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 15.0),
-                            child: Text(
-                              'Let us know if there is something you’d want us to know about your menu, we’ll pass it on to the chef.',
-                              style: authInputTextStyle.copyWith(
-                                  fontSize: 20, color: Colors.black),
-                            ),
-                          ),
-                          Container(
-                              margin: EdgeInsets.all(15),
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              height: MediaQuery.of(context).size.height * 0.15,
-                              decoration: BoxDecoration(
-                                color: white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    blurRadius: 4,
-                                    color: Colors.black.withOpacity(0.25),
-                                    spreadRadius: 0,
-                                    offset: const Offset(0.0, 0.0),
-                                  )
-                                ],
-                              ),
-                              child: TextFormField(
-                                controller: notes,
-                                onChanged: (value) {
-                                  notes.text = value;
-                                },
-                                decoration: authInputFieldDecoration.copyWith(
-                                    hintText: 'Enter your note here'),
-                              )),
-                        ],
-                      );
-                    }
+                ? List.generate(itemsFood.length, (index) {
                     if (itemsFood[index].day == day) {
                       return foodItemCard(itemsFood[index]);
                     }
@@ -546,49 +653,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                           style: selectedTab.copyWith(fontSize: 20),
                         ),
                         initiallyExpanded: indexMinor == 0 ? true : false,
-                        children: List.generate(itemsFood.length + 1, (index) {
-                          if (index == itemsFood.length) {
-                            return Column(
-                              children: [
-                                Divider(),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15.0),
-                                  child: Text(
-                                    'Let us know if there is something you’d want us to know about your menu, we’ll pass it on to the chef.',
-                                    style: authInputTextStyle.copyWith(
-                                        fontSize: 20, color: Colors.black),
-                                  ),
-                                ),
-                                Container(
-                                    margin: EdgeInsets.all(15),
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 10),
-                                    height: MediaQuery.of(context).size.height *
-                                        0.15,
-                                    decoration: BoxDecoration(
-                                      color: white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          blurRadius: 4,
-                                          color: Colors.black.withOpacity(0.25),
-                                          spreadRadius: 0,
-                                          offset: const Offset(0.0, 0.0),
-                                        )
-                                      ],
-                                    ),
-                                    child: TextFormField(
-                                      controller: notes,
-                                      onChanged: (value) {
-                                        notes.text = value;
-                                      },
-                                      decoration:
-                                          authInputFieldDecoration.copyWith(
-                                              hintText: 'Enter your note here'),
-                                    )),
-                              ],
-                            );
-                          }
+                        children: List.generate(itemsFood.length, (index) {
                           if (itemsFood[index].day == day) {
                             return foodItemCard(itemsFood[index]);
                           }
