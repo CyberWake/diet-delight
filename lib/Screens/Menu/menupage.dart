@@ -269,14 +269,6 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                                             color: Color(0x26000000),
                                             blurRadius: 5)
                                       ],
-//                                      boxShadow: [
-//                                        BoxShadow(
-//                                          blurRadius: 4,
-//                                          color: Colors.grey[500],
-//                                          spreadRadius: 0,
-//                                          offset: const Offset(0.0, 0.0),
-//                                        )
-//                                      ],
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
                                         image: imageProvider,
@@ -304,14 +296,6 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                         boxShadow: [
                           BoxShadow(color: Color(0x26000000), blurRadius: 5)
                         ],
-//                        boxShadow: [
-//                          BoxShadow(
-//                            blurRadius: 4,
-//                            color: Colors.black.withOpacity(0.25),
-//                            spreadRadius: 0,
-//                            offset: const Offset(0.0, 0.0),
-//                          )
-//                        ],
                       ),
                       child: Center(
                         child: TabBar(

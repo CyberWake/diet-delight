@@ -82,14 +82,13 @@ class _MealPlanPageState extends State<MealPlanPage>
         isLoaded = true;
       });
       getMenuData();
-    }else{
+    } else {
       getMenuData();
     }
   }
 
   Future getMenuData() async {
     List<List<MenuCategoryModel>> tempMenuCategories = List();
-    await FlutterSecureStorage().write(key: 'menuCategories', value: 'true');
     for (int i = 0; i < menus.length;) {
       tempMenuCategories.insert(
           i,
@@ -97,6 +96,7 @@ class _MealPlanPageState extends State<MealPlanPage>
               .getMenuCategories(menus[i].id)
               .whenComplete(() => i++));
     }
+    await FlutterSecureStorage().write(key: 'menuCategories', value: 'true');
     for (int i = 0; i < tempMenuCategories.length; i++) {
       temp = [];
       for (int j = 0; j < tempMenuCategories[i].length; j++) {
