@@ -1,5 +1,6 @@
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 
 const Color defaultGreen = Color(0xFF8BC53F);
@@ -146,8 +147,8 @@ List<Widget> ddItems = List.generate(
                 index == 0
                     ? 'SILVER'
                     : index == 1
-                        ? 'PLATINUM'
-                        : 'GOLD',
+                        ? 'GOLD'
+                        : 'PLATINUM',
                 style: TextStyle(
                   fontFamily: 'RobotoCondensedReg',
                   fontSize: 15,
@@ -208,3 +209,18 @@ String primaryAddressLine1 = Api.userInfo.addressLine1 ?? '';
 String primaryAddressLine2 = Api.userInfo.addressLine2 ?? '';
 String secondaryAddressLine1 = Api.userInfo.addressSecondary1 ?? '';
 String secondaryAddressLine2 = Api.userInfo.addressSecondary2 ?? '';
+
+String displayDate(DateTime targetDate) {
+  var date;
+  var DT;
+  var formatter;
+  var time;
+  var result;
+  date = DateFormat.yMMMd().format(DT);
+  print(date);
+  formatter = new DateFormat.jm();
+  time = formatter.format(DT);
+  print(time);
+  result = date + ' ' + time;
+  return result;
+}

@@ -16,6 +16,7 @@ import 'package:diet_delight/Models/menuOrdersModel.dart';
 import 'package:diet_delight/Models/optionsFile.dart';
 import 'package:diet_delight/Models/questionnaireModel.dart';
 import 'package:diet_delight/Models/registrationModel.dart';
+import 'package:diet_delight/Models/addFavouritesModel.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:oauth2/oauth2.dart' as oauth2;
@@ -41,6 +42,10 @@ class Api {
   static List<MealPurchaseModel> itemMealPurchases = List();
   static List<MealPurchaseModel> itemPresentMealPurchases = List();
   static List<DurationModel> itemDurations = List();
+  static List<AddFavouritesModel> favouriteItems = List();
+  static List<int> favouriteIds = List();
+  static List<List> favourites = List();
+  static List<FoodItemModel> featuredMenu = List();
   static RegModel userInfo = RegModel();
   static String token;
 
@@ -868,5 +873,117 @@ class Api {
     }
     print(options);
     return options;
+  }
+
+  Future<bool> addFavourites(AddFavouritesModel details) async {
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+      String body = convert.jsonEncode(details.toMap());
+      final response = await http.post(uri + '/api/v1/favourites',
+          headers: headers, body: body);
+      if (response.statusCode == 201) {
+        return true;
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        return false;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> editFavourites(AddFavouritesModel details) async {
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+      String body = convert.jsonEncode(details.toMap());
+      final response = await http.post(uri + '/api/v1/favourites/${details.id}',
+          headers: headers, body: body);
+      if (response.statusCode == 201) {
+        return true;
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        return false;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<List<List>> getFavourites() async {
+    try {
+      favouriteItems = [];
+      favouriteIds = [];
+      favourites = [];
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+      final response = await http.get(
+          uri + '/api/v1/favourites?pageSize=20&sortOrder=desc',
+          headers: headers);
+      if (response.statusCode == 200) {
+        print('Success getting favourites');
+        var body = convert.jsonDecode(response.body);
+        List data = body['data'];
+        data.forEach((element) {
+          AddFavouritesModel item = AddFavouritesModel.fromMap(element);
+          favouriteIds.add(item.menuItemId);
+          favouriteItems.add(item);
+        });
+        print('Favourite Ids : $favouriteIds');
+        print('Favourite Items : $favouriteItems');
+        favourites.add(favouriteIds);
+        favourites.add(favouriteItems);
+        return favourites;
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        return favourites;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return [];
+    }
+  }
+
+  Future<List<FoodItemModel>> getFeaturedMenuItems() async {
+    try {
+      featuredMenu = [];
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+      final response = await http.get(
+          uri + '/api/v1/menu-items?pageSize=20&featured=1&sortOrder=desc',
+          headers: headers);
+      if (response.statusCode == 200) {
+        print('Success getting featured menu items');
+        var body = convert.jsonDecode(response.body);
+        List data = body['data'];
+        data.forEach((element) {
+          FoodItemModel item = FoodItemModel.fromMap(element);
+          featuredMenu.add(item);
+        });
+        print('featuredMenu : $featuredMenu');
+        return featuredMenu;
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        return featuredMenu;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return [];
+    }
   }
 }

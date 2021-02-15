@@ -1,7 +1,8 @@
-import 'dart:io';
-import 'dart:isolate';
+import 'dart:convert';
 import 'dart:ui';
-
+import 'dart:io';
+import 'package:intl/intl.dart';
+import 'dart:isolate';
 import 'package:date_format/date_format.dart';
 import 'package:diet_delight/Models/consultationAppointmentModel.dart';
 import 'package:diet_delight/Models/consultationModel.dart';
@@ -11,10 +12,10 @@ import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ConsultationOrderHistoryPage extends StatefulWidget {
   @override
@@ -33,7 +34,7 @@ class _ConsultationOrderHistoryPageState
   ReceivePort _port = ReceivePort();
   bool _permissionReady = false;
 
-  Future<void> downloadFile(String key, String fileName) async {
+  Future<void> DownloadFile(String key, String fileName) async {
     _permissionReady = await _checkPermission();
     _checkPermission().then((hasGranted) {
       setState(() {
@@ -278,7 +279,7 @@ class _ConsultationOrderHistoryPageState
                                           color: Colors.white,
                                           child: ListTile(
                                             onTap: () async {
-                                              await downloadFile(
+                                              await DownloadFile(
                                                   'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
                                                   'Dummy PDF.pdf');
                                               Navigator.pop(context);
