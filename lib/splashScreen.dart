@@ -95,7 +95,7 @@ class _SplashScreenState extends State<SplashScreen>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    SpinKitFadingCircle(
+                    SpinKitWanderingCubes(
                       itemBuilder: (BuildContext context, int index) {
                         return DecoratedBox(
                           decoration: BoxDecoration(

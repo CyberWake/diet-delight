@@ -12,6 +12,7 @@ import 'package:diet_delight/Widgets/getAddressModalSheet.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class PlaceMealMenuOrders extends StatefulWidget {
   final MealPurchaseModel purchaseDetails;
@@ -337,7 +338,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                             child: menuUi(day: index + 1),
                           );
                         }))
-                    : Center(child: CircularProgressIndicator()),
+                    : Center(child: SpinKitDoubleBounce(color: defaultGreen)),
               )
             ]),
           ),

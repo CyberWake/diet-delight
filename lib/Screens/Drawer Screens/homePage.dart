@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:diet_delight/Models/addFavouritesModel.dart';
 import 'package:diet_delight/Models/consultationModel.dart';
+import 'package:diet_delight/Models/foodItemModel.dart';
 import 'package:diet_delight/Models/mealModel.dart';
 import 'package:diet_delight/Models/mealPlanDurationsModel.dart';
 import 'package:diet_delight/Models/menuModel.dart';
@@ -10,8 +12,7 @@ import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:diet_delight/Models/foodItemModel.dart';
-import 'package:diet_delight/Models/addFavouritesModel.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -627,11 +628,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     size: 60,
                                                   ),
                                                 ),
-//                                                Image.asset(
-//                                                  'images/Group 26.png',
-//                                                  width: (0.4 * devWidth),
-//                                                  height: (0.4 * devWidth) / 2,
-//                                                ),
                                               ),
                                               Padding(
                                                 padding: EdgeInsets.fromLTRB(
@@ -779,6 +775,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           )
-        : Center(child: CircularProgressIndicator());
+        : Center(child: SpinKitDoubleBounce(color: defaultGreen));
   }
 }

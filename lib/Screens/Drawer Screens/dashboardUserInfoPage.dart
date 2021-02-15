@@ -318,6 +318,7 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                                   bool result = await _apiCall.updatePassword(
                                       curPassword.text, newPassword.text);
                                   if (result) {
+                                    getUserInfo();
                                     setState(() {
                                       passwordUpdated = true;
                                     });

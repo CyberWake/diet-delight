@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../Models/foodItemModel.dart';
@@ -158,7 +159,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
     return SafeArea(
       child: Container(
           child: isLoaded == false
-              ? Center(child: CircularProgressIndicator())
+              ? Center(child: SpinKitDoubleBounce(color: defaultGreen))
               : Scaffold(
                   key: _scaffoldKey,
                   backgroundColor: white,
@@ -198,14 +199,6 @@ class _FavouritesPageState extends State<FavouritesPage> {
                             return item(favourites[1][index].menuItem);
                           }),
                     ),
-//      ListView(
-//        children: [
-//          Padding(
-//            padding: const EdgeInsets.only(top: 18.0),
-//            child: item(dummyModel),
-//          )
-//        ],
-//      ),
                   )))),
     );
   }

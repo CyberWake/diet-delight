@@ -1,11 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:diet_delight/Models/addFavouritesModel.dart';
 import 'package:diet_delight/Models/foodItemModel.dart';
 import 'package:diet_delight/Models/menuCategoryModel.dart';
 import 'package:diet_delight/Models/menuModel.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
-import 'package:diet_delight/Models/addFavouritesModel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Menu extends StatefulWidget {
   final MenuModel menu;
@@ -95,6 +96,9 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
     print('subCategoryItems.length: ${subCategoryItems.length}');
     print('mainCategoryItems.length: ${mainCategoryItems.length}');
     print('categoryItems.length: ${categoryItems.length}');
+    subCategoryItems.forEach((element) {
+      print(element.length);
+    });
     if (mounted) {
       setState(() {
         isLoaded = true;
@@ -355,12 +359,13 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                             margin: index == 0
                                 ? EdgeInsets.only(top: 10)
                                 : EdgeInsets.zero,
-                            child: menuUi(foodItems[index], index),
+                            child: menuUi(
+                                foodItems[index], categoryItems[index].parent),
                           );
                         })),
                   )
                 ])
-              : Center(child: CircularProgressIndicator()),
+              : Center(child: SpinKitDoubleBounce(color: defaultGreen)),
         ));
   }
 

@@ -11,6 +11,7 @@ import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class PlacedMealMenuOrders extends StatefulWidget {
@@ -751,7 +752,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                               ],
                             );
                           }))
-                      : Center(child: CircularProgressIndicator()),
+                      : Center(child: SpinKitDoubleBounce(color: defaultGreen)),
                 )
               ]),
         ));

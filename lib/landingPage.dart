@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   TabController _pageController1;
   TabController _pageController2;
+  TabController _pageController3;
   int page = 0;
   String _platformVersion = 'Unknown';
   List<String> drawerItems = [
@@ -82,7 +83,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _pageController1 = TabController(length: 2, vsync: this);
-    _pageController2 = TabController(length: 3, vsync: this);
+    _pageController2 = TabController(length: 2, vsync: this);
+    _pageController3 = TabController(length: 3, vsync: this);
     initPlatformState();
   }
 
@@ -168,7 +170,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               : [],
           bottom: page == 1 || page == 3 || page == 5
               ? TabBar(
-                  controller: page == 5 ? _pageController2 : _pageController1,
+                  controller: page == 5
+                      ? _pageController3
+                      : page == 3
+                          ? _pageController2
+                          : _pageController1,
                   isScrollable: true,
                   onTap: (index) async {},
                   labelStyle: selectedTab.copyWith(
@@ -243,13 +249,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               DashBoardOngoingOrders(),
             ]),
             FavouritesPage(),
-            TabBarView(controller: _pageController1, children: [
+            TabBarView(controller: _pageController2, children: [
               ConsultationOrderHistoryPage(),
               MealPlanOrderHistoryPage()
             ]),
             NotificationsPage(),
             TabBarView(
-              controller: _pageController2,
+              controller: _pageController3,
               children: [
                 SettingsTermsAndConditionsPage(),
                 SettingsFAQPage(),
