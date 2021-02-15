@@ -242,7 +242,6 @@ class Api {
   }
 
   Future<List<ConsultationModel>> getConsultationPackages() async {
-    token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIyIiwianRpIjoiMTc1ZGQ1NWI4M2M5NDRmYWQ5YWM3NWE5MDI1MTU1NjM4MTdlOGIzNGQ3MjZjZTcwNWZiNWY2MzdjZDE3MDZiMWMyNmU0NTg1NjNkYTE1OWQiLCJpYXQiOjE2MTMzNjM0NjMsIm5iZiI6MTYxMzM2MzQ2MywiZXhwIjoxNjQ0ODk5NDYzLCJzdWIiOiI3Iiwic2NvcGVzIjpbXX0.aQ7ktq6cSDsThw4rdgDrRvMaj94qesNbLpBpkyhgWARdePK2iJw8y8ctXt23rprM3_8oFDq22KJ4qYtDbv0tHTGvNW_zbb6fRDeLU-AnbTMrffpv5PLS7FgWpjt1hAJZWppm6abRCOpDgG0phw0ZmKCybb-T2n41PEVVjx6TKtqRytugkDFq8hzHYUC-WngK60uwFJN9I3woUZfNN5Ey36MSaVwlAwVWPV9W2qaIxvW60WVFALfcekSPgK8mvrAVGkNeh90YcDvXw2bWwbt4Kxe8M8Y3wyxQU7hd5OuPqWm1wGSKa_XNTtsyGQ1t8L_FKF7tt5D9sknHJWaeqf-TsaWBxGkRqBZ60T7LIoJji0Q0bk47HKGRKed5pveNSHLJa0Fhf95pG_X_xRQkXqBj1SLe6XS1_llQuN3YepvqJWllG4_ZkrO-8aRUtMoqQHgUx0wWrU7CEmeYuoW7ArXBOkcw9henm14JmGQNftkaug2OiLp4UMIlnMq9VTknUU4ysvmjC_cpdcchQkqCFkFIKfbuq-bvWkpLkt5gBRRVkzIFrB-dAAqeaWSMpYK0G-h4QE8UWuvOS1MoEbcqeDrlWXgqhBB7CJGZZZlEUTkd4cTnBQwimBHt45qOZsU2_ou2NtErPOvxjv5vWmkfPVlhPklWK5kzZE5TcxeZWAxTdfc';
     try {
       itemsConsultation = [];
       Map<String, String> headers = {
@@ -732,7 +731,6 @@ class Api {
 
   //About you
   Future<List<QuestionnaireModel>> getQuestions() async {
-
     var questionOptions = [];
     try {
       itemsQuestionnaire = [];
@@ -885,5 +883,10 @@ class Api {
       print(e.toString());
       return [];
     }
+  }
+
+  Future<void> postBreakTakenDay({DateTime breakDay, DateTime nextDate}) async {
+    // ADD API CAll HERE
+    print('breakTakenApiCalled');
   }
 }
