@@ -13,6 +13,7 @@ import 'package:diet_delight/Screens/Drawer%20Screens/mealPlanOrdersPage.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/notificationsPage.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/settingsFAQs.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/settingsPrivacyPolicy.dart';
+import 'package:diet_delight/Screens/Drawer%20Screens/settingsSecuritiesPage.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/settingsTermsAndConditions.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,6 +24,9 @@ import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
+  final int openPage;
+  final int tabIndex;
+  HomePage({this.openPage = 0, this.tabIndex = 0});
   @override
   _HomePageState createState() => new _HomePageState();
 }
@@ -32,6 +36,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   TabController _pageController1;
   TabController _pageController2;
   TabController _pageController3;
+
   int page = 0;
   String _platformVersion = 'Unknown';
   List<String> drawerItems = [
@@ -52,7 +57,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     [],
     ['Consultation Orders', 'Meal Plan Orders'],
     [],
-    ['Terms and Conditions', 'FAQ', 'Privacy Policy'],
+    ['Terms and Conditions', 'FAQ', 'Privacy Policy', 'Securities'],
     [],
   ];
 
@@ -82,9 +87,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    page = widget.openPage;
     _pageController1 = TabController(length: 2, vsync: this);
+    if (page == 1) {
+      _pageController1.index = widget.tabIndex;
+    }
     _pageController2 = TabController(length: 2, vsync: this);
-    _pageController3 = TabController(length: 3, vsync: this);
+    if (page == 3) {
+      _pageController2.index = widget.tabIndex;
+    }
+    _pageController3 = TabController(length: 4, vsync: this);
+    if (page == 5) {
+      _pageController3.index = widget.tabIndex;
+    }
     initPlatformState();
   }
 
@@ -260,6 +275,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 SettingsTermsAndConditionsPage(),
                 SettingsFAQPage(),
                 SettingsPrivacyPolicyPage(),
+                SettingSecurities(snackBarKey: _scaffoldKey)
               ],
             ),
             ContactUsPage(),

@@ -14,19 +14,9 @@ class DashBoardUserInfoPage extends StatefulWidget {
 
 class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
   FocusNode fullName = FocusNode();
-  FocusNode phoneNo = FocusNode();
-  FocusNode mail = FocusNode();
-  FocusNode passCur = FocusNode();
-  FocusNode passNew = FocusNode();
-  FocusNode passNewConf = FocusNode();
-  FocusNode updatePass = FocusNode();
   TextEditingController name = TextEditingController();
   TextEditingController mobileNo = TextEditingController();
   TextEditingController email = TextEditingController();
-  TextEditingController curPassword = TextEditingController();
-  TextEditingController newPassword = TextEditingController();
-  TextEditingController newConfPassword = TextEditingController();
-  int items = 4;
   RegModel info;
   final _apiCall = Api.instance;
   bool passwordUpdated = false;
@@ -216,7 +206,7 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                   thickness: 1.5,
                 ),
               ),
-              Container(
+              /*Container(
                 height: MediaQuery.of(context).size.width * 0.7,
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -296,7 +286,7 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                         );
                       }
                     })),
-              )
+              )*/
             ],
           ),
         ),
@@ -333,7 +323,7 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                   Scaffold.of(context).showSnackBar(
                       SnackBar(content: Text('User Info Update Failed')));
                 }
-                if (curPassword.text.isNotEmpty) {
+                /*if (curPassword.text.isNotEmpty) {
                   if (newPassword.text == newConfPassword.text) {
                     setState(() {
                       updateInProgress = true;
@@ -370,7 +360,7 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                   Navigator.pop(context);
                   widget.snackBarKey.currentState.showSnackBar(SnackBar(
                       content: Text('Current Password Cannot be empty')));
-                }
+                }*/
               },
               child: Text(
                 updateInProgress ? 'UPDATING' : 'UPDATE',
