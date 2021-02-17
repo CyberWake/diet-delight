@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   List<List<String>> tabItemsTitle = [
     ['', ''],
-    ['User Info', 'Ongoing Meal Plans'],
+    ['Profile', 'Ongoing Meal Plans'],
     [],
     ['Consultation Orders', 'Meal Plan Orders'],
     [],
@@ -179,12 +179,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   onTap: (index) async {},
                   labelStyle: selectedTab.copyWith(
                       fontSize: 18,
-                      color: Colors.black,
+                      color: defaultGreen,
                       fontWeight: FontWeight.w600),
-                  indicatorColor: Colors.transparent,
+                  indicatorColor: defaultGreen,
                   indicatorWeight: 3.0,
-                  indicatorSize: TabBarIndicatorSize.label,
-                  labelColor: Colors.black,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  labelColor: defaultGreen,
                   labelPadding: EdgeInsets.symmetric(horizontal: 13),
                   unselectedLabelStyle: unSelectedTab.copyWith(
                       fontSize: 16,
