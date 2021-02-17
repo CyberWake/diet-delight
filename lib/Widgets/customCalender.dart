@@ -383,24 +383,139 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
 
                                           while(withoutDays.contains((i+counter)%7)  || datesWhenBreakChosen.contains(nextDay)){
                                             dayyy = (int.parse(dayyy) + 1).toString();
-                                            temp = dayyy.length == 1 ? "0$dayyy" : dayyy;
-                                            nextDay  = "$year-$monthStringValue-$temp";
-                                            counter++;
+                                            if(month == 2){
+                                              if(IsLeapYear(year) && temp == "30"){
+                                                month++;
+                                                day = 1;
+                                                monthVal = currentMonth(month);
+                                                monthStringValue = monthIntegerValueInString(month: month);
+                                                var firstDate =
+                                                    year.toString() + monthStringValue + "01";
+                                                var dateIs = DateTime.parse(firstDate);
+                                                var firstDay =
+                                                DateFormat('EEEE').format(dateIs);
+                                                skipDays = _weekDaysFull.indexOf(firstDay);
+                                                nextDay = "$year-$monthStringValue-01";
+                                                counter = -1;
+                                              }
+                                              else if(!IsLeapYear(year) && temp == "29"){
+                                                month++;
+                                                day = 1;
+                                                monthVal = currentMonth(month);
+                                                monthStringValue = monthIntegerValueInString(month: month);
+                                                var firstDate =
+                                                    year.toString() + monthStringValue + "01";
+                                                var dateIs = DateTime.parse(firstDate);
+                                                var firstDay =
+                                                DateFormat('EEEE').format(dateIs);
+                                                skipDays = _weekDaysFull.indexOf(firstDay);
+                                                nextDay = "$year-$monthStringValue-01";
+                                                counter = -1;
+                                              }else{
+                                                temp = dayyy.length == 1 ? "0$dayyy" : dayyy;
+                                                nextDay  = "$year-$monthStringValue-$temp";
+                                                print("NEXT DAT " +         nextDay);
+                                                counter++;
+                                              }
+                                            }
+                                            else if(int.parse(temp) == 32 && currentMonthContainsExtraDay(month)){
+
+                                              if(month == 12){
+                                                month = 1;
+                                                year++;
+                                                monthVal = currentMonth(month);
+                                                monthStringValue = monthIntegerValueInString(month: month);
+                                                var firstDate =
+                                                    year.toString() + monthStringValue + "01";
+                                                var dateIs = DateTime.parse(firstDate);
+                                                var firstDay =
+                                                DateFormat('EEEE').format(dateIs);
+                                                skipDays = _weekDaysFull.indexOf(firstDay);
+                                                nextDay = "$year-$monthStringValue-01";
+                                                counter = -1;
+                                              }else{
+                                                temp = dayyy.length == 1 ? "0$dayyy" : dayyy;
+                                                nextDay  = "$year-$monthStringValue-$temp";
+                                                print("NEXT DAT " +         nextDay);
+                                                counter++;
+                                              }
+                                            }else{
+                                              temp = dayyy.length == 1 ? "0$dayyy" : dayyy;
+                                              nextDay  = "$year-$monthStringValue-$temp";
+                                              print("NEXT DAT " +         nextDay);
+                                              counter++;
+                                            }
+
                                           }
+
+                                          if(month == 2){
+                                            if(IsLeapYear(year) && temp == "30"){
+                                              month++;
+                                              day = 1;
+                                              monthVal = currentMonth(month);
+                                              monthStringValue = monthIntegerValueInString(month: month);
+                                              var firstDate =
+                                                  year.toString() + monthStringValue + "01";
+                                              var dateIs = DateTime.parse(firstDate);
+                                              var firstDay =
+                                              DateFormat('EEEE').format(dateIs);
+                                              skipDays = _weekDaysFull.indexOf(firstDay);
+                                              counter = -1;
+                                            }
+                                            else if(!IsLeapYear(year) && temp == "29"){
+                                              month++;
+                                              day = 1;
+                                              monthVal = currentMonth(month);
+                                              monthStringValue = monthIntegerValueInString(month: month);
+                                              var firstDate =
+                                                  year.toString() + monthStringValue + "01";
+                                              var dateIs = DateTime.parse(firstDate);
+                                              var firstDay =
+                                              DateFormat('EEEE').format(dateIs);
+                                              skipDays = _weekDaysFull.indexOf(firstDay);
+                                              nextDay = "$year-$monthStringValue-01";
+                                              counter = -1;
+                                            }
+                                          }
+                                          else if(int.parse(temp) == 32 && currentMonthContainsExtraDay(month)){
+
+                                            if(month == 12){
+                                              month = 1;
+                                              day = 1;
+                                              year++;
+                                              monthVal = currentMonth(month);
+                                              monthStringValue = monthIntegerValueInString(month: month);
+                                              var firstDate =
+                                                  year.toString() + monthStringValue + "01";
+                                              var dateIs = DateTime.parse(firstDate);
+                                              var firstDay =
+                                              DateFormat('EEEE').format(dateIs);
+                                              skipDays = _weekDaysFull.indexOf(firstDay);
+                                              nextDay = "$year-$monthStringValue-01";
+                                              counter = -1;
+                                            }else{
+                                              month++;
+                                              day = 1;
+                                              monthVal = currentMonth(month);
+                                              monthStringValue = monthIntegerValueInString(month: month);
+                                              var firstDate =
+                                                  year.toString() + monthStringValue + "01";
+                                              var dateIs = DateTime.parse(firstDate);
+                                              var firstDay =
+                                              DateFormat('EEEE').format(dateIs);
+                                              skipDays = _weekDaysFull.indexOf(firstDay);
+                                              nextDay = "$year-$monthStringValue-01";
+                                              counter = -1;
+                                            }
+                                          }
+
                                           datesWhenBreakChosen.add(currDay);
                                           daysList.remove(currDay);
                                           daysList.add(nextDay);
-
-                                          print('dayswhenBreakChosen');
-                                          print(datesWhenBreakChosen);
                                           day = dayInt;
                                         }
-                                        print(DateTime.parse("$currDay 00:00:00"));
-                                        print(DateTime.parse("$nextDay 00:00:00"));
-                                        totalDate =
-                                            monthVal + " " + day.toString() + ", " + year.toString();
-                                      });
-                                      await Api.instance.postBreakTakenDay(breakDay : DateTime.parse("$currDay 00:00:00"), nextDate: DateTime.parse("$nextDay 00:00:00"));
+                                     });
+                                      //await Api.instance.postBreakTakenDay(breakDay : DateTime.parse("$currDay 00:00:00"), nextDate: DateTime.parse("$nextDay 00:00:00"));
 
                                     },
                                     child: Text('$dayText',style: TextStyle(

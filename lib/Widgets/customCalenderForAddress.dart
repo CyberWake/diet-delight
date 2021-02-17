@@ -6,8 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:diet_delight/konstants.dart';
 
 class CustomCalenderForAddress extends StatefulWidget {
-  int primary;
-  CustomCalenderForAddress({this.primary} );
+  List addressTapList;
+
+  CustomCalenderForAddress({this.addressTapList} );
   @override
   _CustomCalenderForAddressState createState() => _CustomCalenderForAddressState();
 }
@@ -24,6 +25,7 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
   var varDate = DateTime.now();
   var datesWhenBreakChosen = [];
   var totalDate = DateFormat.yMMMMd('en_US').format(DateTime.now());
+
 
   _getMonth({String monthText, int monthInt, String monthValue}) {
     return Container(
@@ -108,8 +110,8 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
   ];
 
   List secondayAddressDaysList = [
-    '2021-02-8',
-    '2021-02-9'
+    '2021-02-08',
+    '2021-02-09'
   ];
   bool IsLeapYear(int year) {
     return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
@@ -146,6 +148,9 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
 
   String monthStringValue =
   DateTime.now().toLocal().toString().split('-')[1].toString();
+  bool isDateRemoved = false;
+  var removedDate ;
+  var nextSelectedData ;
 
   final List<String> _weekDaysFull = [
     "Monday",
@@ -220,6 +225,52 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
     });
   }
 
+  _showDialogBox() {
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(builder: (context,setState){
+        return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(30.0))),
+            insetPadding: EdgeInsets.symmetric(
+                vertical: MediaQuery.of(context).size.height * 0.02,
+                horizontal: MediaQuery.of(context).size.width * 0.06),
+            child: Container(
+              height: 100,
+              width: 100,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  //background color of box
+
+
+                  BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 3.0, // soften the shadow
+                    spreadRadius: 3.0, //extend the shadow
+
+                  )
+                ],
+              ),
+              child: Padding(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 10,),
+                    Text('Please de-select one address out of the selected addresses',style: appBarTextStyle.copyWith(color: Colors.black,fontSize: 16),textAlign: TextAlign.center,),
+                    SizedBox(height: 10,),
+
+                  ],
+                ),
+              ),
+            ));
+      }),
+    );
+  }
 
   @override
   void initState() {
@@ -353,19 +404,23 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
                             var dayText =(i - 6 - skipDays).toString();
                             var temp = dayText.length == 1 ? "0$dayText" : dayText;
                             String currDay  = "$year-$monthStringValue-$temp";
-                            print(primaryAddressDaysList.contains(currDay) ? currDay : '');
                             return Container(
                               height: MediaQuery.of(context).size.height * 0.04,
                               width: MediaQuery.of(context).size.width * 0.122,
                               decoration:withoutDays.contains(i%7) ?  BoxDecoration(
                                 color: Color.fromRGBO(240, 240, 240, 1),
                                 borderRadius: BorderRadius.circular(100),
-                              ) :  primaryAddressDaysList.contains(currDay)
+                              ) :  ( primaryAddressDaysList.contains(currDay) || secondayAddressDaysList.contains(currDay)) && widget.addressTapList.contains(0) && widget.addressTapList.contains(1) ?
+                              BoxDecoration(
+                                  color: primaryAddressDaysList.contains(currDay) ? defaultGreen : Colors.purple,
+                                  borderRadius: BorderRadius.circular(100))
+                                  :
+                              primaryAddressDaysList.contains(currDay) && widget.addressTapList.contains(0)
                                   ? BoxDecoration(
                                 color: defaultGreen,
                                 borderRadius: BorderRadius.circular(100),
                               )
-                                  :  secondayAddressDaysList.contains(currDay)
+                                  :   secondayAddressDaysList.contains(currDay) && widget.addressTapList.contains(1)
                                   ? BoxDecoration(
                                 color: Colors.purple,
                                 borderRadius: BorderRadius.circular(100),
@@ -375,31 +430,34 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
                                 children: [
                                   GestureDetector(
                                     onTap: () async {
-                                      int counter = 1;
                                       var dayyy = (int.parse(dayText) + 1).toString();
                                       temp = dayyy.length == 1 ? "0$dayyy" : dayyy;
-                                      String nextDay  = "$year-$monthStringValue-$temp";
                                       setState(()  {
-                                        if(primaryAddressDaysList.contains(currDay)){
-
-                                          while(withoutDays.contains((i+counter)%7)  || datesWhenBreakChosen.contains(nextDay) || primaryAddressDaysList.contains(nextDay) || secondayAddressDaysList.contains(nextDay) ){
-                                            dayyy = (int.parse(dayyy) + 1).toString();
-                                            temp = dayyy.length == 1 ? "0$dayyy" : dayyy;
-                                            nextDay  = "$year-$monthStringValue-$temp";
-                                            counter++;
-                                          }
-                                          datesWhenBreakChosen.add(currDay);
-                                          primaryAddressDaysList.remove(currDay);
-                                          primaryAddressDaysList.add(nextDay);
-
-                                          print('dayswhenBreakChosen');
-                                          print(datesWhenBreakChosen);
-                                          day = dayInt;
+                                        if(isDateRemoved == false && primaryAddressDaysList.contains(currDay)){
+                                          isDateRemoved = true;
+                                          removedDate = currDay;
+                                          primaryAddressDaysList.remove(removedDate);
+                                        }else if(isDateRemoved == false &&  secondayAddressDaysList.contains(currDay)){
+                                          isDateRemoved = true;
+                                          removedDate = currDay;
+                                          secondayAddressDaysList.remove(currDay);
                                         }
-                                        print(DateTime.parse("$currDay 00:00:00"));
-                                        print(DateTime.parse("$nextDay 00:00:00"));
-                                        totalDate =
-                                            monthVal + " " + day.toString() + ", " + year.toString();
+                                        else if(isDateRemoved == true && !primaryAddressDaysList.contains(currDay) && !secondayAddressDaysList.contains(currDay)){
+                                          if(widget.addressTapList.contains(0) && widget.addressTapList.contains(1)){
+                                            _showDialogBox();
+                                             }
+                                          else if(widget.addressTapList.contains(0)){
+                                            nextSelectedData = currDay;
+                                            primaryAddressDaysList.add(nextSelectedData);
+                                            isDateRemoved = false;
+                                          }else if (widget.addressTapList.contains(1)){
+                                            nextSelectedData = currDay;
+                                            secondayAddressDaysList.add(nextSelectedData);
+                                            isDateRemoved = false;
+                                          }else{
+                                            print("primary value is neither 0 or 1");
+                                          }
+                                        }
                                       });
                                     },
                                     child: Text('$dayText',style: TextStyle(

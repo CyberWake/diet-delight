@@ -225,6 +225,44 @@ final List<String> _weekDaysFull = [
 final List<String> _weekDays =
 ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
+bool currentMonthContainsExtraDay(int month){
+  if(month == 1) {
+    return true;
+  }
+  else if(month == 2){
+    return  false;
+  }else if(month == 3){
+    return true;
+  }
+  else if(month == 4){
+    return  false;
+  }
+  else if(month == 5){
+    return true;
+  }
+  else if(month == 6){
+    return  false;
+  }
+  else if(month == 7){
+    return  true;
+  }
+  else if(month == 8){
+    return true;
+  }
+  else if(month == 9){
+    return false;
+  }
+  else if(month == 10){
+    return true;
+  }
+  else if(month == 11){
+    return false;
+  }
+  else if(month == 12){
+    return true;
+  }
+}
+
 String currentMonth(int month){
   if(month == 1) {
     return "January";

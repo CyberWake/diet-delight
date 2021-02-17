@@ -161,6 +161,8 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
     print('end Date: ${widget.purchaseDetails.endDate}');
   }
 
+  List addressTapList = [];
+
   void _onSelectionChangedForAddress(
       DateRangePickerSelectionChangedArgs args, int address) {
     if (address == 0) {
@@ -226,7 +228,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
           borderRadius: BorderRadius.circular(15),
           border: Border.all(
               color: Colors.black,
-              width: selected == addressIndex ? 2.0 : 0.5)),
+              width: addressTapList.contains(addressIndex) ? 2.0 : 0.5)),
       child: addressPresent
           ? GestureDetector(
               onTap: () {
@@ -234,6 +236,11 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                 if (addressPresent) {
                   update(() {
                     selected = addressIndex;
+                    if(addressTapList.contains(addressIndex)){
+                      addressTapList.remove(addressIndex);
+                    }else{
+                      addressTapList.add(addressIndex);
+                    }
                   });
                 }
               },
@@ -248,7 +255,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                         Text(
                           whichAddress,
                           style: adressCardTextStyle.copyWith(
-                            fontWeight: selected == addressIndex
+                            fontWeight: addressTapList.contains(addressIndex)
                                 ? FontWeight.bold
                                 : FontWeight.normal,
                           ),
@@ -271,7 +278,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                                           ? primaryAddressLine1
                                           : secondaryAddressLine1,
                                       style: adressCardTextStyle.copyWith(
-                                        fontWeight: selected == addressIndex
+                                        fontWeight: addressTapList.contains(addressIndex)
                                             ? FontWeight.bold
                                             : FontWeight.normal,
                                       ),
@@ -284,7 +291,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                                           ? primaryAddressLine2
                                           : secondaryAddressLine2,
                                       style: adressCardTextStyle.copyWith(
-                                        fontWeight: selected == addressIndex
+                                        fontWeight: addressTapList.contains(addressIndex)
                                             ? FontWeight.bold
                                             : FontWeight.normal,
                                       ),
@@ -296,7 +303,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                                 child: Text(
                                   'Not Available',
                                   style: adressCardTextStyle.copyWith(
-                                    fontWeight: selected == addressIndex
+                                    fontWeight: addressTapList.contains(addressIndex)
                                         ? FontWeight.bold
                                         : FontWeight.normal,
                                   ),
@@ -322,7 +329,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                     Text(
                       'Not Available',
                       style: adressCardTextStyle.copyWith(
-                        fontWeight: selected == addressIndex
+                        fontWeight: addressTapList.contains(addressIndex)
                             ? FontWeight.bold
                             : FontWeight.normal,
                       ),
@@ -330,7 +337,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                     Text(
                       'Add',
                       style: adressCardTextStyle.copyWith(
-                        fontWeight: selected == addressIndex
+                        fontWeight: addressTapList.contains(addressIndex)
                             ? FontWeight.bold
                             : FontWeight.normal,
                       ),
@@ -388,7 +395,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                               update: updateBottomSheet),
                         ],
                       ),
-                      CustomCalenderForAddress(primary: selected,)
+                      CustomCalenderForAddress(addressTapList : addressTapList)
                     ]));
           });
         });
