@@ -514,6 +514,8 @@ class _ConfirmConsultationState extends State<ConfirmConsultation> {
                           amountPaid: widget
                               .consultation[consultationIndex].price
                               .toString());
+                      print(purchaseDetails.consultationPackageId);
+                      print(widget.package);
                       Navigator.push(
                           context,
                           MaterialPageRoute(

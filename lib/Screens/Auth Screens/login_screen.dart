@@ -166,7 +166,8 @@ class _LoginState extends State<Login> {
                             Navigator.pushReplacement(
                                 context,
                                 CupertinoPageRoute(
-                                    builder: (context) => HomePage()));
+                                    builder: (context) =>
+                                        HomePage(drawerPage: 0)));
                           } else {
                             setState(() {
                               initiated = false;
@@ -185,7 +186,8 @@ class _LoginState extends State<Login> {
                               Navigator.pushReplacement(
                                   context,
                                   CupertinoPageRoute(
-                                      builder: (context) => HomePage()));
+                                      builder: (context) =>
+                                          HomePage(drawerPage: 0)));
                             }
                           } else {
                             Scaffold.of(context).showSnackBar(SnackBar(

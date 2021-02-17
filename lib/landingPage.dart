@@ -23,6 +23,8 @@ import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
+  int drawerPage = 0;
+  HomePage({this.drawerPage});
   @override
   _HomePageState createState() => new _HomePageState();
 }
@@ -81,6 +83,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    page = widget.drawerPage;
     _pageController1 = TabController(length: 2, vsync: this);
     _pageController2 = TabController(length: 3, vsync: this);
     initPlatformState();

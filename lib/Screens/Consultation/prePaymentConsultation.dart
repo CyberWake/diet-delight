@@ -3,9 +3,12 @@ import 'package:diet_delight/Models/consultationPurchaseModel.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:diet_delight/Models/registrationModel.dart';
 import 'package:diet_delight/Widgets/getAddressModalSheet.dart';
+import 'package:diet_delight/landingPage.dart';
 
 class PrePayment extends StatefulWidget {
   final ConsAppointmentModel appointment;
@@ -20,6 +23,7 @@ class _PrePaymentState extends State<PrePayment> {
   Api _apiCall = Api.instance;
   ConsAppointmentModel _appointment;
   ConsPurchaseModel order;
+  FlutterSecureStorage storage = new FlutterSecureStorage();
 
   bool isButtonEnabled = true;
 
@@ -51,8 +55,18 @@ class _PrePaymentState extends State<PrePayment> {
     order = widget.orderDetails;
     _appointment = widget.appointment;
     concatenatedAddress = '';
+    selectedAddressLine1 = '';
+    selectedAddressLine2 = '';
+//    print('selectedIndex : ' +
+//        storage.read(key: 'selectedAddressIndex').toString());
+//    if (storage.read(key: 'selectedAddressIndex') != null) {
+//      isAddressSelected = true;
+//      selectedAddressIndex =
+//          int.parse(storage.read(key: 'selectedAddressIndex').toString());
+//    } else {
     isAddressSelected = false;
-    selectedAddressIndex = -1;
+    selectedAddressIndex = 0;
+//    }
   }
 
   callback(address) {
@@ -165,12 +179,22 @@ class _PrePaymentState extends State<PrePayment> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('$addressPrimaryLine1\n$addressPrimaryLine2',
-                                  style: billingTextStyle.copyWith(
-                                    fontSize: 14,
-                                    fontStyle: FontStyle.normal,
-                                    color: Color(0xFF222222),
-                                  ))
+                              (selectedAddressLine1 == '' ||
+                                      selectedAddressLine1 == null)
+                                  ? Text(
+                                      '$addressPrimaryLine1\n$addressPrimaryLine2',
+                                      style: billingTextStyle.copyWith(
+                                        fontSize: 14,
+                                        fontStyle: FontStyle.normal,
+                                        color: Color(0xFF222222),
+                                      ))
+                                  : Text(
+                                      '$selectedAddressLine1\n$selectedAddressLine2',
+                                      style: billingTextStyle.copyWith(
+                                        fontSize: 14,
+                                        fontStyle: FontStyle.normal,
+                                        color: Color(0xFF222222),
+                                      ))
                             ],
                           ),
                         ],
@@ -276,8 +300,32 @@ class _PrePaymentState extends State<PrePayment> {
                             isButtonEnabled = false;
                           });
                           print('pressed');
-                          order.setUserPaymentDetails(
-                              userId: Api.userInfo.id, paymentId: '11487');
+                          if ((selectedAddressLine1 == '' ||
+                                  selectedAddressLine1 == null) &&
+                              addressPrimaryLine1 == null) {
+                            _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                content: Text(
+                                    'Please Add and select an address before proceeding')));
+                          } else if (selectedAddressLine1 != null &&
+                              selectedAddressLine1 != '') {
+                            order.setUserPaymentDetails(
+                                userId: Api.userInfo.id,
+                                paymentId: '11487',
+                                billingAddressLine1: selectedAddressLine1,
+                                billingAddressLine2: selectedAddressLine2);
+                            String id =
+                                await _apiCall.postConsultationPurchase(order);
+                          } else if ((selectedAddressLine1 == '' ||
+                                  selectedAddressLine1 == null) &&
+                              addressPrimaryLine1 != null) {
+                            order.setUserPaymentDetails(
+                                userId: Api.userInfo.id,
+                                paymentId: '11487',
+                                billingAddressLine1: addressPrimaryLine1,
+                                billingAddressLine2: addressPrimaryLine2);
+                            String id =
+                                await _apiCall.postConsultationPurchase(order);
+                          }
                           String id =
                               await _apiCall.postConsultationPurchase(order);
                           if (id != null) {
@@ -294,6 +342,11 @@ class _PrePaymentState extends State<PrePayment> {
                             _scaffoldKey.currentState.showSnackBar(SnackBar(
                                 content: Text('Something went wrong')));
                           }
+                          Navigator.pushReplacement(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) =>
+                                      HomePage(drawerPage: 3)));
                         }
                       : () {},
                   child: Text(

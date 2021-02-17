@@ -23,8 +23,8 @@ class _SplashScreenState extends State<SplashScreen>
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('accessToken')) {
       _apiCall.autoLogin().whenComplete(() {
-        Navigator.of(context).pushReplacement(
-            CupertinoPageRoute(builder: (BuildContext context) => HomePage()));
+        Navigator.of(context).pushReplacement(CupertinoPageRoute(
+            builder: (BuildContext context) => HomePage(drawerPage: 0)));
       });
     } else {
       Navigator.of(context).pushReplacement(

@@ -24,7 +24,7 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
   List<MealPurchaseModel> purchasedMeal;
   final _apiCall = Api.instance;
   bool loaded = false;
-  List<String> format = [hh, ':', nn, ' ', am, '\n', dd, ' ', 'M', ', ', yyyy];
+  List<String> format = [hh, ':', nn, ' ', am, ' ', dd, ' ', 'M', ', ', yyyy];
   ReceivePort _port = ReceivePort();
   bool _permissionReady = false;
 
@@ -64,6 +64,45 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
             children: [
               Expanded(child: Text(fieldName, style: orderHistoryCardStyle)),
               Expanded(child: Text(fieldValue, style: orderHistoryCardStyle)),
+            ],
+          ),
+        ));
+  }
+
+  Widget daysField({String fieldName, String fieldValue1, String fieldValue2}) {
+    return Flexible(
+        fit: FlexFit.loose,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: Text(fieldName, style: orderHistoryCardStyle)),
+              Expanded(
+                  child: RichText(
+                text: TextSpan(children: <TextSpan>[
+                  TextSpan(
+                      text: fieldValue1 + '\n',
+                      style: orderHistoryCardStyle.copyWith(fontSize: 11)),
+                  TextSpan(
+                      text: fieldValue2,
+                      style: orderHistoryCardStyle.copyWith(
+                          fontSize: 11, color: Color(0xFFC6C6C6))),
+                ]),
+              ))
+//              Column(
+//                mainAxisAlignment: MainAxisAlignment.start,
+//                crossAxisAlignment: CrossAxisAlignment.start,
+//                children: [
+//                  Expanded(
+//                      child: Text(fieldValue1, style: orderHistoryCardStyle)),
+//                  Expanded(
+//                      child: Text(fieldValue2,
+//                          style: orderHistoryCardStyle.copyWith(
+//                              color: Color(0xFFC6C6C6)))),
+//                ],
+//              ),
             ],
           ),
         ));
@@ -135,6 +174,7 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
             shrinkWrap: true,
             children: List.generate(purchasedMeal.length, (index) {
               return Container(
+//                height: MediaQuery.of(context).size.height * 0.25,
                 margin: EdgeInsets.all(10),
                 padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
                 decoration: BoxDecoration(
@@ -156,7 +196,7 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
                     Flexible(
                         fit: FlexFit.loose,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -169,8 +209,7 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
                               ),
                               Flexible(
                                   child: PopupMenuButton<int>(
-                                child:
-                                    Icon(Icons.more_vert, color: Colors.black),
+                                child: Icon(Icons.more_vert, color: timeGrid),
                                 itemBuilder: (BuildContext context) =>
                                     <PopupMenuEntry<int>>[
                                   PopupMenuItem<int>(
@@ -244,11 +283,11 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
                             ],
                           ),
                         )),
-                    dataField(
+                    daysField(
                       fieldName: 'Subscription:',
-                      fieldValue: purchasedMeal[index].mealPlanDuration +
-                          ' Days\n' +
-                          purchasedMeal[index].showWeek(),
+                      fieldValue1:
+                          purchasedMeal[index].mealPlanDuration + ' Days',
+                      fieldValue2: purchasedMeal[index].showWeek(),
                     ),
                     dataField(
                       fieldName: 'Remaining Days:',

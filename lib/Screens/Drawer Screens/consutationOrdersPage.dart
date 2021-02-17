@@ -30,7 +30,7 @@ class _ConsultationOrderHistoryPageState
   List<ConsultationModel> consultationData = List();
   List<ConsAppointmentModel> appointments = List();
   bool loaded = false;
-  List<String> format = [hh, ':', nn, ' ', am, '\n', dd, ' ', 'M', ', ', yyyy];
+  List<String> format = [hh, ':', nn, ' ', am, ' ', dd, ' ', 'M', ', ', yyyy];
   ReceivePort _port = ReceivePort();
   bool _permissionReady = false;
 
@@ -235,8 +235,8 @@ class _ConsultationOrderHistoryPageState
                               Flexible(
                                   fit: FlexFit.loose,
                                   child: PopupMenuButton<int>(
-                                    child: Icon(Icons.more_vert,
-                                        color: Colors.black),
+                                    child:
+                                        Icon(Icons.more_vert, color: timeGrid),
                                     itemBuilder: (BuildContext context) =>
                                         <PopupMenuEntry<int>>[
                                       PopupMenuItem<int>(

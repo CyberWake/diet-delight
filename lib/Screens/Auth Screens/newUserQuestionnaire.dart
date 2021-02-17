@@ -386,7 +386,7 @@ class _QuestionnaireState extends State<Questionnaire>
                                                                       context,
                                                                       CupertinoPageRoute(
                                                                           builder: (context) =>
-                                                                              HomePage()));
+                                                                              HomePage(drawerPage: 0)));
                                                                 },
                                                                 child:
                                                                     Container(
@@ -433,7 +433,7 @@ class _QuestionnaireState extends State<Questionnaire>
                                                                       context,
                                                                       CupertinoPageRoute(
                                                                           builder: (context) =>
-                                                                              HomePage()));
+                                                                              HomePage(drawerPage: 0)));
                                                                   Navigator.push(
                                                                       context,
                                                                       CupertinoPageRoute(
