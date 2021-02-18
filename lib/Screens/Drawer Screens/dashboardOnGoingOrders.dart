@@ -322,6 +322,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                                         CupertinoPageRoute(
                                             builder: (BuildContext context) =>
                                                 PlaceMealMenuOrders(
+                                                    placedFoodItems: [],
                                                     purchaseDetails:
                                                         activeMealPurchases[
                                                             index],

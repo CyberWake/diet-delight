@@ -734,6 +734,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                                         CupertinoPageRoute(
                                             builder: (BuildContext context) =>
                                                 PlaceMealMenuOrders(
+                                                    placedFoodItems: foodItems,
                                                     plan: widget.plan,
                                                     purchaseDetails: widget
                                                         .purchaseDetails)));

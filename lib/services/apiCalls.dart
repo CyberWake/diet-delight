@@ -1012,4 +1012,28 @@ class Api {
       return [];
     }
   }
+
+  Future<bool> deleteMenuOrder(String id) async {
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+      final response = await http.delete(
+        uri + '/api/v1/my-menu-orders/$id',
+        headers: headers,
+      );
+      if (response.statusCode == 204) {
+        print('Success deleting meal menu order');
+        return true;
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        return false;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
 }

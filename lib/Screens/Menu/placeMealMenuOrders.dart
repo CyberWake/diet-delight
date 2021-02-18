@@ -1,5 +1,3 @@
-import 'dart:convert' as convert;
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:date_format/date_format.dart';
 import 'package:diet_delight/Models/foodItemModel.dart';
@@ -15,9 +13,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class PlaceMealMenuOrders extends StatefulWidget {
+  final List<List<MenuOrderModel>> placedFoodItems;
   final MealPurchaseModel purchaseDetails;
   final MealModel plan;
-  PlaceMealMenuOrders({this.purchaseDetails, this.plan});
+  PlaceMealMenuOrders({this.purchaseDetails, this.plan, this.placedFoodItems});
   @override
   _PlaceMealMenuOrdersState createState() => _PlaceMealMenuOrdersState();
 }
@@ -41,6 +40,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
   TabController _pageController;
   MenuOrderModel foodItemOrder;
   bool isLoaded = false;
+  bool notInProgress = true;
   double _height = 250;
   int menuId = 0;
 
@@ -90,6 +90,21 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
             .getMenuCategoryFoodItems(
                 menuId.toString(), categoryItems[i].id.toString())
             .whenComplete(() => i++));
+      }
+    }
+    for (int i = 0; i < foodItems.length; i++) {
+      for (int j = 0; j < foodItems[i].length; j++) {
+        if (widget.placedFoodItems.isNotEmpty) {
+          for (int k = 0; k < widget.placedFoodItems[i].length; k++) {
+            if (foodItems[i][j].id == widget.placedFoodItems[i][k].foodItemId) {
+              foodItems[i][j]
+                  .updateOrderItemId(widget.placedFoodItems[i][k].id);
+              foodItems[i][j].change(true);
+            }
+          }
+        } else {
+          break;
+        }
       }
     }
     if (mounted) {
@@ -521,38 +536,58 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                       ),
                       child: TextButton(
                         onPressed: () async {
-                          if (!item.isSelected) {
-                            if (isAddressSelected) {
-                              foodItemOrder = MenuOrderModel(
-                                  foodItemId: item.id,
-                                  foodItemCategoryId: item.categoryId,
-                                  mealPurchaseId:
-                                      int.parse(widget.purchaseDetails.id),
-                                  menuItemDate: item.date,
-                                  menuItemDay: item.day,
-                                  foodItemName: item.foodName,
-                                  deliveryAddress: concatenatedAddress,
-                                  note: item.noteAdded.length == 0
-                                      ? "null"
-                                      : item.noteAdded);
-                              String body =
-                                  convert.jsonEncode(foodItemOrder.toMap());
-                              print(body);
-                              int result =
-                                  await _apiCall.postMenuOrder(foodItemOrder);
-                              if (result != null) {
-                                item.updateOrderItemId(result);
+                          if (notInProgress) {
+                            setState(() {
+                              notInProgress = false;
+                            });
+                            if (!item.isSelected) {
+                              if (isAddressSelected) {
                                 item.change(true);
                                 setState(() {});
+                                foodItemOrder = MenuOrderModel(
+                                    foodItemId: item.id,
+                                    foodItemCategoryId: item.categoryId,
+                                    mealPurchaseId:
+                                        int.parse(widget.purchaseDetails.id),
+                                    menuItemDate: item.date,
+                                    menuItemDay: item.day,
+                                    foodItemName: item.foodName,
+                                    deliveryAddress: concatenatedAddress,
+                                    note: item.noteAdded.isNotEmpty
+                                        ? ""
+                                        : item.noteAdded);
+                                int result =
+                                    await _apiCall.postMenuOrder(foodItemOrder);
+                                if (result != null) {
+                                  item.updateOrderItemId(result);
+                                  item.change(true);
+                                  setState(() {});
+                                }
+                              } else {
+                                item.change(false);
+                                setState(() {});
+                                _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                    content: Text('Select address first')));
                               }
                             } else {
-                              _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                  content: Text('Select address first')));
+                              item.change(false);
+                              setState(() {});
+                              bool result = await _apiCall
+                                  .deleteMenuOrder(item.orderItemId.toString());
+                              if (result) {
+                                item.change(false);
+                                setState(() {});
+                              } else {
+                                item.change(true);
+                                setState(() {});
+                                _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                    content:
+                                        Text('Deleting menu order failed')));
+                              }
                             }
-                          } else {
-                            // TODO: delete selected item
-                            //item.change(false);
-                            setState(() {});
+                            setState(() {
+                              notInProgress = true;
+                            });
                           }
                         },
                         child: Text(item.isSelected ? 'Selected' : 'Select',
