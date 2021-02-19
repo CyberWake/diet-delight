@@ -28,7 +28,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
   ScrollController _scrollController = new ScrollController();
   final _apiCall = Api.instance;
   TabController _pageController;
-  List<String> dates = [];
+  List<DateTime> dates = [];
   List<String> format = [dd, ' ', 'M', ', ', yyyy];
   bool isLoaded = false;
   DateTime startDate;
@@ -55,11 +55,11 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
     super.initState();
     selectedAddressIndex = -1;
     menuId = widget.plan.menuId;
-    getDates();
-    getData();
     _pageController = TabController(
         length: int.parse(widget.purchaseDetails.mealPlanDuration),
         vsync: this);
+    getDates();
+    getData();
   }
 
   callback(address) {
@@ -69,10 +69,6 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
   }
 
   getData() async {
-    await getMenuCategories(menuId);
-  }
-
-  getMenuCategories(int menuId) async {
     categoryItems = [];
     foodItems = [];
     setState(() {
@@ -146,9 +142,19 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
         count++;
         date = startDate.add(Duration(days: count));
       }
-      dates.insert(i, formatDate(date, [dd, '/', mm]));
+      dates.insert(i, date);
       print(date);
       count++;
+    }
+    DateTime today = DateTime.now();
+    today = DateTime.parse(formatDate(today, [yyyy, '-', mm, '-', dd]));
+    print(today);
+    for (int i = 0; i < dates.length; i++) {
+      if (dates[i] == today) {
+        _pageController.index = i;
+        print(_pageController.index);
+        break;
+      }
     }
     blackoutsAddressCalendar = breakDates + planSelectedOffDays;
     blackoutsAddressCalendar = blackoutsAddressCalendar.toSet().toList();
@@ -703,7 +709,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text('Day ${(index + 1).toString()}'),
-                              Text(dates[index])
+                              Text(formatDate(dates[index], [dd, '/', mm]))
                             ],
                           ),
                         );
@@ -728,16 +734,20 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
+                                  onTap: () async {
+                                    bool returnedBack = await Navigator.push(
                                         context,
                                         CupertinoPageRoute(
                                             builder: (BuildContext context) =>
                                                 PlaceMealMenuOrders(
+                                                    dates: dates,
                                                     placedFoodItems: foodItems,
                                                     plan: widget.plan,
                                                     purchaseDetails: widget
                                                         .purchaseDetails)));
+                                    if (returnedBack) {
+                                      getData();
+                                    }
                                   },
                                   child: Container(
                                     height: 50,

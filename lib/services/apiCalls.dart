@@ -748,6 +748,7 @@ class Api {
         HttpHeaders.authorizationHeader: "Bearer $token"
       };
       String body = convert.jsonEncode(item.toMap());
+      print(body);
       final response = await http.post(uri + '/api/v1/my-menu-orders',
           headers: headers, body: body);
       if (response.statusCode == 201) {
@@ -758,12 +759,12 @@ class Api {
         return id;
       } else {
         print(response.statusCode);
-        print(response.body);
-        return null;
+        print('passing null');
+        return -1;
       }
     } on Exception catch (e) {
       print(e.toString());
-      return null;
+      return -1;
     }
   }
 
