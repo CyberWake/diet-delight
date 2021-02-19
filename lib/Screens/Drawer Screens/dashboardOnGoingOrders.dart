@@ -125,7 +125,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                 itemCount: activeMealPurchases.length,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       if (ordersInActivePlans[index]) {
                         Navigator.push(
                             context,
@@ -136,7 +136,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                                             activeMealPurchases[index],
                                         plan: activePurchaseMealPlans[index])));
                       } else {
-                        Navigator.push(
+                        bool returnedBack = await Navigator.push(
                             context,
                             CupertinoPageRoute(
                                 builder: (BuildContext context) =>
@@ -144,6 +144,9 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                                         purchaseDetails:
                                             activeMealPurchases[index],
                                         plan: activePurchaseMealPlans[index])));
+                        if (returnedBack) {
+                          getCachedData();
+                        }
                       }
                     },
                     child: Container(

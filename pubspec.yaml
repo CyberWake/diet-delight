@@ -29,6 +29,7 @@ dependencies:
   path_provider: ^1.6.9
   permission_handler: ^4.0.0
   pull_to_refresh: 1.6.3
+  ticketview: ^1.0.0
 #  flutter_svg: ^0.17.1
 
 dev_dependencies:

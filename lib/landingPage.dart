@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:diet_delight/Screens/Auth%20Screens/login_signup_form.dart';
-import 'package:diet_delight/Screens/Auth%20Screens/newUserQuestionnaire.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/consutationOrdersPage.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/contactUsPage.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/dashboardOnGoingOrders.dart';
@@ -15,6 +14,7 @@ import 'package:diet_delight/Screens/Drawer%20Screens/settingsFAQs.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/settingsPrivacyPolicy.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/settingsSecuritiesPage.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/settingsTermsAndConditions.dart';
+import 'package:diet_delight/Screens/coupon_code.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -169,8 +169,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       Navigator.push(
                           context,
                           CupertinoPageRoute(
-                              builder: (BuildContext context) => Questionnaire(
-                                  username: 'Ritik kumar srivastava')));
+                              builder: (BuildContext context) => CouponCode()));
                     },
                     child: Image.asset(
                       'images/Group 24.png',
