@@ -61,6 +61,9 @@ class _SettingSecuritiesState extends State<SettingSecurities> {
                           bool result = await _apiCall.updatePassword(
                               curPassword.text, newPassword.text);
                           if (result) {
+                            curPassword.clear();
+                            newPassword.clear();
+                            newConfPassword.clear();
                             setState(() {
                               updateInProgress = false;
                             });
@@ -68,21 +71,17 @@ class _SettingSecuritiesState extends State<SettingSecurities> {
                                 SnackBar(
                                     content:
                                         Text('Password updated Successfully')));
-                            Navigator.pop(context);
                           } else {
                             widget.snackBarKey.currentState.showSnackBar(
                                 SnackBar(
                                     content:
                                         Text('Couldn\'t update try again')));
-                            Navigator.pop(context);
                           }
                         } else {
-                          Navigator.pop(context);
                           widget.snackBarKey.currentState.showSnackBar(SnackBar(
                               content: Text('Passwords do not match')));
                         }
                       } else {
-                        Navigator.pop(context);
                         widget.snackBarKey.currentState.showSnackBar(SnackBar(
                             content: Text('Current Password Cannot be empty')));
                       }

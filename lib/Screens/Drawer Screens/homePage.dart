@@ -575,7 +575,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(
                         padding: EdgeInsets.fromLTRB(20, 20, 10, 10),
                         child: Container(
-                          height: 0.45 * devWidth,
+                          height: 0.48 * devWidth,
                           child: ListView.builder(
                               itemCount: featuredMenu.length,
                               scrollDirection: Axis.horizontal,
@@ -596,12 +596,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                           width: 0.4 * devWidth,
                                           height: 220,
                                           child: Column(
+                                            mainAxisSize: MainAxisSize.max,
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             children: [
                                               Padding(
-                                                padding: EdgeInsets.fromLTRB(
-                                                    5.0, 5.0, 5.0, 5.0),
+                                                padding: EdgeInsets.all(5),
                                                 child: CachedNetworkImage(
                                                   imageUrl: featuredMenu[pos]
                                                           .picture ??
@@ -630,8 +630,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 ),
                                               ),
                                               Padding(
-                                                padding: EdgeInsets.fromLTRB(
-                                                    5.0, 0, 5.0, 0),
+                                                padding: EdgeInsets.all(5),
                                                 child: Text(
                                                   featuredMenu[pos].foodName,
                                                   textAlign: TextAlign.center,
@@ -646,7 +645,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.only(
-                                                    top: 20.0),
+                                                    bottom: 10),
                                                 child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,

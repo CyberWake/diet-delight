@@ -36,8 +36,7 @@ class FoodItemModel {
         isVeg: item['veg'] == 1 ? true : false,
         day: item['day'],
         date: item['date'],
-        featured: item['featured'],
-        noteAdded: '');
+        featured: item['featured']);
   }
 
   change(bool isSel) {

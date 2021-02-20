@@ -33,6 +33,7 @@ class _BookConsultationState extends State<BookConsultation>
   String selectedTime = '1PM';
   String time;
   String date;
+  List<bool> isSelected = [true, false];
   List<List> timeChart = [
     [9, 10, 11],
     [12, 1, 2],
@@ -134,6 +135,7 @@ class _BookConsultationState extends State<BookConsultation>
   @override
   Widget build(BuildContext context) {
     var devWidth = MediaQuery.of(context).size.width;
+    var devHeight = MediaQuery.of(context).size.height;
 
     return SafeArea(
       child: Scaffold(
@@ -155,7 +157,7 @@ class _BookConsultationState extends State<BookConsultation>
           title: Text('Book an Appointment', style: appBarTextStyle),
         ),
         body: Padding(
-          padding: EdgeInsets.only(top: devWidth * 0.02),
+          padding: const EdgeInsets.only(top: 10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -179,7 +181,7 @@ class _BookConsultationState extends State<BookConsultation>
                       },
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 15.0, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(0, 5.0, 0, 0),
                       child: Text(
                         widget.consultation[consultationIndex].details,
                         textAlign: TextAlign.left,
@@ -196,269 +198,369 @@ class _BookConsultationState extends State<BookConsultation>
               ),
               Padding(
                 padding: EdgeInsets.fromLTRB(
-                    devWidth * 0.075, 40, devWidth * 0.075, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Select appointment date',
-                      style: TextStyle(
-                        fontFamily: 'RobotoCondensedReg',
-                        fontSize: 20,
-                        fontWeight: FontWeight.normal,
-                        color: Colors.black,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () async {
-                        DateTime selectedDateTime = await showRoundedDatePicker(
-                            context: context,
-                            background: Colors.white,
-                            styleDatePicker: MaterialRoundedDatePickerStyle(
-                              textStyleMonthYearHeader: TextStyle(
-                                  fontSize: 18,
-                                  color: defaultPurple,
-                                  fontWeight: FontWeight.normal),
-                              paddingMonthHeader: EdgeInsets.only(top: 10),
-                              colorArrowNext: defaultPurple,
-                              colorArrowPrevious: defaultPurple,
-                              textStyleButtonPositive: TextStyle(
-                                  fontSize: 14,
-                                  color: defaultPurple,
-                                  fontWeight: FontWeight.bold),
-                              textStyleButtonNegative: TextStyle(
-                                  fontSize: 14,
-                                  color: inactivePurple,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            theme: ThemeData(
-                              primaryColor: defaultPurple,
-                              accentColor: defaultGreen,
-                              dialogBackgroundColor: Colors.white,
-                              textTheme: TextTheme(
-                                caption: TextStyle(color: defaultPurple),
-                              ),
-                              disabledColor: formFill,
-                              accentTextTheme: TextTheme(),
-                            ),
-                            initialDate: dateSelected ?? today,
-                            firstDate: today.subtract(Duration(days: 1)));
-                        setState(() {
-                          dateSelected = selectedDateTime ?? dateSelected;
-                          date = formatDate(dateSelected, format);
-                        });
-                        print(date);
-                      },
-                      child: Material(
-                          elevation: 2.0,
-                          borderRadius: BorderRadius.circular(2.0),
-                          child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 10),
-                              child: Container(
-                                child: Text(
-                                  DateFormat.E().format(dateSelected ?? today) +
-                                      ', ' +
-                                      DateFormat.MMM()
-                                          .add_d()
-                                          .format(dateSelected ?? today),
-                                  style: TextStyle(
-                                      fontFamily: 'RobotoCondensedReg',
-                                      fontSize: 12,
-                                      color: Color(0xFF303030)),
-                                ),
-                              ))),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(
-                    MediaQuery.of(context).size.width * 0.075,
-                    20,
-                    MediaQuery.of(context).size.width * 0.075,
-                    0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Select preferred time slot',
-                      style: TextStyle(
-                        fontFamily: 'RobotoCondensedReg',
-                        fontSize: 20,
-                        fontWeight: FontWeight.normal,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(
-                    MediaQuery.of(context).size.width * 0.025,
-                    30,
-                    MediaQuery.of(context).size.width * 0.025,
-                    0),
+                    devWidth * 0.075, 25, devWidth * 0.075, 0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: double.infinity,
-                      child: TabBar(
-                          indicatorColor: Colors.transparent,
-                          indicatorWeight: 1.0,
-                          indicatorSize: TabBarIndicatorSize.label,
-                          labelColor: defaultGreen,
-                          labelPadding: EdgeInsets.symmetric(horizontal: 13),
-                          unselectedLabelColor: inactiveGreen,
-                          controller: _tabController,
-                          tabs: List.generate(3, (index) {
-                            return Tab(
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Column(
-                                  children: [
-                                    Material(
-                                        elevation: _tabController.index == index
-                                            ? 0.0
-                                            : 2.0,
-                                        borderRadius:
-                                            BorderRadius.circular(2.0),
-                                        color: _tabController.index == index
-                                            ? defaultGreen
-                                            : Colors.white,
-                                        child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 5, horizontal: 15),
-                                            child: Container(
-                                              child: Text(
-                                                index == 0
-                                                    ? 'Morning'
-                                                    : index == 1
-                                                        ? 'Afternoon'
-                                                        : 'Evening',
-                                                style: tabTextStyle.copyWith(
-                                                    color: _tabController
-                                                                .index ==
-                                                            index
-                                                        ? Colors.white
-                                                        : Color(0xFF303030)),
-                                              ),
-                                            ))),
-                                    SizedBox(
-                                      height: 5.0,
-                                    ),
-                                    Text(
-                                        index == 0
-                                            ? '9 AM to 12 PM'
-                                            : index == 1
-                                                ? '12 PM to 3 PM'
-                                                : '3 PM to 6 PM',
-                                        style: dateTabTextStyle.copyWith(
-                                            color: _tabController.index == index
-                                                ? defaultGreen
-                                                : inactiveTime)),
-                                  ],
+                    Text(
+                      'Select the mode of Consultation',
+                      style: TextStyle(
+                        fontFamily: 'RobotoCondensedReg',
+                        fontSize: 20,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Center(
+                      child: ToggleButtons(
+                        selectedBorderColor: defaultGreen,
+                        fillColor: defaultGreen,
+                        borderRadius: BorderRadius.circular(25),
+                        children: <Widget>[
+                          Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(15.0, 5.0, 12, 5.0),
+                            child: isSelected[0]
+                                ? Text('Online',
+                                    style: toggleTextStyle.copyWith(
+                                        color: Colors.white))
+                                : Text('Online', style: toggleTextStyle),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(12.0, 5.0, 15, 5.0),
+                            child: isSelected[1]
+                                ? Text('Offline',
+                                    style: toggleTextStyle.copyWith(
+                                        color: Colors.white))
+                                : Text('Offline', style: toggleTextStyle),
+                          ),
+                        ],
+                        onPressed: (int index) {
+                          setState(() {
+                            for (int buttonIndex = 0;
+                                buttonIndex < isSelected.length;
+                                buttonIndex++) {
+                              if (buttonIndex == index) {
+                                isSelected[buttonIndex] = true;
+                              } else {
+                                isSelected[buttonIndex] = false;
+                              }
+                            }
+                          });
+                        },
+                        isSelected: isSelected,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              isSelected[1]
+                  ? Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(
+                              devWidth * 0.075, 20, devWidth * 0.075, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Select appointment date',
+                                style: TextStyle(
+                                  fontFamily: 'RobotoCondensedReg',
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black,
                                 ),
                               ),
-                            );
-                          })),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Container(
-                        width: double.infinity,
-                        height: 200,
-                        child: TabBarView(
-                            controller: _tabController,
-                            children: List.generate(3, (index) {
-                              return Container(
-                                height: 300.0,
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 20.0, 0, 0),
-                                  child: ListView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                    itemCount: timeChart[index].length,
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder:
-                                        (BuildContext context, int pos) {
-                                      return Column(
-                                          children:
-                                              List.generate(4, (rowIndex) {
-                                        return Padding(
-                                          padding: EdgeInsets.fromLTRB(
-                                              MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.05,
-                                              10,
-                                              MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.05,
-                                              10),
-                                          child: GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  time =
-                                                      '${timeChart[index][pos]}${getSubTime(index, rowIndex)}';
-                                                  print(time);
-                                                });
-                                              },
-                                              child: Material(
-                                                  elevation: 0,
+                              GestureDetector(
+                                onTap: () async {
+                                  DateTime selectedDateTime =
+                                      await showRoundedDatePicker(
+                                          context: context,
+                                          background: Colors.white,
+                                          styleDatePicker:
+                                              MaterialRoundedDatePickerStyle(
+                                            textStyleMonthYearHeader: TextStyle(
+                                                fontSize: 18,
+                                                color: defaultPurple,
+                                                fontWeight: FontWeight.normal),
+                                            paddingMonthHeader:
+                                                EdgeInsets.only(top: 10),
+                                            colorArrowNext: defaultPurple,
+                                            colorArrowPrevious: defaultPurple,
+                                            textStyleButtonPositive: TextStyle(
+                                                fontSize: 14,
+                                                color: defaultPurple,
+                                                fontWeight: FontWeight.bold),
+                                            textStyleButtonNegative: TextStyle(
+                                                fontSize: 14,
+                                                color: inactivePurple,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          theme: ThemeData(
+                                            primaryColor: defaultPurple,
+                                            accentColor: defaultGreen,
+                                            dialogBackgroundColor: Colors.white,
+                                            textTheme: TextTheme(
+                                              caption: TextStyle(
+                                                  color: defaultPurple),
+                                            ),
+                                            disabledColor: formFill,
+                                            accentTextTheme: TextTheme(),
+                                          ),
+                                          initialDate: dateSelected ?? today,
+                                          firstDate: today
+                                              .subtract(Duration(days: 1)));
+                                  setState(() {
+                                    dateSelected =
+                                        selectedDateTime ?? dateSelected;
+                                    date = formatDate(dateSelected, format);
+                                  });
+                                  print(date);
+                                },
+                                child: Material(
+                                    elevation: 2.0,
+                                    borderRadius: BorderRadius.circular(2.0),
+                                    child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 5, horizontal: 10),
+                                        child: Container(
+                                          child: Text(
+                                            DateFormat.E().format(
+                                                    dateSelected ?? today) +
+                                                ', ' +
+                                                DateFormat.MMM().add_d().format(
+                                                    dateSelected ?? today),
+                                            style: TextStyle(
+                                                fontFamily:
+                                                    'RobotoCondensedReg',
+                                                fontSize: 12,
+                                                color: Color(0xFF303030)),
+                                          ),
+                                        ))),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(
+                              MediaQuery.of(context).size.width * 0.075,
+                              20,
+                              MediaQuery.of(context).size.width * 0.075,
+                              0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Select preferred time slot',
+                                style: TextStyle(
+                                  fontFamily: 'RobotoCondensedReg',
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(
+                              MediaQuery.of(context).size.width * 0.025,
+                              25,
+                              MediaQuery.of(context).size.width * 0.025,
+                              0),
+                          child: Column(
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                child: TabBar(
+                                    indicatorColor: Colors.transparent,
+                                    indicatorWeight: 1.0,
+                                    indicatorSize: TabBarIndicatorSize.label,
+                                    labelColor: defaultGreen,
+                                    labelPadding:
+                                        EdgeInsets.symmetric(horizontal: 13),
+                                    unselectedLabelColor: inactiveGreen,
+                                    controller: _tabController,
+                                    tabs: List.generate(3, (index) {
+                                      return Tab(
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: Column(
+                                            children: [
+                                              Material(
+                                                  elevation:
+                                                      _tabController.index ==
+                                                              index
+                                                          ? 0.0
+                                                          : 2.0,
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           2.0),
-                                                  color: time ==
-                                                          showSlots(index, pos,
-                                                              rowIndex)
+                                                  color: _tabController.index ==
+                                                          index
                                                       ? defaultGreen
                                                       : Colors.white,
                                                   child: Padding(
                                                       padding:
                                                           EdgeInsets.symmetric(
                                                               vertical: 5,
-                                                              horizontal: 10),
+                                                              horizontal: 15),
                                                       child: Container(
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            0.15,
                                                         child: Text(
-                                                          showSlots(index, pos,
-                                                              rowIndex),
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: dateTabTextStyle.copyWith(
-                                                              fontSize: 12,
-                                                              color: time ==
-                                                                      showSlots(
-                                                                          index,
-                                                                          pos,
-                                                                          rowIndex)
+                                                          index == 0
+                                                              ? 'Morning'
+                                                              : index == 1
+                                                                  ? 'Afternoon'
+                                                                  : 'Evening',
+                                                          style: tabTextStyle.copyWith(
+                                                              color: _tabController
+                                                                          .index ==
+                                                                      index
                                                                   ? Colors.white
                                                                   : Color(
                                                                       0xFF303030)),
                                                         ),
-                                                      )))),
+                                                      ))),
+                                              SizedBox(
+                                                height: 5.0,
+                                              ),
+                                              Text(
+                                                  index == 0
+                                                      ? '9 AM to 12 PM'
+                                                      : index == 1
+                                                          ? '12 PM to 3 PM'
+                                                          : '3 PM to 6 PM',
+                                                  style:
+                                                      dateTabTextStyle.copyWith(
+                                                          color: _tabController
+                                                                      .index ==
+                                                                  index
+                                                              ? defaultGreen
+                                                              : inactiveTime)),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    })),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(10.0, 10, 10, 0),
+                                child: Container(
+                                  width: double.infinity,
+                                  height: devHeight * 0.25,
+                                  child: TabBarView(
+                                      controller: _tabController,
+                                      children: List.generate(3, (index) {
+                                        return Container(
+                                          height: devHeight * 0.25,
+                                          child: Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                0, 0.0, 0, 0),
+                                            child: ListView.builder(
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
+                                              padding: EdgeInsets.fromLTRB(
+                                                  0, 0, 0, 0),
+                                              itemCount:
+                                                  timeChart[index].length,
+                                              scrollDirection: Axis.horizontal,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int pos) {
+                                                return Column(
+                                                    children: List.generate(4,
+                                                        (rowIndex) {
+                                                  return Padding(
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.05,
+                                                            10,
+                                                            MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.05,
+                                                            10),
+                                                    child: GestureDetector(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            time =
+                                                                '${timeChart[index][pos]}${getSubTime(index, rowIndex)}';
+                                                            print(time);
+                                                          });
+                                                        },
+                                                        child: Material(
+                                                            elevation: 0,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        2.0),
+                                                            color: time ==
+                                                                    showSlots(
+                                                                        index,
+                                                                        pos,
+                                                                        rowIndex)
+                                                                ? defaultGreen
+                                                                : Colors.white,
+                                                            child: Padding(
+                                                                padding: EdgeInsets
+                                                                    .symmetric(
+                                                                        vertical:
+                                                                            5,
+                                                                        horizontal:
+                                                                            10),
+                                                                child:
+                                                                    Container(
+                                                                  width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width *
+                                                                      0.15,
+                                                                  child: Text(
+                                                                    showSlots(
+                                                                        index,
+                                                                        pos,
+                                                                        rowIndex),
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    style: dateTabTextStyle.copyWith(
+                                                                        fontSize:
+                                                                            12,
+                                                                        color: time ==
+                                                                                showSlots(index, pos, rowIndex)
+                                                                            ? Colors.white
+                                                                            : Color(0xFF303030)),
+                                                                  ),
+                                                                )))),
+                                                  );
+                                                }));
+                                              },
+                                            ),
+                                          ),
                                         );
-                                      }));
-                                    },
-                                  ),
+                                      })),
                                 ),
-                              );
-                            })),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  : SizedBox(),
               Spacer(),
               Padding(
-                padding: const EdgeInsets.fromLTRB(50, 10, 50, 30),
+                padding: const EdgeInsets.fromLTRB(50, 0, 50, 30),
                 child: SizedBox(
                   width: double.infinity,
                   height: 40.0,

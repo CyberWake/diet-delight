@@ -271,10 +271,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             TabBarView(
               controller: _pageController3,
               children: [
+                SettingSecurities(snackBarKey: _scaffoldKey),
                 SettingsTermsAndConditionsPage(),
                 SettingsFAQPage(),
                 SettingsPrivacyPolicyPage(),
-                SettingSecurities(snackBarKey: _scaffoldKey)
               ],
             ),
             ContactUsPage(),

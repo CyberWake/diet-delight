@@ -170,11 +170,12 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                               ? Icon(
                                   Icons.favorite,
                                   size: 13,
-                                  color: Colors.black,
+                                  color: defaultPurple,
                                 )
                               : Icon(
                                   Icons.favorite_border,
                                   size: 13,
+                                  color: defaultPurple,
                                 )),
                     )
                   ],
@@ -332,10 +333,10 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                           isScrollable: true,
                           onTap: (index) async {},
                           labelStyle: pageViewTabSelected,
-                          indicatorColor: Colors.transparent,
-                          indicatorWeight: 3.0,
+                          indicatorColor: defaultGreen,
+                          indicatorWeight: 2.0,
                           indicatorSize: TabBarIndicatorSize.label,
-                          labelColor: Colors.black,
+                          labelColor: defaultPurple,
                           labelPadding: EdgeInsets.symmetric(horizontal: 30),
                           unselectedLabelStyle: pageViewTabSelected,
                           unselectedLabelColor: Colors.grey,

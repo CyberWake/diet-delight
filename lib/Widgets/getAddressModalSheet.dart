@@ -220,6 +220,7 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                         if (!widget.addNewAddressOnly) {
                           result = await _apiCall.putUserInfo(updateUserData);
                           Navigator.pop(context);
+                          getBottomSheet();
                           if (result) {
                             print('User Address Updated');
                           }

@@ -25,11 +25,11 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
   List<MealPurchaseModel> purchasedMeal;
   final _apiCall = Api.instance;
   bool loaded = false;
-  List<String> format = [hh, ':', nn, ' ', am, '\n', dd, ' ', 'M', ', ', yyyy];
+  List<String> format = [hh, ':', nn, ' ', am, ' ', dd, ' ', 'M', ', ', yyyy];
   ReceivePort _port = ReceivePort();
   bool _permissionReady = false;
 
-  Future<void> DownloadFile(String key, String fileName) async {
+  Future<void> downloadFile(String key, String fileName) async {
     _permissionReady = await _checkPermission();
     _checkPermission().then((hasGranted) {
       setState(() {
@@ -65,6 +65,33 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
             children: [
               Expanded(child: Text(fieldName, style: orderHistoryCardStyle)),
               Expanded(child: Text(fieldValue, style: orderHistoryCardStyle)),
+            ],
+          ),
+        ));
+  }
+
+  Widget daysField({String fieldName, String fieldValue1, String fieldValue2}) {
+    return Flexible(
+        fit: FlexFit.loose,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: Text(fieldName, style: orderHistoryCardStyle)),
+              Expanded(
+                  child: RichText(
+                text: TextSpan(children: <TextSpan>[
+                  TextSpan(
+                      text: fieldValue1 + '\n',
+                      style: orderHistoryCardStyle.copyWith(fontSize: 11)),
+                  TextSpan(
+                      text: fieldValue2,
+                      style: orderHistoryCardStyle.copyWith(
+                          fontSize: 11, color: Color(0xFFC6C6C6))),
+                ]),
+              ))
             ],
           ),
         ));
@@ -132,155 +159,157 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
   @override
   Widget build(BuildContext context) {
     return loaded
-        ? purchasedMeal.length == 0
-            ? Center(child: Text('No Consultation Purchase Available'))
-            : ListView(
-                shrinkWrap: true,
-                children: List.generate(purchasedMeal.length, (index) {
-                  return Container(
-                    margin: EdgeInsets.all(10),
-                    padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
-                    decoration: BoxDecoration(
-                      color: white,
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 4,
-                          color: Colors.black.withOpacity(0.25),
-                          spreadRadius: 0,
-                          offset: const Offset(0.0, 0.0),
-                        )
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Flexible(
-                            fit: FlexFit.loose,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Flexible(
-                                    fit: FlexFit.loose,
-                                    child: Text(
-                                        purchasedMeal[index].mealPlanName,
-                                        style: orderHistoryCardStyle.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14)),
-                                  ),
-                                  Flexible(
-                                      child: PopupMenuButton<int>(
-                                    child: Icon(Icons.more_vert,
-                                        color: Colors.black),
-                                    itemBuilder: (BuildContext context) =>
-                                        <PopupMenuEntry<int>>[
-                                      PopupMenuItem<int>(
-                                        value: 0,
-                                        child: Material(
-                                          color: Colors.white,
-                                          child: ListTile(
-                                            onTap: () async {
-                                              MealModel getMealPackage =
-                                                  await _apiCall.getMealPlan(
-                                                      purchasedMeal[index]
-                                                          .mealPlanId);
-                                              Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                      builder: (BuildContext
-                                                              context) =>
-                                                          MealSubscriptionPage(
-                                                            weekDaysSelected:
-                                                                purchasedMeal[
-                                                                        index]
-                                                                    .weekdays
-                                                                    .length,
-                                                            mealPackage:
-                                                                getMealPackage,
-                                                          )));
-                                            },
-                                            leading: Icon(
-                                              Icons.autorenew,
-                                              size: 24,
-                                              color: Colors.black,
-                                            ),
-                                            title: Text(
-                                              'Renew Purchase',
-                                              style: orderHistoryPopUpStyle,
-                                            ),
-                                          ),
+        ? ListView(
+            shrinkWrap: true,
+            children: List.generate(purchasedMeal.length, (index) {
+              return Container(
+//                height: MediaQuery.of(context).size.height * 0.25,
+                margin: EdgeInsets.all(10),
+                padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
+                decoration: BoxDecoration(
+                  color: white,
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 4,
+                      color: Colors.black.withOpacity(0.25),
+                      spreadRadius: 0,
+                      offset: const Offset(0.0, 0.0),
+                    )
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Flexible(
+                        fit: FlexFit.loose,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                fit: FlexFit.loose,
+                                child: Text(purchasedMeal[index].mealPlanName,
+                                    style: orderHistoryCardStyle.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14)),
+                              ),
+                              Flexible(
+                                  child: PopupMenuButton<int>(
+                                child: Icon(Icons.more_vert, color: timeGrid),
+                                itemBuilder: (BuildContext context) =>
+                                    <PopupMenuEntry<int>>[
+                                  PopupMenuItem<int>(
+                                    value: 0,
+                                    child: Material(
+                                      color: Colors.white,
+                                      child: ListTile(
+                                        onTap: () async {
+                                          MealModel getMealPackage =
+                                              await _apiCall.getMealPlan(
+                                                  purchasedMeal[index]
+                                                      .mealPlanId);
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (BuildContext
+                                                          context) =>
+                                                      MealSubscriptionPage(
+                                                        weekDaysSelected:
+                                                            purchasedMeal[index]
+                                                                .weekdays
+                                                                .length,
+                                                        mealPackage:
+                                                            getMealPackage,
+                                                      )));
+                                        },
+                                        leading: Icon(
+                                          Icons.autorenew,
+                                          size: 24,
+                                          color: Colors.black,
+                                        ),
+//                                            new Image.asset(
+//                                              "images/renew-purchase.svg",
+//                                              width: 30,
+//                                              height: 30,
+//                                            ),
+                                        title: Text(
+                                          'Renew Purchase',
+                                          style: orderHistoryPopUpStyle,
                                         ),
                                       ),
-                                      PopupMenuItem<int>(
-                                        value: 1,
-                                        child: Material(
-                                          color: Colors.white,
-                                          child: ListTile(
-                                            onTap: () async {
-                                              await DownloadFile(
-                                                  'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-                                                  'Dummy PDF.pdf');
-                                              Navigator.pop(context);
-                                            },
-                                            leading: Icon(
-                                              Icons.file_download,
-                                              size: 24,
-                                              color: Colors.black,
-                                            ),
-                                            title: Text(
-                                              'Download Invoice',
-                                              style: orderHistoryPopUpStyle,
-                                            ),
-                                          ),
+                                    ),
+                                  ),
+                                  PopupMenuItem<int>(
+                                    value: 1,
+                                    child: Material(
+                                      color: Colors.white,
+                                      child: ListTile(
+                                        onTap: () async {
+                                          await downloadFile(
+                                              'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+                                              'Dummy PDF.pdf');
+                                          Navigator.pop(context);
+                                        },
+                                        leading: Icon(
+                                          Icons.file_download,
+                                          size: 24,
+                                          color: Colors.black,
+                                        ),
+//                                            new Image.asset(
+//                                                "images/download_invoice.png",
+//                                                width: 20),
+                                        title: Text(
+                                          'Download Invoice',
+                                          style: orderHistoryPopUpStyle,
                                         ),
                                       ),
-                                    ],
-                                  )),
-                                ],
-                              ),
-                            )),
-                        dataField(
-                          fieldName: 'Subscription:',
-                          fieldValue: purchasedMeal[index].mealPlanDuration +
-                              ' Days\n' +
-                              purchasedMeal[index].showWeek(),
-                        ),
-                        dataField(
-                          fieldName: 'Remaining Days:',
-                          fieldValue: '12',
-                        ),
-                        Flexible(
-                            fit: FlexFit.loose,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Icon(Icons.schedule),
-                                  SizedBox(
-                                    width: 10,
+                                    ),
                                   ),
-                                  Text(
-                                      formatDate(
-                                          DateTime.parse(
-                                              purchasedMeal[index].createdAt),
-                                          format),
-                                      style: orderHistoryCardStyle),
-                                  Spacer(),
-                                  Text(purchasedMeal[index].amountPaid + ' BHD',
-                                      style: orderHistoryCardStyle)
                                 ],
-                              ),
-                            ))
-                      ],
+                              )),
+                            ],
+                          ),
+                        )),
+                    daysField(
+                      fieldName: 'Subscription:',
+                      fieldValue1:
+                          purchasedMeal[index].mealPlanDuration + ' Days',
+                      fieldValue2: purchasedMeal[index].showWeek(),
                     ),
-                  );
-                }),
-              )
+                    dataField(
+                      fieldName: 'Remaining Days:',
+                      fieldValue: '12',
+                    ),
+                    Flexible(
+                        fit: FlexFit.loose,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(Icons.schedule),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                  formatDate(
+                                      DateTime.parse(
+                                          purchasedMeal[index].createdAt),
+                                      format),
+                                  style: orderHistoryCardStyle),
+                              Spacer(),
+                              Text(purchasedMeal[index].amountPaid + ' BHD',
+                                  style: orderHistoryCardStyle)
+                            ],
+                          ),
+                        ))
+                  ],
+                ),
+              );
+            }),
+          )
         : Center(child: SpinKitDoubleBounce(color: defaultGreen));
   }
 }
