@@ -1,6 +1,5 @@
 import 'dart:math';
-
-import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

@@ -1,21 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
-
-import 'package:diet_delight/Screens/Auth%20Screens/login_signup_form.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/consutationOrdersPage.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/contactUsPage.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/dashboardOnGoingOrders.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/dashboardUserInfoPage.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/favouritesPage.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/homePage.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/mealPlanOrdersPage.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/notificationsPage.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/settingsFAQs.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/settingsPrivacyPolicy.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/settingsSecuritiesPage.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/settingsTermsAndConditions.dart';
-import 'package:diet_delight/Screens/coupon_code.dart';
-import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -57,7 +42,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     [],
     ['Consultation Orders', 'Meal Plan Orders'],
     [],
-    ['Terms and Conditions', 'FAQ', 'Privacy Policy', 'Securities'],
+    ['Securities', 'Terms and Conditions', 'FAQ', 'Privacy Policy'],
     [],
   ];
 

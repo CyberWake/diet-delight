@@ -1,10 +1,6 @@
 import 'dart:ui';
-
-import 'package:diet_delight/Models/registrationModel.dart';
-import 'package:diet_delight/Screens/Auth%20Screens/newUserQuestionnaire.dart';
-import 'package:diet_delight/Screens/Auth%20Screens/resetPassword.dart';
-import 'package:diet_delight/konstants.dart';
-import 'package:diet_delight/services/apiCalls.dart';
+import 'package:diet_delight/Models/export_models.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

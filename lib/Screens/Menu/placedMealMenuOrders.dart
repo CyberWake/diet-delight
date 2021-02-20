@@ -1,14 +1,9 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:date_format/date_format.dart';
-import 'package:diet_delight/Models/mealModel.dart';
-import 'package:diet_delight/Models/mealPurchaseModel.dart';
-import 'package:diet_delight/Models/menuCategoryModel.dart';
-import 'package:diet_delight/Models/menuModel.dart';
-import 'package:diet_delight/Models/menuOrdersModel.dart';
-import 'package:diet_delight/Screens/Menu/placeMealMenuOrders.dart';
-import 'package:diet_delight/Widgets/getAddressModalSheet.dart';
-import 'package:diet_delight/konstants.dart';
-import 'package:diet_delight/services/apiCalls.dart';
+import 'package:diet_delight/Models/export_models.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -162,6 +157,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
     print('end Date: ${widget.purchaseDetails.endDate}');
   }
 
+  List addressTapList = [];
   void _onSelectionChangedForAddress(
       DateRangePickerSelectionChangedArgs args, int address) {
     if (address == 0) {
@@ -227,7 +223,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
           borderRadius: BorderRadius.circular(15),
           border: Border.all(
               color: Colors.black,
-              width: selected == addressIndex ? 2.0 : 0.5)),
+              width: addressTapList.contains(addressIndex) ? 2.0 : 0.5)),
       child: addressPresent
           ? GestureDetector(
               onTap: () {
@@ -235,50 +231,86 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                 if (addressPresent) {
                   update(() {
                     selected = addressIndex;
+                    if (addressTapList.contains(addressIndex)) {
+                      addressTapList.remove(addressIndex);
+                    } else {
+                      addressTapList.add(addressIndex);
+                    }
                   });
                 }
               },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        whichAddress,
-                        style: TextStyle(
-                            fontWeight: selected == addressIndex
+              child: Padding(
+                padding: const EdgeInsets.only(left: 6.0, top: 5),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          whichAddress,
+                          style: adressCardTextStyle.copyWith(
+                            fontWeight: addressTapList.contains(addressIndex)
                                 ? FontWeight.bold
-                                : FontWeight.normal),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      addressPresent
-                          ? Padding(
-                              padding: EdgeInsets.only(left: 5.0),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(addressIndex == 0
-                                      ? primaryAddressLine1
-                                      : secondaryAddressLine1),
-                                  Text(addressIndex == 0
-                                      ? primaryAddressLine2
-                                      : secondaryAddressLine2),
-                                ],
+                                : FontWeight.normal,
+                          ),
+                        )
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        addressPresent
+                            ? Padding(
+                                padding: EdgeInsets.only(left: 10.0, top: 5),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      addressIndex == 0
+                                          ? primaryAddressLine1
+                                          : secondaryAddressLine1,
+                                      style: adressCardTextStyle.copyWith(
+                                        fontWeight: addressTapList
+                                                .contains(addressIndex)
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 2,
+                                    ),
+                                    Text(
+                                      addressIndex == 0
+                                          ? primaryAddressLine2
+                                          : secondaryAddressLine2,
+                                      style: adressCardTextStyle.copyWith(
+                                        fontWeight: addressTapList
+                                                .contains(addressIndex)
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Center(
+                                child: Text(
+                                  'Not Available',
+                                  style: adressCardTextStyle.copyWith(
+                                    fontWeight:
+                                        addressTapList.contains(addressIndex)
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                  ),
+                                ),
                               ),
-                            )
-                          : Center(
-                              child: Text('Not Available'),
-                            ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             )
           : AddressButtonWithModal(
@@ -292,8 +324,22 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Text('Not Available'),
-                    Text('Add'),
+                    Text(
+                      'Not Available',
+                      style: adressCardTextStyle.copyWith(
+                        fontWeight: addressTapList.contains(addressIndex)
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
+                    Text(
+                      'Add',
+                      style: adressCardTextStyle.copyWith(
+                        fontWeight: addressTapList.contains(addressIndex)
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -304,52 +350,13 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
   showBreakCalendar() {
     Future<bool> done = showModalBottomSheet(
         context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25), topRight: Radius.circular(25)),
+        ),
         isScrollControlled: true,
         builder: (BuildContext context) {
-          return Container(
-            height: MediaQuery.of(context).size.height * 0.8,
-            child: SfDateRangePicker(
-              showNavigationArrow: true,
-              todayHighlightColor: defaultGreen,
-              toggleDaySelection: true,
-              headerHeight: 60,
-              initialSelectedDates: breakDates,
-              selectionColor: Colors.grey,
-              monthCellStyle: DateRangePickerMonthCellStyle(
-                  todayCellDecoration: BoxDecoration(
-                      border: Border.all(color: defaultGreen),
-                      shape: BoxShape.circle),
-                  todayTextStyle: TextStyle(
-                    color: defaultGreen,
-                  ),
-                  blackoutDateTextStyle: const TextStyle(
-                      color: Colors.grey,
-                      decoration: TextDecoration.lineThrough)),
-              monthViewSettings: DateRangePickerMonthViewSettings(
-                  numberOfWeeksInView:
-                      ((DateTime.parse(widget.purchaseDetails.endDate))
-                                      .difference(startDate)
-                                      .inDays /
-                                  7)
-                              .round() +
-                          1,
-                  blackoutDates: planSelectedOffDays),
-              enablePastDates: false,
-              minDate: DateTime.parse(widget.purchaseDetails.startDate),
-              maxDate: DateTime.parse(widget.purchaseDetails.endDate),
-              view: DateRangePickerView.month,
-              onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
-                if (args.value != null) {
-                  _onSelectionChanged(args);
-                } else {
-                  setState(() {
-                    breakDates = [];
-                  });
-                }
-              },
-              selectionMode: DateRangePickerSelectionMode.multiple,
-            ),
-          );
+          return CustomCalenderForBreak();
         });
     done.then((value) {
       getDates();
@@ -368,7 +375,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
               builder: (BuildContext context, StateSetter updateBottomSheet) {
             updateBottomSheet(() {});
             return Container(
-                height: MediaQuery.of(context).size.height * 0.8,
+                height: MediaQuery.of(context).size.height * 0.85,
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     mainAxisSize: MainAxisSize.max,
@@ -386,104 +393,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                               update: updateBottomSheet),
                         ],
                       ),
-                      selected == 0
-                          ? SfDateRangePicker(
-                              showNavigationArrow: true,
-                              todayHighlightColor: defaultGreen,
-                              toggleDaySelection: true,
-                              headerHeight: 60,
-                              initialSelectedDates: deliverPrimary,
-                              selectionColor: defaultGreen,
-                              monthCellStyle: DateRangePickerMonthCellStyle(
-                                  todayCellDecoration: BoxDecoration(
-                                      border: Border.all(color: defaultGreen),
-                                      shape: BoxShape.circle),
-                                  todayTextStyle: TextStyle(
-                                    color: defaultGreen,
-                                  ),
-                                  specialDatesDecoration: BoxDecoration(
-                                      color: defaultPurple,
-                                      border:
-                                          Border.all(color: Colors.deepPurple),
-                                      shape: BoxShape.circle),
-                                  blackoutDateTextStyle: const TextStyle(
-                                      color: Colors.grey,
-                                      decoration: TextDecoration.lineThrough)),
-                              monthViewSettings:
-                                  DateRangePickerMonthViewSettings(
-                                      numberOfWeeksInView: ((DateTime.parse(
-                                                          widget.purchaseDetails
-                                                              .endDate))
-                                                      .difference(startDate)
-                                                      .inDays /
-                                                  7)
-                                              .round() +
-                                          1,
-                                      specialDates: deliverSecondary,
-                                      blackoutDates: blackoutsAddressCalendar),
-                              enablePastDates: false,
-                              minDate: DateTime.parse(
-                                  widget.purchaseDetails.startDate),
-                              maxDate: DateTime.parse(
-                                  widget.purchaseDetails.endDate),
-                              view: DateRangePickerView.month,
-                              onSelectionChanged:
-                                  (DateRangePickerSelectionChangedArgs args) {
-                                if (args.value != null) {
-                                  _onSelectionChangedForAddress(args, selected);
-                                }
-                              },
-                              selectionMode:
-                                  DateRangePickerSelectionMode.multiple,
-                            )
-                          : SfDateRangePicker(
-                              showNavigationArrow: true,
-                              todayHighlightColor: defaultGreen,
-                              toggleDaySelection: true,
-                              headerHeight: 60,
-                              initialSelectedDates: deliverSecondary,
-                              selectionColor: Colors.deepPurple,
-                              monthCellStyle: DateRangePickerMonthCellStyle(
-                                  todayCellDecoration: BoxDecoration(
-                                      border: Border.all(color: defaultGreen),
-                                      shape: BoxShape.circle),
-                                  todayTextStyle: TextStyle(
-                                    color: defaultGreen,
-                                  ),
-                                  specialDatesDecoration: BoxDecoration(
-                                      color: defaultGreen,
-                                      border: Border.all(color: defaultGreen),
-                                      shape: BoxShape.circle),
-                                  blackoutDateTextStyle: const TextStyle(
-                                      color: Colors.grey,
-                                      decoration: TextDecoration.lineThrough)),
-                              monthViewSettings:
-                                  DateRangePickerMonthViewSettings(
-                                      numberOfWeeksInView: ((DateTime.parse(
-                                                          widget.purchaseDetails
-                                                              .endDate))
-                                                      .difference(startDate)
-                                                      .inDays /
-                                                  7)
-                                              .round() +
-                                          1,
-                                      specialDates: deliverPrimary,
-                                      blackoutDates: blackoutsAddressCalendar),
-                              enablePastDates: false,
-                              minDate: DateTime.parse(
-                                  widget.purchaseDetails.startDate),
-                              maxDate: DateTime.parse(
-                                  widget.purchaseDetails.endDate),
-                              view: DateRangePickerView.month,
-                              onSelectionChanged:
-                                  (DateRangePickerSelectionChangedArgs args) {
-                                if (args.value != null) {
-                                  _onSelectionChangedForAddress(args, selected);
-                                }
-                              },
-                              selectionMode:
-                                  DateRangePickerSelectionMode.multiple,
-                            ),
+                      CustomCalenderForAddress(addressTapList: addressTapList)
                     ]));
           });
         });

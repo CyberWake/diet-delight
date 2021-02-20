@@ -1,9 +1,7 @@
-import 'package:diet_delight/Models/registrationModel.dart';
-import 'package:diet_delight/Widgets/getAddressModalSheet.dart';
-import 'package:diet_delight/konstants.dart';
-import 'package:diet_delight/services/apiCalls.dart';
+import 'package:diet_delight/Models/export_models.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class DashBoardUserInfoPage extends StatefulWidget {
   final GlobalKey<ScaffoldState> snackBarKey;
@@ -56,7 +54,9 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                 name.text = done;
               },
               style: authInputTextStyle.copyWith(
-                  fontSize: 30, fontWeight: FontWeight.w600),
+                  color: Color(0xFF303960),
+                  fontSize: 30,
+                  fontWeight: FontWeight.w600),
               textAlign: TextAlign.left,
               keyboardType: TextInputType.text,
               textInputAction: TextInputAction.next,
@@ -88,7 +88,7 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                 fillColor: Color(0xffF5F5F5),
                 child: Icon(
                   fieldIcon,
-                  color: defaultGreen,
+                  color: Color(0xFF303960),
                   size: 16,
                 ),
                 shape: CircleBorder()),
@@ -101,7 +101,9 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
             child: Text(
               fieldValue,
               style: selectedTab.copyWith(
-                  fontSize: 18, fontWeight: FontWeight.w400),
+                  color: Color(0xFF303960),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400),
             ),
           ),
         ],
@@ -121,9 +123,10 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
               ? Icons.where_to_vote_rounded
               : Icons.add_location_alt_outlined,
           size: 16,
-          color: defaultGreen,
+          color: Color(0xFF303960),
         ),
         shape: CircleBorder(),
+        onPressed: () {},
       ),
     );
   }
@@ -132,6 +135,7 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
     return Padding(
       padding: const EdgeInsets.only(top: 20),
       child: AddressButtonWithModal(
+        index: index,
         addNewAddressOnly: true,
         callBackFunction: callback,
         child: Row(
@@ -139,10 +143,10 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             index == 0
-                ? primaryAddressLine1 != null
+                ? primaryAddressLine1.isNotEmpty
                     ? addressMarkWidget(present: true)
                     : addressMarkWidget(present: false)
-                : secondaryAddressLine1 != null
+                : secondaryAddressLine1.isNotEmpty
                     ? addressMarkWidget(present: true)
                     : addressMarkWidget(present: false),
             SizedBox(
@@ -152,28 +156,28 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
               width: MediaQuery.of(context).size.width * 0.4,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    fieldName,
+                    index == 0
+                        ? primaryAddressLine1.isNotEmpty
+                            ? fieldName
+                            : 'Add $fieldName'
+                        : secondaryAddressLine1.isNotEmpty
+                            ? fieldName
+                            : 'Add $fieldName',
                     style: selectedTab.copyWith(
-                        fontSize: 18, fontWeight: FontWeight.w400),
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF303960)),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5, bottom: 5, left: 10),
-                    child: Text(
-                      index == 0
-                          ? primaryAddressLine1 + ',\n' + primaryAddressLine2
-                          : index == 1
-                              ? secondaryAddressLine1 +
-                                  ',\n' +
-                                  secondaryAddressLine2
-                              : 'Not available',
-                      style: TextStyle(
-                          color: defaultGreen,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ),
+                  index == 0
+                      ? primaryAddressLine1.isNotEmpty
+                          ? showAddress(index)
+                          : Container()
+                      : secondaryAddressLine1.isNotEmpty
+                          ? showAddress(index)
+                          : Container()
                 ],
               ),
             )
@@ -183,119 +187,190 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              generateTextField(focusNode: fullName, index: 0),
-              generateStaticTextField(
-                  fieldIcon: Icons.phone, fieldValue: mobileNo.text),
-              generateStaticTextField(
-                  fieldIcon: Icons.email, fieldValue: email.text),
-              generateOnTapFields(
-                  fieldName: 'Primary Address', index: 0, onPress: () {}),
-              generateOnTapFields(
-                  fieldName: 'Secondary Address', index: 1, onPress: () {}),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Divider(
-                  thickness: 1.5,
-                ),
-              ),
-            ],
+  Widget showAddress(int index) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 5, bottom: 5, left: 10),
+      child: Text(
+        index == 0
+            ? primaryAddressLine1 + ',\n' + primaryAddressLine2
+            : secondaryAddressLine1 + ',\n' + secondaryAddressLine2,
+        style: TextStyle(
+            color: Color(0xFF77838F),
+            fontSize: 14,
+            fontWeight: FontWeight.w400),
+      ),
+    );
+  }
+
+  Widget generateInfoCard(
+      {String age = '21',
+      icon = FontAwesomeIcons.male,
+      String gender = 'Male'}) {
+    return Padding(
+      padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.1),
+      child: Row(
+        children: [
+          Text(
+            age,
+            style: TextStyle(
+                color: Color(0xFF303960), fontWeight: FontWeight.w600),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 15.0),
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.75,
-            height: 40,
-            child: TextButton(
-              onPressed: () async {
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                String password = prefs.getString('password');
-                setState(() {});
-                List<String> nameBreak = name.text.split(' ');
-                RegModel updateUserData = RegModel(
-                  name: name.text,
-                  firstName: nameBreak[0],
-                  lastName: nameBreak[nameBreak.length - 1],
-                  email: email.text,
-                  mobile: mobileNo.text,
-                  password: password,
-                  addressLine1: primaryAddressLine1,
-                  addressSecondary1: secondaryAddressLine1,
-                  addressLine2: primaryAddressLine2,
-                  addressSecondary2: secondaryAddressLine2,
-                );
-                updateUserData.show();
-                bool result = await _apiCall.putUserInfo(updateUserData);
-                setState(() {});
-                if (result) {
-                  Scaffold.of(context).showSnackBar(SnackBar(
-                      content: Text('User Info Updated Successfully')));
-                } else {
-                  Scaffold.of(context).showSnackBar(
-                      SnackBar(content: Text('User Info Update Failed')));
-                }
-                /*if (curPassword.text.isNotEmpty) {
-                  if (newPassword.text == newConfPassword.text) {
-                    setState(() {
-                      updateInProgress = true;
-                    });
-                    bool result = await _apiCall.updatePassword(
-                        curPassword.text, newPassword.text);
-                    if (result) {
-                      getUserInfo();
-                      setState(() {
-                        passwordUpdated = true;
-                      });
-                      setState(() {
-                        updateInProgress = false;
-                      });
-                      widget.snackBarKey.currentState.showSnackBar(SnackBar(
-                          content: Text('Password updated Successfully')));
-                      Navigator.pop(context);
-                    } else {
-                      Navigator.pop(context);
-                    }
-                  } else {
-                    setState(() {
-                      passwordUpdated = false;
-                    });
-                    Navigator.pop(context);
-                    widget.snackBarKey.currentState.showSnackBar(
-                        SnackBar(content: Text('Passwords do not match')));
-                  }
-                } else {
-                  print(info.password);
-                  setState(() {
-                    passwordUpdated = false;
-                  });
-                  Navigator.pop(context);
-                  widget.snackBarKey.currentState.showSnackBar(SnackBar(
-                      content: Text('Current Password Cannot be empty')));
-                }*/
-              },
-              child: Text(
-                updateInProgress ? 'UPDATING' : 'UPDATE',
-                style: TextStyle(
-                  fontFamily: 'RobotoCondensedReg',
-                  fontSize: 20,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.white,
+          SizedBox(
+            width: 30,
+          ),
+          Text(
+            gender,
+            style: TextStyle(
+                color: Color(0xFF303960), fontWeight: FontWeight.w600),
+          ),
+          FaIcon(icon)
+        ],
+      ),
+    );
+  }
+
+  Widget generateStatCard({String calorie = "1440", String bmi = "24.6"}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: List.generate(2, (index) {
+        return Container(
+          height: MediaQuery.of(context).size.width * 0.425,
+          width: MediaQuery.of(context).size.width * 0.425,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            color: Color(0xFFE5E5E5),
+          ),
+          child: Center(
+            child: Container(
+              height: MediaQuery.of(context).size.width * 0.327,
+              width: MediaQuery.of(context).size.width * 0.327,
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                      color: Color.fromRGBO(0, 0, 0, 0.25),
+                      blurRadius: 5,
+                      spreadRadius: 0,
+                      offset: Offset(0, 4))
+                ],
+                borderRadius: BorderRadius.circular(50),
+                color: Color(0xFF77838F),
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.0305),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: Text(
+                        index == 0 ? bmi : calorie,
+                        style: TextStyle(
+                            fontSize: 40,
+                            fontWeight: FontWeight.w700,
+                            color: white),
+                      ),
+                    ),
+                    Flexible(
+                        fit: FlexFit.loose,
+                        child: Text(
+                          index == 0
+                              ? 'Your BMI'
+                              : 'Recommended Calorie Intake',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: white),
+                        ))
+                  ],
                 ),
               ),
-              style: TextButton.styleFrom(
-                  backgroundColor: defaultGreen,
-                  shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20)))),
             ),
           ),
+        );
+      }),
+    );
+  }
+
+  Widget generateReCalculateButton() {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width * 0.175, vertical: 15),
+      child: SizedBox(
+        height: 40,
+        child: TextButton(
+          onPressed: () async {
+            /*SharedPreferences prefs = await SharedPreferences.getInstance();
+            String password = prefs.getString('password');
+            setState(() {});
+            List<String> nameBreak = name.text.split(' ');
+            RegModel updateUserData = RegModel(
+              name: name.text,
+              firstName: nameBreak[0],
+              lastName: nameBreak[nameBreak.length - 1],
+              email: email.text,
+              mobile: mobileNo.text,
+              password: password,
+              addressLine1: primaryAddressLine1,
+              addressSecondary1: secondaryAddressLine1,
+              addressLine2: primaryAddressLine2,
+              addressSecondary2: secondaryAddressLine2,
+            );
+            updateUserData.show();
+            bool result = await _apiCall.putUserInfo(updateUserData);
+            setState(() {});
+            if (result) {
+              Scaffold.of(context).showSnackBar(
+                  SnackBar(content: Text('User Info Updated Successfully')));
+            } else {
+              Scaffold.of(context).showSnackBar(
+                  SnackBar(content: Text('User Info Update Failed')));
+            }*/
+          },
+          child: Text(
+            updateInProgress ? 'RRecalculate BMIe' : 'Recalculate BMI',
+            style: TextStyle(
+              fontFamily: 'RobotoCondensedReg',
+              fontSize: 20,
+              fontWeight: FontWeight.normal,
+              color: Colors.white,
+            ),
+          ),
+          style: TextButton.styleFrom(
+              backgroundColor: Color(0xFF303960),
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20)))),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      shrinkWrap: true,
+      children: [
+        generateTextField(focusNode: fullName, index: 0),
+        generateInfoCard(),
+        generateStatCard(),
+        generateReCalculateButton(),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Divider(
+            thickness: 1.5,
+          ),
+        ),
+        generateStaticTextField(
+            fieldIcon: Icons.phone, fieldValue: mobileNo.text),
+        generateStaticTextField(fieldIcon: Icons.email, fieldValue: email.text),
+        generateOnTapFields(
+            fieldName: 'Primary Address', index: 0, onPress: () {}),
+        generateOnTapFields(
+            fieldName: 'Secondary Address', index: 1, onPress: () {}),
+        SizedBox(
+          height: 40,
         )
       ],
     );

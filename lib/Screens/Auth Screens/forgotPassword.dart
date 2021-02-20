@@ -1,7 +1,7 @@
 import 'dart:ui';
 
-import 'package:diet_delight/Models/registrationModel.dart';
-import 'package:diet_delight/Screens/Auth%20Screens/verifyPhoneNumber.dart';
+import 'package:diet_delight/Models/export_models.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +22,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   FocusNode country = FocusNode();
   FocusNode mobile = FocusNode();
   RegModel userData;
-
 
   @override
   void initState() {
@@ -173,7 +172,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(30, 20, 30, 0),
+            padding: const EdgeInsets.fromLTRB(30, 20, 30, 0),
                       child: SizedBox(
                         width: double.infinity,
                         child: TextButton(

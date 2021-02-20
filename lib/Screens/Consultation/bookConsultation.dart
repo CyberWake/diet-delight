@@ -1,15 +1,12 @@
 import 'dart:ui';
-
-import 'package:date_format/date_format.dart';
-import 'package:diet_delight/Models/consultationModel.dart';
-import 'package:diet_delight/Screens/Consultation/confirmConsultation.dart';
-import 'package:diet_delight/Widgets/consultation_pop_up.dart';
-import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/Models/export_models.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:date_format/date_format.dart';
 
 class BookConsultation extends StatefulWidget {
   final int packageIndex;
@@ -136,7 +133,6 @@ class _BookConsultationState extends State<BookConsultation>
   Widget build(BuildContext context) {
     var devWidth = MediaQuery.of(context).size.width;
     var devHeight = MediaQuery.of(context).size.height;
-
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,

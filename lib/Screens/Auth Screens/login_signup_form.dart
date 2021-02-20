@@ -1,5 +1,4 @@
-import 'package:diet_delight/Screens/Auth%20Screens/login_screen.dart';
-import 'package:diet_delight/Screens/Auth%20Screens/signup_screen.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:flutter/material.dart';
 

@@ -1,10 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:diet_delight/Models/addFavouritesModel.dart';
-import 'package:diet_delight/Models/foodItemModel.dart';
-import 'package:diet_delight/Models/menuCategoryModel.dart';
-import 'package:diet_delight/Models/menuModel.dart';
-import 'package:diet_delight/konstants.dart';
-import 'package:diet_delight/services/apiCalls.dart';
+import 'package:diet_delight/Models/export_models.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -299,6 +295,14 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                                             color: Color(0x26000000),
                                             blurRadius: 5)
                                       ],
+//                                      boxShadow: [
+//                                        BoxShadow(
+//                                          blurRadius: 4,
+//                                          color: Colors.grey[500],
+//                                          spreadRadius: 0,
+//                                          offset: const Offset(0.0, 0.0),
+//                                        )
+//                                      ],
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
                                         image: imageProvider,
@@ -326,6 +330,14 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                         boxShadow: [
                           BoxShadow(color: Color(0x26000000), blurRadius: 5)
                         ],
+//                        boxShadow: [
+//                          BoxShadow(
+//                            blurRadius: 4,
+//                            color: Colors.black.withOpacity(0.25),
+//                            spreadRadius: 0,
+//                            offset: const Offset(0.0, 0.0),
+//                          )
+//                        ],
                       ),
                       child: Center(
                         child: TabBar(

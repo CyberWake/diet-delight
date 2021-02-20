@@ -1,12 +1,6 @@
 import 'dart:ui';
-
-import 'package:diet_delight/Models/consultationAppointmentModel.dart';
-import 'package:diet_delight/Models/consultationModel.dart';
-import 'package:diet_delight/Models/consultationPurchaseModel.dart';
-import 'package:diet_delight/Screens/Consultation/prePaymentConsultation.dart';
-import 'package:diet_delight/Widgets/consultation_pop_up.dart';
-import 'package:diet_delight/konstants.dart';
-import 'package:diet_delight/services/apiCalls.dart';
+import 'package:diet_delight/Models/export_models.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';

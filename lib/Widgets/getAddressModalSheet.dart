@@ -1,6 +1,5 @@
-import 'package:diet_delight/Models/registrationModel.dart';
-import 'package:diet_delight/konstants.dart';
-import 'package:diet_delight/services/apiCalls.dart';
+import 'package:diet_delight/Models/export_models.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,9 +7,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AddressButtonWithModal extends StatefulWidget {
   final bool addNewAddressOnly;
   final Widget child;
+  final int index;
   final Function(String) callBackFunction;
   AddressButtonWithModal(
-      {this.child, this.callBackFunction, this.addNewAddressOnly = false});
+      {this.child,
+      this.callBackFunction,
+      this.addNewAddressOnly = false,
+      this.index = 0});
   @override
   _AddressButtonWithModalState createState() => _AddressButtonWithModalState();
 }
@@ -85,6 +88,7 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
 
   void addAddressBottomSheet(int index) {
     whichAddress = index;
+    whichAddress == 0 ? addressType = 'Primary' : addressType = 'Secondary';
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -259,7 +263,7 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
         Padding(
           padding: const EdgeInsets.only(top: 15.0, left: 15.0),
           child: Text(
-            '${name}',
+            '$name',
             style: billingTextStyle.copyWith(
               fontSize: 14,
               color: selectedAddressIndex == index ? white : Color(0xFF222222),
@@ -468,7 +472,7 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
     return GestureDetector(
       onTap: () {
         if (widget.addNewAddressOnly) {
-          addAddressBottomSheet(0);
+          addAddressBottomSheet(widget.index);
         } else {
           getBottomSheet();
         }

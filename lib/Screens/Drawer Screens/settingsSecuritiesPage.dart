@@ -1,5 +1,4 @@
-import 'package:diet_delight/konstants.dart';
-import 'package:diet_delight/services/apiCalls.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/material.dart';
 
 class SettingSecurities extends StatefulWidget {
@@ -25,16 +24,15 @@ class _SettingSecuritiesState extends State<SettingSecurities> {
     return Container(
       height: MediaQuery.of(context).size.width * 0.7,
       padding: EdgeInsets.only(top: 20),
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: List.generate(items, (index) {
-            if (index == 0) {
-              return Flexible(
-                fit: FlexFit.loose,
-                child: Align(
+      child: SingleChildScrollView(
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: List.generate(items, (index) {
+              if (index == 0) {
+                return Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    padding: const EdgeInsets.fromLTRB(20.0, 0, 20.0, 50.0),
                     child: Text(
                       'Change Password',
                       style: authInputTextStyle.copyWith(
@@ -43,70 +41,71 @@ class _SettingSecuritiesState extends State<SettingSecurities> {
                           fontWeight: FontWeight.w500),
                     ),
                   ),
-                ),
-              );
-            } else if (index == 4) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 15.0, top: 20),
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.75,
-                  height: 40,
-                  child: TextButton(
-                    onPressed: () async {
-                      if (curPassword.text.isNotEmpty) {
-                        if (newPassword.text == newConfPassword.text) {
-                          setState(() {
-                            updateInProgress = true;
-                          });
-                          bool result = await _apiCall.updatePassword(
-                              curPassword.text, newPassword.text);
-                          if (result) {
-                            curPassword.clear();
-                            newPassword.clear();
-                            newConfPassword.clear();
+                );
+              } else if (index == 4) {
+                return Padding(
+                  padding: EdgeInsets.only(
+                      bottom: 15.0,
+                      top: MediaQuery.of(context).size.height * 0.22),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.75,
+                    height: 40,
+                    child: TextButton(
+                      onPressed: () async {
+                        if (curPassword.text.isNotEmpty) {
+                          if (newPassword.text == newConfPassword.text) {
                             setState(() {
-                              updateInProgress = false;
+                              updateInProgress = true;
                             });
-                            widget.snackBarKey.currentState.showSnackBar(
-                                SnackBar(
-                                    content:
-                                        Text('Password updated Successfully')));
+                            bool result = await _apiCall.updatePassword(
+                                curPassword.text, newPassword.text);
+                            if (result) {
+                              curPassword.clear();
+                              newPassword.clear();
+                              newConfPassword.clear();
+                              setState(() {
+                                updateInProgress = false;
+                              });
+                              widget.snackBarKey.currentState.showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          'Password updated Successfully')));
+                            } else {
+                              widget.snackBarKey.currentState.showSnackBar(
+                                  SnackBar(
+                                      content:
+                                          Text('Couldn\'t update try again')));
+                            }
                           } else {
                             widget.snackBarKey.currentState.showSnackBar(
                                 SnackBar(
-                                    content:
-                                        Text('Couldn\'t update try again')));
+                                    content: Text('Passwords do not match')));
                           }
                         } else {
                           widget.snackBarKey.currentState.showSnackBar(SnackBar(
-                              content: Text('Passwords do not match')));
+                              content:
+                                  Text('Current Password Cannot be empty')));
                         }
-                      } else {
-                        widget.snackBarKey.currentState.showSnackBar(SnackBar(
-                            content: Text('Current Password Cannot be empty')));
-                      }
-                    },
-                    child: Text(
-                      updateInProgress ? 'UPDATING' : 'UPDATE',
-                      style: TextStyle(
-                        fontFamily: 'RobotoCondensedReg',
-                        fontSize: 20,
-                        fontWeight: FontWeight.normal,
-                        color: Colors.white,
+                      },
+                      child: Text(
+                        updateInProgress ? 'UPDATING' : 'UPDATE',
+                        style: TextStyle(
+                          fontFamily: 'RobotoCondensedReg',
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.white,
+                        ),
                       ),
+                      style: TextButton.styleFrom(
+                          backgroundColor: defaultGreen,
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20)))),
                     ),
-                    style: TextButton.styleFrom(
-                        backgroundColor: defaultGreen,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20)))),
                   ),
-                ),
-              );
-            } else {
-              return Flexible(
-                fit: FlexFit.loose,
-                child: Container(
+                );
+              } else {
+                return Container(
                   margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   decoration: BoxDecoration(
@@ -132,14 +131,15 @@ class _SettingSecuritiesState extends State<SettingSecurities> {
                               ? passNew
                               : passNewConf,
                       onFieldSubmitted: (done) {
+                        print('passing current index:$index');
                         index == 1
                             ? curPassword.text = done
                             : index == 2
                                 ? newPassword.text = done
                                 : newConfPassword.text = done;
-                        if (index < 2) {
+                        if (index < 3) {
                           FocusScope.of(context)
-                              .requestFocus(index == 0 ? passNew : passNewConf);
+                              .requestFocus(index == 1 ? passNew : passNewConf);
                         } else {
                           FocusScope.of(context).requestFocus(FocusNode());
                         }
@@ -148,7 +148,7 @@ class _SettingSecuritiesState extends State<SettingSecurities> {
                       textAlign: TextAlign.left,
                       obscureText: true,
                       keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
+                      textInputAction: TextInputAction.done,
                       decoration: authInputFieldDecoration.copyWith(
                         hintText: index == 1
                             ? 'Enter Current Password'
@@ -156,10 +156,10 @@ class _SettingSecuritiesState extends State<SettingSecurities> {
                                 ? 'Enter New Password'
                                 : 'Confirm New Password',
                       )),
-                ),
-              );
-            }
-          })),
+                );
+              }
+            })),
+      ),
     );
   }
 }

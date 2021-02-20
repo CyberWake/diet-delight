@@ -13,20 +13,21 @@ class RegModel {
   String addressSecondary1;
   String addressSecondary2;
 
-  RegModel(
-      {this.status = "0",
-      this.id,
-      this.firebaseUid,
-      this.name,
-      this.email,
-      this.password,
-      this.firstName,
-      this.lastName,
-      this.mobile,
-      this.addressLine1,
-      this.addressLine2,
-      this.addressSecondary1,
-      this.addressSecondary2});
+  RegModel({
+    this.status = "0",
+    this.id,
+    this.firebaseUid,
+    this.name,
+    this.email,
+    this.password,
+    this.firstName,
+    this.lastName,
+    this.mobile,
+    this.addressLine1,
+    this.addressLine2,
+    this.addressSecondary1,
+    this.addressSecondary2,
+  });
 
   Map<String, dynamic> toMap() {
     // ignore: unnecessary_cast

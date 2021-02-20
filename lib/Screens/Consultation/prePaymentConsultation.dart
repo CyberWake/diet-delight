@@ -1,13 +1,8 @@
-import 'package:diet_delight/Models/consultationAppointmentModel.dart';
-import 'package:diet_delight/Models/consultationPurchaseModel.dart';
-import 'package:diet_delight/konstants.dart';
-import 'package:diet_delight/services/apiCalls.dart';
-import 'package:flutter/material.dart';
+import 'package:diet_delight/Models/export_models.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:diet_delight/Models/registrationModel.dart';
-import 'package:diet_delight/Widgets/getAddressModalSheet.dart';
-import 'package:diet_delight/landingPage.dart';
 
 class PrePayment extends StatefulWidget {
   final ConsAppointmentModel appointment;
@@ -405,8 +400,7 @@ class _PrePaymentState extends State<PrePayment> {
                           Navigator.pushReplacement(
                               context,
                               CupertinoPageRoute(
-                                  builder: (context) =>
-                                      HomePage(openPage: 3)));
+                                  builder: (context) => HomePage(openPage: 3)));
                         }
                       : () {},
                   child: Text(
