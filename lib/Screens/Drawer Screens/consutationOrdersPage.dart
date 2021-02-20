@@ -309,8 +309,8 @@ class _ConsultationOrderHistoryPageState
                       fieldValue: formatDate(appointmentDateTime, format),
                     ),
                     meetingDataField(
-                      fieldName: 'Meeting Link:',
-                      fieldValue: 'https://www.google.com',
+                      fieldName: 'Meeting Location:',
+                      fieldValue: appointments[index].consultationLink,
                     ),
                     dataField(
                       fieldName: 'Consultant:',
@@ -323,7 +323,7 @@ class _ConsultationOrderHistoryPageState
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Icon(Icons.schedule),
+                              Icon(Icons.schedule, size: 18, color: timeGrid),
                               SizedBox(
                                 width: 10,
                               ),

@@ -70,6 +70,13 @@ const appBarTextStyle = TextStyle(
   color: Colors.black,
 );
 
+const toggleTextStyle = TextStyle(
+  fontFamily: 'RobotoCondensedReg',
+  fontSize: 18,
+  fontWeight: FontWeight.normal,
+  color: Colors.black,
+);
+
 const billingTextStyle = TextStyle(
   fontFamily: 'ABeeZeeReg',
   fontSize: 20,

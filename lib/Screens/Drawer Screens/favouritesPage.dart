@@ -31,7 +31,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
     _refreshController.refreshCompleted();
   }
 
-  Widget item(FoodItemModel foodItem) {
+  Widget item(FoodItemModel foodItem, AddFavouritesModel details) {
     return InkWell(
       onTap: () {},
       child: Container(
@@ -83,9 +83,14 @@ class _FavouritesPageState extends State<FavouritesPage> {
                         alignment: Alignment.bottomRight,
                         padding: EdgeInsets.only(right: 10),
                         child: IconButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              await _apiCall.deleteFavourites(details);
+                              setState(() {
+                                getData();
+                              });
+                            },
                             icon: Icon(Icons.favorite,
-                                size: 13, color: Colors.black)),
+                                size: 13, color: defaultPurple)),
                       )
                     ],
                   ),
@@ -195,7 +200,8 @@ class _FavouritesPageState extends State<FavouritesPage> {
                           controller: _scrollController,
                           itemCount: favourites[1].length,
                           itemBuilder: (BuildContext context, int index) {
-                            return item(favourites[1][index].menuItem);
+                            return item(favourites[1][index].menuItem,
+                                favourites[1][index]);
                           }),
                     ),
 //      ListView(

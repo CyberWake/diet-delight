@@ -75,6 +75,33 @@ class _PrePaymentState extends State<PrePayment> {
     });
   }
 
+  Widget breakDownFields(String disc, String price, bool isGrandTotal) {
+    return Row(
+      mainAxisAlignment:
+          isGrandTotal ? MainAxisAlignment.end : MainAxisAlignment.spaceBetween,
+      children: [
+        Padding(
+            padding: isGrandTotal
+                ? EdgeInsets.only(top: 10.0, right: 10)
+                : EdgeInsets.only(top: 10.0),
+            child: Text(disc,
+                style: billingTextStyle.copyWith(
+                  fontSize: 12,
+                  fontStyle: FontStyle.normal,
+                  color: Color(0xFF222222),
+                ))),
+        Padding(
+            padding: EdgeInsets.only(top: 10.0),
+            child: Text(price,
+                style: billingTextStyle.copyWith(
+                  fontSize: 12,
+                  fontStyle: FontStyle.normal,
+                  color: Color(0xFF222222),
+                ))),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var devWidth = MediaQuery.of(context).size.width;
@@ -113,7 +140,7 @@ class _PrePaymentState extends State<PrePayment> {
             Material(
               borderRadius: BorderRadius.circular(5.0),
               shadowColor: Color(0x26000000),
-              elevation: 2,
+              elevation: 0,
               color: Colors.white,
               child: Container(
                 margin: EdgeInsets.symmetric(
@@ -201,9 +228,9 @@ class _PrePaymentState extends State<PrePayment> {
                       ),
               ),
             ),
-            Container(
+            Padding(
               padding: EdgeInsets.fromLTRB(
-                  MediaQuery.of(context).size.width * 0.075, 20, 0, 20),
+                  MediaQuery.of(context).size.width * 0.075, 10, 0, 20),
               child: Column(
                 children: [
                   Row(
@@ -239,7 +266,7 @@ class _PrePaymentState extends State<PrePayment> {
                       Material(
                         borderRadius: BorderRadius.circular(5.0),
                         shadowColor: Color(0x26000000),
-                        elevation: 2,
+                        elevation: 0,
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.3,
                           height: MediaQuery.of(context).size.height * 0.1,
@@ -285,6 +312,56 @@ class _PrePaymentState extends State<PrePayment> {
                     ],
                   ),
                 ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.width * 0.075, top: 10.0),
+              child: Text(
+                'Cost Breakdown',
+                style: billingTextStyle,
+              ),
+            ),
+            Material(
+              borderRadius: BorderRadius.circular(5.0),
+              shadowColor: Color(0x26000000),
+              elevation: 0,
+              color: Colors.white,
+              child: Container(
+                margin: EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width * 0.075,
+                    20,
+                    MediaQuery.of(context).size.width * 0.075,
+                    0),
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+                decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(color: Color(0x26000000), blurRadius: 5)
+                    ],
+                    borderRadius: BorderRadius.circular(5.0),
+                    color: Colors.white),
+                child: Column(children: [
+                  Container(
+                    width: double.infinity,
+                    child: Column(
+                      children: [
+                        breakDownFields(
+//                              '${widget.consultation[consultationIndex].name} Consultancy Package',
+//                              '${widget.consultation[consultationIndex].price} BHD',
+                            'Silver Consultancy Package',
+                            '20 BHD',
+                            false),
+                        breakDownFields('Extras', '- - BHD', false),
+                        breakDownFields('Taxes', '- - BHD', false),
+                        breakDownFields(
+                            'Grand Total',
+//                              '${int.parse(widget.consultation[consultationIndex].price.substring(0, 2)) + 80} BHD',
+                            '100 BHD',
+                            true),
+                      ],
+                    ),
+                  ),
+                ]),
               ),
             ),
             Spacer(),

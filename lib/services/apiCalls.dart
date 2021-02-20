@@ -947,6 +947,27 @@ class Api {
     }
   }
 
+  Future<bool> deleteFavourites(AddFavouritesModel details) async {
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+      final response = await http
+          .delete(uri + '/api/v1/favourites/${details.id}', headers: headers);
+      if (response.statusCode == 204) {
+        return true;
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        return false;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
   Future<List<FoodItemModel>> getFeaturedMenuItems() async {
     try {
       featuredMenu = [];

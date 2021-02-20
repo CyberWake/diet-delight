@@ -166,11 +166,12 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                               ? Icon(
                                   Icons.favorite,
                                   size: 13,
-                                  color: Colors.black,
+                                  color: defaultPurple,
                                 )
                               : Icon(
                                   Icons.favorite_border,
                                   size: 13,
+                                  color: defaultPurple,
                                 )),
                     )
                   ],

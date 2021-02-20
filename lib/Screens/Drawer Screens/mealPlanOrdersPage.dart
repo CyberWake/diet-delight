@@ -300,7 +300,7 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Icon(Icons.schedule),
+                              Icon(Icons.schedule, size: 18, color: timeGrid),
                               SizedBox(
                                 width: 10,
                               ),
