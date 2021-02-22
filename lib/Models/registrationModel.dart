@@ -12,22 +12,29 @@ class RegModel {
   String addressLine2;
   String addressSecondary1;
   String addressSecondary2;
+  String bmi;
+  String age;
+  String gender;
+  String recommendedCalories;
 
-  RegModel({
-    this.status = "0",
-    this.id,
-    this.firebaseUid,
-    this.name,
-    this.email,
-    this.password,
-    this.firstName,
-    this.lastName,
-    this.mobile,
-    this.addressLine1,
-    this.addressLine2,
-    this.addressSecondary1,
-    this.addressSecondary2,
-  });
+  RegModel(
+      {this.status = "0",
+      this.id,
+      this.firebaseUid,
+      this.name,
+      this.email,
+      this.password,
+      this.firstName,
+      this.lastName,
+      this.mobile,
+      this.addressLine1,
+      this.addressLine2,
+      this.addressSecondary1,
+      this.addressSecondary2,
+      this.age,
+      this.bmi,
+      this.gender,
+      this.recommendedCalories});
 
   Map<String, dynamic> toMap() {
     // ignore: unnecessary_cast
@@ -96,6 +103,10 @@ class RegModel {
     print('firstName: $firstName');
     print('lastName: $lastName');
     print('mobile: $mobile');
+    print('bmi: $bmi');
+    print('gender: $gender');
+    print('age: $age');
+    print('recommendedCalories: $recommendedCalories');
     print('addressLine1: $addressLine1');
     print('addressLine2: $addressLine2');
     print('addressSecondaryLine1: $addressSecondary1');

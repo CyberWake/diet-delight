@@ -202,16 +202,13 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
     );
   }
 
-  Widget generateInfoCard(
-      {String age = '21',
-      icon = FontAwesomeIcons.male,
-      String gender = 'Male'}) {
+  Widget generateInfoCard() {
     return Padding(
       padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.1),
       child: Row(
         children: [
           Text(
-            age,
+            '${Api.userInfo.age} yrs',
             style: TextStyle(
                 color: Color(0xFF303960), fontWeight: FontWeight.w600),
           ),
@@ -219,17 +216,21 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
             width: 30,
           ),
           Text(
-            gender,
+            Api.userInfo.gender,
             style: TextStyle(
                 color: Color(0xFF303960), fontWeight: FontWeight.w600),
           ),
-          FaIcon(icon)
+          FaIcon(Api.userInfo.gender == 'Male'
+              ? FontAwesomeIcons.male
+              : Api.userInfo.gender == 'Female'
+                  ? FontAwesomeIcons.female
+                  : FontAwesomeIcons.genderless)
         ],
       ),
     );
   }
 
-  Widget generateStatCard({String calorie = "1440", String bmi = "24.6"}) {
+  Widget generateStatCard() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(2, (index) {
@@ -265,7 +266,9 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                     Flexible(
                       fit: FlexFit.loose,
                       child: Text(
-                        index == 0 ? bmi : calorie,
+                        index == 0
+                            ? Api.userInfo.bmi
+                            : Api.userInfo.recommendedCalories,
                         style: TextStyle(
                             fontSize: 40,
                             fontWeight: FontWeight.w700,
