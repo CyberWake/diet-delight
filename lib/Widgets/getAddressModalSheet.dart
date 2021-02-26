@@ -1,6 +1,5 @@
-import 'package:diet_delight/Models/registrationModel.dart';
-import 'package:diet_delight/konstants.dart';
-import 'package:diet_delight/services/apiCalls.dart';
+import 'package:diet_delight/Models/export_models.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,9 +7,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AddressButtonWithModal extends StatefulWidget {
   final bool addNewAddressOnly;
   final Widget child;
+  final int index;
   final Function(String) callBackFunction;
   AddressButtonWithModal(
-      {this.child, this.callBackFunction, this.addNewAddressOnly = false});
+      {this.child,
+      this.callBackFunction,
+      this.addNewAddressOnly = false,
+      this.index = 0});
   @override
   _AddressButtonWithModalState createState() => _AddressButtonWithModalState();
 }
@@ -85,6 +88,7 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
 
   void addAddressBottomSheet(int index) {
     whichAddress = index;
+    whichAddress == 0 ? addressType = 'Primary' : addressType = 'Secondary';
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -101,78 +105,81 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                     children: List.generate(items, (index) {
                   if (index == 0) {
                     return Expanded(
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                          color: white,
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 4,
-                              color: Colors.black.withOpacity(0.25),
-                              spreadRadius: 0,
-                              offset: const Offset(0.0, 0.0),
-                            )
-                          ],
-                        ),
-                        child: DropDown<String>(
-                          showUnderline: false,
-                          items: types,
-                          onChanged: (String choice) {
-                            addressType = choice;
-                            whichAddress = types.indexOf(choice);
-                          },
-                          initialValue: addressType,
-                          isExpanded: true,
+                      child: Material(
+                        borderRadius: BorderRadius.circular(5.0),
+                        shadowColor: Color(0x26000000),
+                        elevation: 0,
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          decoration: BoxDecoration(
+                            color: white,
+                            boxShadow: [
+                              BoxShadow(color: Color(0x26000000), blurRadius: 5)
+                            ],
+                            borderRadius: BorderRadius.circular(2.0),
+                          ),
+                          child: DropDown<String>(
+                            showUnderline: false,
+                            items: types,
+                            onChanged: (String choice) {
+                              addressType = choice;
+                              whichAddress = types.indexOf(choice);
+                            },
+                            initialValue: addressType,
+                            isExpanded: true,
+                          ),
                         ),
                       ),
                     );
                   } else if (index < 3) {
                     return Expanded(
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                          color: white,
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 4,
-                              color: Colors.black.withOpacity(0.25),
-                              spreadRadius: 0,
-                              offset: const Offset(0.0, 0.0),
-                            )
-                          ],
+                      child: Material(
+                        borderRadius: BorderRadius.circular(5.0),
+                        shadowColor: Color(0x26000000),
+                        elevation: 0,
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          decoration: BoxDecoration(
+                            color: white,
+                            boxShadow: [
+                              BoxShadow(color: Color(0x26000000), blurRadius: 5)
+                            ],
+                            borderRadius: BorderRadius.circular(2.0),
+                          ),
+                          child: TextFormField(
+                              focusNode:
+                                  index == 1 ? addressLine1 : addressLine2,
+                              onChanged: (value) {
+                                if (index == 1) {
+                                  if (whichAddress == 0) {
+                                    addressPrimaryLine1.text = value;
+                                  } else {
+                                    addressSecondaryLine1.text = value;
+                                  }
+                                } else {
+                                  if (whichAddress == 0) {
+                                    addressPrimaryLine2.text = value;
+                                  } else {
+                                    addressSecondaryLine2.text = value;
+                                  }
+                                }
+                              },
+                              onFieldSubmitted: (done) {
+                                if (index == 1) {
+                                  Focus.of(context).requestFocus(addressLine2);
+                                }
+                              },
+                              style: authInputTextStyle,
+                              textAlign: TextAlign.center,
+                              keyboardType: TextInputType.text,
+                              textInputAction: TextInputAction.next,
+                              decoration: authInputFieldDecoration.copyWith(
+                                  hintText: index == 1
+                                      ? 'House No, Street Name'
+                                      : 'City')),
                         ),
-                        child: TextFormField(
-                            focusNode: index == 1 ? addressLine1 : addressLine2,
-                            onChanged: (value) {
-                              if (index == 1) {
-                                if (whichAddress == 0) {
-                                  addressPrimaryLine1.text = value;
-                                } else {
-                                  addressSecondaryLine1.text = value;
-                                }
-                              } else {
-                                if (whichAddress == 0) {
-                                  addressPrimaryLine2.text = value;
-                                } else {
-                                  addressSecondaryLine2.text = value;
-                                }
-                              }
-                            },
-                            onFieldSubmitted: (done) {
-                              if (index == 1) {
-                                Focus.of(context).requestFocus(addressLine2);
-                              }
-                            },
-                            style: authInputTextStyle,
-                            textAlign: TextAlign.center,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            decoration: authInputFieldDecoration.copyWith(
-                                hintText: index == 1
-                                    ? 'House No, Street Name'
-                                    : 'City')),
                       ),
                     );
                   } else if (index == 3) {
@@ -217,6 +224,7 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                         if (!widget.addNewAddressOnly) {
                           result = await _apiCall.putUserInfo(updateUserData);
                           Navigator.pop(context);
+                          getBottomSheet();
                           if (result) {
                             print('User Address Updated');
                           }
@@ -229,8 +237,12 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                         color: defaultGreen,
                         child: Center(
                             child: Text(
-                          'Update',
-                          style: TextStyle(fontWeight: FontWeight.w600),
+                          'UPDATE',
+                          style: TextStyle(
+                              fontFamily: 'RobotoReg',
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
                         )),
                       ),
                     ));
@@ -250,16 +262,19 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
       children: [
         Padding(
           padding: const EdgeInsets.only(top: 15.0, left: 15.0),
-          child: Text(name,
-              style: selectedTab.copyWith(
-                  color: selectedAddressIndex == index ? white : defaultGreen,
-                  fontWeight: FontWeight.w400)),
+          child: Text(
+            '$name',
+            style: billingTextStyle.copyWith(
+              fontSize: 14,
+              color: selectedAddressIndex == index ? white : Color(0xFF222222),
+            ),
+          ),
         ),
         Row(
           mainAxisSize: MainAxisSize.max,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 5.0),
+              padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 5.0),
               child: Text(
                 index == 0
                     ? addressPrimaryLine1.text +
@@ -268,9 +283,12 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                     : addressSecondaryLine1.text +
                         ',\n' +
                         addressSecondaryLine2.text,
-                style: selectedTab.copyWith(
-                    color: selectedAddressIndex == index ? white : defaultGreen,
-                    fontWeight: FontWeight.w400),
+                style: billingTextStyle.copyWith(
+                  fontSize: 14,
+                  fontStyle: FontStyle.normal,
+                  color:
+                      selectedAddressIndex == index ? white : Color(0xFF222222),
+                ),
               ),
             ),
           ],
@@ -286,10 +304,9 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             TextButton(
-              child: Text('Add',
-                  style: TextStyle(
-                    color: darkGreen,
-                  )),
+              child: Text('ADD',
+                  style: billingTextStyle.copyWith(
+                      fontSize: 14, color: defaultGreen)),
               onPressed: () {
                 Navigator.pop(context, false);
                 addAddressBottomSheet(index);
@@ -299,7 +316,13 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [Text('Not Available')],
+          children: [
+            Text('Not Available',
+                style: billingTextStyle.copyWith(
+                    fontSize: 14,
+                    fontStyle: FontStyle.normal,
+                    color: Color(0xFF4E4848)))
+          ],
         )
       ],
     );
@@ -325,41 +348,43 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                       children: List.generate(3, (index) {
                     if (index == 2) {
                       return Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            if (isAddressSelected) {
-                              if (selectedAddressIndex == 0) {
-                                concatenatedAddress = addressPrimaryLine1.text +
-                                    ',\n' +
-                                    addressPrimaryLine2.text;
-                                selectedAddressLine1 = addressPrimaryLine1.text;
-                                selectedAddressLine2 = addressPrimaryLine2.text;
-                                widget.callBackFunction(concatenatedAddress);
-                              } else if (selectedAddressIndex == 1) {
-                                concatenatedAddress =
-                                    addressSecondaryLine1.text +
-                                        ',\n' +
-                                        addressSecondaryLine2.text;
-                                selectedAddressLine1 =
-                                    addressSecondaryLine1.text;
-                                selectedAddressLine2 =
-                                    addressSecondaryLine2.text;
-                                widget.callBackFunction(concatenatedAddress);
-                              }
+                          child: GestureDetector(
+                        onTap: () {
+                          if (isAddressSelected) {
+                            if (selectedAddressIndex == 0) {
+                              concatenatedAddress = addressPrimaryLine1.text +
+                                  ',\n' +
+                                  addressPrimaryLine2.text;
+                              selectedAddressLine1 = addressPrimaryLine1.text;
+                              selectedAddressLine2 = addressPrimaryLine2.text;
+                              widget.callBackFunction(concatenatedAddress);
+                            } else if (selectedAddressIndex == 1) {
+                              concatenatedAddress = addressSecondaryLine1.text +
+                                  ',\n' +
+                                  addressSecondaryLine2.text;
+                              selectedAddressLine1 = addressSecondaryLine1.text;
+                              selectedAddressLine2 = addressSecondaryLine2.text;
+                              widget.callBackFunction(concatenatedAddress);
                             }
-                            Navigator.pop(context);
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(top: 20),
-                            color: defaultGreen,
+                          }
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(top: 20),
+                          color: defaultGreen,
+                          child: Center(
                             child: Center(
                                 child: Text(
-                              'Done',
-                              style: TextStyle(fontWeight: FontWeight.w600),
+                              'DONE',
+                              style: TextStyle(
+                                  fontFamily: 'RobotoReg',
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
                             )),
                           ),
                         ),
-                      );
+                      ));
                     }
                     return Padding(
                       padding: const EdgeInsets.symmetric(
@@ -374,51 +399,65 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                               index == 0
                                   ? 'Primary Address'
                                   : 'Secondary Address',
-                              style: selectedTab.copyWith(
-                                  color:
-                                      index == 0 ? defaultGreen : Colors.black,
-                                  fontWeight: FontWeight.w400),
+                              style: billingTextStyle.copyWith(
+                                  color: index == 0
+                                      ? defaultGreen
+                                      : Color(0xFF222222)),
                             ),
                           ),
                           GestureDetector(
-                            onTap: () {
-                              if (index == 0) {
-                                if (addressPrimaryLine1.text.isNotEmpty &&
-                                    addressPrimaryLine2.text.isNotEmpty) {
-                                  modalStateUpdate(() {
-                                    selectedAddressIndex = index;
-                                    isAddressSelected = true;
-                                  });
+                              onTap: () {
+                                if (index == 0) {
+                                  if (addressPrimaryLine1.text.isNotEmpty &&
+                                      addressPrimaryLine2.text.isNotEmpty) {
+                                    modalStateUpdate(() {
+                                      selectedAddressIndex = index;
+                                      isAddressSelected = true;
+                                    });
+                                  }
+                                } else if (index == 1) {
+                                  if (addressSecondaryLine1.text.isNotEmpty &&
+                                      addressSecondaryLine2.text.isNotEmpty) {
+                                    modalStateUpdate(() {
+                                      selectedAddressIndex = index;
+                                      isAddressSelected = true;
+                                    });
+                                  }
                                 }
-                              } else if (index == 1) {
-                                if (addressSecondaryLine1.text.isNotEmpty &&
-                                    addressSecondaryLine2.text.isNotEmpty) {
-                                  modalStateUpdate(() {
-                                    selectedAddressIndex = index;
-                                    isAddressSelected = true;
-                                  });
-                                }
-                              }
-                            },
-                            child: Container(
-                                height: 100,
-                                decoration: BoxDecoration(
-                                    color: selectedAddressIndex == index
-                                        ? defaultGreen
-                                        : white,
-                                    border: Border.all(color: defaultGreen),
-                                    borderRadius: BorderRadius.circular(15)),
-                                child: index == 0
-                                    ? addressPrimaryLine1.text.isNotEmpty &&
-                                            addressPrimaryLine2.text.isNotEmpty
-                                        ? selectionAddressCard(index)
-                                        : addAddressCard(index)
-                                    : addressSecondaryLine1.text.isNotEmpty &&
-                                            addressSecondaryLine2
-                                                .text.isNotEmpty
-                                        ? selectionAddressCard(index)
-                                        : addAddressCard(index)),
-                          )
+                              },
+                              child: Material(
+                                borderRadius: BorderRadius.circular(5.0),
+                                shadowColor: Color(0x26000000),
+                                elevation: 2,
+                                color: Colors.white,
+                                child: Container(
+                                    height: 100.0,
+//                                    padding: EdgeInsets.symmetric(
+//                                        vertical: 20, horizontal: 25),
+                                    decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color: Color(0x26000000),
+                                              blurRadius: 5)
+                                        ],
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
+                                        color: selectedAddressIndex == index
+                                            ? defaultGreen
+                                            : Colors.white),
+                                    child: index == 0
+                                        ? addressPrimaryLine1.text.isNotEmpty &&
+                                                addressPrimaryLine2
+                                                    .text.isNotEmpty
+                                            ? selectionAddressCard(index)
+                                            : addAddressCard(index)
+                                        : addressSecondaryLine1
+                                                    .text.isNotEmpty &&
+                                                addressSecondaryLine2
+                                                    .text.isNotEmpty
+                                            ? selectionAddressCard(index)
+                                            : addAddressCard(index)),
+                              ))
                         ],
                       ),
                     );
@@ -433,7 +472,7 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
     return GestureDetector(
       onTap: () {
         if (widget.addNewAddressOnly) {
-          addAddressBottomSheet(0);
+          addAddressBottomSheet(widget.index);
         } else {
           getBottomSheet();
         }

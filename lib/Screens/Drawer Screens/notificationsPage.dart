@@ -1,10 +1,9 @@
 import 'dart:core';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-import '../../konstants.dart';
 
 class NotificationsPage extends StatefulWidget {
   @override

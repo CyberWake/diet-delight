@@ -7,6 +7,8 @@ class ConsPurchaseModel {
   String consultationPackageId;
   String amountPaid;
   String paymentId;
+  String billingAddressLine1;
+  String billingAddressLine2;
 
   ConsPurchaseModel(
       {this.id,
@@ -16,7 +18,9 @@ class ConsPurchaseModel {
       this.consultationPackageId,
       this.consultationPackageDuration,
       this.amountPaid,
-      this.paymentId});
+      this.paymentId,
+      this.billingAddressLine1,
+      this.billingAddressLine2});
 
   Map<String, dynamic> toMap() {
     // ignore: unnecessary_cast
@@ -27,7 +31,9 @@ class ConsPurchaseModel {
       'consultation_package_id': this.consultationPackageId,
       'consultation_package_duration': this.consultationPackageDuration,
       'amount_paid': this.amountPaid,
-      'payment_id': this.paymentId
+      'payment_id': this.paymentId,
+      'billing_address_line1': this.billingAddressLine1,
+      'billing_address_line2': this.billingAddressLine2
     } as Map<String, dynamic>;
   }
 
@@ -41,12 +47,20 @@ class ConsPurchaseModel {
         consultationPackageDuration:
             item['consultation_package_duration'].toString(),
         amountPaid: item['amount_paid'].toString(),
-        paymentId: item['payment_id'].toString());
+        paymentId: item['payment_id'].toString(),
+        billingAddressLine1: item['billing_address_line1'].toString(),
+        billingAddressLine2: item['billing_address_line2'].toString());
   }
 
-  setUserPaymentDetails({String userId, String paymentId}) {
+  setUserPaymentDetails(
+      {String userId,
+      String paymentId,
+      String billingAddressLine1,
+      String billingAddressLine2}) {
     this.paymentId = paymentId;
     this.userId = userId;
+    this.billingAddressLine1 = billingAddressLine1;
+    this.billingAddressLine2 = billingAddressLine2;
   }
 
   show() {
@@ -57,5 +71,7 @@ class ConsPurchaseModel {
     print('consultationPackageDuration: $consultationPackageDuration');
     print('amountPaid: $amountPaid');
     print('paymentId: $paymentId');
+    print('billingAddressLine1: $billingAddressLine1');
+    print('billingAddressLine2: $billingAddressLine2');
   }
 }

@@ -1,22 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:date_format/date_format.dart';
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:diet_delight/Models/mealModel.dart';
-import 'package:diet_delight/Models/mealPurchaseModel.dart';
-import 'package:diet_delight/Models/menuCategoryModel.dart';
-import 'package:diet_delight/Models/menuModel.dart';
-import 'package:diet_delight/Models/menuOrdersModel.dart';
-import 'package:diet_delight/Screens/Menu/placeMealMenuOrders.dart';
-import 'package:diet_delight/Widgets/customCalender.dart';
-import 'package:diet_delight/Widgets/customCalenderForAddress.dart';
 import 'package:intl/intl.dart';
-import 'package:diet_delight/Widgets/getAddressModalSheet.dart';
-import 'package:diet_delight/konstants.dart';
-import 'package:diet_delight/services/apiCalls.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:date_format/date_format.dart';
+import 'package:diet_delight/Models/export_models.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class PlacedMealMenuOrders extends StatefulWidget {
@@ -33,7 +24,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
   ScrollController _scrollController = new ScrollController();
   final _apiCall = Api.instance;
   TabController _pageController;
-  List<String> dates = [];
+  List<DateTime> dates = [];
   List<String> format = [dd, ' ', 'M', ', ', yyyy];
   bool isLoaded = false;
   DateTime startDate;
@@ -60,11 +51,11 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
     super.initState();
     selectedAddressIndex = -1;
     menuId = widget.plan.menuId;
-    getDates();
-    getData();
     _pageController = TabController(
         length: int.parse(widget.purchaseDetails.mealPlanDuration),
         vsync: this);
+    getDates();
+    getData();
   }
 
   callback(address) {
@@ -73,11 +64,13 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
     });
   }
 
-  getData() async {
-    await getMenuCategories(menuId);
-  }
+  var listOfAvailableDays = [];
+  var primaryDaysList = [];
+  var secondaryDaysList = [];
 
-  getMenuCategories(int menuId) async {
+
+
+  getData() async {
     categoryItems = [];
     foodItems = [];
     setState(() {
@@ -125,6 +118,31 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
         isLoaded = true;
       });
     }
+
+    if(widget.purchaseDetails.weekdays.contains('Sun')){
+      listOfAvailableDays.add('Sunday');
+    }
+    if(widget.purchaseDetails.weekdays.contains('Mon')){
+      listOfAvailableDays.add('Monday');
+    }
+    if(widget.purchaseDetails.weekdays.contains('Tue')){
+      listOfAvailableDays.add('Tuesday');
+    }
+    if(widget.purchaseDetails.weekdays.contains('Wed')){
+      listOfAvailableDays.add('Wednesday');
+    }
+    if(widget.purchaseDetails.weekdays.contains('Thur')){
+      listOfAvailableDays.add('Thursday');
+    }
+    if(widget.purchaseDetails.weekdays.contains('Fri')){
+      listOfAvailableDays.add('Friday');
+    }
+    if(widget.purchaseDetails.weekdays.contains('Sat')){
+      listOfAvailableDays.add('Saturday');
+    }
+    print(listOfAvailableDays);
+    getDaysInBeteween();
+
   }
 
   getDates() {
@@ -151,9 +169,19 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
         count++;
         date = startDate.add(Duration(days: count));
       }
-      dates.insert(i, formatDate(date, [dd, '/', mm]));
+      dates.insert(i, date);
       print(date);
       count++;
+    }
+    DateTime today = DateTime.now();
+    today = DateTime.parse(formatDate(today, [yyyy, '-', mm, '-', dd]));
+    print(today);
+    for (int i = 0; i < dates.length; i++) {
+      if (dates[i] == today) {
+        _pageController.index = i;
+        print(_pageController.index);
+        break;
+      }
     }
     blackoutsAddressCalendar = breakDates + planSelectedOffDays;
     blackoutsAddressCalendar = blackoutsAddressCalendar.toSet().toList();
@@ -162,7 +190,6 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
   }
 
   List addressTapList = [];
-
   void _onSelectionChangedForAddress(
       DateRangePickerSelectionChangedArgs args, int address) {
     if (address == 0) {
@@ -218,27 +245,35 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
         concatenatedAddress = address;
       });
     }
-
+    var col ;
+    if(primary ==  addressIndex){
+      if(addressTapList.contains(0)){
+        col = defaultGreen;
+      }else{
+        col = Color.fromRGBO(198, 198, 198, 1);
+      }
+    }else{
+      if(addressTapList.contains(1)){
+        col = Color.fromRGBO(120, 40, 139, 1);
+      }else{
+        col = Color.fromRGBO(198, 198, 198, 1);
+      }
+    }
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
       height: MediaQuery.of(context).size.height * 0.15,
       width: MediaQuery.of(context).size.width * 0.4,
       decoration: BoxDecoration(
-          color: addressIndex == primary ? defaultGreen : fColor,
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(
-              color: Colors.black,
-              width: addressTapList.contains(addressIndex) ? 2.0 : 0.5)),
+       color: col,   borderRadius: BorderRadius.circular(15),),
       child: addressPresent
           ? GestureDetector(
               onTap: () {
-                print('tapped');
                 if (addressPresent) {
                   update(() {
                     selected = addressIndex;
-                    if(addressTapList.contains(addressIndex)){
+                    if (addressTapList.contains(addressIndex)) {
                       addressTapList.remove(addressIndex);
-                    }else{
+                    } else {
                       addressTapList.add(addressIndex);
                     }
                   });
@@ -278,7 +313,8 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                                           ? primaryAddressLine1
                                           : secondaryAddressLine1,
                                       style: adressCardTextStyle.copyWith(
-                                        fontWeight: addressTapList.contains(addressIndex)
+                                        fontWeight: addressTapList
+                                                .contains(addressIndex)
                                             ? FontWeight.bold
                                             : FontWeight.normal,
                                       ),
@@ -291,7 +327,8 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                                           ? primaryAddressLine2
                                           : secondaryAddressLine2,
                                       style: adressCardTextStyle.copyWith(
-                                        fontWeight: addressTapList.contains(addressIndex)
+                                        fontWeight: addressTapList
+                                                .contains(addressIndex)
                                             ? FontWeight.bold
                                             : FontWeight.normal,
                                       ),
@@ -303,9 +340,10 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                                 child: Text(
                                   'Not Available',
                                   style: adressCardTextStyle.copyWith(
-                                    fontWeight: addressTapList.contains(addressIndex)
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
+                                    fontWeight:
+                                        addressTapList.contains(addressIndex)
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
                                   ),
                                 ),
                               ),
@@ -349,7 +387,32 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
     );
   }
 
-  showBreakCalendar() {
+  List days = [];
+  getDaysInBeteween() {
+    print("getDaysInBetween");
+    DateTime endDate = DateTime.parse((widget.purchaseDetails.endDate));
+
+    DateTime startDate = DateTime.parse((widget.purchaseDetails.startDate));
+
+    print(startDate);
+    print(endDate);
+
+    for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
+      setState(() {
+        days.add(startDate.add(Duration(days: i)).toString().split(" ")[0].toString());
+      });
+    }
+
+    print(days);
+
+  }
+
+
+  showBreakCalendar(datesBreakList,breakDays,putCall,id,primaryAndSecondary) {
+    print("|||||||");
+    print(primaryAndSecondary);
+
+    print(datesBreakList);
     Future<bool> done = showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
@@ -358,7 +421,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
         ),
         isScrollControlled: true,
         builder: (BuildContext context) {
-          return CustomCalenderForBreak();
+          return CustomCalenderForBreak(primaryAndSecondary : primaryAndSecondary,breakDays : breakDays,daysList: datesBreakList, mealId : widget.purchaseDetails.id,status : widget.plan.status,postCall: !putCall,listOfAvailableDays : listOfAvailableDays,id: id,getDaysInBeteween : days);
         });
     done.then((value) {
       getDates();
@@ -368,9 +431,13 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
     });
   }
 
-  showAddressCalendar({bool addressCalendar}) async {
+  showAddressCalendar({bool addressCalendar, id,breakList,pList,sList}) async {
     showModalBottomSheet(
         context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(40), topRight: Radius.circular(40)),
+        ),
         isScrollControlled: true,
         builder: (BuildContext context) {
           return StatefulBuilder(
@@ -395,10 +462,94 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                               update: updateBottomSheet),
                         ],
                       ),
-                      CustomCalenderForAddress(addressTapList : addressTapList)
+                      CustomCalenderForAddress(listOfAvailableDays : listOfAvailableDays,addressTapList: addressTapList,primaryAddress: primaryDaysList,secondaryAddress: secondaryDaysList,makePostCall : makePostAddressCall,mealId : widget.purchaseDetails.id,status : widget.plan.status,id: id,dateList : breakList)
                     ]));
           });
         });
+  }
+
+  var makePostAddressCall = false;
+
+  var isPrimary;
+
+  getInitialPrimaryAndSecondary(){
+
+
+    var billingAddress1 = widget.purchaseDetails.billingAddressLine1;
+    var billingAddress2 = widget.purchaseDetails.billingAddressLine2;
+    var ship1 = widget.purchaseDetails.shippingAddressLine1;
+    var ship2 = widget.purchaseDetails.shippingAddressLine2;
+    if(primaryAddressLine1 == ship1 && primaryAddressLine2 == ship2){
+      setState(() {
+        isPrimary = true;
+        print('primary is selected');
+      });
+    }else if(secondaryAddressLine1 == ship1 && secondaryAddressLine1 == ship2){
+      setState(() {
+        isPrimary = false;
+        print('secondary is selected');
+      });
+    }
+
+    DateTime endDate = DateTime.parse((widget.purchaseDetails.endDate));
+
+    DateTime startDate = DateTime.parse((widget.purchaseDetails.startDate));
+
+    var primaryList = [];
+    var secondaryList = [];
+    var totalDays = [];
+
+    for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
+      if(listOfAvailableDays.contains( DateFormat('EEEE').format(startDate.add(Duration(days: i)))))
+      {
+
+        isPrimary ? primaryList.add(startDate.add(Duration(days: i)).toString().split(" ")[0].toString()+" 00:00:00")
+            : secondaryList.add(startDate.add(Duration(days: i)).toString().split(" ")[0].toString()+" 00:00:00");
+        totalDays.add(startDate.add(Duration(days: i)).toString().split(" ")[0].toString());
+      }
+    }
+
+    var primaryAndSecondary = [];
+    print("||||||||||||||||");
+    print(primaryList);
+    print(totalDays);
+    primaryAndSecondary.add(primaryList);
+    primaryAndSecondary.add([]);
+    primaryAndSecondary.add(totalDays);
+
+    print(primaryAndSecondary);
+
+    return primaryAndSecondary;
+
+  }
+
+  getPrimaryAndSecondaryWithBreak({breaks,primaryList,secondaryList}){
+    print('with break called');
+
+    print(breaks);
+
+    DateTime endDate = DateTime.parse((widget.purchaseDetails.endDate));
+
+    DateTime startDate = DateTime.parse((widget.purchaseDetails.startDate));
+
+    var totalDays = [];
+    print(breaks.length);
+    for (int i = 0; i <= endDate.difference(startDate).inDays+breaks.length; i++) {
+      if(listOfAvailableDays.contains( DateFormat('EEEE').format(startDate.add(Duration(days: i)))))
+      {
+          totalDays.add(startDate.add(Duration(days: i)).toString().split(" ")[0]);
+      }
+    }
+
+    var primaryAndSecondary = [];
+    print("||||||||||||||");
+    print(breaks.length);
+    print(primaryList);
+    print(totalDays);
+    primaryAndSecondary.add(primaryList);
+    primaryAndSecondary.add(secondaryList);
+    primaryAndSecondary.add(totalDays);
+    return primaryAndSecondary;
   }
 
   @override
@@ -559,7 +710,52 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                     children: [
                       TextButton(
                           onPressed: () async {
-                            await showAddressCalendar(addressCalendar: true);
+                            var resource = await _apiCall.getBreakTakenDay();
+                            var res = {};
+                            for(int i =0;i<resource.length;i++){
+                              if(resource[i]['meal_purchase_id'].toString() == widget.purchaseDetails.id.toString()){
+                                res = resource[i];
+                              }
+                            }
+                            print(res);
+                            if(res != null && res['primary_address_dates'] !=null && res['secondary_address_dates'] != null){
+                              print('both address');
+                              primaryDaysList = jsonDecode(res['primary_address_dates']);
+                              for(int  i =0;i<primaryDaysList.length;i++){
+                                primaryDaysList[i] = primaryDaysList[i].toString().split(' ')[0];
+                              }
+                              secondaryDaysList = jsonDecode(res['secondary_address_dates']);
+                              for(int  i =0;i<secondaryDaysList.length;i++){
+                                secondaryDaysList[i] = secondaryDaysList[i].toString().split(' ')[0];
+                              }
+                              makePostAddressCall = false;
+                            }else if(res != null && res['primary_address_dates'] !=null){
+                              primaryDaysList = jsonDecode(res['primary_address_dates']);
+                              for(int  i =0;i<primaryDaysList.length;i++){
+                                primaryDaysList[i] = primaryDaysList[i].toString().split(' ')[0];
+                              }
+                              makePostAddressCall = false;
+                            }else if(res != null && res['secondary_address_dates'] !=null){
+                              secondaryDaysList = jsonDecode(res['secondary_address_dates']);
+                              for(int  i =0;i<secondaryDaysList.length;i++){
+                                secondaryDaysList[i] = secondaryDaysList[i].toString().split(' ')[0];
+                              }
+                              makePostAddressCall = false;
+                            }else{
+                              makePostAddressCall = true;
+                              print('yup called');
+                              var primaryAndSecondary = getInitialPrimaryAndSecondary();
+                              primaryDaysList = primaryAndSecondary[0];
+                              secondaryDaysList = primaryAndSecondary[1];
+                              for(int i =0;i<primaryDaysList.length;i++){
+                                primaryDaysList[i] = primaryDaysList[i].toString().split(' ')[0];
+                              }
+                              for(int i =0;i<secondaryDaysList.length;i++){
+                                secondaryDaysList[i] = secondaryDaysList[i].toString().split(' ')[0];
+                              }
+                            }
+
+                            await showAddressCalendar(addressCalendar: true,id : res['id'],breakList : res['date_list'],pList: primaryDaysList,sList: secondaryDaysList);
                           },
                           child: Text(
                             'Address',
@@ -571,8 +767,68 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                       Text('${widget.purchaseDetails.kCal} Calorie'),
                       TextButton(
                           onPressed: () async {
+                            var resource = await _apiCall.getBreakTakenDay();
+                            var res = {};
+                            int count = 0;
+                            for(int i =0;i<resource.length;i++){
+                              if(resource[i]['meal_purchase_id'].toString() == widget.purchaseDetails.id.toString()){
+                                res = resource[i];
+                              }
+                            }
+                            print('printing res');
+                            print(res);
+                            var dateBreakList = [];
+                            var breakDays = [];
+                            if(res == null || res.length == 0){
+                              var primaryAndSecondary = getInitialPrimaryAndSecondary();
+                              dateBreakList.add(primaryAndSecondary[isPrimary ? 0 : 1 ][0].toString().split(" ")[0]);
+                              await showBreakCalendar(dateBreakList,breakDays,false,res['id'],primaryAndSecondary);
+                            }else{
+                              if(res['date_list'] == null || jsonDecode(res['date_list']).length == 0){
+                                print('break list is empty');
+                                var primaryAndSecondary = getInitialPrimaryAndSecondary();
+                                dateBreakList.add(primaryAndSecondary[isPrimary ? 0 : 1 ][0].toString().split(" ")[0]);
 
-                            await showBreakCalendar();
+                                var primary = res['primary_address_dates'];
+                                var secondary = res['secondary_address_dates'];
+
+                                if(primary == null && secondary == null){
+                                  var primaryList = primaryAndSecondary[0];
+                                  var secondaryList = primaryAndSecondary[1];
+                                }else{
+                                  var primaryList = res['primary_address_dates'] !=null ? jsonDecode(res['primary_address_dates']) : [];
+                                  var secondaryList = res['secondary_address_dates'] != null ? jsonDecode(res['secondary_address_dates']) : [];
+                                  primaryAndSecondary[0] = primaryList;
+                                  primaryAndSecondary[1] = secondaryList;
+                                }
+
+                                await showBreakCalendar(dateBreakList,[],true,res['id'],primaryAndSecondary);
+
+                              }else{
+                                var listOfDate = jsonDecode(res['date_list']);
+                                for(int i =0 ;i<listOfDate.length;i++){
+                                  print(listOfDate[i]);
+                                  breakDays.add(listOfDate[i].toString().split(" ")[0]);
+                                }
+                                var primaryAndSecondary = await getPrimaryAndSecondaryWithBreak(
+                                    breaks: jsonDecode(res['date_list']),
+                                    primaryList  : jsonDecode(res['primary_address_dates']),
+                                    secondaryList : jsonDecode(res['secondary_address_dates'])
+                                );
+                                var breaks = jsonDecode(res['date_list']);
+                                print('printing break days');
+                                print(breaks);
+                                var lastBreak = breaks[breaks.length-1].toString().split(" ")[0];
+                                var ind = primaryAndSecondary[2].indexOf(lastBreak);
+                                print('printing break days');
+                                print(breakDays);
+                                dateBreakList.add(primaryAndSecondary[2][ind+1]);
+
+                                await showBreakCalendar(dateBreakList,breakDays,true,res['id'],primaryAndSecondary);
+                              }
+
+                            }
+
                           },
                           child: Text(
                             'Breaks',
@@ -622,7 +878,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text('Day ${(index + 1).toString()}'),
-                              Text(dates[index])
+                              Text(formatDate(dates[index], [dd, '/', mm]))
                             ],
                           ),
                         );
@@ -647,15 +903,20 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
+                                  onTap: () async {
+                                    bool returnedBack = await Navigator.push(
                                         context,
                                         CupertinoPageRoute(
                                             builder: (BuildContext context) =>
                                                 PlaceMealMenuOrders(
+                                                    dates: dates,
+                                                    placedFoodItems: foodItems,
                                                     plan: widget.plan,
                                                     purchaseDetails: widget
                                                         .purchaseDetails)));
+                                    if (returnedBack) {
+                                      getData();
+                                    }
                                   },
                                   child: Container(
                                     height: 50,
@@ -671,7 +932,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                               ],
                             );
                           }))
-                      : Center(child: CircularProgressIndicator()),
+                      : Center(child: SpinKitDoubleBounce(color: defaultGreen)),
                 )
               ]),
         ));
@@ -799,6 +1060,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
       },
     );
   }
+
 }
 
 class CustomWeekdayLabelsRow extends StatelessWidget {

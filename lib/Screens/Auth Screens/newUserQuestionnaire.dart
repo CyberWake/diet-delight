@@ -1,13 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:diet_delight/Models/consultationModel.dart';
-import 'package:diet_delight/Models/optionsFile.dart';
-import 'package:diet_delight/Models/questionnaireModel.dart';
-import 'package:diet_delight/Screens/Consultation/bookConsultation.dart';
-import 'package:diet_delight/konstants.dart';
-import 'package:diet_delight/landingPage.dart';
-import 'package:diet_delight/services/apiCalls.dart';
+import 'package:diet_delight/Models/export_models.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Questionnaire extends StatefulWidget {
   final String username;
@@ -32,7 +28,7 @@ class _QuestionnaireState extends State<Questionnaire>
   var answer;
 
   Future getQuestions() async {
-   //await _apiCall.getUserInfo();
+    //await _apiCall.getUserInfo();
     questions = await _apiCall.getQuestions();
     options = await _apiCall.getOptions(questions);
     consultationPackages = await _apiCall.getConsultationPackages();
@@ -334,53 +330,53 @@ class _QuestionnaireState extends State<Questionnaire>
                               child: Column(
                                 children: [
                                   CarouselSlider(
-
-                                    options: CarouselOptions(
-                                      height:
-                                      MediaQuery.of(context).size.height *
-                                          0.78,
-                                      aspectRatio: 16/9,
-                                      viewportFraction: 0.85,
-                                      initialPage: 0,
-                                      enableInfiniteScroll: false,
-                                      reverse: false,
-                                      autoPlay: false,
-                                      autoPlayInterval: Duration(seconds: 1),
-                                      autoPlayAnimationDuration: Duration(milliseconds: 800),
-                                      autoPlayCurve: Curves.fastOutSlowIn,
-                                      enlargeCenterPage: true,
-                                   //     onPageChanged: callbackFunction,
-                                      scrollDirection: Axis.horizontal,
-                                      scrollPhysics: NeverScrollableScrollPhysics()
-                                    ),
+                                      options: CarouselOptions(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.78,
+                                          aspectRatio: 16 / 9,
+                                          viewportFraction: 0.85,
+                                          initialPage: 0,
+                                          enableInfiniteScroll: false,
+                                          reverse: false,
+                                          autoPlay: false,
+                                          autoPlayInterval:
+                                              Duration(seconds: 1),
+                                          autoPlayAnimationDuration:
+                                              Duration(milliseconds: 800),
+                                          autoPlayCurve: Curves.fastOutSlowIn,
+                                          enlargeCenterPage: true,
+                                          //     onPageChanged: callbackFunction,
+                                          scrollDirection: Axis.horizontal,
+                                          scrollPhysics:
+                                              NeverScrollableScrollPhysics()),
                                       carouselController: _carController,
-                                      items : List.generate(
-                                          questions.length + 1, (index) {
+                                      items: List.generate(questions.length + 1,
+                                          (index) {
                                         if (index == questions.length) {
                                           return Container(
                                             decoration: BoxDecoration(
                                                 color: Colors.white,
-                                                borderRadius: BorderRadius.circular(30)),
-                                            height:
-                                            MediaQuery.of(context).size.height *
+                                                borderRadius:
+                                                    BorderRadius.circular(30)),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
                                                 0.71,
                                             child: Column(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceEvenly,
+                                                  MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Text(
                                                   'Do you need a Consultation?',
-                                                  style:
-                                                      questionTextStyle,
+                                                  style: questionTextStyle,
                                                 ),
                                                 Padding(
-                                                  padding:
-                                                      const EdgeInsets
-                                                              .symmetric(
-                                                          horizontal:
-                                                              20.0,
-                                                          vertical: 15.0),
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 20.0,
+                                                      vertical: 15.0),
                                                   child: Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
@@ -391,29 +387,27 @@ class _QuestionnaireState extends State<Questionnaire>
                                                             const EdgeInsets
                                                                     .only(
                                                                 top: 4.0,
-                                                                bottom:
-                                                                    4),
-                                                        child:
-                                                            GestureDetector(
+                                                                bottom: 4),
+                                                        child: GestureDetector(
                                                           onTap: () {
                                                             Navigator.pushReplacement(
                                                                 context,
                                                                 CupertinoPageRoute(
-                                                                    builder: (context) =>
-                                                                        HomePage()));
+                                                                    builder:
+                                                                        (context) =>
+                                                                            HomePage()));
                                                           },
-                                                          child:
-                                                              Container(
-                                                            width: double
-                                                                .infinity,
-                                                            padding: EdgeInsets.symmetric(
-                                                                horizontal:
-                                                                    8.0,
-                                                                vertical:
-                                                                    15),
+                                                          child: Container(
+                                                            width:
+                                                                double.infinity,
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        8.0,
+                                                                    vertical:
+                                                                        15),
                                                             child: Center(
-                                                                child:
-                                                                    Text(
+                                                                child: Text(
                                                               'No',
                                                               style: TextStyle(
                                                                   color: Colors
@@ -421,13 +415,13 @@ class _QuestionnaireState extends State<Questionnaire>
                                                             )),
                                                             decoration: BoxDecoration(
                                                                 borderRadius:
-                                                                    BorderRadius.circular(
-                                                                        50),
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            50),
                                                                 color:
                                                                     defaultGreen,
                                                                 border: Border.all(
-                                                                    width:
-                                                                        2,
+                                                                    width: 2,
                                                                     color:
                                                                         defaultGreen)),
                                                           ),
@@ -438,36 +432,36 @@ class _QuestionnaireState extends State<Questionnaire>
                                                             const EdgeInsets
                                                                     .only(
                                                                 top: 4.0,
-                                                                bottom:
-                                                                    4),
-                                                        child:
-                                                            GestureDetector(
+                                                                bottom: 4),
+                                                        child: GestureDetector(
                                                           onTap: () {
                                                             Navigator.pushReplacement(
                                                                 context,
                                                                 CupertinoPageRoute(
-                                                                    builder: (context) =>
-                                                                        HomePage()));
+                                                                    builder:
+                                                                        (context) =>
+                                                                            HomePage()));
                                                             Navigator.push(
                                                                 context,
                                                                 CupertinoPageRoute(
-                                                                    builder: (context) => BookConsultation(
-                                                                          packageIndex: 0,
-                                                                          consultation: consultationPackages,
-                                                                        )));
+                                                                    builder:
+                                                                        (context) =>
+                                                                            BookConsultation(
+                                                                              packageIndex: 0,
+                                                                              consultation: consultationPackages,
+                                                                            )));
                                                           },
-                                                          child:
-                                                              Container(
-                                                            width: double
-                                                                .infinity,
-                                                            padding: EdgeInsets.symmetric(
-                                                                horizontal:
-                                                                    8.0,
-                                                                vertical:
-                                                                    15),
+                                                          child: Container(
+                                                            width:
+                                                                double.infinity,
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        8.0,
+                                                                    vertical:
+                                                                        15),
                                                             child: Center(
-                                                                child:
-                                                                    Text(
+                                                                child: Text(
                                                               'Yes',
                                                               style: TextStyle(
                                                                   color: Colors
@@ -475,22 +469,21 @@ class _QuestionnaireState extends State<Questionnaire>
                                                             )),
                                                             decoration: BoxDecoration(
                                                                 borderRadius:
-                                                                    BorderRadius.circular(
-                                                                        50),
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            50),
                                                                 color:
                                                                     defaultGreen,
                                                                 border: Border.all(
-                                                                    width:
-                                                                        2,
+                                                                    width: 2,
                                                                     color:
                                                                         defaultGreen)),
                                                           ),
                                                         ),
-                                                      ),
+                                                      )
                                                     ],
                                                   ),
                                                 ),
-
                                               ],
                                             ),
                                           );
@@ -498,161 +491,141 @@ class _QuestionnaireState extends State<Questionnaire>
                                         return Container(
                                             decoration: BoxDecoration(
                                                 color: Colors.white,
-                                                borderRadius: BorderRadius.circular(30)),
-                                            height:
-                                            MediaQuery.of(context).size.height *
+                                                borderRadius:
+                                                    BorderRadius.circular(30)),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
                                                 0.71,
                                             padding: EdgeInsets.all(10),
                                             child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
                                                   Expanded(
-                                                    flex : 10,
+                                                    flex: 10,
                                                     child: Column(
                                                       mainAxisAlignment:
-                                                      keyboard == null ||
-                                                          keyboard == 0
-                                                          ? MainAxisAlignment
-                                                          .spaceEvenly
-                                                          : MainAxisAlignment
-                                                          .start,
-                                                      children: [Padding(
-                                                        padding:
-                                                        const EdgeInsets
-                                                            .symmetric(
-                                                            horizontal:
-                                                            20.0,
-                                                            vertical:
-                                                            15.0),
-                                                        child: Text(
-                                                            index == 0
-                                                                ? "Hi ${widget.username} let us know something about yourself?\n\n" +
-                                                                questions[
-                                                                index]
-                                                                    .question
-                                                                : questions[
-                                                            index]
-                                                                .question,
-                                                            style:
-                                                            questionTextStyle),
-                                                      ),
-                                                        buildOptions(index),],
+                                                          keyboard == null ||
+                                                                  keyboard == 0
+                                                              ? MainAxisAlignment
+                                                                  .spaceEvenly
+                                                              : MainAxisAlignment
+                                                                  .start,
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      20.0,
+                                                                  vertical:
+                                                                      15.0),
+                                                          child: Text(
+                                                              index == 0
+                                                                  ? "Hi ${widget.username} let us know something about yourself?\n\n" +
+                                                                      questions[
+                                                                              index]
+                                                                          .question
+                                                                  : questions[
+                                                                          index]
+                                                                      .question,
+                                                              style:
+                                                                  questionTextStyle),
+                                                        ),
+                                                        buildOptions(index),
+                                                      ],
                                                     ),
                                                   ),
-                                                  _currentIndex < questions.length
+                                                  _currentIndex <
+                                                          questions.length
                                                       ? Expanded(
-                                                    flex: 1,
-                                                        child: Row(
-                                                    mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                    children: [
-                                                        Container(
-                                                          height : MediaQuery.of(context).size.height*0.07,
-                                                          child: Padding(
-                                                            padding:
-                                                            const EdgeInsets.only(
-                                                                right: 20.0,
-                                                                bottom: 10),
-                                                            child: Container(
-                                                              alignment:
-                                                              Alignment.bottomRight,
-                                                              decoration: BoxDecoration(
-                                                                  color: Color.fromRGBO(
-                                                                      196, 196, 196, 0.8),
-                                                                  borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(10)),
-                                                              child: Padding(
-                                                                padding: const EdgeInsets
-                                                                    .symmetric(
-                                                                    horizontal: 10.0,
-                                                                    vertical: 8),
-                                                                child: GestureDetector(
-                                                                  onTap: indexSelected < 0
-                                                                      ? () {
-                                                                    _scaffoldKey
-                                                                        .currentState
-                                                                        .showSnackBar(SnackBar(
-                                                                        content:
-                                                                        Text('Please pick an option')));
-                                                                  }
-                                                                      : () async {
-                                                                    var orderId =
-                                                                    questions[_currentIndex].type !=
-                                                                        2
-                                                                        ? 0
-                                                                        : options[indexSelected]
-                                                                        .id;
-                                                                    var ans = questions[_currentIndex].type ==
-                                                                        0 ||
-                                                                        questions[_currentIndex].type ==
-                                                                            3
-                                                                        ? answer
-                                                                        : questions[_currentIndex].type ==
-                                                                        1
-                                                                        ? opt[
-                                                                    indexSelected]
-                                                                        : options[indexSelected]
-                                                                        .option;
-                                                                    var addText = questions[_currentIndex]
-                                                                        .additionText ==
-                                                                        null
-                                                                        ? "0"
-                                                                        : questions[
-                                                                    _currentIndex]
-                                                                        .additionText;
-                                                                    print(ans);
-                                                                    if (ans ==
-                                                                        null) {
-                                                                      _scaffoldKey
-                                                                          .currentState
-                                                                          .showSnackBar(SnackBar(
-                                                                          content:
-                                                                          Text('Please enter some value')));
-                                                                    } else {
-                                                                      await _apiCall.sendOptionsAnswers(
-                                                                          answerId:
-                                                                          orderId,
-                                                                          questionId:
-                                                                          questions[_currentIndex]
-                                                                              .id,
-                                                                          additionalText:
-                                                                          addText,
-                                                                          answer:
-                                                                          ans,
-                                                                          question:
-                                                                          questions[_currentIndex]
-                                                                              .question,
-                                                                          type: questions[_currentIndex]
-                                                                              .type,
-                                                                          optionSelected:
-                                                                          ans);
-                                                                      answer = null;
-                                                                      setState(() {
-                                                                        show =
-                                                                        false;
-                                                                        indexSelected =
-                                                                        -1;
-                                                                        _carController.nextPage();
-                                                                      });
-                                                                    }
-                                                                  },
-                                                                  child: Center(
-                                                                    child: Text(
-                                                                      "Submit",
-                                                                      style: TextStyle(
-                                                                          color:
-                                                                          Colors.black),
+                                                          flex: 1,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .end,
+                                                            children: [
+                                                              Container(
+                                                                height: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .height *
+                                                                    0.07,
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      right:
+                                                                          20.0,
+                                                                      bottom:
+                                                                          10),
+                                                                  child:
+                                                                      Container(
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .bottomRight,
+                                                                    decoration: BoxDecoration(
+                                                                        color: Color.fromRGBO(
+                                                                            196,
+                                                                            196,
+                                                                            196,
+                                                                            0.8),
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(10)),
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: const EdgeInsets
+                                                                              .symmetric(
+                                                                          horizontal:
+                                                                              10.0,
+                                                                          vertical:
+                                                                              8),
+                                                                      child:
+                                                                          GestureDetector(
+                                                                        onTap: indexSelected <
+                                                                                0
+                                                                            ? () {
+                                                                                _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Please pick an option')));
+                                                                              }
+                                                                            : () async {
+                                                                                var orderId = questions[_currentIndex].type != 2 ? 0 : options[indexSelected].id;
+                                                                                var ans = questions[_currentIndex].type == 0 || questions[_currentIndex].type == 3
+                                                                                    ? answer
+                                                                                    : questions[_currentIndex].type == 1
+                                                                                        ? opt[indexSelected]
+                                                                                        : options[indexSelected].option;
+                                                                                var addText = questions[_currentIndex].additionText == null ? "0" : questions[_currentIndex].additionText;
+                                                                                print(ans);
+                                                                                if (ans == null) {
+                                                                                  _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Please enter some value')));
+                                                                                } else {
+                                                                                  await _apiCall.sendOptionsAnswers(answerId: orderId, questionId: questions[_currentIndex].id, additionalText: addText, answer: ans, question: questions[_currentIndex].question, type: questions[_currentIndex].type, optionSelected: ans);
+                                                                                  answer = null;
+                                                                                  setState(() {
+                                                                                    show = false;
+                                                                                    indexSelected = -1;
+                                                                                    _carController.nextPage();
+                                                                                  });
+                                                                                }
+                                                                              },
+                                                                        child:
+                                                                            Center(
+                                                                          child:
+                                                                              Text(
+                                                                            "Submit",
+                                                                            style:
+                                                                                TextStyle(color: Colors.black),
+                                                                          ),
+                                                                        ),
+                                                                      ),
                                                                     ),
                                                                   ),
                                                                 ),
                                                               ),
-                                                            ),
+                                                            ],
                                                           ),
-                                                        ),
-                                                    ],
-                                                  ),
-                                                      )
+                                                        )
                                                       : Container()
                                                 ]));
                                       })),
@@ -669,6 +642,6 @@ class _QuestionnaireState extends State<Questionnaire>
                     ],
                   )
                 : Center(child: Text("No questions to show"))
-            : Center(child: CircularProgressIndicator()));
+            : Center(child: SpinKitDoubleBounce(color: defaultGreen)));
   }
 }

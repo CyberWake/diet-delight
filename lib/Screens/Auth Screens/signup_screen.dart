@@ -1,6 +1,5 @@
-import 'package:diet_delight/Models/registrationModel.dart';
-import 'package:diet_delight/Screens/Auth%20Screens/verifyPhoneNumber.dart';
-import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/Models/export_models.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -370,6 +369,7 @@ class _SignUpState extends State<SignUp> {
                             CupertinoPageRoute(
                                 builder: (context) => VerifyPhoneNumber(
                                       regDetails: signUpDetails,
+                                      from: FromPage.signUp,
                                     )));
                       } else {
                         if (confirmPass.text != password.text) {

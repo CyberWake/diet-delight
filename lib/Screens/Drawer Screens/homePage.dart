@@ -1,15 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:diet_delight/Models/consultationModel.dart';
-import 'package:diet_delight/Models/mealModel.dart';
-import 'package:diet_delight/Models/mealPlanDurationsModel.dart';
-import 'package:diet_delight/Models/menuModel.dart';
-import 'package:diet_delight/Screens/Consultation/bookConsultation.dart';
-import 'package:diet_delight/Screens/MealPlans/mealPlanSelectionScreen.dart';
-import 'package:diet_delight/Screens/Menu/menupage.dart';
-import 'package:diet_delight/konstants.dart';
-import 'package:diet_delight/services/apiCalls.dart';
+import 'package:diet_delight/Models/export_models.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -21,11 +15,16 @@ class _HomeScreenState extends State<HomeScreen> {
   List<ConsultationModel> consultationPackages = List();
   List<DurationModel> durations = List();
   List<MenuModel> menus = List();
+  List<FoodItemModel> featuredMenu = List();
   List<List<MealModel>> mealPackages = List();
+  List<List> favourites = List();
+  List<int> favPressed = List();
   bool isLoaded = false;
 
   Future testApiData() async {
     consultationPackages = await _apiCall.getConsultationPackages();
+    featuredMenu = await _apiCall.getFeaturedMenuItems();
+    favourites = await _apiCall.getFavourites();
     menus = await _apiCall.getMenuPackages();
     durations = await _apiCall.getDurations();
     for (int i = 0; i < durations.length;) {
@@ -187,9 +186,10 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                    padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                    padding: EdgeInsets.only(top: 10.0, bottom: 10.0,left: 10,right: 10),
                     child: Text(
                       durations[pos].title,
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'RobotoCondensedReg',
                         fontSize: 14,
@@ -442,7 +442,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 width: double.infinity,
                 child: Padding(
-                  padding: EdgeInsets.all(10.0),
+                  padding: EdgeInsets.symmetric(vertical : 10.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -468,7 +468,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(20, 20, 10, 10),
+                        padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
                         child: Container(
                           height: 0.65 * devWidth,
                           child: ListView.builder(
@@ -492,7 +492,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 10.0),
+                  padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 10.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -518,7 +518,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(15, 20, 10, 10),
+                        padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
                         child: Container(
                           height: 0.55 * devWidth,
                           child: ListView.builder(
@@ -539,7 +539,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 width: double.infinity,
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 10.0),
+                  padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 10.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -565,11 +565,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(20, 20, 10, 10),
+                        padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
                         child: Container(
-                          height: 0.45 * devWidth,
+                          height: 0.48 * devWidth,
                           child: ListView.builder(
-                              itemCount: 5,
+                              itemCount: featuredMenu.length,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (BuildContext context, int pos) {
                                 return Padding(
@@ -588,23 +588,43 @@ class _HomeScreenState extends State<HomeScreen> {
                                           width: 0.4 * devWidth,
                                           height: 220,
                                           child: Column(
+                                            mainAxisSize: MainAxisSize.max,
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             children: [
                                               Padding(
-                                                padding: EdgeInsets.fromLTRB(
-                                                    5.0, 5.0, 5.0, 5.0),
-                                                child: Image.asset(
-                                                  'images/Group 26.png',
-                                                  width: (0.4 * devWidth),
-                                                  height: (0.4 * devWidth) / 2,
+                                                padding: EdgeInsets.all(5),
+                                                child: CachedNetworkImage(
+                                                  imageUrl: featuredMenu[pos]
+                                                          .picture ??
+                                                      "http://via.placeholder.com/350x150",
+                                                  imageBuilder: (context,
+                                                          imageProvider) =>
+                                                      Container(
+                                                    width: (0.4 * devWidth),
+                                                    height:
+                                                        (0.4 * devWidth) / 2,
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.rectangle,
+                                                      image: DecorationImage(
+                                                        image: imageProvider,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  placeholder: (context, url) =>
+                                                      CircularProgressIndicator(),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          FlutterLogo(
+                                                    size: 60,
+                                                  ),
                                                 ),
                                               ),
                                               Padding(
-                                                padding: EdgeInsets.fromLTRB(
-                                                    5.0, 0, 5.0, 0),
+                                                padding: EdgeInsets.all(5),
                                                 child: Text(
-                                                  'Honey garlic Chicken Stir Fry',
+                                                  featuredMenu[pos].foodName,
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                     fontFamily:
@@ -617,7 +637,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.only(
-                                                    top: 20.0),
+                                                    bottom: 10),
                                                 child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
@@ -630,11 +650,51 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     SizedBox(
                                                       width: 5,
                                                     ),
-                                                    Icon(
-                                                      Icons.favorite_border,
-                                                      size: 15,
-                                                      color: defaultPurple,
-                                                    )
+                                                    IconButton(
+                                                        onPressed: () async {
+                                                          setState(() {
+                                                            favPressed.add(
+                                                                featuredMenu[
+                                                                        pos]
+                                                                    .id);
+                                                          });
+                                                          int userId =
+                                                              int.parse(Api
+                                                                  .userInfo.id);
+                                                          AddFavouritesModel
+                                                              details =
+                                                              AddFavouritesModel(
+                                                            menuItemId:
+                                                                featuredMenu[
+                                                                        pos]
+                                                                    .id,
+                                                            userId: userId,
+                                                          );
+                                                          await _apiCall
+                                                              .addFavourites(
+                                                                  details);
+                                                        },
+                                                        icon: favourites[0].contains(
+                                                                    featuredMenu[
+                                                                            pos]
+                                                                        .id) ||
+                                                                favPressed.contains(
+                                                                    featuredMenu[
+                                                                            pos]
+                                                                        .id)
+                                                            ? Icon(
+                                                                Icons.favorite,
+                                                                size: 15,
+                                                                color:
+                                                                    defaultPurple,
+                                                              )
+                                                            : Icon(
+                                                                Icons
+                                                                    .favorite_border,
+                                                                size: 15,
+                                                                color:
+                                                                    defaultPurple,
+                                                              )),
                                                   ],
                                                 ),
                                               ),
@@ -661,7 +721,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.all(10.0),
+                  padding: EdgeInsets.symmetric(vertical : 10.0,horizontal: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -687,7 +747,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Padding(
-                          padding: EdgeInsets.fromLTRB(20, 20, 10, 0),
+                          padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                           child: Container(
                               height: 0.525 * devWidth,
                               child: ListView.builder(
@@ -706,6 +766,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           )
-        : Center(child: CircularProgressIndicator());
+        : Center(child: SpinKitDoubleBounce(color: defaultGreen));
   }
 }

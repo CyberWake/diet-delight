@@ -1,9 +1,6 @@
 import 'dart:ui';
-
-import 'package:diet_delight/Models/registrationModel.dart';
-import 'package:diet_delight/Screens/Auth%20Screens/newUserQuestionnaire.dart';
-import 'package:diet_delight/konstants.dart';
-import 'package:diet_delight/services/apiCalls.dart';
+import 'package:diet_delight/Models/export_models.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +9,8 @@ import 'package:pin_code_text_field/pin_code_text_field.dart';
 
 class VerifyPhoneNumber extends StatefulWidget {
   final RegModel regDetails;
-  VerifyPhoneNumber({this.regDetails});
+  final FromPage from;
+  VerifyPhoneNumber({this.regDetails, this.from});
   @override
   _VerifyPhoneNumberState createState() => new _VerifyPhoneNumberState();
 }
@@ -63,8 +61,20 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
           (await _auth.signInWithCredential(phoneAuthCredential)).user;
       if (user != null) {
         widget.regDetails.setUid(user.uid);
-        registerUser();
-        showSnackBar("Phone number automatically verified");
+        if (widget.from == FromPage.signUp) {
+          showSnackBar("Phone number automatically verified");
+          registerUser();
+        } else {
+          showSnackBar("Phone number automatically verified");
+          Future.delayed(Duration(seconds: 1)).then((value) {
+            Navigator.push(
+                context,
+                CupertinoPageRoute(
+                    builder: (context) => ResetPassword(
+                          userInfo: widget.regDetails,
+                        )));
+          });
+        }
       }
     };
     print('ver complete check');
@@ -112,7 +122,16 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
       final User user = (await _auth.signInWithCredential(credential)).user;
       if (user != null) {
         widget.regDetails.setUid(user.uid);
-        registerUser();
+        if (widget.from == FromPage.signUp) {
+          registerUser();
+        } else {
+          Navigator.push(
+              context,
+              CupertinoPageRoute(
+                  builder: (context) => ResetPassword(
+                        userInfo: widget.regDetails,
+                      )));
+        }
       }
     } catch (e) {
       showSnackBar('Verification OTP entered is invalid');

@@ -2,20 +2,7 @@ import 'dart:convert' as convert;
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:diet_delight/Models/consultationAppointmentModel.dart';
-import 'package:diet_delight/Models/consultationModel.dart';
-import 'package:diet_delight/Models/consultationPurchaseModel.dart';
-import 'package:diet_delight/Models/foodItemModel.dart';
-import 'package:diet_delight/Models/loginModel.dart';
-import 'package:diet_delight/Models/mealModel.dart';
-import 'package:diet_delight/Models/mealPlanDurationsModel.dart';
-import 'package:diet_delight/Models/mealPurchaseModel.dart';
-import 'package:diet_delight/Models/menuCategoryModel.dart';
-import 'package:diet_delight/Models/menuModel.dart';
-import 'package:diet_delight/Models/menuOrdersModel.dart';
-import 'package:diet_delight/Models/optionsFile.dart';
-import 'package:diet_delight/Models/questionnaireModel.dart';
-import 'package:diet_delight/Models/registrationModel.dart';
+import 'package:diet_delight/Models/export_models.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:oauth2/oauth2.dart' as oauth2;
@@ -24,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 var currentMealPlanCache = [];
 var mealPlanCacheData = [];
 var onGoingMealPurchaseCacheData = [];
+var menuCategoryCacheData = [];
 
 class Api {
   static var client;
@@ -40,6 +28,10 @@ class Api {
   static List<MealPurchaseModel> itemMealPurchases = List();
   static List<MealPurchaseModel> itemPresentMealPurchases = List();
   static List<DurationModel> itemDurations = List();
+  static List<AddFavouritesModel> favouriteItems = List();
+  static List<int> favouriteIds = List();
+  static List<List> favourites = List();
+  static List<FoodItemModel> featuredMenu = List();
   static RegModel userInfo = RegModel();
   static String token;
 
@@ -48,10 +40,14 @@ class Api {
 
   static final Api instance = Api._privateConstructor();
 
-  reset() {
+  resetOnGoingMealPlanCache() {
     currentMealPlanCache = [];
     mealPlanCacheData = [];
     onGoingMealPurchaseCacheData = [];
+  }
+
+  resetMealPlanMenuCategories() {
+    menuCategoryCacheData = [];
   }
 
   Future autoLogin() async {
@@ -149,6 +145,33 @@ class Api {
     if (response.statusCode == 200) {
       print('Success updating user info');
       var body = convert.jsonDecode(response.body);
+      userInfo = null;
+      userInfo = RegModel.fromMap(body);
+      return true;
+    } else if (response.statusCode == 400) {
+      print(response.statusCode);
+      return false;
+    } else {
+      print(response.statusCode);
+      print(response.body);
+      return false;
+    }
+  }
+
+  Future<bool> updatePassword(String currentPass, String newPass) async {
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    String body = convert
+        .jsonEncode({'old_password': currentPass, 'new_password': newPass});
+    print(body);
+    final response =
+        await http.put(uri + '/api/v1/user', headers: headers, body: body);
+    if (response.statusCode == 200) {
+      print('Success updating user info');
+      var body = convert.jsonDecode(response.body);
+      login(LogModel(email: userInfo.email, password: newPass));
       userInfo = null;
       userInfo = RegModel.fromMap(body);
       return true;
@@ -275,6 +298,7 @@ class Api {
   Future<List<MenuCategoryModel>> getMenuCategories(int menuId) async {
     try {
       itemsMenuCategory = [];
+      var cachedData = [];
       Map<String, String> headers = {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token"
@@ -286,6 +310,9 @@ class Api {
         print('Success getting menu categories');
         var body = convert.jsonDecode(response.body);
         List data = body['data'];
+        menuCategoryCacheData.add(data);
+        await FlutterSecureStorage().write(
+            key: 'categoriesData', value: jsonEncode(menuCategoryCacheData));
         data.forEach((element) {
           MenuCategoryModel item = MenuCategoryModel.fromMap(element);
           itemsMenuCategory.add(item);
@@ -361,7 +388,7 @@ class Api {
       }
     } on Exception catch (e) {
       print(e.toString());
-      return [];
+      return null;
     }
   }
 
@@ -553,7 +580,7 @@ class Api {
       }
     } on Exception catch (e) {
       print(e.toString());
-      return [];
+      return null;
     }
   }
 
@@ -585,8 +612,8 @@ class Api {
           }
         }
       });
-      await FlutterSecureStorage().write(
-          key: 'onGoingOrdersDataMain', value: convert.jsonEncode(cachedData));
+      /*await FlutterSecureStorage().write(
+          key: 'onGoingOrdersDataMain', value: convert.jsonEncode(cachedData));*/
       return itemPresentMealPurchases;
     } else {
       print(response.statusCode);
@@ -720,18 +747,17 @@ class Api {
         return id;
       } else {
         print(response.statusCode);
-        print(response.body);
-        return null;
+        print('passing null');
+        return -1;
       }
     } on Exception catch (e) {
       print(e.toString());
-      return null;
+      return -1;
     }
   }
 
   //About you
   Future<List<QuestionnaireModel>> getQuestions() async {
-    var questionOptions = [];
     try {
       itemsQuestionnaire = [];
       Map<String, String> headers = {
@@ -765,49 +791,14 @@ class Api {
     }
   }
 
-  Future<List<OptionsModel>> getOptions(questions) async {
-
-    List<OptionsModel> options = [];
-
-    print(questions.length);
-
-    try {
-      Map<String, String> headers = {
-        HttpHeaders.contentTypeHeader: "application/json",
-        HttpHeaders.authorizationHeader: "Bearer $token"
-      };
-
-      final response = await http.get(uri + "/api/v1/answer-options",
-          headers: headers);
-
-      if (response.statusCode == 200) {
-
-        print('Success getting Options');
-        print(response.statusCode);
-        print(response.body);
-
-        var body = convert.jsonDecode(response.body);
-        var data = body['data'];
-        data.forEach((element) {
-          OptionsModel item = OptionsModel.fromMap(element);
-          options.add(item);
-        });
-
-      } else {
-        print(response.statusCode);
-        print(response.body);
-        //return [];
-      }
-    } on Exception catch (e) {
-      print(e.toString());
-      return [];
-    }
-
-    print(options);
-    return options;
-  }
-
-  Future<void> sendOptionsAnswers({answerId,optionSelected,questionId,answer,type,question,additionalText}) async {
+  Future<void> sendOptionsAnswers(
+      {answerId,
+      optionSelected,
+      questionId,
+      answer,
+      type,
+      question,
+      additionalText}) async {
     print("sendOptionsAnswers");
     var userId = userInfo.id;
     try {
@@ -855,29 +846,124 @@ class Api {
     }
   }
 
-  Future<List<MenuCategoryModel>> getCategories(int menuId) async {
+  Future<List<OptionsModel>> getOptions(questions) async {
+    List<OptionsModel> options = [];
+    print(questions.length);
+    for (int i = 0; i < questions.length; i++) {
+      try {
+        Map<String, String> headers = {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer $token"
+        };
+        int id = questions[i].id;
+        if (questions[i].type == 0) {
+          OptionsModel model = OptionsModel(question_Id: id);
+          options.add(model);
+        } else if (questions[i].type == 1) {
+          OptionsModel model = OptionsModel(question_Id: id, option: "Yes,No");
+          options.add(model);
+        } else if (questions[i].type == 3) {
+          OptionsModel model = OptionsModel(question_Id: id);
+          options.add(model);
+        } else {
+          final response = await http.get(uri + "/api/v1/answer-options/$id",
+              headers: headers);
+
+          if (response.statusCode == 200) {
+            print('Success getting Options');
+            var body = convert.jsonDecode(response.body);
+            var data = body['data'];
+            OptionsModel model = OptionsModel.fromMap(data);
+            options.add(model);
+          } else {
+            print(response.statusCode);
+            print(response.body);
+            return [];
+          }
+        }
+      } on Exception catch (e) {
+        print(e.toString());
+        return [];
+      }
+    }
+    print(options);
+    return options;
+  }
+
+  Future<bool> addFavourites(AddFavouritesModel details) async {
     try {
-      itemsMenuCategory = [];
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+      String body = convert.jsonEncode(details.toMap());
+      final response = await http.post(uri + '/api/v1/favourites',
+          headers: headers, body: body);
+      if (response.statusCode == 201) {
+        return true;
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        return false;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> editFavourites(AddFavouritesModel details) async {
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+      String body = convert.jsonEncode(details.toMap());
+      final response = await http.post(uri + '/api/v1/favourites/${details.id}',
+          headers: headers, body: body);
+      if (response.statusCode == 201) {
+        return true;
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        return false;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<List<List>> getFavourites() async {
+    try {
+      favouriteItems = [];
+      favouriteIds = [];
+      favourites = [];
       Map<String, String> headers = {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token"
       };
       final response = await http.get(
-          uri + '/api/v1/menu-categories?menu_id=$menuId&sortOrder=desc',
+          uri + '/api/v1/favourites?pageSize=20&sortOrder=desc',
           headers: headers);
       if (response.statusCode == 200) {
-        print('Success getting menu categories');
+        print('Success getting favourites');
         var body = convert.jsonDecode(response.body);
         List data = body['data'];
         data.forEach((element) {
-          MenuCategoryModel item = MenuCategoryModel.fromMap(element);
-          itemsMenuCategory.add(item);
+          AddFavouritesModel item = AddFavouritesModel.fromMap(element);
+          favouriteIds.add(item.menuItemId);
+          favouriteItems.add(item);
         });
-        return itemsMenuCategory;
+        print('Favourite Ids : $favouriteIds');
+        print('Favourite Items : $favouriteItems');
+        favourites.add(favouriteIds);
+        favourites.add(favouriteItems);
+        return favourites;
       } else {
         print(response.statusCode);
         print(response.body);
-        return itemsMenuCategory;
+        return favourites;
       }
     } on Exception catch (e) {
       print(e.toString());
@@ -885,8 +971,323 @@ class Api {
     }
   }
 
-  Future<void> postBreakTakenDay({DateTime breakDay, DateTime nextDate}) async {
+  Future<bool> deleteFavourites(AddFavouritesModel details) async {
+    try {
+      itemsMenuCategory = [];
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+      final response = await http
+          .delete(uri + '/api/v1/favourites/${details.id}', headers: headers);
+      if (response.statusCode == 204) {
+        return true;
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        return false;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<List<FoodItemModel>> getFeaturedMenuItems() async {
+    try {
+      featuredMenu = [];
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+      final response = await http.get(
+          uri + '/api/v1/menu-items?pageSize=20&featured=1&sortOrder=desc',
+          headers: headers);
+      if (response.statusCode == 200) {
+        print('Success getting featured menu items');
+        var body = convert.jsonDecode(response.body);
+        List data = body['data'];
+        data.forEach((element) {
+          FoodItemModel item = FoodItemModel.fromMap(element);
+          featuredMenu.add(item);
+        });
+        print('featuredMenu : $featuredMenu');
+        return featuredMenu;
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        return featuredMenu;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return [];
+    }
+  }
+
+  Future<bool> deleteMenuOrder(String id) async {
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+      final response = await http.delete(
+        uri + '/api/v1/my-menu-orders/$id',
+        headers: headers,
+      );
+      if (response.statusCode == 204) {
+        print('Success deleting meal menu order');
+        return true;
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        return false;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<List<dynamic>> getBreakTakenDay() async {
     // ADD API CAll HERE
     print('breakTakenApiCalled');
+
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+
+      final response = await http.get(uri + "/api/v1/my-order-breaks",
+          headers: headers);
+
+      if (response.statusCode == 200) {
+
+        print('Success getting breaks');
+        print(response.statusCode);
+        print(response.body);
+
+        var body = convert.jsonDecode(response.body)["data"];
+
+        return body;
+
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        //return [];
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return [];
+    }
+
+
+  }
+
+  Future<void> postBreakTakenDay({breakDays,mealId,status,primaryAndSecondary}) async {
+    List<String> breakList = [];
+    var primaryAddress = jsonEncode(primaryAndSecondary[0]);
+    var secondaryAddress = jsonEncode(primaryAndSecondary[1]);
+
+    for(int  i =0;i<breakDays.length;i++){
+      breakList.add((breakDays[i]+" 00:00:00").toString());
+    }
+    print('breakTakenPostApiCalled');
+    print(breakDays);
+
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+
+      Map body = {
+        "user_id": "${userInfo.id}",
+        "meal_purchase_id": mealId,
+        "status": status,
+        "primary_address_dates": primaryAddress,
+        "secondary_address_dates": secondaryAddress,
+        "date_list": convert.jsonEncode(breakList),
+        "notes": "No Onion"
+      };
+      final response = await http.post(uri + "/api/v1/my-order-breaks",
+          headers: headers, body: jsonEncode(body));
+
+      if (response.statusCode == 201) {
+
+        print('Success making Post call');
+        print(response.statusCode);
+        print(response.body);
+
+        var body = convert.jsonDecode(response.body)["data"];
+
+        return body;
+
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        //return [];
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return [];
+    }
+
+
+  }
+
+  Future<void> putBreakTakenDay({breakDays,mealId,status,id,primaryAndSecondary}) async {
+    List<String> breakList = [];
+    var primaryAddress = jsonEncode(primaryAndSecondary[0]);
+    var secondaryAddress = jsonEncode(primaryAndSecondary[1]);
+    for(int  i =0;i<breakDays.length;i++){
+      breakList.add((breakDays[i]+" 00:00:00").toString());
+    }
+    print('breakTakenPutApiCalled');
+    print(breakList);
+
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+
+      Map body = {
+        "user_id": "${userInfo.id}",
+        "meal_purchase_id": mealId,
+        "status": status,
+        "date_list": jsonEncode(breakList),
+        "primary_address_dates": primaryAddress,
+        "secondary_address_dates": secondaryAddress,
+        "notes": "No Onion"
+      };
+      final response = await http.put(uri + "/api/v1/my-order-breaks/$id",
+          headers: headers, body: jsonEncode(body));
+      print(response.body);
+      print(response.statusCode);
+      if (response.statusCode == 201) {
+
+        print('Success making Put call');
+
+        var body = convert.jsonDecode(response.body)["data"];
+
+        return body;
+
+      } else {
+
+        //return [];
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return [];
+    }
+
+
+  }
+
+  Future<void> postAddressBreakTakenDay({primaryDays,secondaryDays,mealId,status,dateList}) async {
+    List<String> primaryList = [];
+    List<String> secondaryList = [];
+    for(int  i =0;i<primaryDays.length;i++){
+      primaryList.add((primaryDays[i]+" 00:00:00").toString());
+    }
+    for(int  i =0;i<secondaryDays.length;i++){
+      secondaryList.add((secondaryDays[i]+" 00:00:00").toString());
+    }
+    print('AddressPostApiCalled');
+    print(primaryList);    print(secondaryList);
+
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+
+      Map body = {
+        "user_id": "${userInfo.id}",
+        "meal_purchase_id": mealId,
+        "status": status,
+        "primary_address_dates": jsonEncode(primaryList),
+        "date_list": dateList,
+        "secondary_address_dates": jsonEncode(secondaryList),
+        "notes": "No Onion"
+      };
+      final response = await http.post(uri + "/api/v1/my-order-breaks",
+          headers: headers, body: jsonEncode(body));
+
+      if (response.statusCode == 201) {
+
+        print('Success making AddressPostApiCalled');
+        print(response.statusCode);
+        print(response.body);
+
+        var body = convert.jsonDecode(response.body)["data"];
+
+        return body;
+
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        //return [];
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return [];
+    }
+
+
+  }
+
+  Future<void> putAddressBreakTakenDay({primaryDays,secondaryDays,mealId,status,id,dateList}) async {
+    List<String> primaryList = [];
+    List<String> secondaryList = [];
+    for(int  i =0;i<primaryDays.length;i++){
+      primaryList.add((primaryDays[i]+" 00:00:00").toString());
+    }
+    for(int  i =0;i<secondaryDays.length;i++){
+      secondaryList.add((secondaryDays[i]+" 00:00:00").toString());
+    }
+    print('AddressPutApiCalled');
+    print(primaryList);    print(secondaryList);
+
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+
+      Map body = {
+        "user_id": "${userInfo.id}",
+        "meal_purchase_id": mealId,
+        "status": status,
+        "primary_address_dates": jsonEncode(primaryList),
+        "secondary_address_dates": jsonEncode(secondaryList),
+        "date_list": dateList,
+        "notes": "No Onion"
+      };
+      final response = await http.put(uri + "/api/v1/my-order-breaks/$id",
+          headers: headers, body: jsonEncode(body));
+
+      if (response.statusCode == 201) {
+
+        print('Success making AddressPutApiCalled');
+        print(response.statusCode);
+        print(response.body);
+
+        var body = convert.jsonDecode(response.body)["data"];
+
+        return body;
+
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        //return [];
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return [];
+    }
+
+
   }
 }

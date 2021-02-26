@@ -1,8 +1,5 @@
-import 'package:diet_delight/Models/loginModel.dart';
-import 'package:diet_delight/Screens/Auth%20Screens/forgotPassword.dart';
-import 'package:diet_delight/konstants.dart';
-import 'package:diet_delight/landingPage.dart';
-import 'package:diet_delight/services/apiCalls.dart';
+import 'package:diet_delight/Models/export_models.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

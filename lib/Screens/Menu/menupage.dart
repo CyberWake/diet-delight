@@ -1,10 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:diet_delight/Models/foodItemModel.dart';
-import 'package:diet_delight/Models/menuCategoryModel.dart';
-import 'package:diet_delight/Models/menuModel.dart';
-import 'package:diet_delight/konstants.dart';
-import 'package:diet_delight/services/apiCalls.dart';
+import 'package:diet_delight/Models/export_models.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Menu extends StatefulWidget {
   final MenuModel menu;
@@ -24,6 +22,8 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
   List<List<MenuCategoryModel>> subCategoryItems = List();
   List<List<FoodItemModel>> foodItems = List();
   List<FoodItemModel> expansionFoodItems = List();
+  List<List> favourites = List();
+  List<int> favPressed = List();
   final _apiCall = Api.instance;
   int menuId = 0;
   bool isLoaded = false;
@@ -39,6 +39,7 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
   }
 
   getData() async {
+    await getFavourites();
     await getMenuCategories(menuId);
   }
 
@@ -91,6 +92,9 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
     print('subCategoryItems.length: ${subCategoryItems.length}');
     print('mainCategoryItems.length: ${mainCategoryItems.length}');
     print('categoryItems.length: ${categoryItems.length}');
+    subCategoryItems.forEach((element) {
+      print(element.length);
+    });
     if (mounted) {
       setState(() {
         isLoaded = true;
@@ -101,6 +105,10 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
   getFoodItems(int categoryId) async {
     expansionFoodItems = await _apiCall.getMenuCategoryFoodItems(
         menuId.toString(), categoryId.toString());
+  }
+
+  getFavourites() async {
+    favourites = await _apiCall.getFavourites();
   }
 
   Widget item(FoodItemModel foodItem) {
@@ -142,11 +150,29 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                       alignment: Alignment.bottomRight,
                       padding: EdgeInsets.only(right: 10),
                       child: IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.favorite_border,
-                            size: 13,
-                          )),
+                          onPressed: () async {
+                            setState(() {
+                              favPressed.add(foodItem.id);
+                            });
+                            int userId = int.parse(Api.userInfo.id);
+                            AddFavouritesModel details = AddFavouritesModel(
+                              menuItemId: foodItem.id,
+                              userId: userId,
+                            );
+                            await _apiCall.addFavourites(details);
+                          },
+                          icon: favourites[0].contains(foodItem.id) ||
+                                  favPressed.contains(foodItem.id)
+                              ? Icon(
+                                  Icons.favorite,
+                                  size: 13,
+                                  color: defaultPurple,
+                                )
+                              : Icon(
+                                  Icons.favorite_border,
+                                  size: 13,
+                                  color: defaultPurple,
+                                )),
                     )
                   ],
                 ),
@@ -319,10 +345,10 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                           isScrollable: true,
                           onTap: (index) async {},
                           labelStyle: pageViewTabSelected,
-                          indicatorColor: Colors.transparent,
-                          indicatorWeight: 3.0,
+                          indicatorColor: defaultGreen,
+                          indicatorWeight: 2.0,
                           indicatorSize: TabBarIndicatorSize.label,
-                          labelColor: Colors.black,
+                          labelColor: defaultPurple,
                           labelPadding: EdgeInsets.symmetric(horizontal: 30),
                           unselectedLabelStyle: pageViewTabSelected,
                           unselectedLabelColor: Colors.grey,
@@ -346,12 +372,13 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                             margin: index == 0
                                 ? EdgeInsets.only(top: 10)
                                 : EdgeInsets.zero,
-                            child: menuUi(foodItems[index], index),
+                            child: menuUi(
+                                foodItems[index], categoryItems[index].parent),
                           );
                         })),
                   )
                 ])
-              : Center(child: CircularProgressIndicator()),
+              : Center(child: SpinKitDoubleBounce(color: defaultGreen)),
         ));
   }
 

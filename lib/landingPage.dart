@@ -1,20 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
-
-import 'package:diet_delight/Screens/Auth%20Screens/login_signup_form.dart';
-import 'package:diet_delight/Screens/Auth%20Screens/newUserQuestionnaire.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/consutationOrdersPage.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/contactUsPage.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/dashboardOnGoingOrders.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/dashboardUserInfoPage.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/favouritesPage.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/homePage.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/mealPlanOrdersPage.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/notificationsPage.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/settingsFAQs.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/settingsPrivacyPolicy.dart';
-import 'package:diet_delight/Screens/Drawer%20Screens/settingsTermsAndConditions.dart';
-import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +9,9 @@ import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
+  final int openPage;
+  final int tabIndex;
+  HomePage({this.openPage = 0, this.tabIndex = 0});
   @override
   _HomePageState createState() => new _HomePageState();
 }
@@ -31,6 +20,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   TabController _pageController1;
   TabController _pageController2;
+  TabController _pageController3;
+
   int page = 0;
   String _platformVersion = 'Unknown';
   List<String> drawerItems = [
@@ -47,11 +38,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   List<List<String>> tabItemsTitle = [
     ['', ''],
-    ['User Info', 'Ongoing Meal Plans'],
+    ['Profile', 'Ongoing Meal Plans'],
     [],
     ['Consultation Orders', 'Meal Plan Orders'],
     [],
-    ['Terms and Conditions', 'FAQ', 'Privacy Policy'],
+    ['Securities', 'Terms and Conditions', 'FAQ', 'Privacy Policy'],
     [],
   ];
 
@@ -81,8 +72,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    page = widget.openPage;
     _pageController1 = TabController(length: 2, vsync: this);
-    _pageController2 = TabController(length: 3, vsync: this);
+    if (page == 1) {
+      _pageController1.index = widget.tabIndex;
+    }
+    _pageController2 = TabController(length: 2, vsync: this);
+    if (page == 3) {
+      _pageController2.index = widget.tabIndex;
+    }
+    _pageController3 = TabController(length: 4, vsync: this);
+    if (page == 5) {
+      _pageController3.index = widget.tabIndex;
+    }
     initPlatformState();
   }
 
@@ -136,7 +138,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   GestureDetector(
                     onTap: () {
                       FlutterOpenWhatsapp.sendSingleMessage(
-                          "917985434482", "Hello");
+                          "917259384025", "Hello");
                     },
                     child: Image.asset(
                       'images/Group 22.png',
@@ -145,40 +147,43 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                   ),
                   SizedBox(
-                    width: 20,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                              builder: (BuildContext context) => Questionnaire(
-                                  username: 'Ritik kumar srivastava')));
-                    },
-                    child: Image.asset(
-                      'images/Group 24.png',
-                      width: 25.0,
-                      height: 25.0,
-                    ),
-                  ),
-                  SizedBox(
                     width: 10,
                   ),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     Navigator.push(
+                  //         context,
+                  //         CupertinoPageRoute(
+                  //             builder: (BuildContext context) => CouponCode()));
+                  //   },
+                  //   child: Image.asset(
+                  //     'images/Group 24.png',
+                  //     width: 25.0,
+                  //     height: 25.0,
+                  //   ),
+                  // ),
+                  // SizedBox(
+                  //   width: 10,
+                  // ),
                 ]
               : [],
           bottom: page == 1 || page == 3 || page == 5
               ? TabBar(
-                  controller: page == 5 ? _pageController2 : _pageController1,
+                  controller: page == 5
+                      ? _pageController3
+                      : page == 3
+                          ? _pageController2
+                          : _pageController1,
                   isScrollable: true,
                   onTap: (index) async {},
                   labelStyle: selectedTab.copyWith(
                       fontSize: 18,
-                      color: Colors.black,
+                      color: defaultGreen,
                       fontWeight: FontWeight.w600),
-                  indicatorColor: Colors.transparent,
+                  indicatorColor: defaultGreen,
                   indicatorWeight: 3.0,
-                  indicatorSize: TabBarIndicatorSize.label,
-                  labelColor: Colors.black,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  labelColor: defaultGreen,
                   labelPadding: EdgeInsets.symmetric(horizontal: 13),
                   unselectedLabelStyle: unSelectedTab.copyWith(
                       fontSize: 16,
@@ -239,18 +244,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           children: [
             HomeScreen(),
             TabBarView(controller: _pageController1, children: [
-              DashBoardUserInfoPage(),
+              DashBoardUserInfoPage(snackBarKey: _scaffoldKey),
               DashBoardOngoingOrders(),
             ]),
             FavouritesPage(),
-            TabBarView(controller: _pageController1, children: [
+            TabBarView(controller: _pageController2, children: [
               ConsultationOrderHistoryPage(),
               MealPlanOrderHistoryPage()
             ]),
             NotificationsPage(),
             TabBarView(
-              controller: _pageController2,
+              controller: _pageController3,
               children: [
+                SettingSecurities(snackBarKey: _scaffoldKey),
                 SettingsTermsAndConditionsPage(),
                 SettingsFAQPage(),
                 SettingsPrivacyPolicyPage(),

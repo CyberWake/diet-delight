@@ -2,15 +2,12 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:date_format/date_format.dart';
-import 'package:diet_delight/Models/mealModel.dart';
-import 'package:diet_delight/Models/mealPurchaseModel.dart';
-import 'package:diet_delight/Screens/Menu/placeMealMenuOrders.dart';
-import 'package:diet_delight/Screens/Menu/placedMealMenuOrders.dart';
-import 'package:diet_delight/konstants.dart';
-import 'package:diet_delight/services/apiCalls.dart';
+import 'package:diet_delight/Models/export_models.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class DashBoardOngoingOrders extends StatefulWidget {
   @override
@@ -32,7 +29,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
 
     if (isCached.toString() == 'true') {
       print('true');
-      _apiCall.reset();
+      _apiCall.resetOnGoingMealPlanCache();
       var ordersTemp = await FlutterSecureStorage().read(key: 'ordersData');
       var plansDataTemp = await FlutterSecureStorage().read(key: 'plansData');
       var ordersPresentDataTemp =
@@ -124,7 +121,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                 itemCount: activeMealPurchases.length,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       if (ordersInActivePlans[index]) {
                         Navigator.push(
                             context,
@@ -135,7 +132,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                                             activeMealPurchases[index],
                                         plan: activePurchaseMealPlans[index])));
                       } else {
-                        Navigator.push(
+                        bool returnedBack = await Navigator.push(
                             context,
                             CupertinoPageRoute(
                                 builder: (BuildContext context) =>
@@ -143,6 +140,9 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                                         purchaseDetails:
                                             activeMealPurchases[index],
                                         plan: activePurchaseMealPlans[index])));
+                        if (returnedBack) {
+                          getCachedData();
+                        }
                       }
                     },
                     child: Container(
@@ -321,6 +321,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                                         CupertinoPageRoute(
                                             builder: (BuildContext context) =>
                                                 PlaceMealMenuOrders(
+                                                    placedFoodItems: [],
                                                     purchaseDetails:
                                                         activeMealPurchases[
                                                             index],
@@ -350,7 +351,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
             ],
           )
         : Center(
-            child: CircularProgressIndicator(),
+            child: SpinKitDoubleBounce(color: defaultGreen),
           );
   }
 }

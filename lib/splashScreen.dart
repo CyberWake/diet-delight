@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:core';
 
-import 'package:diet_delight/Screens/Auth%20Screens/login_signup_form.dart';
-import 'package:diet_delight/landingPage.dart';
-import 'package:diet_delight/services/apiCalls.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -23,8 +21,8 @@ class _SplashScreenState extends State<SplashScreen>
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('accessToken')) {
       _apiCall.autoLogin().whenComplete(() {
-        Navigator.of(context).pushReplacement(
-            CupertinoPageRoute(builder: (BuildContext context) => HomePage()));
+        Navigator.of(context).pushReplacement(CupertinoPageRoute(
+            builder: (BuildContext context) => HomePage(openPage: 0)));
       });
     } else {
       Navigator.of(context).pushReplacement(
@@ -95,7 +93,7 @@ class _SplashScreenState extends State<SplashScreen>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    SpinKitFadingCircle(
+                    SpinKitWanderingCubes(
                       itemBuilder: (BuildContext context, int index) {
                         return DecoratedBox(
                           decoration: BoxDecoration(

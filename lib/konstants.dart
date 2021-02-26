@@ -69,6 +69,13 @@ const appBarTextStyle = TextStyle(
   color: Colors.black,
 );
 
+const toggleTextStyle = TextStyle(
+  fontFamily: 'RobotoCondensedReg',
+  fontSize: 18,
+  fontWeight: FontWeight.normal,
+  color: Colors.black,
+);
+
 const billingTextStyle = TextStyle(
   fontFamily: 'ABeeZeeReg',
   fontSize: 20,
@@ -146,8 +153,8 @@ List<Widget> ddItems = List.generate(
                 index == 0
                     ? 'SILVER'
                     : index == 1
-                        ? 'PLATINUM'
-                        : 'GOLD',
+                        ? 'GOLD'
+                        : 'PLATINUM',
                 style: TextStyle(
                   fontFamily: 'RobotoCondensedReg',
                   fontSize: 15,
@@ -370,3 +377,5 @@ String primaryAddressLine1 = Api.userInfo.addressLine1 ?? '';
 String primaryAddressLine2 = Api.userInfo.addressLine2 ?? '';
 String secondaryAddressLine1 = Api.userInfo.addressSecondary1 ?? '';
 String secondaryAddressLine2 = Api.userInfo.addressSecondary2 ?? '';
+
+enum FromPage { signUp, forgetPass }

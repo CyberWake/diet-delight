@@ -7,34 +7,53 @@ import 'package:diet_delight/konstants.dart';
 
 class CustomCalenderForAddress extends StatefulWidget {
   List addressTapList;
-
-  CustomCalenderForAddress({this.addressTapList} );
+  List primaryAddress;
+  List secondaryAddress;
+  var listOfAvailableDays;
+  bool makePostCall;
+  var mealId;
+  var status;
+  var id;
+  var dateList;
+  CustomCalenderForAddress(
+      {this.dateList,
+      this.mealId,
+      this.status,
+      this.id,
+      this.addressTapList,
+      this.primaryAddress,
+      this.secondaryAddress,
+      this.listOfAvailableDays,
+      this.makePostCall});
   @override
-  _CustomCalenderForAddressState createState() => _CustomCalenderForAddressState();
+  _CustomCalenderForAddressState createState() =>
+      _CustomCalenderForAddressState(
+          primaryAddressDaysList: primaryAddress,
+          secondayAddressDaysList: secondaryAddress);
 }
 
 class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
-
+  _CustomCalenderForAddressState(
+      {this.primaryAddressDaysList, this.secondayAddressDaysList});
   var skipDays;
   int month = 1;
   int index = 1;
   int year = 2021;
   int day = 1;
   String monthVal = "January";
-  var withoutDays = [4,5];
+  var withoutDays = [];
   var varDate = DateTime.now();
   var datesWhenBreakChosen = [];
   var totalDate = DateFormat.yMMMMd('en_US').format(DateTime.now());
-
 
   _getMonth({String monthText, int monthInt, String monthValue}) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.05,
       decoration: month == monthInt
           ? BoxDecoration(
-        color: Color.fromRGBO(119, 131, 143, 1),
-        borderRadius: BorderRadius.circular(10),
-      )
+              color: Color.fromRGBO(119, 131, 143, 1),
+              borderRadius: BorderRadius.circular(10),
+            )
           : null,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 4.0),
@@ -104,15 +123,9 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
     );
   }
 
-  List primaryAddressDaysList = [
-    '2021-02-14',
-    '2021-02-23'
-  ];
+  List primaryAddressDaysList = [];
 
-  List secondayAddressDaysList = [
-    '2021-02-08',
-    '2021-02-09'
-  ];
+  List secondayAddressDaysList = [];
   bool IsLeapYear(int year) {
     return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
   }
@@ -145,12 +158,11 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
     }
   }
 
-
   String monthStringValue =
-  DateTime.now().toLocal().toString().split('-')[1].toString();
+      DateTime.now().toLocal().toString().split('-')[1].toString();
   bool isDateRemoved = false;
-  var removedDate ;
-  var nextSelectedData ;
+  var removedDate;
+  var nextSelectedData;
 
   final List<String> _weekDaysFull = [
     "Monday",
@@ -174,13 +186,15 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
   Widget _weekDayTitle(int index) {
     return FittedBox(
       fit: BoxFit.scaleDown,
-      child: Text(_weekDays[index],  style: appBarTextStyle.copyWith(
-        color: Color.fromRGBO(119, 131, 143, 1),
-        fontSize: 12,
-      ),),
+      child: Text(
+        _weekDays[index],
+        style: appBarTextStyle.copyWith(
+          color: Color.fromRGBO(119, 131, 143, 1),
+          fontSize: 12,
+        ),
+      ),
     );
   }
-
 
   setDateData() {
     setState(() {
@@ -228,7 +242,7 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
   _showDialogBox() {
     showDialog(
       context: context,
-      builder: (context) => StatefulBuilder(builder: (context,setState){
+      builder: (context) => StatefulBuilder(builder: (context, setState) {
         return Dialog(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(30.0))),
@@ -244,26 +258,32 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
                 boxShadow: [
                   //background color of box
 
-
                   BoxShadow(
                     color: Colors.grey,
                     blurRadius: 3.0, // soften the shadow
                     spreadRadius: 3.0, //extend the shadow
-
                   )
                 ],
               ),
               child: Padding(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(height: 10,),
-                    Text('Please de-select one address out of the selected addresses',style: appBarTextStyle.copyWith(color: Colors.black,fontSize: 16),textAlign: TextAlign.center,),
-                    SizedBox(height: 10,),
-
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Please de-select one address out of the selected addresses',
+                      style: appBarTextStyle.copyWith(
+                          color: Colors.black, fontSize: 16),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
                   ],
                 ),
               ),
@@ -277,11 +297,58 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
     // TODO: implement initState
     setDateData();
     super.initState();
+    print(widget.listOfAvailableDays);
+    if (!widget.listOfAvailableDays.contains('Monday')) {
+      withoutDays.add(0);
+    }
+    if (!widget.listOfAvailableDays.contains('Tuesday')) {
+      withoutDays.add(1);
+    }
+    if (!widget.listOfAvailableDays.contains('Wednesday')) {
+      withoutDays.add(2);
+    }
+    if (!widget.listOfAvailableDays.contains('Thursday')) {
+      withoutDays.add(3);
+    }
+    if (!widget.listOfAvailableDays.contains('Friday')) {
+      withoutDays.add(4);
+    }
+    if (!widget.listOfAvailableDays.contains('Saturday')) {
+      withoutDays.add(5);
+    }
+    if (!widget.listOfAvailableDays.contains('Sunday')) {
+      withoutDays.add(6);
+    }
+    print('primary and secondary');
+    print(primaryAddressDaysList);
+    print(secondayAddressDaysList);
+  }
+
+  makeApiCall(){
+    if (widget.makePostCall == true) {
+      Api.instance.postAddressBreakTakenDay(
+          primaryDays: primaryAddressDaysList,
+          secondaryDays:
+          secondayAddressDaysList,
+          mealId: widget.mealId,
+          status: widget.status,
+          dateList: widget.dateList);
+      widget.makePostCall = false;
+    } else {
+      Api.instance.putAddressBreakTakenDay(
+          primaryDays: primaryAddressDaysList,
+          secondaryDays:
+          secondayAddressDaysList,
+          mealId: widget.mealId,
+          status: widget.status,
+          dateList : widget.dateList,
+          id: widget.id);
+    }
   }
   @override
   Widget build(BuildContext context) {
-    return StatefulBuilder(builder: (BuildContext context,
-        StateSetter setState /*You can rename this!*/) {
+    return StatefulBuilder(builder:
+        (BuildContext context, StateSetter setState /*You can rename this!*/) {
       return Container(
         height: MediaQuery.of(context).size.height * 0.59,
         child: Column(
@@ -302,18 +369,20 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
                         ),
                         onPressed: () {
                           setState(() {
-                            if(month ==1 ){
+                            if (month == 1) {
                               year--;
                               month = 12;
-                            }else{ month--; }
+                            } else {
+                              month--;
+                            }
 
                             monthVal = currentMonth(month);
-                            monthStringValue = monthIntegerValueInString(month: month);
+                            monthStringValue =
+                                monthIntegerValueInString(month: month);
                             var firstDate =
                                 year.toString() + monthStringValue + "01";
                             var dateIs = DateTime.parse(firstDate);
-                            var firstDay =
-                            DateFormat('EEEE').format(dateIs);
+                            var firstDay = DateFormat('EEEE').format(dateIs);
                             skipDays = _weekDaysFull.indexOf(firstDay);
                             totalDate = monthVal +
                                 " " +
@@ -324,12 +393,13 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
                           });
                         }),
                     Padding(
-                      padding:
-                      const EdgeInsets.symmetric(horizontal: 18.0),
-                      child: Text('${currentMonth(month)} $year',style: appBarTextStyle.copyWith(
-                          color: Color.fromRGBO(119, 131, 149, 1),
-                          fontSize: 16
-                      ),),
+                      padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                      child: Text(
+                        '${currentMonth(month).toUpperCase().substring(0, 3)} $year',
+                        style: appBarTextStyle.copyWith(
+                            color: Color.fromRGBO(119, 131, 149, 1),
+                            fontSize: 16),
+                      ),
                     ),
                     IconButton(
                         icon: Icon(
@@ -339,18 +409,20 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
                         ),
                         onPressed: () {
                           setState(() {
-                            if(month == 12 ){
+                            if (month == 12) {
                               year++;
                               month = 1;
-                            }else{ month++; }
+                            } else {
+                              month++;
+                            }
 
                             monthVal = currentMonth(month);
-                            monthStringValue = monthIntegerValueInString(month: month);
+                            monthStringValue =
+                                monthIntegerValueInString(month: month);
                             var firstDate =
                                 year.toString() + monthStringValue + "01";
                             var dateIs = DateTime.parse(firstDate);
-                            var firstDay =
-                            DateFormat('EEEE').format(dateIs);
+                            var firstDay = DateFormat('EEEE').format(dateIs);
                             skipDays = _weekDaysFull.indexOf(firstDay);
                             totalDate = monthVal +
                                 " " +
@@ -377,8 +449,7 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
                         shrinkWrap: true,
                         padding: EdgeInsets.zero,
                         itemCount: 31 + 7 + skipDays,
-                        gridDelegate:
-                        SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           mainAxisSpacing: 5,
                           crossAxisCount: 7,
                           crossAxisSpacing: 20,
@@ -400,75 +471,158 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
                           else if (i - 6 - skipDays < 1) {
                             return Container();
                           } else if (i - 6 - skipDays <= 31) {
-                            var dayInt =  i - 6 - skipDays;
-                            var dayText =(i - 6 - skipDays).toString();
-                            var temp = dayText.length == 1 ? "0$dayText" : dayText;
-                            String currDay  = "$year-$monthStringValue-$temp";
-                            return Container(
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              width: MediaQuery.of(context).size.width * 0.122,
-                              decoration:withoutDays.contains(i%7) ?  BoxDecoration(
-                                color: Color.fromRGBO(240, 240, 240, 1),
-                                borderRadius: BorderRadius.circular(100),
-                              ) :  ( primaryAddressDaysList.contains(currDay) || secondayAddressDaysList.contains(currDay)) && widget.addressTapList.contains(0) && widget.addressTapList.contains(1) ?
-                              BoxDecoration(
-                                  color: primaryAddressDaysList.contains(currDay) ? defaultGreen : Colors.purple,
-                                  borderRadius: BorderRadius.circular(100))
-                                  :
-                              primaryAddressDaysList.contains(currDay) && widget.addressTapList.contains(0)
-                                  ? BoxDecoration(
-                                color: defaultGreen,
-                                borderRadius: BorderRadius.circular(100),
-                              )
-                                  :   secondayAddressDaysList.contains(currDay) && widget.addressTapList.contains(1)
-                                  ? BoxDecoration(
-                                color: Colors.purple,
-                                borderRadius: BorderRadius.circular(100),
-                              ) : null,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () async {
-                                      var dayyy = (int.parse(dayText) + 1).toString();
-                                      temp = dayyy.length == 1 ? "0$dayyy" : dayyy;
-                                      setState(()  {
-                                        if(isDateRemoved == false && primaryAddressDaysList.contains(currDay)){
-                                          isDateRemoved = true;
-                                          removedDate = currDay;
-                                          primaryAddressDaysList.remove(removedDate);
-                                        }else if(isDateRemoved == false &&  secondayAddressDaysList.contains(currDay)){
-                                          isDateRemoved = true;
-                                          removedDate = currDay;
-                                          secondayAddressDaysList.remove(currDay);
-                                        }
-                                        else if(isDateRemoved == true && !primaryAddressDaysList.contains(currDay) && !secondayAddressDaysList.contains(currDay)){
-                                          if(widget.addressTapList.contains(0) && widget.addressTapList.contains(1)){
-                                            _showDialogBox();
-                                             }
-                                          else if(widget.addressTapList.contains(0)){
-                                            nextSelectedData = currDay;
-                                            primaryAddressDaysList.add(nextSelectedData);
-                                            isDateRemoved = false;
-                                          }else if (widget.addressTapList.contains(1)){
-                                            nextSelectedData = currDay;
-                                            secondayAddressDaysList.add(nextSelectedData);
-                                            isDateRemoved = false;
-                                          }else{
-                                            print("primary value is neither 0 or 1");
-                                          }
-                                        }
-                                      });
-                                    },
-                                    child: Text('$dayText',style: TextStyle(
-                                        color:    datesWhenBreakChosen.contains(currDay) ? Color.fromRGBO(119, 131, 149, 1) : withoutDays.contains(i%7) ? Color.fromRGBO(119, 131, 143, 1) : Colors.black
-                                    ),),
-                                  ),
-                                  datesWhenBreakChosen.contains(currDay) ? Text('Break',style: appBarTextStyle.copyWith(
-                                      color: Color.fromRGBO(119, 131, 149, 1),
-                                      fontSize: 12
-                                  ),) : Container(),
-                                ],
+                            var dayInt = i - 6 - skipDays;
+                            var dayText = (i - 6 - skipDays).toString();
+                            var temp =
+                                dayText.length == 1 ? "0$dayText" : dayText;
+                            String currDay = "$year-$monthStringValue-$temp";
+                            return GestureDetector(
+                              onTap: () async {
+                                var dayyy = (int.parse(dayText) + 1).toString();
+                                temp = dayyy.length == 1 ? "0$dayyy" : dayyy;
+
+                                  if (primaryAddressDaysList
+                                      .contains(currDay)) {
+                                   setState((){
+                                     primaryAddressDaysList.remove(currDay);
+                                   secondayAddressDaysList.add(currDay);});
+                                    await makeApiCall();
+                                  }
+                                  else if (secondayAddressDaysList
+                                      .contains(currDay)) {
+                                    setState((){
+                                      secondayAddressDaysList.remove(currDay);
+                                      primaryAddressDaysList.add(currDay);
+                                    });
+                                    await makeApiCall();
+                                  }
+
+                              },
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.04,
+                                width:
+                                    MediaQuery.of(context).size.width * 0.122,
+                                decoration: withoutDays.contains(i % 7)
+                                    ? BoxDecoration(
+                                        color: Color.fromRGBO(240, 240, 240, 1),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                      )
+                                    : primaryAddressDaysList.contains(currDay) &&
+                                            !widget.addressTapList.contains(0)
+                                        ? BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black
+                                                    .withOpacity(0.2),
+                                                blurRadius: 4,
+                                                offset: Offset(0,
+                                                    2), // changes position of shadow
+                                              ),
+                                            ],
+                                          )
+                                        : secondayAddressDaysList.contains(currDay) &&
+                                                !widget.addressTapList
+                                                    .contains(1)
+                                            ? BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(100),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black
+                                                        .withOpacity(0.2),
+                                                    blurRadius: 4,
+                                                    offset: Offset(0,
+                                                        2), // changes position of shadow
+                                                  ),
+                                                ],
+                                              )
+                                            : (primaryAddressDaysList.contains(currDay) ||
+                                                        secondayAddressDaysList
+                                                            .contains(
+                                                                currDay)) &&
+                                                    widget.addressTapList
+                                                        .contains(0) &&
+                                                    widget.addressTapList
+                                                        .contains(1)
+                                                ? BoxDecoration(
+                                                    color: primaryAddressDaysList
+                                                            .contains(currDay)
+                                                        ? defaultGreen
+                                                        : Colors.purple,
+                                                    borderRadius: BorderRadius.circular(
+                                                        100))
+                                                : primaryAddressDaysList
+                                                            .contains(currDay) &&
+                                                        widget.addressTapList.contains(0)
+                                                    ? BoxDecoration(
+                                                        color: defaultGreen,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(100),
+                                                      )
+                                                    : secondayAddressDaysList.contains(currDay) && widget.addressTapList.contains(1)
+                                                        ? BoxDecoration(
+                                                            color:
+                                                                Colors.purple,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        100),
+                                                          )
+                                                        : null,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      '$dayText',
+                                      style: TextStyle(
+                                          color: withoutDays.contains((i % 7))
+                                              ? Colors.black
+                                              : primaryAddressDaysList
+                                                          .contains(currDay) &&
+                                                      !widget.addressTapList
+                                                          .contains(0)
+                                                  ? defaultGreen
+                                                  : secondayAddressDaysList
+                                                              .contains(
+                                                                  currDay) &&
+                                                          !widget.addressTapList
+                                                              .contains(1)
+                                                      ? defaultPurple
+                                                      : primaryAddressDaysList
+                                                                  .contains(
+                                                                      currDay) &&
+                                                              widget
+                                                                  .addressTapList
+                                                                  .contains(0)
+                                                          ? Colors.white
+                                                          : secondayAddressDaysList
+                                                                      .contains(
+                                                                          currDay) &&
+                                                                  widget
+                                                                      .addressTapList
+                                                                      .contains(
+                                                                          1)
+                                                              ? Colors.white
+                                                              : Colors.black),
+                                    ),
+                                    datesWhenBreakChosen.contains(currDay)
+                                        ? Text(
+                                            'Break',
+                                            style: appBarTextStyle.copyWith(
+                                                color: Color.fromRGBO(
+                                                    119, 131, 149, 1),
+                                                fontSize: 12),
+                                          )
+                                        : Container(),
+                                  ],
+                                ),
                               ),
                             );
                           } else {
@@ -488,4 +642,3 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
     });
   }
 }
-

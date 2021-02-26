@@ -1,13 +1,11 @@
 import 'dart:ui';
 
-import 'package:diet_delight/Models/registrationModel.dart';
-import 'package:diet_delight/Screens/Auth%20Screens/resetPassword.dart';
+import 'package:diet_delight/Models/export_models.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:diet_delight/konstants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:pin_code_text_field/pin_code_text_field.dart';
 
 class ForgotPassword extends StatefulWidget {
   @override
@@ -15,10 +13,7 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  int count = 0;
-  String _verificationId;
   bool result = false;
   bool initialised = false;
   TextEditingController mobileNo = TextEditingController();
@@ -28,91 +23,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   FocusNode mobile = FocusNode();
   RegModel userData;
 
-  verifyPhoneNo() async {
-    userData = RegModel(mobile: countryCode.text + mobileNo.text);
-    PhoneVerificationCompleted verificationCompleted =
-        (PhoneAuthCredential phoneAuthCredential) async {
-      final User user =
-          (await _auth.signInWithCredential(phoneAuthCredential)).user;
-      if (user != null) {
-        userData.setUid(user.uid);
-        Navigator.pushReplacement(
-            context,
-            CupertinoPageRoute(
-                builder: (context) => ResetPassword(
-                      userInfo: userData,
-                    )));
-        showSnackBar("Phone number automatically verified");
-      }
-    };
-    PhoneVerificationFailed verificationFailed =
-        (FirebaseAuthException authException) {
-      setState(() {
-        initialised = false;
-      });
-      showSnackBar(
-          'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
-    };
-    PhoneCodeSent codeSent =
-        (String verificationId, [int forceResendingToken]) async {
-      setState(() {
-        count++;
-      });
-      showSnackBar('Please check your phone for the verification code.');
-      _verificationId = verificationId;
-    };
-    PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
-        (String verificationId) {
-      print('time out');
-      _verificationId = verificationId;
-    };
-    try {
-      await _auth.verifyPhoneNumber(
-          phoneNumber: countryCode.text + mobileNo.text,
-          timeout: Duration(seconds: 120),
-          verificationCompleted: verificationCompleted,
-          verificationFailed: verificationFailed,
-          codeSent: codeSent,
-          codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
-    } catch (e) {
-      print('error');
-      setState(() {
-        initialised = false;
-      });
-      showSnackBar("Failed to Verify Phone Number: ${e.toString()}");
-    }
-  }
-
-  Future<void> signInWithPhoneNumber() async {
-    try {
-      final AuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: _verificationId,
-        smsCode: enteredOtp.text,
-      );
-
-      final User user = (await _auth.signInWithCredential(credential)).user;
-      if (user != null) {
-        userData.setUid(user.uid);
-        Navigator.push(
-            context,
-            CupertinoPageRoute(
-                builder: (context) => ResetPassword(userInfo: userData)));
-      }
-    } catch (e) {
-      setState(() {
-        initialised = false;
-      });
-      showSnackBar('Verification OTP entered is invalid');
-    }
-  }
-
-  void showSnackBar(String message) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
-  }
-
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     countryCode.text = '+973';
   }
@@ -240,7 +152,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                             controller: mobileNo,
                                             onFieldSubmitted: (done) {
                                               mobile.unfocus();
-                                              verifyPhoneNo();
                                             },
                                             textAlign: TextAlign.center,
                                             keyboardType: TextInputType.phone,
@@ -261,96 +172,21 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(30, 15, 30, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'ENTER OTP',
-                            style: TextStyle(
-                              fontFamily: 'RobotoCondensedReg',
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                              color: defaultGreen,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 8.0, 0, 0),
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 11, vertical: 4),
-                                child: PinCodeTextField(
-                                  maxLength: 6,
-                                  hasUnderline: false,
-                                  pinBoxWidth: 30,
-                                  pinBoxHeight: 40,
-                                  hasTextBorderColor: Color(0xff909090),
-                                  pinBoxColor: Colors.transparent,
-                                  pinBoxDecoration: ProvidedPinBoxDecoration
-                                      .underlinedPinBoxDecoration,
-                                  defaultBorderColor: Color(0xff909090),
-                                  controller: enteredOtp,
-                                  onDone: (String userOtp) {
-                                    signInWithPhoneNumber();
-                                  },
-                                  pinTextStyle: TextStyle(
-                                    fontFamily: 'RobotoReg',
-                                    color: formFill,
-                                  ),
-                                  keyboardType: TextInputType.number,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 10, 30, 0),
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: GestureDetector(
-                          onTap: () {
-                            if (!initialised) {
-                              if (countryCode.text.isNotEmpty &&
-                                  mobileNo.text.isNotEmpty) {
-                                verifyPhoneNo();
-                              } else {
-                                _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                    content: Text(
-                                        'Enter both fields to receive an OTP.')));
-                              }
-                            }
-                          },
-                          child: Text(
-                            'Resend OTP',
-                            style: TextStyle(
-                              fontFamily: 'RobotoCondensedReg',
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                              color: formFill,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(30, 20, 30, 0),
+            padding: const EdgeInsets.fromLTRB(30, 20, 30, 0),
                       child: SizedBox(
                         width: double.infinity,
                         child: TextButton(
                           onPressed: () {
-                            if (!initialised) {
-                              if (count == 0) {
-                                verifyPhoneNo();
-                              } else {
-                                signInWithPhoneNumber();
-                              }
-                            }
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => VerifyPhoneNumber(
+                                      regDetails: RegModel(mobile: countryCode.text+mobileNo.text),
+                                      from: FromPage.forgetPass,
+                                    )));
                           },
                           child: Text(
-                            count == 0 ? 'SEND OTP' : 'VERIFY',
+                            'SEND OTP',
                             style: TextStyle(
                               fontFamily: 'RobotoCondensedReg',
                               fontSize: 20,

@@ -1,4 +1,4 @@
-import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/material.dart';
 
 class SettingsTermsAndConditionsPage extends StatelessWidget {
