@@ -183,7 +183,7 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
       child: Text(
         _weekDays[index],
         style: appBarTextStyle.copyWith(
-          color: Color.fromRGBO(119, 131, 143, 1),
+          color: Color.fromRGBO(144, 144, 144, 1),
           fontSize: 12,
         ),
       ),
@@ -279,7 +279,7 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
             Text(
               'Breaks',
               style: appBarTextStyle.copyWith(
-                  color: Color.fromRGBO(119, 131, 143, 1),
+                  color: Colors.white,
                   fontSize: 24,
                   fontWeight: FontWeight.w500),
             ),
@@ -295,7 +295,7 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
                         icon: Icon(
                           Icons.arrow_back_ios_outlined,
                           size: 16,
-                          color: Color.fromRGBO(119, 131, 149, 1),
+                          color: Color(0xFF979797),
                         ),
                         onPressed: () {
                           setState(() {
@@ -327,7 +327,7 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
                       child: Text(
                         '${currentMonth(month).toUpperCase().substring(0, 3)} $year',
                         style: appBarTextStyle.copyWith(
-                            color: Color.fromRGBO(119, 131, 149, 1),
+                            color: Colors.white,
                             fontSize: 16),
                       ),
                     ),
@@ -335,7 +335,7 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
                         icon: Icon(
                           Icons.arrow_forward_ios_outlined,
                           size: 16,
-                          color: Color.fromRGBO(119, 131, 149, 1),
+                          color: Color(0xFF979797),
                         ),
                         onPressed: () {
                           setState(() {
@@ -372,7 +372,7 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
                     Container(
                       padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                          color: Color.fromRGBO(248, 248, 248, 1),
+                          color: Colors.transparent,
                           borderRadius: BorderRadius.circular(20)),
                       child: Container(
                           height: MediaQuery.of(context).size.height * 0.4,
@@ -661,20 +661,18 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
                                     decoration: !widget.primaryAndSecondary[2]
                                             .contains(currDay)
                                         ? BoxDecoration(
-                                            color: Color.fromRGBO(
-                                                240, 240, 240, 1),
+                                            color: Color(0xFF77838F).withOpacity(0.5),
                                             borderRadius:
                                                 BorderRadius.circular(100),
                                           )
                                         : daysList.contains(currDay)
                                             ? BoxDecoration(
-                                                color: Color.fromRGBO(
-                                                    119, 131, 143, 1),
+                                                color: Color.fromRGBO(180, 180, 180, 1),
                                                 borderRadius:
                                                     BorderRadius.circular(100),
                                                 boxShadow: [
                                                   BoxShadow(
-                                                    color: Colors.black
+                                                    color: Colors.grey
                                                         .withOpacity(0.25),
                                                     blurRadius: 4,
                                                     offset: Offset(0,
@@ -696,7 +694,7 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
                                                   ? Color(0xFF77838F)
                                                   : daysList.contains(currDay)
                                                       ? Colors.white
-                                                      : Colors.black,
+                                                      : Colors.white,
                                               fontSize: datesWhenBreakChosen
                                                       .contains(currDay)
                                                   ? 12

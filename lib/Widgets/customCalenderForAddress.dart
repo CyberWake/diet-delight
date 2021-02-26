@@ -189,7 +189,7 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
       child: Text(
         _weekDays[index],
         style: appBarTextStyle.copyWith(
-          color: Color.fromRGBO(119, 131, 143, 1),
+          color: Colors.white,
           fontSize: 12,
         ),
       ),
@@ -197,6 +197,7 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
   }
 
   setDateData() {
+
     setState(() {
       year = int.parse(DateTime.now().toLocal().toString().split('-')[0]);
       month = int.parse(DateTime.now().toLocal().toString().split('-')[1]);
@@ -365,7 +366,7 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
                         icon: Icon(
                           Icons.arrow_back_ios_outlined,
                           size: 16,
-                          color: Color.fromRGBO(119, 131, 149, 1),
+                          color: Color(0xFF979797),
                         ),
                         onPressed: () {
                           setState(() {
@@ -397,7 +398,7 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
                       child: Text(
                         '${currentMonth(month).toUpperCase().substring(0, 3)} $year',
                         style: appBarTextStyle.copyWith(
-                            color: Color.fromRGBO(119, 131, 149, 1),
+                            color: Colors.white,
                             fontSize: 16),
                       ),
                     ),
@@ -405,7 +406,7 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
                         icon: Icon(
                           Icons.arrow_forward_ios_outlined,
                           size: 16,
-                          color: Color.fromRGBO(119, 131, 149, 1),
+                          color: Color(0xFF979797),
                         ),
                         onPressed: () {
                           setState(() {
@@ -440,7 +441,7 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
                 Container(
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      color: Color.fromRGBO(248, 248, 248, 1),
+                      color: Colors.transparent,
                       borderRadius: BorderRadius.circular(20)),
                   child: Container(
                       height: MediaQuery.of(context).size.height * 0.4,
@@ -505,7 +506,7 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
                                     MediaQuery.of(context).size.width * 0.122,
                                 decoration: withoutDays.contains(i % 7)
                                     ? BoxDecoration(
-                                        color: Color.fromRGBO(240, 240, 240, 1),
+                                        color: Color(0xFF77838F),
                                         borderRadius:
                                             BorderRadius.circular(100),
                                       )
@@ -575,7 +576,11 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
                                                                     .circular(
                                                                         100),
                                                           )
-                                                        : null,
+                                                        : BoxDecoration(
+                                  color: Color(0xFF77838F),
+                                  borderRadius:
+                                  BorderRadius.circular(100),
+                                ),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -583,7 +588,7 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
                                       '$dayText',
                                       style: TextStyle(
                                           color: withoutDays.contains((i % 7))
-                                              ? Colors.black
+                                              ? Color(0xFFFFFFFF).withOpacity(0.2)
                                               : primaryAddressDaysList
                                                           .contains(currDay) &&
                                                       !widget.addressTapList
@@ -610,14 +615,14 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
                                                                       .contains(
                                                                           1)
                                                               ? Colors.white
-                                                              : Colors.black),
+                                                              : datesWhenBreakChosen.contains(currDay)?
+                                          Colors.white : Colors.white.withOpacity(0.2)),
                                     ),
                                     datesWhenBreakChosen.contains(currDay)
                                         ? Text(
                                             'Break',
                                             style: appBarTextStyle.copyWith(
-                                                color: Color.fromRGBO(
-                                                    119, 131, 149, 1),
+                                                color: Colors.white,
                                                 fontSize: 12),
                                           )
                                         : Container(),

@@ -250,7 +250,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
       if(addressTapList.contains(0)){
         col = defaultGreen;
       }else{
-        col = Color.fromRGBO(198, 198, 198, 1);
+        col = Color(0xFFC6C6C6);
       }
     }else{
       if(addressTapList.contains(1)){
@@ -421,7 +421,16 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
         ),
         isScrollControlled: true,
         builder: (BuildContext context) {
-          return CustomCalenderForBreak(primaryAndSecondary : primaryAndSecondary,breakDays : breakDays,daysList: datesBreakList, mealId : widget.purchaseDetails.id,status : widget.plan.status,postCall: !putCall,listOfAvailableDays : listOfAvailableDays,id: id,getDaysInBeteween : days);
+          return Container(
+
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(topRight: Radius.circular(25),topLeft: Radius.circular(25)),
+              image: DecorationImage(
+                image: AssetImage('images/popup_background.jpg'),
+                fit: BoxFit.cover
+              )
+            ),
+              child: CustomCalenderForBreak(primaryAndSecondary : primaryAndSecondary,breakDays : breakDays,daysList: datesBreakList, mealId : widget.purchaseDetails.id,status : widget.plan.status,postCall: !putCall,listOfAvailableDays : listOfAvailableDays,id: id,getDaysInBeteween : days));
         });
     done.then((value) {
       getDates();
@@ -445,6 +454,13 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
             updateBottomSheet(() {});
             return Container(
                 height: MediaQuery.of(context).size.height * 0.85,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(topRight: Radius.circular(25),topLeft: Radius.circular(25)),
+                    image: DecorationImage(
+                        image: AssetImage('images/popup_background.jpg'),
+                        fit: BoxFit.cover
+                    )
+                ),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     mainAxisSize: MainAxisSize.max,
@@ -552,6 +568,8 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
     return primaryAndSecondary;
   }
 
+
+  var isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -710,14 +728,21 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                     children: [
                       TextButton(
                           onPressed: () async {
+                            setState(() {
+                              isLoading = true;
+                            });
                             var resource = await _apiCall.getBreakTakenDay();
                             var res = {};
+                            setState(() {
+                              isLoading = false;
+                            });
                             for(int i =0;i<resource.length;i++){
                               if(resource[i]['meal_purchase_id'].toString() == widget.purchaseDetails.id.toString()){
                                 res = resource[i];
                               }
                             }
                             print(res);
+
                             if(res != null && res['primary_address_dates'] !=null && res['secondary_address_dates'] != null){
                               print('both address');
                               primaryDaysList = jsonDecode(res['primary_address_dates']);
@@ -767,8 +792,15 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                       Text('${widget.purchaseDetails.kCal} Calorie'),
                       TextButton(
                           onPressed: () async {
+                            print(isLoaded);
+                            setState(() {
+                              isLoading = true;
+                            });
                             var resource = await _apiCall.getBreakTakenDay();
                             var res = {};
+                            setState(() {
+                              isLoading = false;
+                            });
                             int count = 0;
                             for(int i =0;i<resource.length;i++){
                               if(resource[i]['meal_purchase_id'].toString() == widget.purchaseDetails.id.toString()){
@@ -888,7 +920,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                 ),
                 Expanded(
                   flex: 18,
-                  child: isLoaded
+                  child: !isLoading ? isLoaded
                       ? TabBarView(
                           controller: _pageController,
                           children: List.generate(
@@ -932,10 +964,10 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                               ],
                             );
                           }))
-                      : Center(child: SpinKitDoubleBounce(color: defaultGreen)),
+                      : Center(child: SpinKitDoubleBounce(color: defaultGreen))  : Center(child: SpinKitDoubleBounce(color: defaultGreen)),
                 )
               ]),
-        ));
+        ) );
   }
 
   Widget foodItemCard(MenuOrderModel item) {
