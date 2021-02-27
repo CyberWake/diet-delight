@@ -1,10 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:diet_delight/Models/export_models.dart';
-import 'package:diet_delight/Screens/export.dart';
+import 'package:diet_delight/Models/addFavouritesModel.dart';
+import 'package:diet_delight/Models/consultationModel.dart';
+import 'package:diet_delight/Models/foodItemModel.dart';
+import 'package:diet_delight/Models/mealModel.dart';
+import 'package:diet_delight/Models/mealPlanDurationsModel.dart';
+import 'package:diet_delight/Models/menuModel.dart';
+import 'package:diet_delight/Screens/Consultation/selectConsultationMode.dart';
+import 'package:diet_delight/Screens/MealPlans/mealPlanSelectionScreen.dart';
+import 'package:diet_delight/Screens/Menu/menupage.dart';
+import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:page_transition/page_transition.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -36,6 +44,10 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  getFavourites() async {
+    favourites = await _apiCall.getFavourites();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -57,22 +69,12 @@ class _HomeScreenState extends State<HomeScreen> {
         child: InkWell(
           splashColor: defaultGreen.withAlpha(30),
           onTap: () {
-            print('called');
             Navigator.push(
-              context,
-              PageTransition(
-                type: PageTransitionType.fade,
-                child:  Menu(
-                  menu: menus[pos],
-                ),
-              ),
-            );
-            // Navigator.push(
-            //     context,
-            //     CupertinoPageRoute(
-            //         builder: (context) => Menu(
-            //               menu: menus[pos],
-            //             )));
+                context,
+                CupertinoPageRoute(
+                    builder: (context) => Menu(
+                          menu: menus[pos],
+                        )));
 
             print('success getting menu screen');
           },
@@ -182,18 +184,10 @@ class _HomeScreenState extends State<HomeScreen> {
           splashColor: defaultGreen.withAlpha(30),
           onTap: () {
             Navigator.push(
-              context,
-              PageTransition(
-                type: PageTransitionType.fade,
-                child:  MealPlanPage(
-                    menus: menus, mealPlans: mealPackages[pos])
-              ),
-            );
-            // Navigator.push(
-            //     context,
-            //     CupertinoPageRoute(
-            //         builder: (context) => MealPlanPage(
-            //             menus: menus, mealPlans: mealPackages[pos])));
+                context,
+                CupertinoPageRoute(
+                    builder: (context) => MealPlanPage(
+                        menus: menus, mealPlans: mealPackages[pos])));
             print('success getting meal details page');
           },
           child: Container(
@@ -205,10 +199,9 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                    padding: EdgeInsets.only(top: 10.0, bottom: 10.0,left: 10,right: 10),
+                    padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                     child: Text(
                       durations[pos].title,
-                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'RobotoCondensedReg',
                         fontSize: 14,
@@ -286,16 +279,12 @@ class _HomeScreenState extends State<HomeScreen> {
           splashColor: defaultGreen.withAlpha(30),
           onTap: () {
             Navigator.push(
-              context,
-              PageTransition(
-                  type: PageTransitionType.fade,
-                  child:  BookConsultation(
-                    packageIndex: pos,
-                    consultation: consultationPackages,
-                  ))
-            );
-
-
+                context,
+                CupertinoPageRoute(
+                    builder: (context) => SelectConsultationMode(
+                          packageIndex: pos,
+                          consultation: consultationPackages,
+                        )));
             print('success getting consultation package screen');
           },
           child: Container(
@@ -330,15 +319,31 @@ class _HomeScreenState extends State<HomeScreen> {
                     )),
                 Padding(
                   padding: EdgeInsets.fromLTRB(5.0, 0, 5, 0),
-                  child: Text(
-                    consultationPackages[pos].subtitle,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'RobotoCondensedReg',
-                      fontSize: 11,
-                      fontWeight: FontWeight.normal,
-                      color: cardGray,
-                    ),
+                  child: Column(
+//                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        consultationPackages[pos].subtitle,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontFamily: 'RobotoCondensedReg',
+                          fontSize: 11,
+                          fontWeight: FontWeight.normal,
+                          color: cardGray,
+                        ),
+                      ),
+                      SizedBox(height: 10.0),
+                      Text(
+                        consultationPackages[pos].details,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontFamily: 'RobotoCondensedReg',
+                          fontSize: 11,
+                          fontWeight: FontWeight.normal,
+                          color: cardGray,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Spacer(),
@@ -465,7 +470,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 width: double.infinity,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical : 10.0),
+                  padding: EdgeInsets.all(10.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -491,7 +496,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
+                        padding: EdgeInsets.fromLTRB(20, 20, 10, 10),
                         child: Container(
                           height: 0.65 * devWidth,
                           child: ListView.builder(
@@ -515,7 +520,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 10.0),
+                  padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 10.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -541,7 +546,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
+                        padding: EdgeInsets.fromLTRB(15, 20, 10, 10),
                         child: Container(
                           height: 0.55 * devWidth,
                           child: ListView.builder(
@@ -562,7 +567,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 width: double.infinity,
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 10.0),
+                  padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 10.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -588,9 +593,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
+                        padding: EdgeInsets.fromLTRB(20, 20, 10, 10),
                         child: Container(
-                          height: 0.48 * devWidth,
+                          height: 0.45 * devWidth,
                           child: ListView.builder(
                               itemCount: featuredMenu.length,
                               scrollDirection: Axis.horizontal,
@@ -608,7 +613,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         },
                                         child: Container(
                                           color: Colors.white,
-                                          width: 0.5 * devWidth,
+                                          width: 0.4 * devWidth,
                                           height: 220,
                                           child: Column(
                                             mainAxisSize: MainAxisSize.max,
@@ -624,9 +629,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   imageBuilder: (context,
                                                           imageProvider) =>
                                                       Container(
-                                                    width: (0.5 * devWidth),
+                                                    width: (0.4 * devWidth),
                                                     height:
-                                                        (0.5 * devWidth) / 2,
+                                                        (0.4 * devWidth) / 2,
                                                     decoration: BoxDecoration(
                                                       shape: BoxShape.rectangle,
                                                       image: DecorationImage(
@@ -660,7 +665,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.only(
-                                                    bottom: 5),
+                                                    bottom: 10),
                                                 child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
@@ -673,51 +678,79 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     SizedBox(
                                                       width: 5,
                                                     ),
-                                                    IconButton(
-                                                        onPressed: () async {
-                                                          setState(() {
-                                                            favPressed.add(
-                                                                featuredMenu[
-                                                                        pos]
-                                                                    .id);
-                                                          });
-                                                          int userId =
-                                                              int.parse(Api
-                                                                  .userInfo.id);
-                                                          AddFavouritesModel
-                                                              details =
-                                                              AddFavouritesModel(
-                                                            menuItemId:
-                                                                featuredMenu[
-                                                                        pos]
-                                                                    .id,
-                                                            userId: userId,
-                                                          );
-                                                          await _apiCall
-                                                              .addFavourites(
-                                                                  details);
-                                                        },
-                                                        icon: favourites[0].contains(
-                                                                    featuredMenu[
-                                                                            pos]
-                                                                        .id) ||
-                                                                favPressed.contains(
+                                                    favPressed.contains(
+                                                                featuredMenu[pos]
+                                                                    .id) ||
+                                                            favourites[0]
+                                                                .contains(
                                                                     featuredMenu[
                                                                             pos]
                                                                         .id)
-                                                            ? Icon(
+                                                        ? IconButton(
+                                                            onPressed:
+                                                                () async {
+                                                              setState(() {
+                                                                favPressed.remove(
+                                                                    featuredMenu[
+                                                                            pos]
+                                                                        .id);
+                                                              });
+//                                                              print(favourites[
+//                                                                      0]
+//                                                                  .indexWhere((f) => f
+//                                                                      .featuredMenu[
+//                                                                          pos]
+//                                                                      .id));
+                                                              await _apiCall.deleteFavourites(favourites[
+                                                                  1][favourites[
+                                                                      0]
+                                                                  .indexOf(
+                                                                      featuredMenu[
+                                                                              pos]
+                                                                          .id)]);
+                                                              setState(() {
+                                                                getFavourites();
+                                                              });
+                                                            },
+                                                            icon: Icon(
                                                                 Icons.favorite,
-                                                                size: 15,
+                                                                size: 13,
                                                                 color:
-                                                                    defaultPurple,
-                                                              )
-                                                            : Icon(
-                                                                Icons
-                                                                    .favorite_border,
-                                                                size: 15,
-                                                                color:
-                                                                    defaultPurple,
-                                                              )),
+                                                                    defaultPurple))
+                                                        : IconButton(
+                                                            onPressed:
+                                                                () async {
+                                                              setState(() {
+                                                                favPressed.add(
+                                                                    featuredMenu[
+                                                                            pos]
+                                                                        .id);
+                                                              });
+                                                              int userId =
+                                                                  int.parse(Api
+                                                                      .userInfo
+                                                                      .id);
+                                                              AddFavouritesModel
+                                                                  details =
+                                                                  AddFavouritesModel(
+                                                                menuItemId:
+                                                                    featuredMenu[
+                                                                            pos]
+                                                                        .id,
+                                                                userId: userId,
+                                                              );
+                                                              await _apiCall
+                                                                  .addFavourites(
+                                                                      details);
+                                                              getFavourites();
+                                                            },
+                                                            icon: Icon(
+                                                              Icons
+                                                                  .favorite_border,
+                                                              size: 15,
+                                                              color:
+                                                                  defaultPurple,
+                                                            )),
                                                   ],
                                                 ),
                                               ),
@@ -744,7 +777,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical : 10.0,horizontal: 10),
+                  padding: EdgeInsets.all(10.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -770,9 +803,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Padding(
-                          padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
+                          padding: EdgeInsets.fromLTRB(20, 20, 10, 0),
                           child: Container(
-                              height: 0.525 * devWidth,
+                              height: 0.6 * devWidth,
                               child: ListView.builder(
                                 itemCount: consultationPackages.length,
                                 scrollDirection: Axis.horizontal,

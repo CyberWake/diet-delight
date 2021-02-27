@@ -25,14 +25,6 @@ dependencies:
   date_format: ^1.0.9
   cached_network_image: ^2.5.0
   syncfusion_flutter_datepicker: ^18.4.41-beta
-  font_awesome_flutter: ^8.11.0
-  url_launcher: ^5.7.10
-  flutter_downloader: ^1.5.2
-  path_provider: ^1.6.9
-  permission_handler: ^4.0.0
-  pull_to_refresh: 1.6.3
-  ticketview: ^1.0.0
-#  flutter_svg: ^0.17.1
 
 dev_dependencies:
   flutter_test:
@@ -59,3 +51,9 @@ flutter:
     - family: NewIcons
       fonts:
         - asset: fonts/NewIcons.ttf
+    - family: MontserratMed
+      fonts:
+        - asset: fonts/Montserrat-Medium.ttf
+    - family: KalamReg
+      fonts:
+        - asset: fonts/Kalam-Regular.ttf

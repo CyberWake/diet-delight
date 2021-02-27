@@ -1,11 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:diet_delight/Models/export_models.dart';
-import 'package:diet_delight/Screens/export.dart';
+import 'package:diet_delight/Models/addFavouritesModel.dart';
+import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../../Models/foodItemModel.dart';
+import '../../konstants.dart';
 
 class FavouritesPage extends StatefulWidget {
   @override
@@ -24,6 +26,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
 
   void _onRefresh() async {
     await getData();
+    print(favourites[0]);
     // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
     setState(() {});
@@ -90,7 +93,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                               });
                             },
                             icon: Icon(Icons.favorite,
-                                size: 13, color: defaultPurple)),
+                                size: 16, color: defaultPurple)),
                       )
                     ],
                   ),
@@ -100,22 +103,28 @@ class _FavouritesPageState extends State<FavouritesPage> {
                 flex: 3,
                 child: Container(
                   margin: EdgeInsets.only(right: 20),
-                  child: CachedNetworkImage(
-                    imageUrl: foodItem.picture ??
-                        "http://via.placeholder.com/350x150",
-                    imageBuilder: (context, imageProvider) => Container(
-                      height: 60,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
+                  child: Material(
+                    elevation: 2,
+                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    child: CachedNetworkImage(
+                      imageUrl: foodItem.picture ??
+                          "http://via.placeholder.com/350x150",
+                      imageBuilder: (context, imageProvider) => Container(
+                        height: MediaQuery.of(context).size.width * 0.2,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.fill,
+                          ),
                         ),
                       ),
-                    ),
-                    placeholder: (context, url) => CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => FlutterLogo(
-                      size: 60,
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => FlutterLogo(
+                        size: 60,
+                      ),
                     ),
                   ),
                 ),
@@ -163,7 +172,11 @@ class _FavouritesPageState extends State<FavouritesPage> {
     return SafeArea(
       child: Container(
           child: isLoaded == false
-              ? Center(child: SpinKitDoubleBounce(color: defaultGreen))
+              ? Center(
+                  child: SpinKitThreeBounce(
+                  color: defaultPurple,
+                  size: 32,
+                ))
               : Scaffold(
                   key: _scaffoldKey,
                   backgroundColor: white,

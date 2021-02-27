@@ -1,5 +1,6 @@
-import 'package:diet_delight/Models/export_models.dart';
-import 'package:diet_delight/Screens/export.dart';
+import 'package:diet_delight/Models/registrationModel.dart';
+import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,13 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AddressButtonWithModal extends StatefulWidget {
   final bool addNewAddressOnly;
   final Widget child;
-  final int index;
   final Function(String) callBackFunction;
   AddressButtonWithModal(
-      {this.child,
-      this.callBackFunction,
-      this.addNewAddressOnly = false,
-      this.index = 0});
+      {this.child, this.callBackFunction, this.addNewAddressOnly = false});
   @override
   _AddressButtonWithModalState createState() => _AddressButtonWithModalState();
 }
@@ -88,7 +85,6 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
 
   void addAddressBottomSheet(int index) {
     whichAddress = index;
-    whichAddress == 0 ? addressType = 'Primary' : addressType = 'Secondary';
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -261,20 +257,31 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 15.0, left: 15.0),
-          child: Text(
-            '$name',
-            style: billingTextStyle.copyWith(
-              fontSize: 14,
-              color: selectedAddressIndex == index ? white : Color(0xFF222222),
-            ),
+          padding: const EdgeInsets.only(top: 15.0, left: 15.0, right: 15.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '${name}',
+                style: addressChangeTextStyle.copyWith(
+                  fontSize: 14,
+                ),
+              ),
+              Text(
+                'Select',
+                style: addressChangeTextStyle.copyWith(
+                  fontSize: 14,
+                  color: defaultGreen,
+                ),
+              ),
+            ],
           ),
         ),
         Row(
           mainAxisSize: MainAxisSize.max,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 5.0),
+              padding: const EdgeInsets.fromLTRB(25.0, 15.0, 15.0, 5.0),
               child: Text(
                 index == 0
                     ? addressPrimaryLine1.text +
@@ -283,12 +290,8 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                     : addressSecondaryLine1.text +
                         ',\n' +
                         addressSecondaryLine2.text,
-                style: billingTextStyle.copyWith(
-                  fontSize: 14,
-                  fontStyle: FontStyle.normal,
-                  color:
-                      selectedAddressIndex == index ? white : Color(0xFF222222),
-                ),
+                style: addressChangeTextStyle.copyWith(
+                    fontSize: 14, fontWeight: FontWeight.normal),
               ),
             ),
           ],
@@ -305,7 +308,7 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
           children: [
             TextButton(
               child: Text('ADD',
-                  style: billingTextStyle.copyWith(
+                  style: addressChangeTextStyle.copyWith(
                       fontSize: 14, color: defaultGreen)),
               onPressed: () {
                 Navigator.pop(context, false);
@@ -319,9 +322,8 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
           children: [
             Text('Not Available',
                 style: billingTextStyle.copyWith(
-                    fontSize: 14,
-                    fontStyle: FontStyle.normal,
-                    color: Color(0xFF4E4848)))
+                  fontSize: 14,
+                ))
           ],
         )
       ],
@@ -334,14 +336,22 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
         isScrollControlled: true,
         isDismissible: false,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
+          borderRadius: BorderRadius.circular(30.0),
         ),
         builder: (builder) {
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter modalStateUpdate) {
             return Container(
               height: 380,
-              color: Colors.transparent,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage('images/popup_background.jpg'),
+                    fit: BoxFit.fitHeight),
+                color: Colors.transparent,
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(30.0),
+                    topLeft: Radius.circular(30.0)),
+              ),
               child: Container(
                   padding: EdgeInsets.only(top: 10),
                   child: Column(
@@ -371,7 +381,7 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                         },
                         child: Container(
                           margin: EdgeInsets.only(top: 20),
-                          color: defaultGreen,
+                          color: questionnaireDisabled.withOpacity(0.7),
                           child: Center(
                             child: Center(
                                 child: Text(
@@ -394,16 +404,14 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                         children: [
                           Padding(
                             padding:
-                                const EdgeInsets.only(left: 15.0, bottom: 10),
+                                const EdgeInsets.only(left: 0.0, bottom: 10),
                             child: Text(
-                              index == 0
-                                  ? 'Primary Address'
-                                  : 'Secondary Address',
-                              style: billingTextStyle.copyWith(
-                                  color: index == 0
-                                      ? defaultGreen
-                                      : Color(0xFF222222)),
-                            ),
+                                index == 0
+                                    ? 'Primary Address'
+                                    : 'Secondary Address',
+                                style: billingTextStyle.copyWith(
+                                  color: white,
+                                )),
                           ),
                           GestureDetector(
                               onTap: () {
@@ -427,24 +435,26 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                               },
                               child: Material(
                                 borderRadius: BorderRadius.circular(5.0),
-                                shadowColor: Color(0x26000000),
-                                elevation: 2,
-                                color: Colors.white,
+//                                shadowColor: Color(0x26000000),
+                                elevation: 0,
+                                color: Colors.transparent,
                                 child: Container(
                                     height: 100.0,
 //                                    padding: EdgeInsets.symmetric(
 //                                        vertical: 20, horizontal: 25),
                                     decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: Color(0x26000000),
-                                              blurRadius: 5)
-                                        ],
+//                                        boxShadow: [
+//                                          BoxShadow(
+//                                              color: Color(0x26000000),
+//                                              blurRadius: 5)
+//                                        ],
+
                                         borderRadius:
                                             BorderRadius.circular(5.0),
                                         color: selectedAddressIndex == index
                                             ? defaultGreen
-                                            : Colors.white),
+                                            : questionnaireDisabled
+                                                .withOpacity(0.5)),
                                     child: index == 0
                                         ? addressPrimaryLine1.text.isNotEmpty &&
                                                 addressPrimaryLine2
@@ -472,7 +482,7 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
     return GestureDetector(
       onTap: () {
         if (widget.addNewAddressOnly) {
-          addAddressBottomSheet(widget.index);
+          addAddressBottomSheet(0);
         } else {
           getBottomSheet();
         }

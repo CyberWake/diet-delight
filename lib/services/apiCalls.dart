@@ -2,7 +2,21 @@ import 'dart:convert' as convert;
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:diet_delight/Models/export_models.dart';
+import 'package:diet_delight/Models/addFavouritesModel.dart';
+import 'package:diet_delight/Models/consultationAppointmentModel.dart';
+import 'package:diet_delight/Models/consultationModel.dart';
+import 'package:diet_delight/Models/consultationPurchaseModel.dart';
+import 'package:diet_delight/Models/foodItemModel.dart';
+import 'package:diet_delight/Models/loginModel.dart';
+import 'package:diet_delight/Models/mealModel.dart';
+import 'package:diet_delight/Models/mealPlanDurationsModel.dart';
+import 'package:diet_delight/Models/mealPurchaseModel.dart';
+import 'package:diet_delight/Models/menuCategoryModel.dart';
+import 'package:diet_delight/Models/menuModel.dart';
+import 'package:diet_delight/Models/menuOrdersModel.dart';
+import 'package:diet_delight/Models/optionsFile.dart';
+import 'package:diet_delight/Models/questionnaireModel.dart';
+import 'package:diet_delight/Models/registrationModel.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:oauth2/oauth2.dart' as oauth2;
@@ -116,13 +130,12 @@ class Api {
       };
       final response = await http.get(uri + '/api/v1/user', headers: headers);
       if (response.statusCode == 200) {
-        print("token :  $token");
         print('Success getting user info');
         var body = convert.jsonDecode(response.body);
         userInfo = RegModel.fromMap(body);
         return userInfo;
       } else {
-        print(response.statusCode.toString() + 'error');
+        print(response.statusCode);
         return null;
       }
     } on Exception catch (e) {
@@ -137,7 +150,6 @@ class Api {
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
-    print("token :  $token");
     String body = convert.jsonEncode(user.toMap());
     print(body);
     final response =
@@ -388,7 +400,7 @@ class Api {
       }
     } on Exception catch (e) {
       print(e.toString());
-      return null;
+      return [];
     }
   }
 
@@ -528,21 +540,18 @@ class Api {
     }
   }
 
-  Future<ConsultationModel> getConsultationData(String consultationId) async {
+  Future<bool> postMealPurchase(MealPurchaseModel order) async {
     try {
       Map<String, String> headers = {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token"
       };
-      final response = await http.get(
-          uri + '/api/v1/consultation-packages/$consultationId',
-          headers: headers);
-      if (response.statusCode == 200) {
-        print('Success getting consultation package');
-        var body = convert.jsonDecode(response.body);
-        var data = body['data'];
-        ConsultationModel item = ConsultationModel.fromMap(data);
-        return item;
+      String body = convert.jsonEncode(order.toMap());
+      final response = await http.post(uri + '/api/v1/my-meal-purchases',
+          headers: headers, body: body);
+      if (response.statusCode == 201) {
+        print('meal purchase Posted');
+        return true;
       } else {
         print(response.statusCode);
         print(response.body);
@@ -580,7 +589,7 @@ class Api {
       }
     } on Exception catch (e) {
       print(e.toString());
-      return null;
+      return [];
     }
   }
 
@@ -737,6 +746,7 @@ class Api {
         HttpHeaders.authorizationHeader: "Bearer $token"
       };
       String body = convert.jsonEncode(item.toMap());
+      print(body);
       final response = await http.post(uri + '/api/v1/my-menu-orders',
           headers: headers, body: body);
       if (response.statusCode == 201) {
@@ -973,7 +983,6 @@ class Api {
 
   Future<bool> deleteFavourites(AddFavouritesModel details) async {
     try {
-      itemsMenuCategory = [];
       Map<String, String> headers = {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token"
@@ -1047,6 +1056,7 @@ class Api {
       return false;
     }
   }
+
 
   Future<List<dynamic>> getBreakTakenDay() async {
     // ADD API CAll HERE

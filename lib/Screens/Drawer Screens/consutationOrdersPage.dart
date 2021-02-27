@@ -1,15 +1,22 @@
-import 'dart:io';
-import 'dart:isolate';
+import 'dart:convert';
 import 'dart:ui';
+import 'dart:io';
+import 'package:intl/intl.dart';
+import 'dart:isolate';
 import 'package:date_format/date_format.dart';
-import 'package:diet_delight/Models/export_models.dart';
-import 'package:diet_delight/Screens/export.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:diet_delight/Models/consultationAppointmentModel.dart';
+import 'package:diet_delight/Models/consultationModel.dart';
+import 'package:diet_delight/Models/consultationPurchaseModel.dart';
+import 'package:diet_delight/Screens/Consultation/bookConsultation.dart';
+import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class ConsultationOrderHistoryPage extends StatefulWidget {
   @override
@@ -19,10 +26,12 @@ class ConsultationOrderHistoryPage extends StatefulWidget {
 
 class _ConsultationOrderHistoryPageState
     extends State<ConsultationOrderHistoryPage> {
-  List<MealPurchaseModel> purchasedMeal;
-  final _apiCall = Api.instance;
+  Api _apiCall = Api.instance;
+  List<ConsPurchaseModel> consultationPurchases = List();
+  List<ConsultationModel> consultationData = List();
+  List<ConsAppointmentModel> appointments = List();
   bool loaded = false;
-  List<String> format = [hh, ':', nn, ' ', am, ' ', dd, ' ', 'M', ', ', yyyy];
+  List<String> format = [hh, ':', nn, ' ', am, ', ', dd, ' ', 'M', ', ', yyyy];
   ReceivePort _port = ReceivePort();
   bool _permissionReady = false;
 
@@ -58,62 +67,76 @@ class _ConsultationOrderHistoryPageState
           padding: const EdgeInsets.all(8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(child: Text(fieldName, style: orderHistoryCardStyle)),
-              Expanded(child: Text(fieldValue, style: orderHistoryCardStyle)),
+              Expanded(
+                  flex: 2,
+                  child: Text(fieldName, style: orderHistoryCardStyle)),
+              Expanded(child: Container()),
+              Expanded(
+                  flex: 3,
+                  child: Text(fieldValue, style: orderHistoryCardStyle)),
+              Expanded(child: Container())
             ],
           ),
         ));
   }
 
-  Widget daysField({String fieldName, String fieldValue1, String fieldValue2}) {
+  Widget meetingDataField({String fieldName, String fieldValue}) {
     return Flexible(
         fit: FlexFit.loose,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(child: Text(fieldName, style: orderHistoryCardStyle)),
               Expanded(
-                  child: RichText(
-                text: TextSpan(children: <TextSpan>[
-                  TextSpan(
-                      text: fieldValue1 + '\n',
-                      style: orderHistoryCardStyle.copyWith(fontSize: 11)),
-                  TextSpan(
-                      text: fieldValue2,
-                      style: orderHistoryCardStyle.copyWith(
-                          fontSize: 11, color: Color(0xFFC6C6C6))),
-                ]),
-              ))
-//              Column(
-//                mainAxisAlignment: MainAxisAlignment.start,
-//                crossAxisAlignment: CrossAxisAlignment.start,
-//                children: [
-//                  Expanded(
-//                      child: Text(fieldValue1, style: orderHistoryCardStyle)),
-//                  Expanded(
-//                      child: Text(fieldValue2,
-//                          style: orderHistoryCardStyle.copyWith(
-//                              color: Color(0xFFC6C6C6)))),
-//                ],
-//              ),
+                  flex: 2,
+                  child: Text(fieldName, style: orderHistoryCardStyle)),
+              Expanded(child: Container()),
+              Expanded(
+                  flex: 3,
+                  child: GestureDetector(
+                      onTap: () async {
+                        if (await canLaunch(fieldValue)) {
+                          await launch(fieldValue);
+                        } else {
+                          throw 'Could not launch $fieldName';
+                        }
+                      },
+                      child: Text(
+                        fieldValue,
+                        style:
+                            orderHistoryCardStyle.copyWith(color: defaultGreen),
+                      ))),
+              Expanded(child: Container())
             ],
           ),
         ));
   }
 
   getData() async {
-    purchasedMeal = await _apiCall.getMealPurchases().whenComplete(() {
-      if (mounted) {
-        setState(() {
-          loaded = true;
-        });
+    consultationPurchases = await _apiCall.getConsultationPurchases();
+    appointments = await _apiCall.getConsultationAppointments();
+    for (int i = 0; i < appointments.length; i++) {
+      if (appointments[i].consultationTime == 'null') {
+        appointments[i].consultationTime = '0000-00-00 00:00:00';
+        print(appointments[i].consultationTime);
       }
-    });
+    }
+    for (int i = 0; i < consultationPurchases.length;) {
+      consultationData.add(await _apiCall
+          .getConsultationData(consultationPurchases[i].consultationPackageId)
+          .whenComplete(() {
+        i++;
+        if (i == consultationPurchases.length) {
+          if (mounted) {
+            setState(() {
+              loaded = true;
+            });
+          }
+        }
+      }));
+    }
   }
 
   @override
@@ -170,155 +193,181 @@ class _ConsultationOrderHistoryPageState
     return loaded
         ? ListView(
             shrinkWrap: true,
-            children: List.generate(purchasedMeal.length, (index) {
-              return Container(
-//                height: MediaQuery.of(context).size.height * 0.25,
-                margin: EdgeInsets.all(10),
-                padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
-                decoration: BoxDecoration(
-                  color: white,
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 4,
-                      color: Colors.black.withOpacity(0.25),
-                      spreadRadius: 0,
-                      offset: const Offset(0.0, 0.0),
-                    )
-                  ],
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Flexible(
-                        fit: FlexFit.loose,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(
-                                fit: FlexFit.loose,
-                                child: Text(purchasedMeal[index].mealPlanName,
+            children: List.generate(appointments.length, (index) {
+              String name = (consultationData[index].name).toString();
+              DateTime createdDateTime =
+                  DateTime.parse(appointments[index].createdAt);
+              DateTime appointmentDateTime =
+                  appointments[index].consultationTime != null ||
+                          appointments[index].consultationTime != 'null'
+                      ? DateTime.parse(appointments[index].consultationTime)
+                      : DateTime.now();
+              int packageIndex = name.contains("SILVER")
+                  ? 0
+                  : name.contains("GOLD")
+                      ? 2
+                      : 1;
+              return Material(
+                elevation: 0.0,
+                color: Colors.transparent,
+                child: Container(
+                  margin: EdgeInsets.all(15),
+                  padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
+                  decoration: BoxDecoration(
+                    color: white,
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 4,
+                        color: Colors.black.withOpacity(0.25),
+                        spreadRadius: 0,
+                        offset: const Offset(0.0, 0.0),
+                      )
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Flexible(
+                          fit: FlexFit.loose,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                    (consultationData[index].name).toString() +
+                                        ' Consultation Package',
                                     style: orderHistoryCardStyle.copyWith(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),
-                              ),
-                              Flexible(
-                                  child: PopupMenuButton<int>(
-                                child: Icon(Icons.more_vert, color: timeGrid),
-                                itemBuilder: (BuildContext context) =>
-                                    <PopupMenuEntry<int>>[
-                                  PopupMenuItem<int>(
-                                    value: 0,
-                                    child: Material(
-                                      color: Colors.white,
-                                      child: ListTile(
-                                        onTap: () async {
-                                          MealModel getMealPackage =
-                                              await _apiCall.getMealPlan(
-                                                  purchasedMeal[index]
-                                                      .mealPlanId);
-                                          Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                  builder: (BuildContext
-                                                          context) =>
-                                                      MealSubscriptionPage(
-                                                        weekDaysSelected:
-                                                            purchasedMeal[index]
-                                                                .weekdays
-                                                                .length,
-                                                        mealPackage:
-                                                            getMealPackage,
-                                                      )));
-                                        },
-                                        leading: Icon(
-                                          Icons.autorenew,
-                                          size: 24,
-                                          color: Colors.black,
-                                        ),
+                                PopupMenuButton<int>(
+                                  child: Icon(Icons.more_vert, color: timeGrid),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0))),
+                                  itemBuilder: (BuildContext context) =>
+                                      <PopupMenuEntry<int>>[
+                                    PopupMenuItem<int>(
+                                      value: 0,
+                                      child: Material(
+                                        color: Colors.white,
+                                        child: ListTile(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        BookConsultation(
+                                                          packageIndex:
+                                                              packageIndex,
+                                                          consultation:
+                                                              consultationData,
+                                                        )));
+                                          },
+                                          leading: Icon(
+                                            Icons.autorenew,
+                                            size: 24,
+                                            color: Colors.black,
+                                          ),
 //                                            new Image.asset(
 //                                              "images/renew-purchase.svg",
 //                                              width: 30,
 //                                              height: 30,
 //                                            ),
-                                        title: Text(
-                                          'Renew Purchase',
-                                          style: orderHistoryPopUpStyle,
+                                          title: Text(
+                                            'Renew Purchase',
+                                            style: orderHistoryPopUpStyle,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  PopupMenuItem<int>(
-                                    value: 1,
-                                    child: Material(
-                                      color: Colors.white,
-                                      child: ListTile(
-                                        onTap: () async {
-                                          await DownloadFile(
-                                              'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-                                              'Dummy PDF.pdf');
-                                          Navigator.pop(context);
-                                        },
-                                        leading: Icon(
-                                          Icons.file_download,
-                                          size: 24,
-                                          color: Colors.black,
-                                        ),
+                                    PopupMenuItem<int>(
+                                      value: 1,
+                                      child: Material(
+                                        color: Colors.white,
+                                        child: ListTile(
+                                          onTap: () async {
+                                            await DownloadFile(
+                                                'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+                                                'Dummy PDF.pdf');
+                                            Navigator.pop(context);
+                                          },
+                                          leading: Icon(
+                                            Icons.file_download,
+                                            size: 24,
+                                            color: Colors.black,
+                                          ),
 //                                            new Image.asset(
 //                                                "images/download_invoice.png",
 //                                                width: 20),
-                                        title: Text(
-                                          'Download Invoice',
-                                          style: orderHistoryPopUpStyle,
+                                          title: Text(
+                                            'Download Invoice',
+                                            style: orderHistoryPopUpStyle,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              )),
-                            ],
-                          ),
-                        )),
-                    daysField(
-                      fieldName: 'Subscription:',
-                      fieldValue1:
-                          purchasedMeal[index].mealPlanDuration + ' Days',
-                      fieldValue2: purchasedMeal[index].showWeek(),
-                    ),
-                    dataField(
-                      fieldName: 'Remaining Days:',
-                      fieldValue: '12',
-                    ),
-                    Flexible(
-                        fit: FlexFit.loose,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Icon(Icons.schedule),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                  formatDate(
-                                      DateTime.parse(
-                                          purchasedMeal[index].createdAt),
-                                      format),
-                                  style: orderHistoryCardStyle),
-                              Spacer(),
-                              Text(purchasedMeal[index].amountPaid + ' BHD',
-                                  style: orderHistoryCardStyle)
-                            ],
-                          ),
-                        ))
-                  ],
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )),
+                      appointments[index].consultationTime ==
+                                  '0000-00-00 00:00:00' ||
+                              appointments[index].consultationTime == 'null'
+                          ? SizedBox()
+                          : dataField(
+                              fieldName: 'Appointment:',
+                              fieldValue:
+                                  formatDate(appointmentDateTime, format),
+                            ),
+                      meetingDataField(
+                        fieldName: 'Consultation Mode: ',
+                        fieldValue: appointments[index].consultationTime ==
+                                    '0000-00-00 00:00:00' ||
+                                appointments[index].consultationTime == 'null'
+                            ? 'Online'
+                            : 'Offline',
+                      ),
+                      dataField(
+                        fieldName: 'Consultant:',
+                        fieldValue: appointments[index].consultantName,
+                      ),
+                      Flexible(
+                          fit: FlexFit.loose,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Icon(Icons.schedule, size: 18, color: timeGrid),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(formatDate(createdDateTime, format),
+                                    style: orderHistoryCardStyle),
+                                Spacer(),
+                                Text(
+                                    consultationPurchases[index].amountPaid +
+                                        ' BHD',
+                                    style: orderHistoryCardStyle)
+                              ],
+                            ),
+                          )),
+                    ],
+                  ),
                 ),
               );
             }),
           )
-        : Center(child: SpinKitDoubleBounce(color: defaultGreen));
+        : Center(
+            child: SpinKitThreeBounce(
+              color: defaultPurple,
+              size: 32,
+            ),
+          );
   }
 }
