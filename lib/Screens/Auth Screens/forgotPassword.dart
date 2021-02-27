@@ -34,7 +34,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     double devWidth = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
-        key: _scaffoldKey,
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: Container(
           decoration: BoxDecoration(

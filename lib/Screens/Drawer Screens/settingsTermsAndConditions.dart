@@ -12,12 +12,17 @@ class SettingsTermsAndConditionsPage extends StatelessWidget {
           )
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10),
         child: ListView(
           children: [
-            Text(
-              termsAndConditions,
-              style: appBarTextStyle,
+            Container(color: Color(0xFFC4C4C4).withOpacity(0.4),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  termsAndConditions,
+                  style: appBarTextStyle,
+                ),
+              ),
             ),
           ],
         ),

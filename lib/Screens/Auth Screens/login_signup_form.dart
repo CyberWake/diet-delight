@@ -13,9 +13,20 @@ class _AfterSplashState extends State<AfterSplash>
   double conHeight = 300.0;
   String accessToken;
 
+  int tabSel = 0;
   @override
   void initState() {
-    _tabController = new TabController(length: 2, vsync: this);
+    _tabController = new TabController(length: 2, vsync: this)..addListener(() {
+      if(_tabController.index == 0){
+        setState(() {
+          tabSel = 0;
+        });
+      }else{
+        setState(() {
+          tabSel = 1;
+        });
+      }
+    });
     super.initState();
   }
 
@@ -76,7 +87,7 @@ class _AfterSplashState extends State<AfterSplash>
               Container(
                 margin: EdgeInsets.all(10.0),
                 width: double.infinity,
-                height: 2.5 * devHeight / 4,
+                height: tabSel == 0 ?2.5 * devHeight / 4 :3 * devHeight / 4,
                 decoration: BoxDecoration(
                   color: formBackground,
                 ),
