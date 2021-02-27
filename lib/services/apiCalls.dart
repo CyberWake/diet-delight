@@ -512,6 +512,31 @@ class Api {
     }
   }
 
+  Future<ConsultationModel> getConsultationData(String consultationId) async {
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+      final response = await http.get(
+          uri + '/api/v1/consultation-packages/$consultationId',
+          headers: headers);
+      if (response.statusCode == 200) {
+        print('Success getting consultation package');
+        var body = convert.jsonDecode(response.body);
+        var data = body['data'];
+        ConsultationModel item = ConsultationModel.fromMap(data);
+        return item;
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        return null;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
   Future<List<ConsAppointmentModel>> getConsultationAppointments() async {
     try {
       itemAppointments = [];
@@ -540,28 +565,28 @@ class Api {
     }
   }
 
-  Future<bool> postMealPurchase(MealPurchaseModel order) async {
-    try {
-      Map<String, String> headers = {
-        HttpHeaders.contentTypeHeader: "application/json",
-        HttpHeaders.authorizationHeader: "Bearer $token"
-      };
-      String body = convert.jsonEncode(order.toMap());
-      final response = await http.post(uri + '/api/v1/my-meal-purchases',
-          headers: headers, body: body);
-      if (response.statusCode == 201) {
-        print('meal purchase Posted');
-        return true;
-      } else {
-        print(response.statusCode);
-        print(response.body);
-        return null;
-      }
-    } on Exception catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
+  // Future<bool> postMealPurchase(MealPurchaseModel order) async {
+  //   try {
+  //     Map<String, String> headers = {
+  //       HttpHeaders.contentTypeHeader: "application/json",
+  //       HttpHeaders.authorizationHeader: "Bearer $token"
+  //     };
+  //     String body = convert.jsonEncode(order.toMap());
+  //     final response = await http.post(uri + '/api/v1/my-meal-purchases',
+  //         headers: headers, body: body);
+  //     if (response.statusCode == 201) {
+  //       print('meal purchase Posted');
+  //       return true;
+  //     } else {
+  //       print(response.statusCode);
+  //       print(response.body);
+  //       return null;
+  //     }
+  //   } on Exception catch (e) {
+  //     print(e.toString());
+  //     return null;
+  //   }
+  // }
 
   //Order History page for meal purchase
   Future<List<MealPurchaseModel>> getMealPurchases() async {

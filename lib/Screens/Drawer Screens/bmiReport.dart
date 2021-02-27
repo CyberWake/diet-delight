@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:percent_indicator/percent_indicator.dart';
+
 import 'package:flutter/material.dart';
 import 'package:diet_delight/konstants.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class BmiReport extends StatefulWidget {
   String bmi;

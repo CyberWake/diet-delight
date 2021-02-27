@@ -1,9 +1,10 @@
 import 'package:diet_delight/splashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

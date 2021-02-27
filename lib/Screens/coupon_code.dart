@@ -2,6 +2,7 @@ import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/material.dart';
 import 'package:ticketview/ticketview.dart';
 
+
 class CouponCode extends StatefulWidget {
   CouponCode({Key key}) : super(key: key);
 

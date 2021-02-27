@@ -23,6 +23,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'Screens/Auth Screens/newUserQuestionnaire.dart';
+
 class HomePage extends StatefulWidget {
   final int openPage;
   final int tabIndex;
