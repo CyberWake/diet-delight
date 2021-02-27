@@ -510,7 +510,7 @@ class _BookConsultationState extends State<BookConsultation>
                             padding: const EdgeInsets.fromLTRB(10.0, 10, 10, 0),
                             child: Container(
                               width: double.infinity,
-                              height: devHeight * 0.25,
+                              height: devHeight * 0.27,
                               child: TabBarView(
                                   controller: _tabController,
                                   children: List.generate(3, (index) {
@@ -614,7 +614,7 @@ class _BookConsultationState extends State<BookConsultation>
 //                  : SizedBox(),
                 Spacer(),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(50, 0, 50, 30),
+                  padding: const EdgeInsets.fromLTRB(50, 0, 50, 20),
                   child: SizedBox(
                     width: double.infinity,
                     height: 40.0,

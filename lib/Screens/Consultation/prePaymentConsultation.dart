@@ -268,9 +268,9 @@ class _PrePaymentState extends State<PrePayment> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(
                       MediaQuery.of(context).size.width * 0.11,
-                      10,
+                      5,
                       MediaQuery.of(context).size.width * 0.11,
-                      20),
+                      10),
                   child: Column(
                     children: [
                       Row(
@@ -307,7 +307,7 @@ class _PrePaymentState extends State<PrePayment> {
                         ],
                       ),
                       SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -342,7 +342,7 @@ class _PrePaymentState extends State<PrePayment> {
                                       size: 20)),
                             ),
                           ),
-                          SizedBox(height: devHeight * 0.025),
+                          SizedBox(height: devHeight * 0.015),
                           Padding(
                             padding: EdgeInsets.symmetric(
                                 horizontal: devWidth * 0.05),
@@ -454,7 +454,7 @@ class _PrePaymentState extends State<PrePayment> {
                 ),
                 Spacer(),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(50, 0, 50, 30),
+                  padding: const EdgeInsets.fromLTRB(50, 0, 50, 20),
                   child: SizedBox(
                     width: double.infinity,
                     height: 40.0,

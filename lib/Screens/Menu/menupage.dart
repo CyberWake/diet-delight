@@ -176,15 +176,15 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Icon(Icons.star,
-                                  //  color: featuredColor,
+                                    color: featuredColor,
                                   size: 12),
                               Text(
                                 'Featured',
                                 style: appBarTextStyle.copyWith(
                                   fontSize: 10,
                                   fontWeight: FontWeight.w600,
-                                  // color:
-                                  //featuredColor
+                                   color:
+                                  featuredColor
                                 ),
                               ),
                             ],
@@ -391,7 +391,7 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                     indicatorSize: TabBarIndicatorSize.tab,
                     indicatorPadding: EdgeInsets.symmetric(horizontal: 35.0),
                     labelColor: defaultPurple,
-                    labelPadding: EdgeInsets.symmetric(horizontal: 40),
+                    labelPadding: mainCategoryItems.length == 2 ? EdgeInsets.symmetric(horizontal: 60) : EdgeInsets.symmetric(horizontal: 40),
                     //          unselectedLabelStyle:
                     //    tabBarLabelStyle.copyWith(color: inactiveTime),
                     unselectedLabelColor: Colors.grey,

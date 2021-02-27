@@ -23,8 +23,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Screens/Auth Screens/newUserQuestionnaire.dart';
-
 class HomePage extends StatefulWidget {
   final int openPage;
   final int tabIndex;
@@ -69,7 +67,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     [],
     ['Consultation Orders', 'Meal Plan Orders'],
     [],
-    ['Security', 'Terms and Conditions', 'FAQ', 'Privacy Policy'],
+    ['Terms and Conditions', 'FAQ', 'Privacy Policy', 'Securities'],
     [],
   ];
 
@@ -141,141 +139,203 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        key: _scaffoldKey,
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: defaultGreen),
-          elevation: 0.0,
-          backgroundColor: white,
-          centerTitle: true,
-          title: page == 0
-              ? Image.asset(
-                  'images/Group 57.png',
-                  height: 50.0,
-                  fit: BoxFit.fitHeight,
-                )
-              : Text(pageTitle[page], style: appBarTextStyle),
-          leading: IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () => _scaffoldKey.currentState.openDrawer(),
-          ),
-          actions: page == 0
-              ? [
-                  GestureDetector(
-                    onTap: () {
-                      FlutterOpenWhatsapp.sendSingleMessage(
-                          "917985434482", "Hello");
-                    },
-                    child: Image.asset(
-                      'images/Group 22.png',
-                      width: 28.0,
-                      height: 28.0,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                              builder: (BuildContext context) => Questionnaire(
-                                  username: 'Ritik kumar srivastava')));
-                    },
-                    child: Image.asset(
-                      'images/Group 24.png',
-                      width: 25.0,
-                      height: 25.0,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                ]
-              : [],
-          bottom: page == 1 || page == 3 || page == 5
-              ? TabBar(
-                  controller: page == 5 ? _pageController2 : _pageController1,
-                  isScrollable: true,
-                  onTap: (index) async {},
-                  labelStyle: selectedTab.copyWith(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600),
-                  indicatorColor: Colors.transparent,
-                  indicatorWeight: 3.0,
-                  indicatorSize: TabBarIndicatorSize.label,
-                  labelColor: Colors.black,
-                  labelPadding: EdgeInsets.symmetric(horizontal: 13),
-                  unselectedLabelStyle: unSelectedTab.copyWith(
-                      fontSize: 16,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w400),
-                  unselectedLabelColor: Colors.grey,
-                  tabs: List.generate(tabItemsTitle[page].length, (index) {
-                    return Tab(
-                      text: tabItemsTitle[page][index],
-                    );
-                  }))
-              : PreferredSize(child: Container(), preferredSize: Size(0, 0)),
-        ),
-        drawer: Drawer(
-          child: Padding(
-            padding:
-                EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1),
-            child: ListView(
-                children: List.generate(8, (index) {
-              if (index == 0) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
-                  child: Image.asset(
-                    'images/Group 57.png',
-                    height: 80.0,
-                    fit: BoxFit.fitHeight,
-                  ),
-                );
-              }
-              return Padding(
-                padding: EdgeInsets.only(top: 5.0),
-                child: ListTile(
-                    onTap: () {
-                      drawerOnTaps(index - 1);
-                    },
-                    title: Center(
-                        child: Text(
-                      drawerItems[index],
-                      style: selectedTab.copyWith(
-                          fontWeight: FontWeight.normal, fontSize: 28),
-                    ))),
-              );
-            })),
-          ),
-        ),
-        body: IndexedStack(
-          index: page,
-          children: [
-            HomeScreen(),
-            TabBarView(controller: _pageController1, children: [
-              DashBoardUserInfoPage(),
-              DashBoardOngoingOrders(),
-            ]),
-            FavouritesPage(),
-            TabBarView(controller: _pageController1, children: [
-              ConsultationOrderHistoryPage(),
-              MealPlanOrderHistoryPage()
-            ]),
-            NotificationsPage(),
-            TabBarView(
-              controller: _pageController2,
-              children: [
-                SettingsTermsAndConditionsPage(),
-                SettingsFAQPage(),
-                SettingsPrivacyPolicyPage(),
-              ],
+      child: Container(
+        decoration: page == 3
+            ? BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('images/order_history.jpg'),
+              fit: BoxFit.fitHeight),
+        )
+            : BoxDecoration(),
+        child: Scaffold(
+          key: _scaffoldKey,
+          backgroundColor: page == 3 ? Colors.transparent : white,
+          appBar: AppBar(
+            iconTheme: IconThemeData(
+                color: page == 0 || page == 3 ? defaultGreen : white),
+            elevation: 0.0,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(20.0),
+                    bottomRight: Radius.circular(20.0))),
+            shadowColor: page == 3 ? (Color(0x26000000)) : Colors.transparent,
+            backgroundColor: page == 0 || page == 3 ? white : defaultGreen,
+            centerTitle: page == 0 ? true : false,
+            title: page == 0
+                ? Image.asset(
+              'images/Group 57.png',
+              height: 50.0,
+              fit: BoxFit.fitHeight,
+            )
+                : Text(pageTitle[page],
+                style: appBarTextStyle.copyWith(
+                    fontFamily: 'RobotoReg',
+                    color: page == 3 ? defaultGreen : white,
+                    fontWeight: FontWeight.bold)),
+            leading: IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () => _scaffoldKey.currentState.openDrawer(),
             ),
-          ],
+            actions: page == 0
+                ? [
+              GestureDetector(
+                onTap: () {
+                  FlutterOpenWhatsapp.sendSingleMessage(
+                      "917259384025", "Hello");
+                },
+                child: Image.asset(
+                  'images/Group 22.png',
+                  width: 28.0,
+                  height: 28.0,
+                ),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (BuildContext context) =>
+                              CouponCode()));
+                },
+                child: Image.asset(
+                  'images/Group 24.png',
+                  width: 25.0,
+                  height: 25.0,
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+            ]
+                : [],
+            bottom: page == 1 || page == 3 || page == 5
+                ? TabBar(
+                controller: page == 5
+                    ? _pageController3
+                    : page == 3
+                    ? _pageController2
+                    : _pageController1,
+                isScrollable: true,
+                onTap: (index) async {},
+                labelStyle: selectedTab.copyWith(
+                    fontSize: 18,
+                    color: defaultPurple,
+                    fontWeight: FontWeight.w600),
+                indicatorColor: defaultGreen,
+                indicatorWeight: 3.0,
+                indicatorSize: TabBarIndicatorSize.tab,
+                labelColor: defaultPurple,
+                labelPadding: EdgeInsets.symmetric(horizontal: 13),
+                unselectedLabelStyle: unSelectedTab.copyWith(
+                    fontSize: 18,
+                    color: questionnaireDisabled,
+                    fontWeight: FontWeight.w400),
+                unselectedLabelColor: questionnaireDisabled,
+                tabs: List.generate(tabItemsTitle[page].length, (index) {
+                  return Tab(
+                    text: tabItemsTitle[page][index],
+                  );
+                }))
+                : PreferredSize(child: Container(), preferredSize: Size(0, 0)),
+          ),
+          drawer: ClipRRect(
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(30.0),
+                bottomRight: Radius.circular(30.0)),
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.75,
+              child: Drawer(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.01),
+                  child: ListView(
+                      shrinkWrap: true,
+                      children: List.generate(drawerItems.length, (index) {
+                        if (index == 0) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                                top: MediaQuery.of(context).size.height * 0.03,
+                                bottom:
+                                MediaQuery.of(context).size.height * 0.05),
+                            child: Image.asset(
+                              'images/Group 57.png',
+                              height: 80.0,
+                              fit: BoxFit.fitHeight,
+                            ),
+                          );
+                        } else if (index == drawerItems.length - 1) {
+                          return Padding(
+                              padding: EdgeInsets.only(
+                                  top: index + 1 == drawerItems.length
+                                      ? MediaQuery.of(context).size.height * 0.1
+                                      : 0.0),
+                              child: ListTile(
+                                  onTap: () {
+                                    drawerOnTaps(index - 1);
+                                  },
+                                  title: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        drawerItems[index],
+                                        style: drawerItemsStyle,
+                                      ),
+                                      SizedBox(
+                                          width: MediaQuery.of(context)
+                                              .size
+                                              .width *
+                                              0.02),
+                                      drawerIcons[index - 1],
+                                    ],
+                                  )));
+                        }
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              top: index + 1 == drawerItems.length ? 50 : 0.0),
+                          child: ListTile(
+                              onTap: () {
+                                drawerOnTaps(index - 1);
+                              },
+                              leading: drawerIcons[index - 1],
+                              title: Text(
+                                drawerItems[index],
+                                style: drawerItemsStyle,
+                              )),
+                        );
+                      })),
+                ),
+              ),
+            ),
+          ),
+          body: IndexedStack(
+            index: page,
+            children: [
+              HomeScreen(),
+              TabBarView(controller: _pageController1, children: [
+                DashBoardUserInfoPage(snackBarKey: _scaffoldKey),
+                DashBoardOngoingOrders(),
+              ]),
+              FavouritesPage(),
+              TabBarView(controller: _pageController2, children: [
+                ConsultationOrderHistoryPage(),
+                MealPlanOrderHistoryPage()
+              ]),
+              NotificationsPage(),
+              TabBarView(
+                controller: _pageController3,
+                children: [
+                  SettingSecurities(snackBarKey: _scaffoldKey),
+                  SettingsTermsAndConditionsPage(),
+                  SettingsFAQPage(),
+                  SettingsPrivacyPolicyPage(),
+                ],
+              ),
+              ContactUsPage(),
+            ],
+          ),
         ),
       ),
     );

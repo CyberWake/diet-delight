@@ -301,7 +301,7 @@ class _BmiReportState extends State<BmiReport> {
                                                                 const EdgeInsets
                                                                         .only(
                                                                     top: 30,
-                                                                    left: 8,
+                                                                    left: 25,
                                                                     right: 8),
                                                             child: Column(
                                                               crossAxisAlignment:
@@ -309,7 +309,7 @@ class _BmiReportState extends State<BmiReport> {
                                                                       .start,
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
-                                                                      .spaceAround,
+                                                                      .start,
                                                               children: [
                                                                 Text(
                                                                   "Hello there!",
@@ -320,6 +320,7 @@ class _BmiReportState extends State<BmiReport> {
                                                                       fontSize:
                                                                           14),
                                                                 ),
+                                                                SizedBox(height: 5,),
                                                                 Text(
                                                                   "Are you unsure about what you need? Why not book an consultation with one of our experts to help you through the process?",
                                                                   style: questionnaireOptionsStyle.copyWith(

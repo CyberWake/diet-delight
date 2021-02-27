@@ -469,46 +469,46 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Container(
                 width: double.infinity,
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Column(
-                        children: [
-                          Text(
-                            'OUR MENU PACKAGE',
-                            style: TextStyle(
-                              fontFamily: 'RobotoCondensedReg',
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: defaultPurple,
-                            ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      children: [
+                        Text(
+                          'OUR MENU PACKAGE',
+                          style: TextStyle(
+                            fontFamily: 'RobotoCondensedReg',
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: defaultPurple,
                           ),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                            child: Container(
-                              width: 60,
-                              height: 3,
-                              color: defaultGreen,
-                            ),
-                          )
-                        ],
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(20, 20, 10, 10),
-                        child: Container(
-                          height: 0.65 * devWidth,
-                          child: ListView.builder(
-                              itemCount: menus.length,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (BuildContext context, int index) {
-                                return menuItemCard(index);
-                              }),
                         ),
-                      )
-                    ],
-                  ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                          child: Container(
+                            width: 60,
+                            height: 3,
+                            color: defaultGreen,
+                          ),
+                        )
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
+                      child: Container(
+                        height: 0.65 * devWidth,
+                        child: ListView.builder(
+                            itemCount: menus.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                child: menuItemCard(index),
+                              );
+                            }),
+                      ),
+                    )
+                  ],
                 ),
               ),
               Container(
@@ -520,7 +520,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 10.0),
+                  padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 10.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -546,14 +546,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(15, 20, 10, 10),
+                        padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
                         child: Container(
                           height: 0.55 * devWidth,
                           child: ListView.builder(
                               itemCount: durations.length,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (BuildContext context, int index) {
-                                return mealPlanDurationCategoryCard(index);
+                                return Padding(
+                                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  child: mealPlanDurationCategoryCard(index),
+                                );
                               }),
                         ),
                       ),
@@ -567,7 +570,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 width: double.infinity,
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 10.0),
+                  padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 10.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -593,7 +596,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(20, 20, 10, 10),
+                        padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
                         child: Container(
                           height: 0.45 * devWidth,
                           child: ListView.builder(
@@ -601,7 +604,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (BuildContext context, int pos) {
                                 return Padding(
-                                  padding: EdgeInsets.only(right: 15.0),
+                                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                                   child: Material(
                                     elevation: 0.0,
                                     shadowColor: Colors.white,
@@ -613,7 +616,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         },
                                         child: Container(
                                           color: Colors.white,
-                                          width: 0.4 * devWidth,
+                                          width: 0.43 * devWidth,
                                           height: 220,
                                           child: Column(
                                             mainAxisSize: MainAxisSize.max,
@@ -629,9 +632,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   imageBuilder: (context,
                                                           imageProvider) =>
                                                       Container(
-                                                    width: (0.4 * devWidth),
+                                                    width: (0.43 * devWidth),
                                                     height:
-                                                        (0.4 * devWidth) / 2,
+                                                        (0.44 * devWidth) / 2,
                                                     decoration: BoxDecoration(
                                                       shape: BoxShape.rectangle,
                                                       image: DecorationImage(
@@ -665,7 +668,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.only(
-                                                    bottom: 10),
+                                                    bottom: 5),
                                                 child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
@@ -777,7 +780,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.all(10.0),
+                  padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -803,14 +806,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Padding(
-                          padding: EdgeInsets.fromLTRB(20, 20, 10, 0),
+                          padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                           child: Container(
-                              height: 0.6 * devWidth,
+                              height: 0.625 * devWidth,
                               child: ListView.builder(
                                 itemCount: consultationPackages.length,
                                 scrollDirection: Axis.horizontal,
                                 itemBuilder: (BuildContext context, int index) {
-                                  return consultationItemCard(index);
+                                  return Padding(
+                                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    child: consultationItemCard(index),
+                                  );
                                 },
                               ))),
                       SizedBox(
