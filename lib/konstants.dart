@@ -2,6 +2,7 @@ import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
 
 const Color defaultGreen = Color(0xFF8BC53F);
+const Color blurredDefaultGreen = Color.fromRGBO(255, 255, 255, 0.8);
 const Color darkGreen = Color(0xFF079404);
 const Color inactiveGreen = Color(0x808BC53F);
 const Color white = Color(0xFFFFFFFF);
@@ -15,6 +16,16 @@ const Color inactivePurple = Color(0x8078288B);
 const Color cardGray = Color(0xFF666666);
 const Color timeGrid = Color(0xFF303030);
 const Color inactiveTime = Color(0xFF909090);
+const Color questionnaireDecor = Color(0xFFE5E5E5);
+const Color questionnaireSelect = Color(0xFF303960);
+const Color questionnaireDisabled = Color(0xFF77838F);
+const Color commentChange = Color(0xFFFFFDFD);
+const Color paymentSeparator = Color(0xFFDADADA);
+const Color featuredColor = Color(0xFFE96E25);
+const Color disabledAddress = Color(0xFF4E4848);
+const Color onlineConsultation = Color(0xFFFFC2C2);
+const Color offlineConsultation = Color(0xFFC2DBFF);
+
 InputDecoration authInputFieldDecoration = InputDecoration(
   fillColor: Colors.white,
   focusedBorder: InputBorder.none,
@@ -42,6 +53,13 @@ const TextStyle selectedTab = TextStyle(
   fontFamily: 'RobotoCondensedReg',
   fontSize: 18,
   fontWeight: FontWeight.bold,
+);
+
+const TextStyle drawerItemsStyle = TextStyle(
+  fontFamily: 'MontserratMed',
+  fontSize: 26,
+  fontWeight: FontWeight.normal,
+  color: questionnaireSelect,
 );
 
 const TextStyle authLabelTextStyle = TextStyle(
@@ -75,12 +93,27 @@ const toggleTextStyle = TextStyle(
   color: Colors.black,
 );
 
-const billingTextStyle = TextStyle(
-  fontFamily: 'ABeeZeeReg',
+const costBreakdownTextStyle = TextStyle(
+  fontFamily: 'RobotoReg',
+  fontSize: 12,
+  fontWeight: FontWeight.bold,
+  color: white,
+);
+
+const addressChangeTextStyle = TextStyle(
+  fontFamily: 'RobotoReg',
   fontSize: 20,
-  fontStyle: FontStyle.italic,
-  fontWeight: FontWeight.normal,
-  color: Color(0xFF222222),
+  fontStyle: FontStyle.normal,
+  fontWeight: FontWeight.w600,
+  color: white,
+);
+
+const billingTextStyle = TextStyle(
+  fontFamily: 'RobotoReg',
+  fontSize: 20,
+  fontStyle: FontStyle.normal,
+  fontWeight: FontWeight.bold,
+  color: questionnaireSelect,
 );
 
 const descriptionTextStyle = TextStyle(
@@ -105,9 +138,44 @@ const orderHistoryCardStyle = TextStyle(
 
 const orderHistoryPopUpStyle = TextStyle(
   fontFamily: 'MontserratMed',
-  fontSize: 16,
+  fontSize: 15,
   fontWeight: FontWeight.normal,
   color: Colors.black,
+);
+
+const questionnaireTitleStyle = TextStyle(
+  fontFamily: 'RobotoReg',
+  fontSize: 24,
+  fontWeight: FontWeight.bold,
+  color: white,
+);
+
+const questionnaireOptionsStyle = TextStyle(
+  fontFamily: 'RobotoReg',
+  fontSize: 12,
+  fontWeight: FontWeight.bold,
+  color: white,
+);
+
+const questionnaireDisabledStyle = TextStyle(
+  fontFamily: 'KalamReg',
+  fontSize: 16,
+  fontWeight: FontWeight.bold,
+  color: questionnaireDisabled,
+);
+
+const tabBarLabelStyle = TextStyle(
+  fontFamily: 'RobotoReg',
+  fontSize: 12,
+  fontWeight: FontWeight.w600,
+  color: defaultPurple,
+);
+
+const consultationModeSelectStyle = TextStyle(
+  fontFamily: 'RobotoReg',
+  fontSize: 20,
+  fontWeight: FontWeight.w600,
+  color: questionnaireSelect,
 );
 
 BoxDecoration authFieldDecoration = BoxDecoration(

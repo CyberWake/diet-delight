@@ -147,36 +147,61 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                       style: appBarTextStyle.copyWith(
                           fontSize: 12, fontWeight: FontWeight.w400),
                     ),
+                    foodItem.featured == 1
+                        ? Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Icon(Icons.star, color: featuredColor, size: 12),
+                              Text(
+                                'Featured',
+                                style: appBarTextStyle.copyWith(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                    color: featuredColor),
+                              ),
+                            ],
+                          )
+                        : SizedBox(),
                     SizedBox(
                       height: 4,
                     ),
                     Container(
                       alignment: Alignment.bottomRight,
                       padding: EdgeInsets.only(right: 10),
-                      child: IconButton(
-                          onPressed: () async {
-                            setState(() {
-                              favPressed.add(foodItem.id);
-                            });
-                            int userId = int.parse(Api.userInfo.id);
-                            AddFavouritesModel details = AddFavouritesModel(
-                              menuItemId: foodItem.id,
-                              userId: userId,
-                            );
-                            await _apiCall.addFavourites(details);
-                          },
-                          icon: favourites[0].contains(foodItem.id) ||
-                                  favPressed.contains(foodItem.id)
-                              ? Icon(
-                                  Icons.favorite,
-                                  size: 13,
-                                  color: defaultPurple,
-                                )
-                              : Icon(
-                                  Icons.favorite_border,
-                                  size: 13,
-                                  color: defaultPurple,
-                                )),
+                      child: favPressed.contains(foodItem.id) ||
+                              favourites[0].contains(foodItem.id)
+                          ? IconButton(
+                              onPressed: () async {
+                                setState(() {
+                                  favPressed.remove(foodItem.id);
+                                });
+                                await _apiCall.deleteFavourites(favourites[1]
+                                    [favourites[0].indexOf(foodItem.id)]);
+                                setState(() {
+                                  getFavourites();
+                                  print('deleted');
+                                });
+                              },
+                              icon: Icon(Icons.favorite,
+                                  size: 18, color: defaultPurple))
+                          : IconButton(
+                              onPressed: () async {
+                                setState(() {
+                                  favPressed.add(foodItem.id);
+                                });
+                                int userId = int.parse(Api.userInfo.id);
+                                AddFavouritesModel details = AddFavouritesModel(
+                                  menuItemId: foodItem.id,
+                                  userId: userId,
+                                );
+                                await _apiCall.addFavourites(details);
+                                getFavourites();
+                              },
+                              icon: Icon(
+                                Icons.favorite_border,
+                                size: 18,
+                                color: defaultPurple,
+                              )),
                     )
                   ],
                 ),
@@ -186,22 +211,31 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
               flex: 3,
               child: Container(
                 margin: EdgeInsets.only(right: 20),
-                child: CachedNetworkImage(
-                  imageUrl:
-                      foodItem.picture ?? "http://via.placeholder.com/350x150",
-                  imageBuilder: (context, imageProvider) => Container(
-                    height: 60,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.cover,
+                child: Material(
+                  elevation: 2,
+                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  child: CachedNetworkImage(
+                    imageUrl: foodItem.picture ??
+                        "http://via.placeholder.com/350x150",
+                    imageBuilder: (context, imageProvider) => Container(
+                      height: MediaQuery.of(context).size.width * 0.2,
+                      constraints: BoxConstraints(),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.fill,
+                        ),
                       ),
                     ),
-                  ),
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => FlutterLogo(
-                    size: 60,
+                    placeholder: (context, url) => SpinKitChasingDots(
+                      color: defaultPurple,
+                      size: 32,
+                    ),
+                    errorWidget: (context, url, error) => FlutterLogo(
+                      size: 60,
+                    ),
                   ),
                 ),
               ),
@@ -231,7 +265,7 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
               color: defaultGreen,
             ),
           ),
-          title: Text('Menu Packages', style: appBarTextStyle),
+//          title: Text('Menu Packages', style: appBarTextStyle),
         ),
         body: Container(
           child: isLoaded
@@ -307,7 +341,10 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                                     ),
                                   ),
                                   placeholder: (context, url) =>
-                                      CircularProgressIndicator(),
+                                      SpinKitChasingDots(
+                                    color: defaultPurple,
+                                    size: 32,
+                                  ),
                                   errorWidget: (context, url, error) =>
                                       Icon(Icons.error),
                                 ),
@@ -332,13 +369,16 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                           controller: _pageController,
                           isScrollable: true,
                           onTap: (index) async {},
-                          labelStyle: pageViewTabSelected,
+                          labelStyle: tabBarLabelStyle,
                           indicatorColor: defaultGreen,
-                          indicatorWeight: 2.0,
-                          indicatorSize: TabBarIndicatorSize.label,
+                          indicatorWeight: 3.0,
+                          indicatorSize: TabBarIndicatorSize.tab,
+                          indicatorPadding:
+                              EdgeInsets.symmetric(horizontal: 35.0),
                           labelColor: defaultPurple,
-                          labelPadding: EdgeInsets.symmetric(horizontal: 30),
-                          unselectedLabelStyle: pageViewTabSelected,
+                          labelPadding: EdgeInsets.symmetric(horizontal: 40),
+                          unselectedLabelStyle:
+                              tabBarLabelStyle.copyWith(color: inactiveTime),
                           unselectedLabelColor: Colors.grey,
                           tabs:
                               List.generate(mainCategoryItems.length, (index) {
@@ -366,7 +406,8 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                         })),
                   )
                 ])
-              : Center(child: SpinKitDoubleBounce(color: defaultGreen)),
+              : Center(
+                  child: SpinKitThreeBounce(color: defaultPurple, size: 32)),
         ));
   }
 

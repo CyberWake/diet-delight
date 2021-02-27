@@ -5,7 +5,7 @@ import 'package:diet_delight/Models/foodItemModel.dart';
 import 'package:diet_delight/Models/mealModel.dart';
 import 'package:diet_delight/Models/mealPlanDurationsModel.dart';
 import 'package:diet_delight/Models/menuModel.dart';
-import 'package:diet_delight/Screens/Consultation/bookConsultation.dart';
+import 'package:diet_delight/Screens/Consultation/selectConsultationMode.dart';
 import 'package:diet_delight/Screens/MealPlans/mealPlanSelectionScreen.dart';
 import 'package:diet_delight/Screens/Menu/menupage.dart';
 import 'package:diet_delight/konstants.dart';
@@ -42,6 +42,10 @@ class _HomeScreenState extends State<HomeScreen> {
           .whenComplete(() => i++);
       mealPackages.add(meal);
     }
+  }
+
+  getFavourites() async {
+    favourites = await _apiCall.getFavourites();
   }
 
   @override
@@ -277,7 +281,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.push(
                 context,
                 CupertinoPageRoute(
-                    builder: (context) => BookConsultation(
+                    builder: (context) => SelectConsultationMode(
                           packageIndex: pos,
                           consultation: consultationPackages,
                         )));
@@ -315,15 +319,31 @@ class _HomeScreenState extends State<HomeScreen> {
                     )),
                 Padding(
                   padding: EdgeInsets.fromLTRB(5.0, 0, 5, 0),
-                  child: Text(
-                    consultationPackages[pos].subtitle,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'RobotoCondensedReg',
-                      fontSize: 11,
-                      fontWeight: FontWeight.normal,
-                      color: cardGray,
-                    ),
+                  child: Column(
+//                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        consultationPackages[pos].subtitle,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontFamily: 'RobotoCondensedReg',
+                          fontSize: 11,
+                          fontWeight: FontWeight.normal,
+                          color: cardGray,
+                        ),
+                      ),
+                      SizedBox(height: 10.0),
+                      Text(
+                        consultationPackages[pos].details,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontFamily: 'RobotoCondensedReg',
+                          fontSize: 11,
+                          fontWeight: FontWeight.normal,
+                          color: cardGray,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Spacer(),
@@ -575,7 +595,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(
                         padding: EdgeInsets.fromLTRB(20, 20, 10, 10),
                         child: Container(
-                          height: 0.48 * devWidth,
+                          height: 0.45 * devWidth,
                           child: ListView.builder(
                               itemCount: featuredMenu.length,
                               scrollDirection: Axis.horizontal,
@@ -658,51 +678,79 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     SizedBox(
                                                       width: 5,
                                                     ),
-                                                    IconButton(
-                                                        onPressed: () async {
-                                                          setState(() {
-                                                            favPressed.add(
-                                                                featuredMenu[
-                                                                        pos]
-                                                                    .id);
-                                                          });
-                                                          int userId =
-                                                              int.parse(Api
-                                                                  .userInfo.id);
-                                                          AddFavouritesModel
-                                                              details =
-                                                              AddFavouritesModel(
-                                                            menuItemId:
-                                                                featuredMenu[
-                                                                        pos]
-                                                                    .id,
-                                                            userId: userId,
-                                                          );
-                                                          await _apiCall
-                                                              .addFavourites(
-                                                                  details);
-                                                        },
-                                                        icon: favourites[0].contains(
-                                                                    featuredMenu[
-                                                                            pos]
-                                                                        .id) ||
-                                                                favPressed.contains(
+                                                    favPressed.contains(
+                                                                featuredMenu[pos]
+                                                                    .id) ||
+                                                            favourites[0]
+                                                                .contains(
                                                                     featuredMenu[
                                                                             pos]
                                                                         .id)
-                                                            ? Icon(
+                                                        ? IconButton(
+                                                            onPressed:
+                                                                () async {
+                                                              setState(() {
+                                                                favPressed.remove(
+                                                                    featuredMenu[
+                                                                            pos]
+                                                                        .id);
+                                                              });
+//                                                              print(favourites[
+//                                                                      0]
+//                                                                  .indexWhere((f) => f
+//                                                                      .featuredMenu[
+//                                                                          pos]
+//                                                                      .id));
+                                                              await _apiCall.deleteFavourites(favourites[
+                                                                  1][favourites[
+                                                                      0]
+                                                                  .indexOf(
+                                                                      featuredMenu[
+                                                                              pos]
+                                                                          .id)]);
+                                                              setState(() {
+                                                                getFavourites();
+                                                              });
+                                                            },
+                                                            icon: Icon(
                                                                 Icons.favorite,
-                                                                size: 15,
+                                                                size: 13,
                                                                 color:
-                                                                    defaultPurple,
-                                                              )
-                                                            : Icon(
-                                                                Icons
-                                                                    .favorite_border,
-                                                                size: 15,
-                                                                color:
-                                                                    defaultPurple,
-                                                              )),
+                                                                    defaultPurple))
+                                                        : IconButton(
+                                                            onPressed:
+                                                                () async {
+                                                              setState(() {
+                                                                favPressed.add(
+                                                                    featuredMenu[
+                                                                            pos]
+                                                                        .id);
+                                                              });
+                                                              int userId =
+                                                                  int.parse(Api
+                                                                      .userInfo
+                                                                      .id);
+                                                              AddFavouritesModel
+                                                                  details =
+                                                                  AddFavouritesModel(
+                                                                menuItemId:
+                                                                    featuredMenu[
+                                                                            pos]
+                                                                        .id,
+                                                                userId: userId,
+                                                              );
+                                                              await _apiCall
+                                                                  .addFavourites(
+                                                                      details);
+                                                              getFavourites();
+                                                            },
+                                                            icon: Icon(
+                                                              Icons
+                                                                  .favorite_border,
+                                                              size: 15,
+                                                              color:
+                                                                  defaultPurple,
+                                                            )),
                                                   ],
                                                 ),
                                               ),
@@ -757,7 +805,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(
                           padding: EdgeInsets.fromLTRB(20, 20, 10, 0),
                           child: Container(
-                              height: 0.525 * devWidth,
+                              height: 0.6 * devWidth,
                               child: ListView.builder(
                                 itemCount: consultationPackages.length,
                                 scrollDirection: Axis.horizontal,
