@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   pin_code_text_field: ^1.7.1
+  page_transition: ^1.1.7+6
   flutter_rounded_date_picker: ^1.0.5+1
   email_validator: ^1.0.6
   oauth2: ^1.6.3
@@ -55,3 +56,6 @@ flutter:
     - family: MontserratMed
       fonts:
         - asset: fonts/Montserrat-Medium.ttf
+    - family: NewIcons
+      fonts:
+        - asset: fonts/NewIcons.ttf

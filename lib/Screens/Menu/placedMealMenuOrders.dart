@@ -453,7 +453,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
               builder: (BuildContext context, StateSetter updateBottomSheet) {
             updateBottomSheet(() {});
             return Container(
-                height: MediaQuery.of(context).size.height * 0.85,
+                height: MediaQuery.of(context).size.height * 0.8,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(topRight: Radius.circular(25),topLeft: Radius.circular(25)),
                     image: DecorationImage(
@@ -729,6 +729,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                       TextButton(
                           onPressed: () async {
                             setState(() {
+                              addressTapList.add(0);
                               isLoading = true;
                             });
                             var resource = await _apiCall.getBreakTakenDay();
@@ -793,6 +794,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                       TextButton(
                           onPressed: () async {
                             print(isLoaded);
+
                             setState(() {
                               isLoading = true;
                             });
@@ -813,13 +815,16 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                             var breakDays = [];
                             if(res == null || res.length == 0){
                               var primaryAndSecondary = getInitialPrimaryAndSecondary();
-                              dateBreakList.add(primaryAndSecondary[isPrimary ? 0 : 1 ][0].toString().split(" ")[0]);
+                              dateBreakList = primaryAndSecondary[0]+primaryAndSecondary[1];
+                              for(int i =0;i<dateBreakList.length;i++){
+                                dateBreakList[i] = dateBreakList[i].toString().split(' ')[0];
+                              }
+
                               await showBreakCalendar(dateBreakList,breakDays,false,res['id'],primaryAndSecondary);
                             }else{
                               if(res['date_list'] == null || jsonDecode(res['date_list']).length == 0){
                                 print('break list is empty');
                                 var primaryAndSecondary = getInitialPrimaryAndSecondary();
-                                dateBreakList.add(primaryAndSecondary[isPrimary ? 0 : 1 ][0].toString().split(" ")[0]);
 
                                 var primary = res['primary_address_dates'];
                                 var secondary = res['secondary_address_dates'];
@@ -834,9 +839,15 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                                   primaryAndSecondary[1] = secondaryList;
                                 }
 
+                                dateBreakList = primaryAndSecondary[0]+primaryAndSecondary[1];
+                                for(int i =0;i<dateBreakList.length;i++){
+                                  dateBreakList[i] = dateBreakList[i].toString().split(' ')[0];
+                                }
+
                                 await showBreakCalendar(dateBreakList,[],true,res['id'],primaryAndSecondary);
 
                               }else{
+                                print('else condition is called');
                                 var listOfDate = jsonDecode(res['date_list']);
                                 for(int i =0 ;i<listOfDate.length;i++){
                                   print(listOfDate[i]);
@@ -854,7 +865,10 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                                 var ind = primaryAndSecondary[2].indexOf(lastBreak);
                                 print('printing break days');
                                 print(breakDays);
-                                dateBreakList.add(primaryAndSecondary[2][ind+1]);
+                                dateBreakList = primaryAndSecondary[0]+primaryAndSecondary[1];
+                                for(int i =0;i<dateBreakList.length;i++){
+                                  dateBreakList[i] = dateBreakList[i].toString().split(' ')[0];
+                                }
 
                                 await showBreakCalendar(dateBreakList,breakDays,true,res['id'],primaryAndSecondary);
                               }

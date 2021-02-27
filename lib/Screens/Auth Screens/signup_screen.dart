@@ -82,6 +82,7 @@ class _SignUpState extends State<SignUp> {
                                 padding:
                                     const EdgeInsets.fromLTRB(20, 5, 20, 5),
                                 child: TextFormField(
+
                                     onChanged: (done) {
                                       firstName.text = done;
                                     },
@@ -248,6 +249,7 @@ class _SignUpState extends State<SignUp> {
                                 mail.unfocus();
                                 FocusScope.of(context).requestFocus(pass);
                               },
+                              textAlign: TextAlign.center,
                               style: authInputTextStyle,
                               keyboardType: TextInputType.emailAddress,
                               textInputAction: TextInputAction.next,
@@ -287,6 +289,7 @@ class _SignUpState extends State<SignUp> {
                               },
                               style: authInputTextStyle,
                               keyboardType: TextInputType.text,
+                              textAlign: TextAlign.center,
                               textInputAction: TextInputAction.next,
                               obscureText: true,
                               focusNode: pass,
@@ -324,6 +327,7 @@ class _SignUpState extends State<SignUp> {
                                 confPass.unfocus();
                                 FocusScope.of(context).requestFocus(submit);
                               },
+                              textAlign: TextAlign.center,
                               style: authInputTextStyle,
                               keyboardType: TextInputType.text,
                               obscureText: true,

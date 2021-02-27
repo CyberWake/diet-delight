@@ -12,7 +12,12 @@ class _SettingsFAQPageState extends State<SettingsFAQPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('images/Group 7.png'),
+              fit: BoxFit.cover
+          )
+      ),
       child: ListView.builder(
           controller: _scrollController,
           itemCount: faqAnswers.length,
@@ -34,7 +39,7 @@ class _SettingsFAQPageState extends State<SettingsFAQPage> {
                       style: selectedTab.copyWith(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
-                          color: Colors.black));
+                          color: Color( 0xFF77838F)));
                 }),
               ),
             );

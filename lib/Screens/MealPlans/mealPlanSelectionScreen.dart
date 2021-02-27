@@ -197,6 +197,7 @@ class _MealPlanPageState extends State<MealPlanPage>
                               flex: 2,
                               child: InkWell(
                                   onTap: () {
+
                                     Navigator.push(
                                         context,
                                         CupertinoPageRoute(

@@ -276,151 +276,153 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: white,
-      body: CustomScrollView(
-       // controller: _scrollCon,
-        slivers: <Widget>[
-          SliverAppBar(
-            automaticallyImplyLeading:  true,
-            leading: GestureDetector(onTap : (){
-              Navigator.pop(context);
-            },child: Icon(Icons.keyboard_backspace,color: defaultGreen,)),
-            expandedHeight: MediaQuery.of(context).size.height * 3 / 13,
-            backgroundColor: Colors.white,
-            title: Text(widget.menu.name,
-                style: selectedTab.copyWith(fontSize: 18,color: Colors.black)),
-            flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      right: 10.0, top: 45, bottom: 5, left: 35),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 7,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 5.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
+    return SafeArea(
+      child: Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: white,
+        body: CustomScrollView(
+         // controller: _scrollCon,
+          slivers: <Widget>[
+            SliverAppBar(
+              automaticallyImplyLeading:  true,
+              leading: GestureDetector(onTap : (){
+                Navigator.pop(context);
+              },child: Icon(Icons.keyboard_backspace,color: defaultGreen,size: 30,)),
+              expandedHeight: MediaQuery.of(context).size.height * 3 / 13,
+              backgroundColor: Colors.white,
+              title: Text(widget.menu.name,
+                  style: selectedTab.copyWith(fontSize: 18,color: Colors.black)),
+              flexibleSpace: FlexibleSpaceBar(
+                background: Container(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        right: 10.0, top: 45, bottom: 5, left: 35),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 7,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 5.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
 
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Flexible(
-                                fit: FlexFit.loose,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 10.0, right: 10.0),
-                                  child: Text(
-                                    widget.menu.description +
-                                        widget.menu.description,
-                                    style: TextStyle(
-                                      fontFamily: 'RobotoCondensedReg',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                    maxLines: 3,
-                                  ),
+                                SizedBox(
+                                  height: 10,
                                 ),
-                              )
-                            ],
+                                Flexible(
+                                  fit: FlexFit.loose,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 10.0, right: 10.0),
+                                    child: Text(
+                                      widget.menu.description +
+                                          widget.menu.description,
+                                      style: TextStyle(
+                                        fontFamily: 'RobotoCondensedReg',
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                      maxLines: 3,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                          flex: 3,
-                          child: CircleAvatar(
-                            radius: 45,
-                            backgroundColor: white,
-                            child: CachedNetworkImage(
-                              imageUrl: widget.menu.picture ??
-                                  "http://via.placeholder.com/350x150",
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color: Color(0x26000000), blurRadius: 5)
-                                      ],
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover,
+                        Expanded(
+                            flex: 3,
+                            child: CircleAvatar(
+                              radius: 45,
+                              backgroundColor: white,
+                              child: CachedNetworkImage(
+                                imageUrl: widget.menu.picture ??
+                                    "http://via.placeholder.com/350x150",
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color: Color(0x26000000), blurRadius: 5)
+                                        ],
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                              placeholder: (context, url) => SpinKitChasingDots(
-                                color: defaultPurple,
-                                size: 32,
+                                placeholder: (context, url) => SpinKitChasingDots(
+                                  color: defaultPurple,
+                                  size: 32,
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
                               ),
-                              errorWidget: (context, url, error) =>
-                                  Icon(Icons.error),
-                            ),
-                          ))
-                    ],
+                            ))
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          SliverList(
-              delegate: SliverChildListDelegate(<Widget>[
-            Container(
-              height: MediaQuery.of(context).size.height * 1 / 13,
-              width: double.infinity,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: white,
-                boxShadow: [BoxShadow(color: Color(0x26000000), blurRadius: 5)],
-              ),
-              child: Center(
-                child: TabBar(
-                  controller: _pageController,
-                  isScrollable: true,
-                  onTap: (index) async {},
-                  //     labelStyle: tabBarLabelStyle,
-                  indicatorColor: defaultGreen,
-                  indicatorWeight: 3.0,
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  indicatorPadding: EdgeInsets.symmetric(horizontal: 35.0),
-                  labelColor: defaultPurple,
-                  labelPadding: EdgeInsets.symmetric(horizontal: 40),
-                  //          unselectedLabelStyle:
-                  //    tabBarLabelStyle.copyWith(color: inactiveTime),
-                  unselectedLabelColor: Colors.grey,
-                  tabs: List.generate(mainCategoryItems.length, (index) {
-                    return Tab(
-                      text: mainCategoryItems[index].name,
-                    );
-                  }),
+            SliverList(
+                delegate: SliverChildListDelegate(<Widget>[
+              Container(
+                height: MediaQuery.of(context).size.height * 1 / 13,
+                width: double.infinity,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: white,
+                  boxShadow: [BoxShadow(color: Color(0x26000000), blurRadius: 5)],
+                ),
+                child: Center(
+                  child: TabBar(
+                    controller: _pageController,
+                    isScrollable: true,
+                    onTap: (index) async {},
+                    //     labelStyle: tabBarLabelStyle,
+                    indicatorColor: defaultGreen,
+                    indicatorWeight: 3.0,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    indicatorPadding: EdgeInsets.symmetric(horizontal: 35.0),
+                    labelColor: defaultPurple,
+                    labelPadding: EdgeInsets.symmetric(horizontal: 40),
+                    //          unselectedLabelStyle:
+                    //    tabBarLabelStyle.copyWith(color: inactiveTime),
+                    unselectedLabelColor: Colors.grey,
+                    tabs: List.generate(mainCategoryItems.length, (index) {
+                      return Tab(
+                        text: mainCategoryItems[index].name,
+                      );
+                    }),
+                  ),
                 ),
               ),
-            ),
-            isLoaded
-                ? Container(
-              height: MediaQuery.of(context).size.height*12/13-kTextTabBarHeight,
-                  child: TabBarView(
-                      controller: _pageController,
-                      children: List.generate(mainCategoryItems.length, (index) {
-                        return Container(
-                          margin: index == 0
-                              ? EdgeInsets.only(top: 10)
-                              : EdgeInsets.zero,
-                          child: menuUi(
-                              foodItems[index], categoryItems[index].parent),
-                        );
-                      })),
-                )
-                : Center(
-                    child: SpinKitThreeBounce(color: defaultPurple, size: 32))
-          ]))
-        ],
+              isLoaded
+                  ? Container(
+                height: MediaQuery.of(context).size.height*11.4/13-kTextTabBarHeight,
+                    child: TabBarView(
+                        controller: _pageController,
+                        children: List.generate(mainCategoryItems.length, (index) {
+                          return Container(
+                            margin: index == 0
+                                ? EdgeInsets.only(top: 10)
+                                : EdgeInsets.zero,
+                            child: menuUi(
+                                foodItems[index], categoryItems[index].parent),
+                          );
+                        })),
+                  )
+                  : Center(
+                      child: SpinKitThreeBounce(color: defaultPurple, size: 32))
+            ]))
+          ],
+        ),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:page_transition/page_transition.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -56,12 +57,22 @@ class _HomeScreenState extends State<HomeScreen> {
         child: InkWell(
           splashColor: defaultGreen.withAlpha(30),
           onTap: () {
+            print('called');
             Navigator.push(
-                context,
-                CupertinoPageRoute(
-                    builder: (context) => Menu(
-                          menu: menus[pos],
-                        )));
+              context,
+              PageTransition(
+                type: PageTransitionType.fade,
+                child:  Menu(
+                  menu: menus[pos],
+                ),
+              ),
+            );
+            // Navigator.push(
+            //     context,
+            //     CupertinoPageRoute(
+            //         builder: (context) => Menu(
+            //               menu: menus[pos],
+            //             )));
 
             print('success getting menu screen');
           },
@@ -171,10 +182,18 @@ class _HomeScreenState extends State<HomeScreen> {
           splashColor: defaultGreen.withAlpha(30),
           onTap: () {
             Navigator.push(
-                context,
-                CupertinoPageRoute(
-                    builder: (context) => MealPlanPage(
-                        menus: menus, mealPlans: mealPackages[pos])));
+              context,
+              PageTransition(
+                type: PageTransitionType.fade,
+                child:  MealPlanPage(
+                    menus: menus, mealPlans: mealPackages[pos])
+              ),
+            );
+            // Navigator.push(
+            //     context,
+            //     CupertinoPageRoute(
+            //         builder: (context) => MealPlanPage(
+            //             menus: menus, mealPlans: mealPackages[pos])));
             print('success getting meal details page');
           },
           child: Container(
@@ -267,12 +286,16 @@ class _HomeScreenState extends State<HomeScreen> {
           splashColor: defaultGreen.withAlpha(30),
           onTap: () {
             Navigator.push(
-                context,
-                CupertinoPageRoute(
-                    builder: (context) => BookConsultation(
-                          packageIndex: pos,
-                          consultation: consultationPackages,
-                        )));
+              context,
+              PageTransition(
+                  type: PageTransitionType.fade,
+                  child:  BookConsultation(
+                    packageIndex: pos,
+                    consultation: consultationPackages,
+                  ))
+            );
+
+
             print('success getting consultation package screen');
           },
           child: Container(
@@ -468,7 +491,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
+                        padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
                         child: Container(
                           height: 0.65 * devWidth,
                           child: ListView.builder(
@@ -518,7 +541,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
+                        padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
                         child: Container(
                           height: 0.55 * devWidth,
                           child: ListView.builder(
@@ -565,7 +588,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
+                        padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
                         child: Container(
                           height: 0.48 * devWidth,
                           child: ListView.builder(
@@ -585,7 +608,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         },
                                         child: Container(
                                           color: Colors.white,
-                                          width: 0.4 * devWidth,
+                                          width: 0.5 * devWidth,
                                           height: 220,
                                           child: Column(
                                             mainAxisSize: MainAxisSize.max,
@@ -601,9 +624,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   imageBuilder: (context,
                                                           imageProvider) =>
                                                       Container(
-                                                    width: (0.4 * devWidth),
+                                                    width: (0.5 * devWidth),
                                                     height:
-                                                        (0.4 * devWidth) / 2,
+                                                        (0.5 * devWidth) / 2,
                                                     decoration: BoxDecoration(
                                                       shape: BoxShape.rectangle,
                                                       image: DecorationImage(
@@ -637,7 +660,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.only(
-                                                    bottom: 10),
+                                                    bottom: 5),
                                                 child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
@@ -747,7 +770,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Padding(
-                          padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                          padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
                           child: Container(
                               height: 0.525 * devWidth,
                               child: ListView.builder(

@@ -261,8 +261,11 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
       withoutDays.add(6);
     }
     print("printing primary");
+    print(datesWhenBreakChosen);
+    print(daysList);
     print(widget.primaryAndSecondary[0]);
     print(widget.primaryAndSecondary[1]);
+    print(widget.primaryAndSecondary[2]);
   }
 
   @override
@@ -423,39 +426,28 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
                                     setState(() {
                                       if (daysList.contains(currDay)) {
                                         var primaryList =
-                                            widget.primaryAndSecondary[0];
+                                        widget.primaryAndSecondary[0];
                                         var secondaryList =
-                                            widget.primaryAndSecondary[1];
+                                        widget.primaryAndSecondary[1];
                                         var totalList =
-                                            widget.primaryAndSecondary[2];
+                                        widget.primaryAndSecondary[2];
                                         if (primaryList
                                             .contains(currDay + " 00:00:00")) {
                                           int count = 1;
                                           int counter = 1;
-                                          var nextPossibleDay = DateTime.parse(
-                                                  currDay + " 00:00:00")
-                                              .add(Duration(days: count));
-                                          while (!widget.listOfAvailableDays
-                                              .contains(DateFormat('EEEE')
-                                                  .format(nextPossibleDay))) {
-                                            count++;
-                                            nextPossibleDay = DateTime.parse(
-                                                    currDay + " 00:00:00")
-                                                .add(Duration(days: count));
-                                          }
 
                                           var date = DateTime.parse(
                                               totalList[totalList.length - 1] +
                                                   " 00:00:00");
                                           print(date);
                                           var nextPossibleDayToAdd =
-                                              new DateTime(date.year,
-                                                  date.month, date.day + 1);
+                                          new DateTime(date.year,
+                                              date.month, date.day + 1);
 
                                           while (!widget.listOfAvailableDays
                                               .contains(DateFormat('EEEE')
-                                                  .format(
-                                                      nextPossibleDayToAdd))) {
+                                              .format(
+                                              nextPossibleDayToAdd)) || daysList.contains(nextPossibleDayToAdd.toString().split(' ')[0])) {
                                             print(nextPossibleDayToAdd);
                                             print(DateFormat('EEEE')
                                                 .format(nextPossibleDayToAdd));
@@ -472,66 +464,58 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
                                               .toString()
                                               .split(" ")[0]);
 
-                                          var nextDay = nextPossibleDay
-                                                  .toString()
-                                                  .split(" ")[0] +
-                                              " 00:00:00";
-
                                           datesWhenBreakChosen.add(currDay);
                                           primaryList
                                               .remove(currDay + " 00:00:00");
                                           primaryList.add(nextPossibleDayToAdd
-                                                  .toString()
-                                                  .split(" ")[0] +
+                                              .toString()
+                                              .split(" ")[0] +
                                               " 00:00:00");
                                           daysList.remove(currDay);
                                           daysList.add(
-                                              nextDay.toString().split(" ")[0]);
-
+                                              nextPossibleDayToAdd.toString().split(" ")[0]);
+                                          primaryList.sort((a,b) {
+                                            return DateTime.parse(a).compareTo(DateTime.parse(b));
+                                          });
+                                          totalList.sort((a,b) {
+                                            return DateTime.parse(a+" 00:00:00").compareTo(DateTime.parse(b+" 00:00:00"));
+                                          });
                                           widget.primaryAndSecondary[0] =
                                               primaryList;
                                           widget.primaryAndSecondary[2] =
                                               totalList;
 
-                                          month =
-                                              int.parse(nextDay.split('-')[1]);
-                                          monthStringValue =
-                                              monthIntegerValueInString(
-                                                  month: month);
-                                          day = int.parse(nextDay
-                                              .split(' ')[0]
-                                              .toString()
-                                              .split("-")[2]);
+                                          // month =
+                                          //     int.parse(nextPossibleDayToAdd
+                                          //         .toString().split('-')[1]);
+                                          // monthStringValue =
+                                          //     monthIntegerValueInString(
+                                          //         month: month);
+                                          // day = int.parse(nextPossibleDayToAdd
+                                          //     .toString()
+                                          //     .split(' ')[0]
+                                          //     .toString()
+                                          //     .split("-")[2]);
                                         } else if (secondaryList
                                             .contains(currDay + " 00:00:00")) {
                                           print(
                                               'secondary contains break taken day');
                                           int count = 1;
                                           int counter = 1;
-                                          var nextPossibleDay = DateTime.parse(
-                                                  currDay + " 00:00:00")
-                                              .add(Duration(days: count));
-                                          while (!widget.listOfAvailableDays
-                                              .contains(DateFormat('EEEE')
-                                                  .format(nextPossibleDay))) {
-                                            count++;
-                                            nextPossibleDay = DateTime.parse(
-                                                    currDay + " 00:00:00")
-                                                .add(Duration(days: count));
-                                          }
+
 
                                           var date = DateTime.parse(
                                               totalList[totalList.length - 1] +
                                                   " 00:00:00");
                                           print(date);
                                           var nextPossibleDayToAdd =
-                                              new DateTime(date.year,
-                                                  date.month, date.day + 1);
+                                          new DateTime(date.year,
+                                              date.month, date.day + 1);
 
                                           while (!widget.listOfAvailableDays
                                               .contains(DateFormat('EEEE')
-                                                  .format(
-                                                      nextPossibleDayToAdd))) {
+                                              .format(
+                                              nextPossibleDayToAdd)) || daysList.contains(nextPossibleDayToAdd.toString().split(' ')[0])) {
                                             print(nextPossibleDayToAdd);
                                             print(DateFormat('EEEE')
                                                 .format(nextPossibleDayToAdd));
@@ -545,42 +529,44 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
                                               .toString()
                                               .split(" ")[0]);
 
-                                          var nextDay = nextPossibleDay
-                                                  .toString()
-                                                  .split(" ")[0] +
-                                              " 00:00:00";
-
                                           datesWhenBreakChosen.add(currDay);
                                           secondaryList
                                               .remove(currDay + " 00:00:00");
                                           secondaryList.add(nextPossibleDayToAdd
-                                                  .toString()
-                                                  .split(" ")[0] +
+                                              .toString()
+                                              .split(" ")[0] +
                                               " 00:00:00");
                                           daysList.remove(currDay);
                                           daysList.add(
-                                              nextDay.toString().split(" ")[0]);
+                                              nextPossibleDayToAdd.toString().split(" ")[0]);
 
+                                          secondaryList.sort((a,b) {
+                                            return DateTime.parse(a).compareTo(DateTime.parse(b));
+                                          });
+                                          totalList.sort((a,b) {
+                                            return DateTime.parse(a+" 00:00:00").compareTo(DateTime.parse(b+" 00:00:00"));
+                                          });
                                           widget.primaryAndSecondary[1] =
                                               secondaryList;
                                           widget.primaryAndSecondary[2] =
                                               totalList;
 
-                                          month =
-                                              int.parse(nextDay.split('-')[1]);
-                                          monthStringValue =
-                                              monthIntegerValueInString(
-                                                  month: month);
-                                          day = int.parse(nextDay
-                                              .split(' ')[0]
-                                              .toString()
-                                              .split("-")[2]);
+                                          // month =
+                                          //     int.parse(nextPossibleDayToAdd.toString().split('-')[1]);
+                                          // monthStringValue =
+                                          //     monthIntegerValueInString(
+                                          //         month: month);
+                                          // day = int.parse(nextPossibleDayToAdd.toString()
+                                          //     .split(' ')[0]
+                                          //     .toString()
+                                          //     .split("-")[2]);
                                         }
                                         print('printing total list');
                                         print(totalList);
                                         print(primaryList);
                                         print(secondaryList);
-                                      } else if (datesWhenBreakChosen
+                                      }
+                                       else if (datesWhenBreakChosen
                                           .contains(currDay)) {
                                         var primaryList =
                                             widget.primaryAndSecondary[0];
@@ -589,66 +575,132 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
                                         var totalList =
                                             widget.primaryAndSecondary[2];
                                         print("tapped on break date");
-                                        int ind = datesWhenBreakChosen
-                                            .indexOf(currDay);
-                                        daysList = [];
-                                        daysList.add(currDay);
-                                        final length =
-                                            datesWhenBreakChosen.length;
-                                        for (int i = ind; i < length; i++) {
-                                          print('for loop called');
-                                          if (primaryList.contains(
-                                              totalList[totalList.length - 1] +
-                                                  " 00:00:00")) {
-                                            primaryList.insert(
-                                                0,
-                                                datesWhenBreakChosen[i] +
-                                                    " 00:00:00");
-                                            primaryList.remove(totalList[
-                                                    totalList.length - 1] +
-                                                " 00:00:00");
-                                            totalList.remove(totalList[
-                                                totalList.length - 1]);
 
-                                            print('removed from primary');
-                                          } else if (secondaryList.contains(
-                                              totalList[totalList.length - 1] +
-                                                  " 00:00:00")) {
-                                            secondaryList.insert(
-                                                0,
-                                                datesWhenBreakChosen[i] +
-                                                    " 00:00:00");
-                                            secondaryList.remove(totalList[
-                                                    totalList.length - 1] +
-                                                " 00:00:00");
-                                            totalList.remove(totalList[
-                                                totalList.length - 1]);
+                                        if(primaryList.length == 0){
+                                          print("primary called");
+                                          var dateToBeRemoved = secondaryList[secondaryList.length-1];
+                                          secondaryList.add(currDay+" 00:00:00");
+                                          secondaryList.sort((a,b) {
+                                            return DateTime.parse(a).compareTo(DateTime.parse(b));
+                                          });
+                                          secondaryList.remove(dateToBeRemoved);
+                                          widget.primaryAndSecondary[1] = secondaryList;
+                                          datesWhenBreakChosen.remove(currDay);
+                                          daysList.add(currDay);
+                                        }else  if(secondaryList.length == 0){
+                                          print('secondary called');
+                                          var dateToBeRemoved = primaryList[primaryList.length-1];
+                                          primaryList.add(currDay+" 00:00:00");
+                                          primaryList.sort((a,b) {
+                                            return DateTime.parse(a).compareTo(DateTime.parse(b));
+                                          });
+                                          primaryList.remove(dateToBeRemoved);
+                                          widget.primaryAndSecondary[0] = primaryList;
+                                          datesWhenBreakChosen.remove(currDay);
+                                          daysList.add(currDay);
 
-                                            print('removed from secondary');
-                                          } else {
-                                            print(
-                                                "ERROR\n\n\n\ None contains the last date");
+                                        }else{
+                                          print('else condition called');
+                                          var dateFromPrimary = primaryList[primaryList.length-1];
+                                          var dateFromSecondary =  secondaryList[secondaryList.length-1];
+                                          var list = [
+                                            DateTime.parse(dateFromPrimary),
+                                            DateTime.parse(dateFromSecondary)
+                                          ];
+                                          print('reached here');
+                                          list.sort((a,b) {
+                                            return a.compareTo(b);
+                                          });
+                                          print(list);
+                                          if(primaryList.contains(list[list.length-1].toString().split(" ")[0]+" 00:00:00")){
+                                            print('primary contains');
+                                            primaryList.add(currDay+" 00:00:00");
+                                            datesWhenBreakChosen.remove(currDay);
+                                            daysList.add(currDay);
+                                            primaryList.remove(list[list.length-1].toString().split(" ")[0]+" 00:00:00");
+                                            primaryList.sort((a,b) {
+                                              return DateTime.parse(a).compareTo(DateTime.parse(b));
+                                            });
+                                            widget.primaryAndSecondary[0] = primaryList;
+                                          }else{
+                                            print('secondary called');
+                                            secondaryList.add(currDay+" 00:00:00");
+                                            datesWhenBreakChosen.remove(currDay);
+                                            daysList.add(currDay);
+                                            secondaryList.remove(list[list.length-1].toString().split(" ")[0]+" 00:00:00");
+                                            secondaryList.sort((a,b) {
+                                              return DateTime.parse(a).compareTo(DateTime.parse(b));
+                                            });
+                                            widget.primaryAndSecondary[1] = secondaryList;
+                                            print(widget.primaryAndSecondary);
+
                                           }
                                         }
+                                        // int ind = datesWhenBreakChosen
+                                        //     .indexOf(currDay);
+                                        // daysList = [];
+                                        // daysList.add(currDay);
+                                        // final length =
+                                        //     datesWhenBreakChosen.length;
+                                        // for (int i = ind; i < length; i++) {
+                                        //   print('for loop called');
+                                        //   if (primaryList.contains(
+                                        //       totalList[totalList.length - 1] +
+                                        //           " 00:00:00")) {
+                                        //     primaryList.insert(
+                                        //         0,
+                                        //         datesWhenBreakChosen[i] +
+                                        //             " 00:00:00");
+                                        //     primaryList.remove(totalList[
+                                        //             totalList.length - 1] +
+                                        //         " 00:00:00");
+                                        //     totalList.remove(totalList[
+                                        //         totalList.length - 1]);
+                                        //
+                                        //     print('removed from primary');
+                                        //   } else if (secondaryList.contains(
+                                        //       totalList[totalList.length - 1] +
+                                        //           " 00:00:00")) {
+                                        //     secondaryList.insert(
+                                        //         0,
+                                        //         datesWhenBreakChosen[i] +
+                                        //             " 00:00:00");
+                                        //     secondaryList.remove(totalList[
+                                        //             totalList.length - 1] +
+                                        //         " 00:00:00");
+                                        //     totalList.remove(totalList[
+                                        //         totalList.length - 1]);
+                                        //
+                                        //     print('removed from secondary');
+                                        //   } else {
+                                        //     print(
+                                        //         "ERROR\n\n\n\ None contains the last date");
+                                        //   }
+                                        // }
+                                        //
+                                        // var tempDateChosen = [];
+                                        // for (int i = 0; i < ind; i++) {
+                                        //   tempDateChosen.add(datesWhenBreakChosen[i]);
+                                        // }
+                                        //
+                                        // datesWhenBreakChosen = tempDateChosen;
+                                        // print(totalList);
+                                        // print(primaryList);
+                                        // print(secondaryList);
+                                        // print(datesWhenBreakChosen);
+                                        // widget.primaryAndSecondary[0] =
+                                        //     primaryList;
+                                        // widget.primaryAndSecondary[1] =
+                                        //     secondaryList;
+                                        // widget.primaryAndSecondary[2] =
+                                        //     totalList;
+                                       }
 
-                                        var tempDateChosen = [];
-                                        for (int i = 0; i < ind; i++) {
-                                          tempDateChosen.add(datesWhenBreakChosen[i]);
-                                        }
 
-                                        datesWhenBreakChosen = tempDateChosen;
-                                        print(totalList);
-                                        print(primaryList);
-                                        print(secondaryList);
-                                        print(datesWhenBreakChosen);
-                                        widget.primaryAndSecondary[0] =
-                                            primaryList;
-                                        widget.primaryAndSecondary[1] =
-                                            secondaryList;
-                                        widget.primaryAndSecondary[2] =
-                                            totalList;
-                                      } else {
+                                       else {
                                         print('heyyyyyyyyyyy');
+                                        print(daysList);
+                                        print(currDay);
                                         print(nextDay);
                                       }
                                     });
@@ -658,29 +710,47 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
                                         0.04,
                                     width: MediaQuery.of(context).size.width *
                                         0.122,
-                                    decoration: !widget.primaryAndSecondary[2]
-                                            .contains(currDay)
+                                    decoration: withoutDays.contains(i%7) ?
+                                    BoxDecoration(
+                                      color: Color(0xFF77838F).withOpacity(0.5),
+                                      borderRadius:
+                                      BorderRadius.circular(100),
+
+                                    )
+                                        :  !widget.primaryAndSecondary[0]
+                                            .contains(currDay+" 00:00:00") && !widget.primaryAndSecondary[1]
+                                        .contains(currDay+" 00:00:00")
                                         ? BoxDecoration(
-                                            color: Color(0xFF77838F).withOpacity(0.5),
+                                            color: Colors.transparent,
                                             borderRadius:
                                                 BorderRadius.circular(100),
+
                                           )
                                         : daysList.contains(currDay)
                                             ? BoxDecoration(
-                                                color: Color.fromRGBO(180, 180, 180, 1),
+                                                color: Color(0xFF77838F),
                                                 borderRadius:
                                                     BorderRadius.circular(100),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.grey
-                                                        .withOpacity(0.25),
-                                                    blurRadius: 4,
-                                                    offset: Offset(0,
-                                                        2), // changes position of shadow
-                                                  ),
-                                                ],
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.25),
+                                          offset: Offset(0.0, 1.0), //(x,y)
+                                          blurRadius: 6.0,
+                                        ),
+                                      ],
                                               )
-                                            : null,
+                                            : datesWhenBreakChosen.contains(currDay) ? BoxDecoration(
+                                      color: Color(0xFF77838F).withOpacity(0.2),
+                                      borderRadius:
+                                      BorderRadius.circular(100),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.25),
+                                          offset: Offset(0.0, 1.0), //(x,y)
+                                          blurRadius: 6.0,
+                                        ),
+                                      ],
+                                    ) : null,
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -688,13 +758,13 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
                                         Text(
                                           '$dayText',
                                           style: TextStyle(
-                                              color: !widget
-                                                      .primaryAndSecondary[2]
-                                                      .contains(currDay)
+                                              color: withoutDays.contains(i%7) ? Color(0xFFFFFFFF).withOpacity(0.25) :  !widget.primaryAndSecondary[0]
+                                                  .contains(currDay+" 00:00:00") && !widget.primaryAndSecondary[1]
+                                                  .contains(currDay+" 00:00:00")
                                                   ? Color(0xFF77838F)
                                                   : daysList.contains(currDay)
                                                       ? Colors.white
-                                                      : Colors.white,
+                                                      : Color(0xFF77838F),
                                               fontSize: datesWhenBreakChosen
                                                       .contains(currDay)
                                                   ? 12
@@ -704,8 +774,7 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
                                             ? Text(
                                                 'Break',
                                                 style: appBarTextStyle.copyWith(
-                                                    color: Color.fromRGBO(
-                                                        119, 131, 149, 1),
+                                                    color:  Color(0xFF77838F),
                                                     fontSize:
                                                         datesWhenBreakChosen
                                                                 .contains(

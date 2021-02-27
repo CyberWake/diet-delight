@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     [],
     ['Consultation Orders', 'Meal Plan Orders'],
     [],
-    ['Securities', 'Terms and Conditions', 'FAQ', 'Privacy Policy'],
+    ['Security', 'Terms and Conditions', 'FAQ', 'Privacy Policy'],
     [],
   ];
 

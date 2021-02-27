@@ -243,7 +243,7 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
   _showDialogBox() {
     showDialog(
       context: context,
-      builder: (context) => StatefulBuilder(builder: (context, setState) {
+      builder: (context) => StatefulBuilder(builder: (context,setState){
         return Dialog(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(30.0))),
@@ -259,32 +259,26 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
                 boxShadow: [
                   //background color of box
 
+
                   BoxShadow(
                     color: Colors.grey,
                     blurRadius: 3.0, // soften the shadow
                     spreadRadius: 3.0, //extend the shadow
+
                   )
                 ],
               ),
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'Please de-select one address out of the selected addresses',
-                      style: appBarTextStyle.copyWith(
-                          color: Colors.black, fontSize: 16),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
+                    SizedBox(height: 10,),
+                    Text('Please add a secondary address first.',style: appBarTextStyle.copyWith(color: Colors.black,fontSize: 16),textAlign: TextAlign.center,),
+                    SizedBox(height: 10,),
+
                   ],
                 ),
               ),
@@ -351,11 +345,11 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
     return StatefulBuilder(builder:
         (BuildContext context, StateSetter setState /*You can rename this!*/) {
       return Container(
-        height: MediaQuery.of(context).size.height * 0.59,
+        height: MediaQuery.of(context).size.height * 0.55,
         child: Column(
           children: [
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.04,
+              height: MediaQuery.of(context).size.height * 0.0,
             ),
             Column(
               children: [
@@ -482,11 +476,12 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
                                 var dayyy = (int.parse(dayText) + 1).toString();
                                 temp = dayyy.length == 1 ? "0$dayyy" : dayyy;
 
+                                if (secondaryAddressLine1 != '' && secondaryAddressLine2 != ''){
                                   if (primaryAddressDaysList
                                       .contains(currDay)) {
-                                   setState((){
-                                     primaryAddressDaysList.remove(currDay);
-                                   secondayAddressDaysList.add(currDay);});
+                                    setState((){
+                                      primaryAddressDaysList.remove(currDay);
+                                      secondayAddressDaysList.add(currDay);});
                                     await makeApiCall();
                                   }
                                   else if (secondayAddressDaysList
@@ -497,6 +492,9 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
                                     });
                                     await makeApiCall();
                                   }
+                                }else{
+                                  _showDialogBox();
+                                }
 
                               },
                               child: Container(
@@ -505,11 +503,19 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
                                 width:
                                     MediaQuery.of(context).size.width * 0.122,
                                 decoration: withoutDays.contains(i % 7)
+                                    ?  BoxDecoration(
+                                  color: Color(0xFF77838F).withOpacity(0.5),
+                                  borderRadius:
+                                  BorderRadius.circular(100),
+                                ) :   !primaryAddressDaysList
+                                    .contains(currDay) && !secondayAddressDaysList
+                                    .contains(currDay)
                                     ? BoxDecoration(
-                                        color: Color(0xFF77838F),
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                      )
+                                  color: Colors.transparent,
+                                  borderRadius:
+                                  BorderRadius.circular(100),
+
+                                )
                                     : primaryAddressDaysList.contains(currDay) &&
                                             !widget.addressTapList.contains(0)
                                         ? BoxDecoration(
@@ -588,7 +594,9 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
                                       '$dayText',
                                       style: TextStyle(
                                           color: withoutDays.contains((i % 7))
-                                              ? Color(0xFFFFFFFF).withOpacity(0.2)
+                                              ? Color(0xFFFFFFFF).withOpacity(0.2) :   !primaryAddressDaysList
+                                              .contains(currDay) && !secondayAddressDaysList
+                                              .contains(currDay) ? Color(0xFF77838F)
                                               : primaryAddressDaysList
                                                           .contains(currDay) &&
                                                       !widget.addressTapList
@@ -616,7 +624,9 @@ class _CustomCalenderForAddressState extends State<CustomCalenderForAddress> {
                                                                           1)
                                                               ? Colors.white
                                                               : datesWhenBreakChosen.contains(currDay)?
-                                          Colors.white : Colors.white.withOpacity(0.2)),
+                                          Colors.white : Colors.white.withOpacity(0.2),
+                                        fontWeight: widget.addressTapList.contains(0) && widget.addressTapList.contains(1) ? FontWeight.bold  : FontWeight.normal,
+                                      ),
                                     ),
                                     datesWhenBreakChosen.contains(currDay)
                                         ? Text(

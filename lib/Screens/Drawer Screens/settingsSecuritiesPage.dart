@@ -23,6 +23,12 @@ class _SettingSecuritiesState extends State<SettingSecurities> {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.width * 0.7,
+      decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('images/Group 7.png'),
+              fit: BoxFit.cover
+          )
+      ),
       padding: EdgeInsets.only(top: 20),
       child: SingleChildScrollView(
         child: Column(
@@ -36,7 +42,7 @@ class _SettingSecuritiesState extends State<SettingSecurities> {
                     child: Text(
                       'Change Password',
                       style: authInputTextStyle.copyWith(
-                          color: Colors.black,
+                          color: Color(0xFF303960),
                           fontSize: 24,
                           fontWeight: FontWeight.w500),
                     ),
@@ -149,13 +155,23 @@ class _SettingSecuritiesState extends State<SettingSecurities> {
                       obscureText: true,
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.done,
-                      decoration: authInputFieldDecoration.copyWith(
+                    decoration: InputDecoration(
+                      hintStyle: appBarTextStyle.copyWith(color: Color(0xFF77838F),fontSize: 16),
                         hintText: index == 1
                             ? 'Enter Current Password'
                             : index == 2
                                 ? 'Enter New Password'
                                 : 'Confirm New Password',
-                      )),
+                      fillColor: Colors.white,
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(3.0),
+                      ),
+                    ),
+                  ),
                 );
               }
             })),

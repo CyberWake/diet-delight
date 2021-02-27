@@ -63,52 +63,60 @@ class _SplashScreenState extends State<SplashScreen>
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                flex: 2,
-                child: Container(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      child: Container(
-                          child: Image.asset(
-                        'images/Group 66.png',
-                        width: 300.0,
-                        height: 100.0,
-                      )),
-                      radius: 100.0,
-                    ),
-                    SizedBox(
-                      height: 24,
-                    ),
-                  ],
-                )),
-              ),
-              Expanded(
-                flex: 1,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SpinKitWanderingCubes(
-                      itemBuilder: (BuildContext context, int index) {
-                        return DecoratedBox(
-                          decoration: BoxDecoration(
-                            color: index.isEven ? Colors.red : Colors.green,
-                          ),
-                        );
-                      },
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 20.0),
-                    ),
-                  ],
+          Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage('images/splash_screen.jpg'),
+                    fit: BoxFit.cover
+                )
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        child: Container(
+                            child: Image.asset(
+                          'images/Group 66.png',
+                          width: 300.0,
+                          height: 100.0,
+                        )),
+                        radius: 100.0,
+                      ),
+                      SizedBox(
+                        height: 24,
+                      ),
+                    ],
+                  )),
                 ),
-              ),
-            ],
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SpinKitWanderingCubes(
+                        itemBuilder: (BuildContext context, int index) {
+                          return DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: index.isEven ? Colors.red : Colors.green,
+                            ),
+                          );
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 20.0),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
