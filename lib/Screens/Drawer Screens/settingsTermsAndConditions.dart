@@ -5,12 +5,6 @@ class SettingsTermsAndConditionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('images/Group 7.png'),
-              fit: BoxFit.cover
-          )
-      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10),
         child: ListView(
@@ -20,7 +14,7 @@ class SettingsTermsAndConditionsPage extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   termsAndConditions,
-                  style: appBarTextStyle,
+                  style: appBarTextStyle.copyWith(fontSize: 14),
                 ),
               ),
             ),

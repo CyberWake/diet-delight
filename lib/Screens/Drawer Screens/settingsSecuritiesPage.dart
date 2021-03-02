@@ -23,12 +23,6 @@ class _SettingSecuritiesState extends State<SettingSecurities> {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.width * 0.7,
-      decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('images/Group 7.png'),
-              fit: BoxFit.cover
-          )
-      ),
       padding: EdgeInsets.only(top: 20),
       child: SingleChildScrollView(
         child: Column(

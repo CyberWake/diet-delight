@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     [],
     ['Consultation Orders', 'Meal Plan Orders'],
     [],
-    ['Terms and Conditions', 'FAQ', 'Privacy Policy', 'Securities'],
+    [ 'Security','Terms and Conditions', 'FAQ', 'Privacy Policy',],
     [],
   ];
 
@@ -146,20 +146,25 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               image: AssetImage('images/order_history.jpg'),
               fit: BoxFit.fitHeight),
         )
-            : BoxDecoration(),
+            : page == 5 || page == 6 ?BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('images/Group 7.png'),
+                fit: BoxFit.fitHeight
+            )
+        ) :  BoxDecoration(),
         child: Scaffold(
           key: _scaffoldKey,
-          backgroundColor: page == 3 ? Colors.transparent : white,
+          backgroundColor: page == 3 ||  page == 5 || page == 6 ? Colors.transparent : white,
           appBar: AppBar(
             iconTheme: IconThemeData(
-                color: page == 0 || page == 3 ? defaultGreen : white),
+                color: page == 0 ||  page == 3 ||  page == 5 || page == 6 ? defaultGreen : white),
             elevation: 0.0,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(20.0),
                     bottomRight: Radius.circular(20.0))),
-            shadowColor: page == 3 ? (Color(0x26000000)) : Colors.transparent,
-            backgroundColor: page == 0 || page == 3 ? white : defaultGreen,
+            shadowColor:  page == 3 ||  page == 5 || page == 6  ? (Color(0x26000000)) : Colors.transparent,
+            backgroundColor: page == 0 ||  page == 5 || page == 6 ? white : defaultGreen,
             centerTitle: page == 0 ? true : false,
             title: page == 0
                 ? Image.asset(
@@ -170,7 +175,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 : Text(pageTitle[page],
                 style: appBarTextStyle.copyWith(
                     fontFamily: 'RobotoReg',
-                    color: page == 3 ? defaultGreen : white,
+                    color:  page == 3 ||  page == 5 || page == 6 ? defaultGreen : white,
                     fontWeight: FontWeight.bold)),
             leading: IconButton(
               icon: Icon(Icons.menu),

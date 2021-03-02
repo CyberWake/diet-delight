@@ -12,12 +12,7 @@ class _SettingsFAQPageState extends State<SettingsFAQPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('images/Group 7.png'),
-              fit: BoxFit.cover
-          )
-      ),
+
       child: ListView.builder(
           controller: _scrollController,
           itemCount: faqAnswers.length,

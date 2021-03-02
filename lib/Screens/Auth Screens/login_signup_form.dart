@@ -84,21 +84,12 @@ class _AfterSplashState extends State<AfterSplash>
                           child: index == 0 ? Text('SIGN IN') : Text('SIGN UP'));
                     })),
               ),
-              Container(
-                margin: EdgeInsets.all(10.0),
-                width: double.infinity,
-                height: tabSel == 0 ?2.5 * devHeight / 4 :3 * devHeight / 4,
-                decoration: BoxDecoration(
-                  color: formBackground,
-                ),
-                child: TabBarView(
-                  controller: _tabController,
-                  children: <Widget>[
-                    Login(token: accessToken),
-                    SignUp(token: accessToken),
-                  ],
-                ),
-              ),
+              tabSel == 0 ?  Container(
+                margin: EdgeInsets.all(10),
+                  child: Login(token: accessToken,height: 2.5 * devHeight / 4  ,)) :
+              Container( margin: EdgeInsets.all(10),
+                  child: SignUp(token: accessToken,height:  3.6* devHeight / 4,)),
+
             ],
           ),
         ),

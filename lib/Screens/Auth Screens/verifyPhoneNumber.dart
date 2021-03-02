@@ -204,7 +204,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                               style: TextStyle(
                                 fontFamily: 'RobotoCondensedReg',
                                 fontSize: 18,
-                                fontWeight: FontWeight.normal,
+                                fontWeight: FontWeight.w700,
                                 color: defaultGreen,
                               ),
                             ),
@@ -215,13 +215,14 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                                 style: TextStyle(
                                   fontFamily: 'RobotoCondensedReg',
                                   fontSize: 13,
-                                  fontWeight: FontWeight.normal,
+                                  fontWeight: FontWeight.w700,
                                   color: defaultGreen,
                                 ),
                               ),
                             ),
                           ],
                         ),
+                        SizedBox(height: MediaQuery.of(context).size.height*0.04,),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
                           child: Column(
@@ -245,7 +246,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                                     child: PinCodeTextField(
                                       maxLength: 6,
                                       hasUnderline: false,
-                                      pinBoxWidth: 30,
+                                      pinBoxWidth: 38,
                                       pinBoxHeight: 40,
                                       wrapAlignment: WrapAlignment.spaceBetween,
                                       hasTextBorderColor: Color(0xff909090),

@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 
 class SignUp extends StatefulWidget {
   final String token;
-  SignUp({this.token});
+  var height;
+  SignUp({this.token,this.height});
   @override
   _SignUpState createState() => _SignUpState();
 }
@@ -54,11 +55,13 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     double devWidth = MediaQuery.of(context).size.width;
     return Container(
-      height: 600.0,
+      height: widget.height,
+      decoration: BoxDecoration(
+        color: formBackground,
+      ),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-        child: ListView(
-          shrinkWrap: true,
+        child: Column(
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
@@ -426,7 +429,7 @@ class _SignUpState extends State<SignUp> {
                 children: [
                   Container(
                     color: defaultGreen,
-                    height: 1,
+                    height: 1.6,
                     width: 130,
                   ),
                   Padding(
@@ -435,7 +438,7 @@ class _SignUpState extends State<SignUp> {
                   ),
                   Container(
                     color: defaultGreen,
-                    height: 1,
+                    height: 1.6,
                     width: 130,
                   ),
                 ],

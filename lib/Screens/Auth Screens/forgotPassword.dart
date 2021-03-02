@@ -6,6 +6,7 @@ import 'package:diet_delight/konstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:page_transition/page_transition.dart';
 
 class ForgotPassword extends StatefulWidget {
   @override
@@ -80,6 +81,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   )
                 ],
               ),
+              SizedBox(height: MediaQuery.of(context).size.height*0.08,),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 30.0, 0, 20.0),
                 child: Container(
@@ -180,20 +182,25 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             ],
                           ),
                         ),
-                        SizedBox(height: MediaQuery.of(context).size.height*0.13,),
+                        SizedBox(height: MediaQuery.of(context).size.height*0.06,),
                         Padding(
               padding: const EdgeInsets.fromLTRB(30, 20, 30, 0),
                           child: SizedBox(
                             width: double.infinity,
                             child: TextButton(
                               onPressed: () {
+
                                 Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => VerifyPhoneNumber(
-                                          regDetails: RegModel(mobile: countryCode.text+mobileNo.text),
-                                          from: FromPage.forgetPass,
-                                        )));
+                                  context,
+                                  PageTransition(
+                                    type: PageTransitionType.fade,
+                                    child: VerifyPhoneNumber(
+                                      regDetails: RegModel(mobile: countryCode.text+mobileNo.text),
+                                      from: FromPage.forgetPass,
+                                    ),
+                                  ),
+                                );
+
                               },
                               child: Text(
                                 'SEND OTP',

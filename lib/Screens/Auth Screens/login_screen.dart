@@ -4,10 +4,12 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Login extends StatefulWidget {
   final String token;
-  Login({this.token});
+  var height;
+  Login({this.token,this.height});
   @override
   _LoginState createState() => _LoginState();
 }
@@ -32,7 +34,10 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300.0,
+      height: widget.height,
+      decoration: BoxDecoration(
+        color: formBackground,
+      ),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 20.0, 0, 0),
         child: ListView(
@@ -203,7 +208,18 @@ class _LoginState extends State<Login> {
                     }
                   },
                   child: initiated
-                      ? CircularProgressIndicator()
+                      ? Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: SpinKitWanderingCubes(
+                    itemBuilder: (BuildContext context, int index) {
+                        return DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: index.isEven ? Colors.red : Colors.green,
+                          ),
+                        );
+                    },
+                  ),
+                      )
                       : Text(
                           'SIGN IN',
                           style: TextStyle(
@@ -227,7 +243,7 @@ class _LoginState extends State<Login> {
                 children: [
                   Container(
                     color: defaultGreen,
-                    height: 1,
+                    height: 1.6,
                     width: 130,
                   ),
                   Padding(
@@ -236,7 +252,7 @@ class _LoginState extends State<Login> {
                   ),
                   Container(
                     color: defaultGreen,
-                    height: 1,
+                    height: 1.6,
                     width: 130,
                   ),
                 ],
