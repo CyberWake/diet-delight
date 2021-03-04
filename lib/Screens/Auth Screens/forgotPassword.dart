@@ -81,7 +81,19 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   )
                 ],
               ),
-              SizedBox(height: MediaQuery.of(context).size.height*0.08,),
+              SizedBox(height: MediaQuery.of(context).size.height*0.03,),
+              Center(
+                child: Text(
+                  'FORGOT PASSWORD',
+                  style: TextStyle(
+                    fontFamily: 'RobotoCondensedReg',
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: defaultGreen,
+                  ),
+                ),
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height*0.05,),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 30.0, 0, 20.0),
                 child: Container(
@@ -91,17 +103,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Center(
-                          child: Text(
-                            'FORGOT PASSWORD',
-                            style: TextStyle(
-                              fontFamily: 'RobotoCondensedReg',
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              color: defaultGreen,
-                            ),
-                          ),
-                        ),
+
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20, 15, 0, 0),
                           child: Column(

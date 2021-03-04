@@ -20,11 +20,13 @@ class _SplashScreenState extends State<SplashScreen>
   _retrieveCredentials() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('accessToken')) {
+      await Future.delayed(Duration(seconds: 2));
       _apiCall.autoLogin().whenComplete(() {
         Navigator.of(context).pushReplacement(CupertinoPageRoute(
             builder: (BuildContext context) => HomePage(openPage: 0)));
       });
     } else {
+      await Future.delayed(Duration(seconds: 2));
       Navigator.of(context).pushReplacement(
           CupertinoPageRoute(builder: (BuildContext context) => AfterSplash()));
     }
@@ -64,12 +66,9 @@ class _SplashScreenState extends State<SplashScreen>
         fit: StackFit.expand,
         children: <Widget>[
           Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('images/splash_screen.jpg'),
-                    fit: BoxFit.cover
-                )
-            ),
+      decoration: BoxDecoration(
+        color: Color(0xFF77838F).withOpacity(0.2),
+    ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[

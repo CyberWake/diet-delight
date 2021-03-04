@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 
 Future<void> main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterDownloader.initialize(
       debug: true // optional: set false to disable printing logs to console
@@ -23,6 +24,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
+    precacheImage(AssetImage("images/Group 7.png"), context);
     return MaterialApp(
       initialRoute: '/',
       routes: {

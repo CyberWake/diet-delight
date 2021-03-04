@@ -1,5 +1,7 @@
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 const Color defaultGreen = Color(0xFF8BC53F);
 const Color blurredDefaultGreen = Color.fromRGBO(255, 255, 255, 0.8);
@@ -57,7 +59,7 @@ const TextStyle selectedTab = TextStyle(
 
 const TextStyle drawerItemsStyle = TextStyle(
   fontFamily: 'MontserratMed',
-  fontSize: 26,
+  fontSize: 20,
   fontWeight: FontWeight.normal,
   color: questionnaireSelect,
 );
@@ -435,6 +437,22 @@ var faqAnswers = [
   "Though we really encourage you to exercise to maximize weight loss and for optimum health, you can still lose weight even without as long as you comply with our dietary recommendations and maintain an active life. ",
   "Hydration is very important – drink at least 2 Liters water daily. Besides water, you can have plain coffee or tea.  ",
 ];
+
+
+Future<bool> sendEmail(name,emailAddress,content) async{
+
+
+  final Email email = Email(
+    body: content,
+    subject: '$name',
+    recipients: [emailAddress.toString()],
+    isHTML: false,
+  );
+  print("hey");
+  await FlutterEmailSender.send(email);
+
+
+}
 
 
 int selectedAddressIndex;

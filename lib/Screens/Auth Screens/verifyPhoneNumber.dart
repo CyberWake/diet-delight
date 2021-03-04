@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 
 class VerifyPhoneNumber extends StatefulWidget {
@@ -67,12 +68,16 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
         } else {
           showSnackBar("Phone number automatically verified");
           Future.delayed(Duration(seconds: 1)).then((value) {
+
             Navigator.push(
-                context,
-                CupertinoPageRoute(
-                    builder: (context) => ResetPassword(
-                          userInfo: widget.regDetails,
-                        )));
+              context,
+              PageTransition(
+                type: PageTransitionType.fade,
+                child: ResetPassword(
+                  userInfo: widget.regDetails,
+                )
+              ),
+            );
           });
         }
       }
@@ -142,6 +147,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         key: _scaffoldKey,
         body: Container(
           decoration: BoxDecoration(
@@ -187,6 +193,34 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                   )
                 ],
               ),
+              SizedBox(height: MediaQuery.of(context).size.height*0.04,),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'VERIFY YOUR PHONE NUMBER',
+                    style: TextStyle(
+                      fontFamily: 'RobotoCondensedReg',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: defaultGreen,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 8.0, 0, 0),
+                    child: Text(
+                      'You would have received an otp on your phone...',
+                      style: TextStyle(
+                        fontFamily: 'RobotoCondensedReg',
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: defaultGreen,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height*0.01,),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 30.0, 0, 20.0),
                 child: Container(
@@ -196,33 +230,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'VERIFY YOUR PHONE NUMBER',
-                              style: TextStyle(
-                                fontFamily: 'RobotoCondensedReg',
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                                color: defaultGreen,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 8.0, 0, 0),
-                              child: Text(
-                                'You would have received an otp on your phone...',
-                                style: TextStyle(
-                                  fontFamily: 'RobotoCondensedReg',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w700,
-                                  color: defaultGreen,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: MediaQuery.of(context).size.height*0.04,),
+
                         Padding(
                           padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
                           child: Column(
@@ -253,7 +261,8 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                                       pinBoxColor: Colors.transparent,
                                       pinBoxDecoration: ProvidedPinBoxDecoration
                                           .underlinedPinBoxDecoration,
-                                      defaultBorderColor: Color(0xff909090),
+
+                                      defaultBorderColor: Color.fromRGBO(119, 131, 143, 0.2),
                                       onTextChanged: (String otp) {
                                         print(otp);
                                         enteredOtp = otp;

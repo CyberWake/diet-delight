@@ -97,7 +97,7 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
         ),
         builder: (builder) {
           return Container(
-            height: _height,
+            height: _height+10,
             color: Colors.transparent,
             child: Container(
                 padding: EdgeInsets.only(top: 30),

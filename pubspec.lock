@@ -195,6 +195,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.8"
+  flutter_email_sender:
+    dependency: "direct main"
+    description:
+      name: flutter_email_sender
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.0"
   flutter_open_whatsapp:
     dependency: "direct main"
     description:
@@ -209,6 +216,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5+1"
+  flutter_search_panel:
+    dependency: "direct main"
+    description:
+      name: flutter_search_panel
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   flutter_secure_storage:
     dependency: "direct main"
     description:

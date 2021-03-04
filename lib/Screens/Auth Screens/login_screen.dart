@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:page_transition/page_transition.dart';
 
 class Login extends StatefulWidget {
   final String token;
@@ -126,9 +127,12 @@ class _LoginState extends State<Login> {
                 child: GestureDetector(
                   onTap: () {
                     Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                            builder: (context) => ForgotPassword()));
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.fade,
+                        child: ForgotPassword(),
+                      ),
+                    );
                   },
                   child: Text('Forgot Password?',
                       style: TextStyle(
@@ -209,15 +213,10 @@ class _LoginState extends State<Login> {
                   },
                   child: initiated
                       ? Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: SpinKitWanderingCubes(
-                    itemBuilder: (BuildContext context, int index) {
-                        return DecoratedBox(
-                          decoration: BoxDecoration(
-                            color: index.isEven ? Colors.red : Colors.green,
-                          ),
-                        );
-                    },
+                        padding: const EdgeInsets.all(6.0),
+                        child: SpinKitChasingDots(
+                          color: Colors.white,
+                          size: 25,
                   ),
                       )
                       : Text(

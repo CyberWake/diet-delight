@@ -146,23 +146,23 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               image: AssetImage('images/order_history.jpg'),
               fit: BoxFit.fitHeight),
         )
-            : page == 5 || page == 6 ?BoxDecoration(
+            : page == 5  || page == 6? BoxDecoration(
             image: DecorationImage(
-                image: AssetImage('images/Group 7.png'),
+                image: AssetImage('images/questionnaire_background.jpg'),
                 fit: BoxFit.fitHeight
-            )
-        ) :  BoxDecoration(),
+            ) ):  BoxDecoration(),
         child: Scaffold(
           key: _scaffoldKey,
           backgroundColor: page == 3 ||  page == 5 || page == 6 ? Colors.transparent : white,
           appBar: AppBar(
             iconTheme: IconThemeData(
                 color: page == 0 ||  page == 3 ||  page == 5 || page == 6 ? defaultGreen : white),
-            elevation: 0.0,
+            elevation: 2.0,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(20.0),
                     bottomRight: Radius.circular(20.0))),
+            bottomOpacity: 1,
             shadowColor:  page == 3 ||  page == 5 || page == 6  ? (Color(0x26000000)) : Colors.transparent,
             backgroundColor: page == 0 ||  page == 5 || page == 6 ? white : defaultGreen,
             centerTitle: page == 0 ? true : false,
@@ -260,6 +260,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       shrinkWrap: true,
                       children: List.generate(drawerItems.length, (index) {
                         if (index == 0) {
+
+                          print('called');
                           return Padding(
                             padding: EdgeInsets.only(
                                 top: MediaQuery.of(context).size.height * 0.03,

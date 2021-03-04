@@ -182,7 +182,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
       child: RawMaterialButton(
           elevation: 0.0,
           onPressed: onPress,
-          fillColor: Colors.white,
+          fillColor: Colors.transparent,
           child: child,
           shape: shapeWithBorder
               ? CircleBorder(side: BorderSide(color: Colors.black))
@@ -193,6 +193,12 @@ class _ContactUsPageState extends State<ContactUsPage> {
   var commentError = false;
   var nameError = false;
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    print('dispose called');
+  }
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -222,8 +228,8 @@ class _ContactUsPageState extends State<ContactUsPage> {
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
                     padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text("Please enter valid name",style: TextStyle(
-                      color: Colors.red,
+                    child: Text("Please enter your name",style: TextStyle(
+                      color: defaultGreen,
                     ),),
                   ),
                 ) : Container()
@@ -242,7 +248,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                     margin: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Text("Please enter valid email address.",style: TextStyle(
-                      color: Colors.red,
+                      color:defaultGreen,
                     ),),
                   ),
                 ) : Container()
@@ -260,8 +266,8 @@ class _ContactUsPageState extends State<ContactUsPage> {
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
                     padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text("Please enter valid email address.",style: TextStyle(
-                      color: Colors.red,
+                    child: Text("Please enter comment.",style: TextStyle(
+                      color:defaultGreen
                     ),),
                   ),
                 ) : Container()
@@ -271,10 +277,11 @@ class _ContactUsPageState extends State<ContactUsPage> {
               children: [
                 Spacer(),
                 TextButton(
-                  onPressed: email != null && comment.text != null && comment.text.length >0 && name.text.length >0 && name.text != null ? () {
+                  onPressed: email != null && comment.text != null && comment.text.length >0 && name.text.length >0 && name.text != null ? () async {
                     print('called');
                     print(comment.text);
                     print(name.text);
+                    await sendEmail(name.text, email.text, comment.text);
                   }
                   :  () {
                     print(commentError);
@@ -316,7 +323,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
               ],
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 30),
               child: Row(
                   children: List.generate(5, (index) {
                 return bottomButtons(
@@ -335,6 +342,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                           "917259384025", "Hello");
                     }
                   },
+
                   child: iconButtons[index],
                   shapeWithBorder: false,
                 );

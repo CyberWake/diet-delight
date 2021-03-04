@@ -1,3 +1,4 @@
+import 'package:date_format/date_format.dart';
 import 'package:diet_delight/Models/export_models.dart';
 import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,6 +30,72 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
   List<MenuCategoryModel> tempItems = List();
   final _apiCall = Api.instance;
   bool progress = false;
+  DateTime startDate;
+  List<DateTime> breakDates = List();
+  List<DateTime> planSelectedOffDays = List();
+  List<List<MenuOrderModel>> foodItems = List();
+  List<DateTime> dates = [];
+  List<List<MenuOrderModel>> foodItems1 = List();
+
+  getDates(success) {
+    dates = [];
+    int count = 0;
+    startDate = DateTime.parse(success.startDate);
+    DateTime date;
+    startDate = DateTime(
+        startDate.year, startDate.month, startDate.day, 00, 00, 00, 000);
+    List days =success.weekdays;
+    if (days.contains('Thu')) {
+      days.remove('Thu');
+      days.add('Thur');
+    }
+    for (int i = 0;
+    i < int.parse(success.mealPlanDuration);
+    i++) {
+      date = startDate.add(Duration(days: (count)));
+      while (!days.contains(formatDate(date, [D])) ||
+          ((breakDates != null) ? (breakDates.contains(date)) : false)) {
+        if (!days.contains(formatDate(date, [D]))) {
+          planSelectedOffDays.add(date);
+        }
+        count++;
+        date = startDate.add(Duration(days: count));
+      }
+      dates.insert(i, date);
+      print(date);
+      count++;
+    }
+    DateTime today = DateTime.now();
+    today = DateTime.parse(formatDate(today, [yyyy, '-', mm, '-', dd]));
+    print(today);
+
+  }
+
+  getData(success) async {
+    categoryItems = [];
+    foodItems1 = [];
+    setState(() {
+      isLoaded = false;
+    });
+    categoryItems = await _apiCall.getMenuCategories(widget.mealPlan.menuId);
+
+    if (categoryItems.isNotEmpty) {
+      for (int i = 0; i < categoryItems.length;) {
+        foodItems.add(await _apiCall
+            .getCurrentMealCategoryOrdersFoodItems(
+            categoryItems[i].id.toString(), success.id)
+            .whenComplete(() => i++));
+      }
+    }
+    if (mounted) {
+      setState(() {
+        isLoaded = true;
+      });
+    }
+
+
+
+  }
 
   @override
   void initState() {
@@ -55,7 +122,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                 : EdgeInsets.only(top: 5.0),
             child: Text(
               disc,
-              style: selectedTab.copyWith(fontSize: 14),
+              style: selectedTab.copyWith(fontSize: 14,fontWeight: FontWeight.w500),
             )),
         Padding(
             padding: EdgeInsets.only(top: 10.0),
@@ -102,16 +169,13 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                 padding: const EdgeInsets.only(left: 20.0),
                 child: Text(
                   'Billing Address',
-                  style: selectedTab,
+                  style: selectedTab.copyWith(fontWeight: FontWeight.w600),
                 ),
               ),
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                 padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    border: Border.all(width: 1, color: Colors.grey),
-                    color: white),
+
                 child: isAddressSelected
                     ? Column(
                         children: [
@@ -122,7 +186,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                                 Api.userInfo.firstName +
                                     ' ' +
                                     Api.userInfo.lastName,
-                                style: selectedTab,
+                                style: selectedTab.copyWith(fontWeight: FontWeight.w400),
                               ),
                               AddressButtonWithModal(
                                 callBackFunction: callback,
@@ -138,7 +202,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(concatenatedAddress, style: unSelectedTab)
+                              Text(concatenatedAddress, style: unSelectedTab.copyWith(fontWeight: FontWeight.w400),)
                             ],
                           ),
                         ],
@@ -172,20 +236,18 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                         ],
                       ),
               ),
+              Divider(),
               Padding(
                 padding: EdgeInsets.fromLTRB(20, 10, 30, 0),
                 child: Text(
                   'Your Plan',
-                  style: selectedTab,
+                  style: selectedTab.copyWith(fontWeight: FontWeight.w600),
                 ),
               ),
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    border: Border.all(width: 1, color: Colors.grey),
-                    color: white),
+
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -196,39 +258,39 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                       children: [
                         Text(
                           'Menu Package',
-                          style: selectedTab,
+                          style: selectedTab.copyWith(fontWeight: FontWeight.w400),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 10.0),
+                          padding: const EdgeInsets.only(left: 10.0,top: 4),
                           child: Text(widget.mealPlan.name,
                               style: selectedTab.copyWith(
-                                  fontSize: 14, fontWeight: FontWeight.normal)),
+                                  fontSize: 14, fontWeight: FontWeight.normal,color: Color(0xFF909090))),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 10.0),
-                          child: Text(widget.mealPlan.details,
+                          padding: const EdgeInsets.only(left: 10.0,top: 2),
+                          child: Text("Duration : ${widget.mealPlan.duration.toString()} Days",
                               style: selectedTab.copyWith(
-                                  fontSize: 14, fontWeight: FontWeight.normal)),
+                                  fontSize: 14, fontWeight: FontWeight.normal,color: Color(0xFF909090))),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 10.0),
+                          padding: const EdgeInsets.only(left: 10.0,top: 2),
                           child: Text(widget.categories,
                               style: selectedTab.copyWith(
-                                  fontSize: 14, fontWeight: FontWeight.normal)),
+                                  fontSize: 14, fontWeight: FontWeight.normal,color: Color(0xFF909090))),
                         ),
                       ],
                     ),
-                    Divider(),
+                    SizedBox(height: 13,),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'Starting Date',
-                          style: selectedTab,
+                          style: selectedTab.copyWith(fontWeight: FontWeight.w400),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 10.0),
+                          padding: const EdgeInsets.only(left: 10.0,top: 4),
                           child: Text(
                               DateFormat.E().format(widget.selectedDate) +
                                   ', ' +
@@ -238,18 +300,18 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                                   ', ' +
                                   widget.selectedDate.year.toString(),
                               style: selectedTab.copyWith(
-                                  fontSize: 14, fontWeight: FontWeight.normal)),
+                                  fontSize: 14, fontWeight: FontWeight.normal,color: Color(0xFF909090))),
                         ),
                       ],
                     ),
-                    Divider(),
+                    SizedBox(height: 13,),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Subscription Days', style: selectedTab),
+                        Text('Subscription Days', style: selectedTab.copyWith(fontWeight: FontWeight.w400)),
                         Padding(
-                            padding: const EdgeInsets.only(left: 10.0),
+                            padding: const EdgeInsets.only(left: 10.0,top: 4),
                             child: Row(
                               children: List.generate(
                                   widget.selectedDays.length, (index) {
@@ -257,7 +319,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                                   widget.selectedDays[index] + ', ',
                                   style: selectedTab.copyWith(
                                       fontSize: 14,
-                                      fontWeight: FontWeight.normal),
+                                      fontWeight: FontWeight.normal,color: Color(0xFF909090)),
                                 );
                               }),
                             )),
@@ -266,6 +328,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                   ],
                 ),
               ),
+              Divider(),
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 20),
                 padding: EdgeInsets.symmetric(vertical: 10),
@@ -276,7 +339,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                       children: [
                         Text(
                           'Payment',
-                          style: selectedTab,
+                          style: selectedTab.copyWith(fontWeight: FontWeight.w600),
                         ),
                         Text('Change',
                             style: unSelectedTab.copyWith(color: defaultGreen)),
@@ -285,35 +348,39 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                     SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: 55,
-                          width: 75,
-                          padding: EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Colors.grey)),
-                          child: Image.asset(
-                            'images/card.png',
-                            fit: BoxFit.fill,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 55,
+                            width: 75,
+                            padding: EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                                border: Border.all(width: 0.5, color: Colors.grey.withOpacity(0.5))
+                            ),
+                            child: Image.asset(
+                              'images/card.png',
+                              fit: BoxFit.fill,
+                            ),
                           ),
-                        ),
-                        Text('**** **** **** 3947', style: unSelectedTab),
-                      ],
+                          Text('**** **** **** 3947', style: unSelectedTab),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(20, 10, 30, 0),
+                padding: EdgeInsets.fromLTRB(20, 20, 30, 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
                       'Cost Breakdown',
-                      style: selectedTab,
+                      style: selectedTab.copyWith(fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
@@ -374,13 +441,27 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                             Navigator.pop(context);
                             Navigator.pop(context);
                             Navigator.pop(context);
+                            getDates(success);
+                            getData(success);
+
                             Navigator.push(
                                 context,
                                 CupertinoPageRoute(
-                                    builder: (context) => PlacedMealMenuOrders(
-                                          plan: widget.mealPlan,
-                                          purchaseDetails: success,
+                                    builder: (BuildContext context) =>
+                                        PlaceMealMenuOrders(
+                                            dates: dates,
+                                            placedFoodItems: foodItems,
+                                            plan: widget.mealPlan,
+                                            purchaseDetails: success
                                         )));
+
+                            // Navigator.push(
+                            //     context,
+                            //     CupertinoPageRoute(
+                            //         builder: (context) => PlacedMealMenuOrders(
+                            //               plan: widget.mealPlan,
+                            //               purchaseDetails: success,
+                            //             )));
                           });
                         } else {
                           setState(() {
