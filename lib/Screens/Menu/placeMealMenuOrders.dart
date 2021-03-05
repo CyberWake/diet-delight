@@ -12,6 +12,7 @@ class PlaceMealMenuOrders extends StatefulWidget {
   final List<DateTime> dates;
   final MealPurchaseModel purchaseDetails;
   final MealModel plan;
+
   PlaceMealMenuOrders(
       {this.purchaseDetails, this.plan, this.placedFoodItems, this.dates});
   @override
@@ -46,15 +47,65 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     DateTime today = DateTime.now();
     today = DateTime.parse(formatDate(today, [yyyy, '-', mm, '-', dd]));
     print(today);
-    for (int i = 0; i < widget.dates.length; i++) {
-      if (widget.dates[i] == today) {
+    for (int i = 0; dates == null ?i < 0 : i < dates.length; i++) {
+      if (dates[i] == today) {
         _pageController.index = i;
         print(_pageController.index);
         break;
       }
     }
+
+
+    var resources = await _apiCall.getCalorieDataa(menuId);
+    print(resources);
+    for(int i =0;i<resources.length;i++){
+      data.add(resources[i].toString());
+    }
+    intake = resources[0].toString();
     await getMenuCategories(menuId);
   }
+
+  DateTime startDate;
+  List<DateTime> breakDates = List();
+  List<DateTime> dates = [];
+
+  getDates(success) {
+    print("getDatescalled");
+    dates = [];
+    int count = 0;
+    startDate = DateTime.parse(success.startDate);
+    DateTime date;
+    startDate = DateTime(
+        startDate.year, startDate.month, startDate.day, 00, 00, 00, 000);
+    List days =success.weekdays;
+    if (days.contains('Thu')) {
+      days.remove('Thu');
+      days.add('Thur');
+    }
+    for (int i = 0;
+    i < int.parse(success.mealPlanDuration);
+    i++) {
+      date = startDate.add(Duration(days: (count)));
+      while (!days.contains(formatDate(date, [D])) ||
+          ((breakDates != null) ? (breakDates.contains(date)) : false)) {
+
+        count++;
+        date = startDate.add(Duration(days: count));
+      }
+      setState(() {
+        dates.insert(i, date);
+      });
+      print(date);
+      count++;
+    }
+    print("printing dates  $dates");
+
+    DateTime today = DateTime.now();
+    today = DateTime.parse(formatDate(today, [yyyy, '-', mm, '-', dd]));
+    print(today);
+
+  }
+
 
   getMenuCategories(int menuId) async {
     categoryItems = [];
@@ -63,6 +114,8 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
       isLoaded = false;
     });
     categoryItems = await _apiCall.getMenuCategories(menuId);
+    print("printing categoryitemas");
+    print(categoryItems);
     for (int i = 0; i < categoryItems.length; i++) {
       categoryItems[i].showNew();
       maxBuyCount.insert(i, 0);
@@ -93,7 +146,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
         }
       }
     }
-    if (categoryItems.isNotEmpty) {
+    if (categoryItems.length>0) {
       for (int i = 0; i < categoryItems.length;) {
         foodItems.add(await _apiCall
             .getMenuCategoryFoodItems(
@@ -103,7 +156,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     }
     for (int i = 0; i < foodItems.length; i++) {
       for (int j = 0; j < foodItems[i].length; j++) {
-        if (widget.placedFoodItems.isNotEmpty) {
+        if (widget.placedFoodItems != null  && widget.placedFoodItems.isNotEmpty) {
           for (int k = 0; k < widget.placedFoodItems[i].length; k++) {
             if (foodItems[i][j].id == widget.placedFoodItems[i][k].foodItemId) {
               foodItems[i][j]
@@ -125,10 +178,17 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     }
   }
 
+
   void initState() {
     super.initState();
-    isAddressSelected = false;
-    concatenatedAddress = '';
+    isAddressSelected = true;
+    dates = widget.dates;
+    getDates(widget.purchaseDetails);
+    var line1 = widget.purchaseDetails.shippingAddressLine1;
+    var line2 = widget.purchaseDetails.shippingAddressLine1;
+    concatenatedAddress = line1 +
+        ',\n' +
+        line1;
     selectedAddressIndex = -1;
     menuId = widget.plan.menuId;
     notes.addListener(() {
@@ -150,12 +210,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     getData();
   }
 
-  List<SearchItem<int>> data = [
-    SearchItem(0, 'This'),
-    SearchItem(1, 'is'),
-    SearchItem(2, 'a'),
-    SearchItem(3, 'test'),
-    SearchItem(4, '.'),
+  List<String> data = [
   ];
 
 
@@ -292,7 +347,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                         GestureDetector(
                         //    child: Text('${widget.purchaseDetails.kCal} Calorie')
                           child:  DropdownButton<String>(
-                            items: <String>['1000 Calorie', "2000 Calorie"].map((String value) {
+                            items: data.map((String value) {
                               return new DropdownMenuItem<String>(
                                 value: value,
                                 child: new Text(value,style: TextStyle(
@@ -588,7 +643,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                       child: TextButton(
                         onPressed: () async {
                           bool isBefore = DateTime.now().isBefore(
-                              widget.dates[dateIndex].add(Duration(days: 1)));
+                              dates[dateIndex].add(Duration(days: 1)));
                           if (isBefore) {
                             if (notInProgress) {
                               setState(() {
@@ -605,11 +660,11 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                         mealPurchaseId: int.parse(
                                             widget.purchaseDetails.id),
                                         menuItemDate:
-                                            widget.dates[dateIndex].toString(),
+                                            dates[dateIndex].toString(),
                                         menuItemDay: item.day,
                                         foodItemName: item.foodName,
                                         deliveryAddress: concatenatedAddress,
-                                        note: item.noteAdded.isNotEmpty
+                                        note: item.noteAdded != null && item.noteAdded.isNotEmpty
                                             ? ""
                                             : item.noteAdded);
                                     int result = await _apiCall

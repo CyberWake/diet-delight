@@ -22,6 +22,8 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
   List<bool> ordersInActivePlans = List();
   bool loaded = false;
   List<String> format = [dd, ' ', 'M', ', ', yyyy];
+  List<DateTime> dates = [];
+  DateTime startDate;
 
   getCachedData() async {
     print('getCachedCalled');
@@ -34,6 +36,10 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
       var plansDataTemp = await FlutterSecureStorage().read(key: 'plansData');
       var ordersPresentDataTemp =
           await FlutterSecureStorage().read(key: 'ordersPresentData');
+      print("||||||||||1");
+      print(ordersTemp);
+      print(plansDataTemp);
+      print(ordersPresentDataTemp);
       var decodedOrders = jsonDecode(ordersTemp)[0];
       List<MealPurchaseModel> itemPresentMealPurchases = List();
       decodedOrders.forEach((element) {
@@ -73,6 +79,8 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
       getData();
     }
   }
+
+
 
   getData() async {
     print("in get data");
@@ -123,6 +131,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                   return GestureDetector(
                     onTap: () async {
                       if (ordersInActivePlans[index]) {
+                        print('placed called');
                         Navigator.push(
                             context,
                             CupertinoPageRoute(
@@ -132,6 +141,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                                             activeMealPurchases[index],
                                         plan: activePurchaseMealPlans[index])));
                       } else {
+                        print('place called');
                         bool returnedBack = await Navigator.push(
                             context,
                             CupertinoPageRoute(

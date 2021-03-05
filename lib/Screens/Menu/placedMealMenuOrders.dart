@@ -619,22 +619,23 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                                     Flexible(
                                       child: Text(
                                         widget.purchaseDetails.mealPlanName,
-                                        style: TextStyle(
-                                          fontFamily: 'RobotoCondensedReg',
-                                          fontSize: 28,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
+                                    style: selectedTab.copyWith(fontSize: 18,color: Colors.black)
+                          ),
                                     ),
+                                    SizedBox(height: 10,),
                                     Flexible(
                                       child: Padding(
                                         padding: EdgeInsets.symmetric(
-                                            horizontal: 10),
+                                            horizontal: 6),
                                         child: Text(
                                           widget.plan.details,
-                                          style: authInputTextStyle.copyWith(
-                                              fontSize: 14,
-                                              color: Colors.black),
+                                          style: TextStyle(
+                                            fontFamily: 'RobotoCondensedReg',
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                     ),
@@ -688,7 +689,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                   ),
                 ),
                 Expanded(
-                    flex: 3,
+                    flex: 2,
                     child: Padding(
                       padding: const EdgeInsets.only(left: 30.0),
                       child: Column(
@@ -701,20 +702,27 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                                   (widget.plan.type == 0
                                       ? "With Weekends"
                                       : "Without Weekends"),
-                              style: TextStyle(color: Colors.black),
+                              style: descriptionTextStyle.copyWith(
+                                  color: Color(0xFF303030), fontSize: 13
+                              ),
                             ),
                           ),
                           Flexible(
                             fit: FlexFit.loose,
                             child: Text(
                               "${widget.purchaseDetails.kCal} Calorie",
-                              style: TextStyle(color: Colors.black),
+                              style: descriptionTextStyle.copyWith(
+                                  color: Color(0xFF303030), fontSize: 13
+                              ),
                             ),
                           ),
                           Flexible(
                             child: Text(
                               'Start Date - ${formatDate(DateTime.parse(widget.purchaseDetails.startDate), format)}',
-                              style: TextStyle(color: Colors.black),
+                              style: descriptionTextStyle.copyWith(
+                                  color: Color(0xFF303030),
+                                fontSize: 13
+                              ),
                             ),
                           ),
                         ],
@@ -790,7 +798,6 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                               decoration: TextDecoration.underline,
                             ),
                           )),
-                      Text('${widget.purchaseDetails.kCal} Calorie'),
                       TextButton(
                           onPressed: () async {
                             print(isLoaded);
@@ -933,7 +940,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                   ),
                 ),
                 Expanded(
-                  flex: 18,
+                  flex: 16,
                   child: !isLoading ? isLoaded
                       ? TabBarView(
                           controller: _pageController,

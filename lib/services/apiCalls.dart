@@ -774,6 +774,7 @@ class Api {
       print(body);
       final response = await http.post(uri + '/api/v1/my-menu-orders',
           headers: headers, body: body);
+
       if (response.statusCode == 201) {
         print('Success posting meal menu order');
         var body = convert.jsonDecode(response.body);
@@ -1325,4 +1326,106 @@ class Api {
 
 
   }
+
+  Future<int> getAfternoonValue() async {
+    // ADD API CAll HERE
+
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+
+      final response = await http.get(uri + "/api/v1/key-values?key=afternoon_delivery",
+          headers: headers);
+
+      if (response.statusCode == 200) {
+
+        print('Success getting breaks');
+        print(response.statusCode);
+        print(response.body);
+        return int.parse(jsonDecode(response.body)['value']);
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        //return [];
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return 0;
+    }
+
+
+  }
+
+  Future<List<dynamic>> getCalorieDataa(id) async {
+    // ADD API CAll HERE
+    print('calorieapicallcalled');
+    print(id);
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+
+      final response = await http.get(uri + "/api/v1/menus/$id",
+          headers: headers);
+
+      if (response.statusCode == 200) {
+
+        print('Success getting calorie');
+        print(response.statusCode);
+        print(response.body);
+        var calorieOption = convert.jsonDecode(jsonDecode(response.body)['data']['calorie_options']);
+        List<dynamic> opt = calorieOption;
+        print("printing opt");
+        print(opt);
+        return opt;
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        //return [];
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return [];
+    }
+
+
+  }
+
+
+  Future<List<dynamic>> getMenuItem(id) async {
+    // ADD API CAll HERE
+    print(id);
+    print('getmenuItem');
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+
+      final response = await http.get(uri + "/api/v1/menus/user_id=${userInfo.id}&menu_item_id=$id",
+          headers: headers);
+
+      if (response.statusCode == 200) {
+
+        print('Success getting calorie');
+        print(response.statusCode);
+        print(response.body);
+
+
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        //return [];
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return [];
+    }
+
+
+  }
+
 }
