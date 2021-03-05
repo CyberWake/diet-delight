@@ -5,6 +5,7 @@ import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_search_panel/flutter_search_panel.dart';
 import 'package:flutter_search_panel/search_item.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class PlaceMealMenuOrders extends StatefulWidget {
@@ -61,7 +62,11 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     for(int i =0;i<resources.length;i++){
       data.add(resources[i].toString());
     }
-    intake = resources[0].toString();
+
+    var value = await FlutterSecureStorage().read(key: 'calorie');
+    data.add(value);
+    intake = value;
+    print("||||||||||||||||||||| $intake");
     await getMenuCategories(menuId);
   }
 
@@ -246,14 +251,16 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                 color: defaultGreen,
               ),
             ),
-            title: Text('Place meal orders', style: appBarTextStyle),
+            title: Text('Place meal orders', style: appBarTextStyle.copyWith(
+              color: defaultGreen
+            )),
           ),
           body: SingleChildScrollView(
             child: Container(
               height: MediaQuery.of(context).size.height * 0.88,
               child: Column(children: [
                 Expanded(
-                  flex: 4,
+                  flex: 5,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -290,7 +297,29 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                     maxLines: 6,
                                   ),
                                 ),
-                              )
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left : 7.0),
+                                  child: DropdownButton<String>(
+                                    elevation: 0,
+                                    items: data.map((String value) {
+                                      return new DropdownMenuItem<String>(
+                                        value: value,
+                                        child: new Text(value,style: TextStyle(
+                                            color: Colors.black,
+                                          fontSize: 12
+                                        ),),
+                                      );
+                                    }).toList(),
+                                    onChanged: (newVal) {
+                                      intake = newVal;
+                                      this.setState(() {});
+                                    },
+                                    value: intake.toString(),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -339,43 +368,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                     ],
                   ),
                 ),
-                Expanded(
-                    flex: 1,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                        //    child: Text('${widget.purchaseDetails.kCal} Calorie')
-                          child:  DropdownButton<String>(
-                            items: data.map((String value) {
-                              return new DropdownMenuItem<String>(
-                                value: value,
-                                child: new Text(value,style: TextStyle(
-                                  color: Colors.black
-                                ),),
-                              );
-                            }).toList(),
-                onChanged: (newVal) {
-                  intake = newVal;
-                  this.setState(() {});
-                },
-                            value: intake.toString(),
-                          ),
-                          ),
-                        // TextButton(
-                        //     onPressed: () {},
-                        //     child: AddressButtonWithModal(
-                        //       callBackFunction: callback,
-                        //       child: Text(
-                        //         'Address',
-                        //         style: TextStyle(
-                        //           color: darkGreen,
-                        //           decoration: TextDecoration.underline,
-                        //         ),
-                        //       ),
-                        //     )),
-                      ],
-                    )),
+
                 Expanded(
                   flex: 1,
                   child: Container(

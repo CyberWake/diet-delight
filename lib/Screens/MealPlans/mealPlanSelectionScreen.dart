@@ -118,7 +118,7 @@ class _MealPlanPageState extends State<MealPlanPage>
 
   Widget mealPlanCard(int index) {
     return Container(
-      margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+      margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
       padding: EdgeInsets.symmetric(horizontal: 10),
       width: double.infinity,
       height: 355,
@@ -129,7 +129,7 @@ class _MealPlanPageState extends State<MealPlanPage>
         boxShadow: [
           BoxShadow(
             blurRadius: 4,
-            color: Colors.black.withAlpha(63),
+            color: Colors.black.withOpacity(0.25),
             spreadRadius: 0,
             offset: const Offset(0, 4),
           )
@@ -149,22 +149,24 @@ class _MealPlanPageState extends State<MealPlanPage>
                       flex: 11,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
                         children: [
+                          SizedBox(height: 12,),
                           Text(
                             widget.mealPlans[index].name,
                             style: selectedTab.copyWith(
                                 fontWeight: FontWeight.w400, fontSize: 20),
                           ),
+                          SizedBox(height: 6,),
                           Text(
                             widget.mealPlans[index].price + ' BHD',
                             style: selectedTab.copyWith(
                                 fontWeight: FontWeight.w400, fontSize: 20),
                           ),
-                          Text(widget.mealPlans[index].type == 0
-                              ? 'With Weekends'
-                              : 'Without Weekends'),
+                          // Text(widget.mealPlans[index].type == 0
+                          //     ? 'With Weekends'
+                          //     : 'Without Weekends'),
                         ],
                       )),
                   Expanded(
@@ -209,7 +211,7 @@ class _MealPlanPageState extends State<MealPlanPage>
                                     'View Menu',
                                     style: TextStyle(
                                       fontFamily: 'RobotoCondensedReg',
-                                      fontSize: 18,
+                                      fontSize: 14,
                                       fontWeight: FontWeight.w400,
                                       color: defaultGreen,
                                     ),
@@ -229,10 +231,22 @@ class _MealPlanPageState extends State<MealPlanPage>
                   fit: FlexFit.loose,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
-                    child: Text(
-                      getCategories(index),
-                      style: selectedTab.copyWith(
-                          fontSize: 16, fontWeight: FontWeight.w400),
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 4,width: 8,
+                          decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(500)
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          getCategories(index).toString().replaceAll('-', "").replaceAll(" ", ""),
+                          style: selectedTab.copyWith(
+                              fontSize: 16, fontWeight: FontWeight.w400),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -240,10 +254,29 @@ class _MealPlanPageState extends State<MealPlanPage>
                   fit: FlexFit.loose,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
-                    child: Text(
-                      '- ' + menus[index].description,
-                      style: selectedTab.copyWith(
-                          fontSize: 16, fontWeight: FontWeight.w400),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Container(
+                            height: 4,width: 8,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(500)
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        Flexible(
+                          child: Text(
+                             menus[index].description,
+                            style: selectedTab.copyWith(
+                                fontSize: 16, fontWeight: FontWeight.w400),
+                            maxLines: 3,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -301,66 +334,77 @@ class _MealPlanPageState extends State<MealPlanPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: white,
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.keyboard_backspace,
-            size: 30.0,
-            color: defaultGreen,
+    return Container(
+      decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('images/questionnaire_background.jpg'),
+              fit: BoxFit.fitHeight
+          ) ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          elevation: 5.0,
+          backgroundColor: defaultGreen,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(20.0),
+                  bottomRight: Radius.circular(20.0))),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.keyboard_backspace,
+              size: 30.0,
+              color: Colors.white,
+            ),
           ),
-        ),
-        title: Text('Choose your meal plan', style: appBarTextStyle),
-        bottom: TabBar(
-            controller: _pageController1,
-            isScrollable: false,
-            onTap: (index) async {},
-            labelStyle: selectedTab.copyWith(
-                fontSize: 18, color: Colors.black, fontWeight: FontWeight.w600),
-            indicatorColor: Colors.transparent,
-            indicatorWeight: 3.0,
-            indicatorSize: TabBarIndicatorSize.label,
-            labelColor: Colors.black,
-            labelPadding: EdgeInsets.symmetric(horizontal: 13),
-            unselectedLabelStyle: unSelectedTab.copyWith(
-                fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w400),
-            unselectedLabelColor: Colors.grey,
-            tabs: List.generate(2, (index) {
-              return Tab(
-                text: index == 0 ? 'With Weekends' : 'Without Weekends',
-              );
-            })),
-      ),
-      body: isLoaded
-          ? TabBarView(
+          title: Text('Choose your meal plan', style: appBarTextStyle.copyWith(color: Colors.white)),
+          bottom: TabBar(
               controller: _pageController1,
-              children: List.generate(2, (indexTab) {
-                return ListView.builder(
-                  itemCount: widget.mealPlans.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    if (indexTab == 0) {
-                      if (widget.mealPlans[index].type == 0) {
-                        return mealPlanCard(index);
-                      } else {
-                        return Container();
-                      }
-                    } else {
-                      if (widget.mealPlans[index].type == 1) {
-                        return mealPlanCard(index);
-                      } else {
-                        return Container();
-                      }
-                    }
-                  },
+              isScrollable: false,
+              onTap: (index) async {},
+              labelStyle: selectedTab.copyWith(
+                  fontSize: 18, color: Colors.black, fontWeight: FontWeight.w600),
+              indicatorColor: Colors.white,
+              indicatorWeight: 3.0,
+              indicatorSize: TabBarIndicatorSize.label,
+              labelColor: defaultPurple,
+              labelPadding: EdgeInsets.symmetric(horizontal: 13),
+              unselectedLabelStyle: unSelectedTab.copyWith(
+                  fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w400),
+              unselectedLabelColor: Colors.grey,
+              tabs: List.generate(2, (index) {
+                return Tab(
+                  text: index == 0 ? 'With Weekends' : 'Without Weekends',
                 );
-              }))
-          : Center(child: CircularProgressIndicator()),
+              })),
+        ),
+        body: isLoaded
+            ? TabBarView(
+                controller: _pageController1,
+                children: List.generate(2, (indexTab) {
+                  return ListView.builder(
+                    itemCount: widget.mealPlans.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (indexTab == 0) {
+                        if (widget.mealPlans[index].type == 0) {
+                          return mealPlanCard(index);
+                        } else {
+                          return Container();
+                        }
+                      } else {
+                        if (widget.mealPlans[index].type == 1) {
+                          return mealPlanCard(index);
+                        } else {
+                          return Container();
+                        }
+                      }
+                    },
+                  );
+                }))
+            : Center(child: CircularProgressIndicator()),
+      ),
     );
   }
 }

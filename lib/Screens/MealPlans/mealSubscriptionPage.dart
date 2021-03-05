@@ -74,7 +74,10 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
   void initState() {
     super.initState();
 
-
+    var temp = DateTime.now().toLocal();
+    dateSelected = temp.add(Duration(days: 2));
+    date =
+    '${dateSelected.year.toString()}-${dateSelected.month.toString().padLeft(2, '0')}-${dateSelected.day.toString().padLeft(2, '0')}';
     getUserInfo();
 
     if (widget.categories == null) {
@@ -119,7 +122,6 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
         appBar: AppBar(
           elevation: 5.0,
           backgroundColor: white,
-          centerTitle: true,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(20.0),
@@ -134,7 +136,9 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
               color: defaultGreen,
             ),
           ),
-          title: Text('Subscribe your meal plan', style: appBarTextStyle),
+          title: Text('Subscribe your meal plan', style: appBarTextStyle.copyWith(
+            color: defaultGreen
+          )),
         ),
         body: Container(
           padding: const EdgeInsets.only(left: 30.0, right: 20),
@@ -142,66 +146,64 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
           child: ListView(
 
             children: [
-              Flexible(
-                fit: FlexFit.loose,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Flexible(
-                      flex: 15,
-                      fit: FlexFit.loose,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 10.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(widget.mealPackage.name,
-                                style: selectedTab.copyWith(fontSize: 18)),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              selDays.contains("Sun") &&   selDays.contains("Sat")  ?
-                              widget.mealPackage.duration.toString() +" day meal plan\nwith weekend" :
-                              widget.mealPackage.duration.toString() +" day meal plan\nwithout weekend"
-                              ,
-                              style: descriptionTextStyle,
-                              maxLines: 4,
-                            ),
-                            SizedBox(
-                              height: 4,
-                            ),
-                            Text(widget.categories.trim(),style: descriptionTextStyle,),
-                          ],
-                        ),
+              SizedBox(height: 10,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    flex: 15,
+                    fit: FlexFit.loose,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(widget.mealPackage.name,
+                              style: selectedTab.copyWith(fontSize: 18)),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            selDays.contains("Sun") &&   selDays.contains("Sat")  ?
+                            widget.mealPackage.duration.toString() +" day meal plan\nwith weekend" :
+                            widget.mealPackage.duration.toString() +" day meal plan\nwithout weekend"
+                            ,
+                            style: descriptionTextStyle,
+                            maxLines: 4,
+                          ),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          Text(widget.categories.trim(),style: descriptionTextStyle,),
+                        ],
                       ),
                     ),
-                    Flexible(
-                      flex: 5,
-                      fit: FlexFit.loose,
-                      child: CachedNetworkImage(
-                        imageUrl: widget.mealPackage.picture ??
-                            "http://via.placeholder.com/350x150",
-                        imageBuilder: (context, imageProvider) => Container(
-                          height: 100,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
-                            ),
+                  ),
+                  Flexible(
+                    flex: 5,
+                    fit: FlexFit.loose,
+                    child: CachedNetworkImage(
+                      imageUrl: widget.mealPackage.picture ??
+                          "http://via.placeholder.com/350x150",
+                      imageBuilder: (context, imageProvider) => Container(
+                        height: 100,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
                           ),
                         ),
-                        placeholder: (context, url) =>
-                            CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
                       ),
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
               SizedBox(height: 40),
              Padding(
@@ -272,7 +274,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                                      child: Text(
                                        days[index],
                                        style: TextStyle(
-                                           fontSize: 18,
+                                           fontSize: 14,
                                            color: selectedDays[index]
                                                ? Colors.white
                                                : defaultGreen),
@@ -328,7 +330,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                                        child: Text(
                                          days[index + 4],
                                          style: TextStyle(
-                                             fontSize: 18,
+                                             fontSize: 14,
                                              color: selectedDays[index + 4]
                                                  ? Colors.white
                                                  : defaultGreen),
@@ -345,7 +347,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                          margin: EdgeInsets.symmetric(horizontal: 30),
                          decoration: BoxDecoration(
                              color: Colors.white,
-                             borderRadius: BorderRadius.circular(20),
+                             borderRadius: BorderRadius.circular(10),
                            boxShadow: [
                              BoxShadow(
                                color: Colors.grey.withOpacity(0.5),
@@ -432,7 +434,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
 
               Container(
 
-                margin: EdgeInsets.only(top: 20, bottom: 20),
+                margin: EdgeInsets.only(top: 30, bottom: 20),
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                 decoration: BoxDecoration(
                   color: formBackground,
@@ -647,15 +649,20 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                                               ],
                                             ),
                                           ),
-                                          Container(
-                                            color: Color(0xFF77838F).withOpacity(0.3),
-                                            width: double.infinity,
-                                            height: 50,
-                                            child: Center(
-                                              child: Text("Done", style: descriptionTextStyle.copyWith(
-                                                  color: Colors.white,
-                                                  fontSize: 25
-                                              ),),
+                                          GestureDetector(
+                                            onTap: (){
+                                              Navigator.pop(context);
+                                            },
+                                            child: Container(
+                                              color: Color(0xFF77838F).withOpacity(0.3),
+                                              width: double.infinity,
+                                              height: 50,
+                                              child: Center(
+                                                child: Text("Done", style: descriptionTextStyle.copyWith(
+                                                    color: Colors.white,
+                                                    fontSize: 25
+                                                ),),
+                                              ),
                                             ),
                                           )
                                         ],
@@ -699,7 +706,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                             context,
                             CupertinoPageRoute(
                                 builder: (context) => PrePaymentMealPlan(
-                                  afterNoonPrice : afterNoonValue,
+                                  afterNoonPrice : deliveryTimeIndex ==  1 ? afterNoonValue : 0,
                                       categories: widget.categories,
                                       selectedDate: dateSelected,
                                       selectedDays: selDays,

@@ -199,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                    padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                    padding: EdgeInsets.only(top: 10.0, bottom: 10.0,left: 10,right: 10),
                     child: Text(
                       durations[pos].title,
                       style: TextStyle(
@@ -208,6 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
+                      textAlign: TextAlign.center,
                     )),
                 durations[pos].subTitle == null
                     ? SizedBox()

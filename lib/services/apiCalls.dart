@@ -26,7 +26,7 @@ var currentMealPlanCache = [];
 var mealPlanCacheData = [];
 var onGoingMealPurchaseCacheData = [];
 var menuCategoryCacheData = [];
-
+var recommendedCalories = "0";
 class Api {
   static var client;
   static List<QuestionnaireModel> itemsQuestionnaire = List();
@@ -133,6 +133,8 @@ class Api {
         print('Success getting user info');
         var body = convert.jsonDecode(response.body);
         userInfo = RegModel.fromMap(body);
+        recommendedCalories = userInfo.recommendedCalories;
+        await FlutterSecureStorage().write(key: 'calorie', value: recommendedCalories.toString());
         return userInfo;
       } else {
         print(response.statusCode);

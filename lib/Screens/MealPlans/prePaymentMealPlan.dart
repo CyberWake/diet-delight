@@ -159,7 +159,6 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
         appBar: AppBar(
           elevation: 5.0,
           backgroundColor: white,
-          centerTitle: true,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(20.0),
@@ -174,7 +173,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
               color: defaultGreen,
             ),
           ),
-          title: Text('Payment', style: appBarTextStyle),
+          title: Text('Purchase Meal Plan', style: appBarTextStyle.copyWith(color: defaultGreen)),
         ),
         body: Container(
 
@@ -354,6 +353,44 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                   ),
                   Divider(),
                   Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xFFC4C4C4).withOpacity(0.6),
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal : 8.0,vertical: 4),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                         Row(
+                           children: [
+                             SizedBox(width: 10,),
+                             Icon(Icons.local_offer_outlined,size: 24,),
+                             SizedBox(width: 10,),
+                             Padding(
+                               padding: const EdgeInsets.symmetric(horizontal: 10),
+                               child: Text("Enter coupon code here",
+                                 style: appBarTextStyle.copyWith(
+                                     color: Color(0xFF303030),
+                                     fontSize: 17,
+                                     fontWeight: FontWeight.w600
+                                 ),
+                                 overflow: TextOverflow.ellipsis,),
+                             ),
+                           ],
+                         ),
+                          Text("APPLY",style: appBarTextStyle.copyWith(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700
+                          ),)
+                        ],
+                      ),
+                    ),
+                  ),
+                  Divider(),
+                  Container(
                     margin: EdgeInsets.symmetric(horizontal: 20),
                     padding: EdgeInsets.symmetric(vertical: 10),
                     child: Column(
@@ -430,7 +467,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                               breakDownFields('Extras', '- - USD', false),
                               breakDownFields('Taxes', '- - USD', false),
                               breakDownFields(
-                                  'Grand Total', widget.mealPlan.price + ' USD', true),
+                                  'Grand Total', (int.parse(widget.mealPlan.price)+int.parse(widget.afterNoonPrice.toString())).toString() + ' USD', true),
                             ],
                           ),
                         ),
@@ -456,7 +493,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                               status: '1',
                               mealPlanName: widget.mealPlan.name,
                               mealPlanDuration: widget.mealPlan.duration.toString(),
-                              amountPaid: widget.mealPlan.price,
+                              amountPaid: ( int.parse(widget.mealPlan.price)+int.parse(widget.afterNoonPrice.toString()) ).toString(),
                               startDate: widget.selectedDate.toString(),
                               endDate: widget.selectedDate
                                   .add(Duration(days: widget.mealPlan.duration))

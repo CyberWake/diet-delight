@@ -264,17 +264,17 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
           padding: const EdgeInsets.only(top: 15.0, left: 15.0),
           child: Text(
             '$name',
-            style: billingTextStyle.copyWith(
-              fontSize: 14,
-              color: selectedAddressIndex == index ? white : Color(0xFF222222),
-            ),
+              style: descriptionTextStyle.copyWith(
+                  color : selectedAddressIndex == index ? Colors.white : Colors.black,
+                  fontSize: 14)
+
           ),
         ),
         Row(
           mainAxisSize: MainAxisSize.max,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 5.0),
+              padding: const EdgeInsets.fromLTRB(30.0, 8.0, 15.0, 5.0),
               child: Text(
                 index == 0
                     ? addressPrimaryLine1.text +
@@ -283,12 +283,10 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                     : addressSecondaryLine1.text +
                     ',\n' +
                     addressSecondaryLine2.text,
-                style: billingTextStyle.copyWith(
-                  fontSize: 14,
-                  fontStyle: FontStyle.normal,
-                  color:
-                  selectedAddressIndex == index ? white : Color(0xFF222222),
-                ),
+                  style: descriptionTextStyle.copyWith(color:
+                  selectedAddressIndex == index ? Colors.white : Colors.black,
+                      fontSize: 14)
+
               ),
             ),
           ],
