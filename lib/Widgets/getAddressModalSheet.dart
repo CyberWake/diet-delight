@@ -446,19 +446,20 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                                     height: 100.0,
 //                                    padding: EdgeInsets.symmetric(
 //                                        vertical: 20, horizontal: 25),
-                                            decoration: BoxDecoration(
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                      color: Color(0x26000000),
-                                                      blurRadius: 5)
-                                                ],
-                                                borderRadius:
-                                                BorderRadius.circular(5.0),
-                                                color: selectedAddressIndex == index
-                                                    ? defaultGreen
-                                                    : Colors.white),
-                                            child: index == 0
-                                                ? addressPrimaryLine1.text.isNotEmpty &&
+                                    decoration: BoxDecoration(
+                                        // boxShadow: [
+                                        //   BoxShadow(
+                                        //       color: Color(0x26000000),
+                                        //       blurRadius: 5)
+                                        // ],
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
+                                        color: selectedAddressIndex == index
+                                            ? defaultGreen
+                                            : questionnaireDisabled
+                                                .withOpacity(0.5)),
+                                    child: index == 0
+                                        ? addressPrimaryLine1.text.isNotEmpty &&
                                                 addressPrimaryLine2
                                                     .text.isNotEmpty
                                             ? selectionAddressCard(index)

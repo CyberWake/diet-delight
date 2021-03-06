@@ -45,6 +45,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
   int menuId = 0;
   List<int> favPressed = List();
   List<List> favourites = List();
+  var maxBuyIndexedList = [];
 
 
   getFavourites() async {
@@ -124,7 +125,6 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
 
   }
 
-
   getMenuCategories(int menuId) async {
     categoryItems = [];
     foodItems = [];
@@ -187,6 +187,16 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
         }
       }
     }
+
+    for(int i =0;i<dates.length;i++){
+      var temp = [];
+      for(int j =0;j<mainCategoryItems.length;j++){
+        temp.add(0);
+      }
+      maxBuyIndexedList.add(temp);
+    }
+
+    print("{}{{}{}{{{}}{ $maxBuyIndexedList");
     print(
         'maxBuyCount: ${maxBuyCount.length}\nfoodItems: ${foodItems.length}\ncategory: ${categoryItems.length}\nmainCategoryItems: ${mainCategoryItems.length}\nsubCategoryItems: ${subCategoryItems.length}');
     if (mounted) {
@@ -196,6 +206,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     }
   }
 
+  int pageIndex = 0;
 
   void initState() {
     super.initState();
@@ -203,12 +214,13 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     dates = widget.dates;
     getDates(widget.purchaseDetails);
     var line1 = widget.purchaseDetails.shippingAddressLine1;
-    var line2 = widget.purchaseDetails.shippingAddressLine1;
+    var line2 = widget.purchaseDetails.shippingAddressLine2;
     concatenatedAddress = line1 +
         ',\n' +
-        line1;
+        line2;
     selectedAddressIndex = -1;
     menuId = widget.plan.menuId;
+    print(menuId.toString() + "thissss");
     notes.addListener(() {
       if (note.hasFocus) {
         print('height increased');
@@ -224,7 +236,11 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     });
     _pageController = TabController(
         length: int.parse(widget.purchaseDetails.mealPlanDuration),
-        vsync: this);
+        vsync: this)..addListener(() {
+          setState(() {
+            pageIndex = _pageController.index;
+          });
+    });
     getData();
   }
 
@@ -756,9 +772,16 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                               setState(() {
                                 notInProgress = false;
                               });
-                              if (max > maxBuyCount[maxBuyIndex]) {
+                              if (isAddressSelected) {
                                 if (!item.isSelected) {
-                                  if (isAddressSelected) {
+                                  print("|||");
+                                  print(max);
+                                  print(maxBuyIndexedList);
+                                  print(pageIndex);
+                                  print(maxBuyIndex);
+                                  print(maxBuyIndexedList[pageIndex][maxBuyIndex]);
+                                  if (max > maxBuyIndexedList[pageIndex][maxBuyIndex]) {
+
                                     item.change(true);
                                     setState(() {});
                                     foodItemOrder = MenuOrderModel(
@@ -778,7 +801,9 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                         .postMenuOrder(foodItemOrder);
                                     if (result != -1) {
                                       orderPlaced = true;
-                                      maxBuyCount[maxBuyIndex] += 1;
+                                      print('called');
+                                      maxBuyIndexedList[pageIndex][maxBuyIndex] =  maxBuyIndexedList[pageIndex][maxBuyIndex] + 1;
+                                      print(maxBuyIndexedList);
                                       item.updateOrderItemId(result);
                                       item.change(true);
                                       setState(() {});
@@ -791,6 +816,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                                   'Something went wrong')));
                                     }
                                   } else {
+                                    print("||||" + concatenatedAddress);
                                     item.change(false);
                                     setState(() {});
                                     _scaffoldKey.currentState.showSnackBar(
@@ -800,10 +826,14 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                   }
                                 } else {
                                   item.change(false);
+                                  print('deleted called');
+
                                   setState(() {});
                                   bool result = await _apiCall.deleteMenuOrder(
                                       item.orderItemId.toString());
                                   if (result) {
+                                    maxBuyIndexedList[pageIndex][maxBuyIndex] -= 1;
+                                    print(maxBuyIndexedList);
                                     item.change(false);
                                     setState(() {});
                                   } else {
@@ -830,6 +860,8 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                             //item.change(false);
                             setState(() {});
                           }
+
+                          print("max buy count " + maxBuyCount.toString());
                         },
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
