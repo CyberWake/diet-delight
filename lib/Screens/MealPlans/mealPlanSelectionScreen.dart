@@ -108,8 +108,9 @@ class _MealPlanPageState extends State<MealPlanPage>
     }
   }
 
-  getCategories(index) {
+  getCategories(index) async {
     String displayCategories = '- ';
+    await Future.delayed(Duration(milliseconds: 1000));
     categoryItems[index].forEach((element) {
       displayCategories += element.name + ', ';
     });
@@ -125,13 +126,13 @@ class _MealPlanPageState extends State<MealPlanPage>
       decoration: BoxDecoration(
         color: Colors.white,
         shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             blurRadius: 4,
             color: Colors.black.withOpacity(0.25),
             spreadRadius: 0,
-            offset: const Offset(0, 4),
+            offset: const Offset(0, 0),
           )
         ],
       ),
@@ -140,7 +141,7 @@ class _MealPlanPageState extends State<MealPlanPage>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            flex: 3,
+            flex: 6,
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 15.0),
               child: Row(
@@ -158,7 +159,7 @@ class _MealPlanPageState extends State<MealPlanPage>
                             style: selectedTab.copyWith(
                                 fontWeight: FontWeight.w400, fontSize: 20),
                           ),
-                          SizedBox(height: 6,),
+                          SizedBox(height: 10,),
                           Text(
                             widget.mealPlans[index].price + ' BHD',
                             style: selectedTab.copyWith(
@@ -187,6 +188,14 @@ class _MealPlanPageState extends State<MealPlanPage>
                                       image: imageProvider,
                                       fit: BoxFit.cover,
                                     ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        blurRadius: 4,
+                                        color: Colors.black.withOpacity(0.25),
+                                        spreadRadius: 0,
+                                        offset: const Offset(0, 4),
+                                      )
+                                    ],
                                   ),
                                 ),
                                 placeholder: (context, url) =>
@@ -212,7 +221,7 @@ class _MealPlanPageState extends State<MealPlanPage>
                                     style: TextStyle(
                                       fontFamily: 'RobotoCondensedReg',
                                       fontSize: 14,
-                                      fontWeight: FontWeight.w400,
+                                      fontWeight: FontWeight.w500,
                                       color: defaultGreen,
                                     ),
                                   )))
@@ -223,7 +232,7 @@ class _MealPlanPageState extends State<MealPlanPage>
             ),
           ),
           Expanded(
-            flex: 2,
+            flex: 5,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -284,7 +293,7 @@ class _MealPlanPageState extends State<MealPlanPage>
             ),
           ),
           Expanded(
-            flex: 1,
+            flex: 2,
             child: Container(
               margin: EdgeInsets.only(
                   right: MediaQuery.of(context).size.width * 0.18,
@@ -344,7 +353,7 @@ class _MealPlanPageState extends State<MealPlanPage>
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           elevation: 5.0,
-          backgroundColor: defaultGreen,
+          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(20.0),
@@ -356,17 +365,17 @@ class _MealPlanPageState extends State<MealPlanPage>
             icon: Icon(
               Icons.keyboard_backspace,
               size: 30.0,
-              color: Colors.white,
+              color: defaultGreen,
             ),
           ),
-          title: Text('Choose your meal plan', style: appBarTextStyle.copyWith(color: Colors.white)),
+          title: Text('Choose your meal plan', style: appBarTextStyle.copyWith(color: defaultGreen)),
           bottom: TabBar(
               controller: _pageController1,
               isScrollable: false,
               onTap: (index) async {},
               labelStyle: selectedTab.copyWith(
                   fontSize: 18, color: Colors.black, fontWeight: FontWeight.w600),
-              indicatorColor: Colors.white,
+              indicatorColor: defaultGreen,
               indicatorWeight: 3.0,
               indicatorSize: TabBarIndicatorSize.label,
               labelColor: defaultPurple,

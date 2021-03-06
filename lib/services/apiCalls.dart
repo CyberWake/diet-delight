@@ -138,7 +138,6 @@ class Api {
         print('Success getting user info');
         var body = convert.jsonDecode(response.body);
         userInfo = RegModel.fromMap(body);
-        recommendedCalories = userInfo.recommendedCalories;
         await FlutterSecureStorage().write(key: 'calorie', value: recommendedCalories.toString());
         return userInfo;
       } else {
@@ -437,6 +436,44 @@ class Api {
     }
   }
 
+  Future<void> putMealPurchase(var orderDetails,String calorie) async {
+    print("putMealPurchaseCalled");
+
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+      var data = {
+        "user_id": int.parse( orderDetails.userId),
+        "meal_plan_id": int.parse(orderDetails.mealPlanId),
+        "payment_id": int.parse(orderDetails.paymentId),
+        "meal_plan_name": orderDetails.mealPlanName,
+        "meal_plan_duration": int.parse( orderDetails.mealPlanDuration),
+        "amount_paid": orderDetails.amountPaid.toString(),
+        "start_date": orderDetails.startDate.toString(),
+        "kcal": int.parse(calorie),
+      };
+      var body = jsonEncode(data);
+      print(body);
+      final response = await http.put(uri + '/api/v1/my-meal-purchases/${orderDetails.mealPlanId}',
+          headers: headers, body: body);
+      print(response.statusCode);
+      if (response.statusCode == 201) {
+        print('meal purchase put success');
+        var body = convert.jsonDecode(response.body);
+        print(body);
+
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        return null;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
   //Consultation buy
   Future<String> postConsultationPurchase(ConsPurchaseModel order) async {
     try {
@@ -1490,6 +1527,42 @@ class Api {
 
   }
 
+
+
+  Future<List<dynamic>> getCouponCode() async {
+
+    print('getCoupon');
+    print(token);
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+
+      final response = await http.get(uri + "/api/v1/coupons",
+          headers: headers);
+
+      if (response.statusCode == 200) {
+
+        print('Success getting coupons');
+        print(response.statusCode);
+        print(response.body);
+
+        var data = convert.jsonDecode(response.body);
+        print(data);
+
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        //return [];
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return [];
+    }
+
+
+  }
 
   Future<List<dynamic>> getMenuItem(id) async {
     // ADD API CAll HERE

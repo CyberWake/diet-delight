@@ -431,6 +431,7 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
                                         widget.primaryAndSecondary[1];
                                         var totalList =
                                         widget.primaryAndSecondary[2];
+
                                         if (primaryList
                                             .contains(currDay + " 00:00:00")) {
                                           int count = 1;
@@ -443,7 +444,8 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
                                           var nextPossibleDayToAdd =
                                           new DateTime(date.year,
                                               date.month, date.day + 1);
-
+                                          print('manually calculate $nextPossibleDayToAdd');
+                                          print(daysList);
                                           while (!widget.listOfAvailableDays
                                               .contains(DateFormat('EEEE')
                                               .format(
@@ -459,7 +461,6 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
                                           }
                                           print(
                                               "printing next possible day $nextPossibleDayToAdd");
-
                                           totalList.add(nextPossibleDayToAdd
                                               .toString()
                                               .split(" ")[0]);
@@ -584,6 +585,12 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
                                             return DateTime.parse(a).compareTo(DateTime.parse(b));
                                           });
                                           secondaryList.remove(dateToBeRemoved);
+
+                                          var totalDate = widget.primaryAndSecondary[2];
+                                          totalDate.remove(dateToBeRemoved.toString().split(" ")[0]);
+                                          widget.primaryAndSecondary[2] = totalDate;
+
+                                          daysList.remove(dateToBeRemoved.toString().split(' ')[0]);
                                           widget.primaryAndSecondary[1] = secondaryList;
                                           datesWhenBreakChosen.remove(currDay);
                                           daysList.add(currDay);
@@ -595,10 +602,18 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
                                             return DateTime.parse(a).compareTo(DateTime.parse(b));
                                           });
                                           primaryList.remove(dateToBeRemoved);
+                                          daysList.remove(dateToBeRemoved.toString().split(' ')[0]);
+
+
+                                          var totalDate = widget.primaryAndSecondary[2];
+                                          totalDate.remove(dateToBeRemoved.toString().split(" ")[0]);
+                                          widget.primaryAndSecondary[2] = totalDate;
+
                                           widget.primaryAndSecondary[0] = primaryList;
                                           datesWhenBreakChosen.remove(currDay);
                                           daysList.add(currDay);
-
+                                          print(widget.primaryAndSecondary[2]);
+                                          print(widget.primaryAndSecondary[0]);
                                         }else{
                                           print('else condition called');
                                           var dateFromPrimary = primaryList[primaryList.length-1];
@@ -615,6 +630,11 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
                                           if(primaryList.contains(list[list.length-1].toString().split(" ")[0]+" 00:00:00")){
                                             print('primary contains');
                                             primaryList.add(currDay+" 00:00:00");
+
+                                            var totalDate = widget.primaryAndSecondary[2];
+                                            totalDate.remove((list[list.length-1].toString().split(" ")[0]));
+                                            widget.primaryAndSecondary[2] = totalDate;
+
                                             datesWhenBreakChosen.remove(currDay);
                                             daysList.add(currDay);
                                             primaryList.remove(list[list.length-1].toString().split(" ")[0]+" 00:00:00");
@@ -625,6 +645,12 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
                                           }else{
                                             print('secondary called');
                                             secondaryList.add(currDay+" 00:00:00");
+
+                                            var totalDate = widget.primaryAndSecondary[2];
+                                            totalDate.remove((list[list.length-1].toString().split(" ")[0]));
+                                            widget.primaryAndSecondary[2] = totalDate;
+
+
                                             datesWhenBreakChosen.remove(currDay);
                                             daysList.add(currDay);
                                             secondaryList.remove(list[list.length-1].toString().split(" ")[0]+" 00:00:00");
@@ -635,6 +661,8 @@ class _CustomCalenderForBreakState extends State<CustomCalenderForBreak> {
                                             print(widget.primaryAndSecondary);
 
                                           }
+
+                                          daysList.remove((list[list.length-1].toString().split(" ")[0]));
                                         }
                                         // int ind = datesWhenBreakChosen
                                         //     .indexOf(currDay);

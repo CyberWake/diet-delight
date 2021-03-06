@@ -269,7 +269,16 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                                        border: Border.all(
                                            color: selectedDays[index]
                                                ? white
-                                               : defaultGreen)),
+                                               : Color.fromRGBO(144, 144, 144, 1).withOpacity(0.5)),
+                                     boxShadow: [
+                                       BoxShadow(
+                                         blurRadius:   selectedDays[index]  ? 0 : 4,
+                                         color: Colors.black.withOpacity(0.25),
+                                         spreadRadius: 0,
+                                         offset:  selectedDays[index]  ?  const Offset(0, 0):const Offset(0, 4),
+                                       )
+                                     ],
+                                   ),
                                    child: Center(
                                      child: Text(
                                        days[index],
@@ -318,14 +327,22 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                                      height: 45,
                                      width: 45,
                                      decoration: BoxDecoration(
-                                         shape: BoxShape.circle,
-                                         color: selectedDays[index + 4]
-                                             ? defaultGreen
-                                             : white,
-                                         border: Border.all(
-                                             color: selectedDays[index + 4]
-                                                 ? white
-                                                 : defaultGreen)),
+                                       shape: BoxShape.circle,
+                                       color:
+                                       selectedDays[index+4] ? defaultGreen : white,
+                                       border: Border.all(
+                                           color: selectedDays[index+4]
+                                               ? white
+                                               : Color.fromRGBO(144, 144, 144, 1).withOpacity(0.5)),
+                                       boxShadow: [
+                                         BoxShadow(
+                                           blurRadius:   selectedDays[index+4]  ? 0 : 4,
+                                           color: Colors.black.withOpacity(0.25),
+                                           spreadRadius: 0,
+                                           offset:  selectedDays[index+4]  ?  const Offset(0, 0):const Offset(0, 4),
+                                         )
+                                       ],
+                                     ),
                                      child: Center(
                                        child: Text(
                                          days[index + 4],
@@ -358,58 +375,58 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                            ],
                          ),
                          width: double.infinity,
-                         child: Row(
-                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                           children: [
-                             Text("First Delivery",style: appBarTextStyle.copyWith(
-                                 color: defaultGreen,
-                                 fontSize: 18
-                             ),),
-                             GestureDetector(
-                               onTap: () async {
-                                 DateTime selectedDateTime = await showRoundedDatePicker(
-                                     context: context,
-                                     background: Colors.white,
-                                     styleDatePicker: MaterialRoundedDatePickerStyle(
-                                       textStyleMonthYearHeader: TextStyle(
-                                           fontSize: 18,
-                                           color: defaultPurple,
-                                           fontWeight: FontWeight.normal),
-                                       paddingMonthHeader: EdgeInsets.only(top: 10),
-                                       colorArrowNext: defaultPurple,
-                                       colorArrowPrevious: defaultPurple,
-                                       textStyleButtonPositive: TextStyle(
-                                           fontSize: 14,
-                                           color: defaultPurple,
-                                           fontWeight: FontWeight.bold),
-                                       textStyleButtonNegative: TextStyle(
-                                           fontSize: 14,
-                                           color: inactivePurple,
-                                           fontWeight: FontWeight.bold),
-                                     ),
-                                     theme: ThemeData(
-                                       primaryColor: defaultPurple,
-                                       accentColor: defaultGreen,
-                                       dialogBackgroundColor: Colors.white,
-                                       textTheme: TextTheme(
-                                         caption: TextStyle(color: defaultPurple),
-                                       ),
-                                       disabledColor: formFill,
-                                       accentTextTheme: TextTheme(),
-                                     ),
-                                     initialDate:
-                                     dateSelected ?? today.add(Duration(days: 2)),
-                                     firstDate: today.add(Duration(days: 2)));
-                                 if (selectedDateTime != null) {
-                                   setState(() {
-                                     dateSelected = selectedDateTime;
-                                     date =
-                                     '${dateSelected.year.toString()}-${dateSelected.month.toString().padLeft(2, '0')}-${dateSelected.day.toString().padLeft(2, '0')}';
-                                   });
-                                 }
-                                 print(date);
-                               },
-                               child: Text(
+                         child: GestureDetector(
+                           onTap: () async {
+                             DateTime selectedDateTime = await showRoundedDatePicker(
+                                 context: context,
+                                 background: Colors.white,
+                                 styleDatePicker: MaterialRoundedDatePickerStyle(
+                                   textStyleMonthYearHeader: TextStyle(
+                                       fontSize: 18,
+                                       color: defaultPurple,
+                                       fontWeight: FontWeight.normal),
+                                   paddingMonthHeader: EdgeInsets.only(top: 10),
+                                   colorArrowNext: defaultPurple,
+                                   colorArrowPrevious: defaultPurple,
+                                   textStyleButtonPositive: TextStyle(
+                                       fontSize: 14,
+                                       color: defaultPurple,
+                                       fontWeight: FontWeight.bold),
+                                   textStyleButtonNegative: TextStyle(
+                                       fontSize: 14,
+                                       color: inactivePurple,
+                                       fontWeight: FontWeight.bold),
+                                 ),
+                                 theme: ThemeData(
+                                   primaryColor: defaultPurple,
+                                   accentColor: defaultGreen,
+                                   dialogBackgroundColor: Colors.white,
+                                   textTheme: TextTheme(
+                                     caption: TextStyle(color: defaultPurple),
+                                   ),
+                                   disabledColor: formFill,
+                                   accentTextTheme: TextTheme(),
+                                 ),
+                                 initialDate:
+                                 dateSelected ?? today.add(Duration(days: 2)),
+                                 firstDate: DateTime.now().toLocal().add(Duration(days: 1)));
+                             if (selectedDateTime != null) {
+                               setState(() {
+                                 dateSelected = selectedDateTime;
+                                 date =
+                                 '${dateSelected.year.toString()}-${dateSelected.month.toString().padLeft(2, '0')}-${dateSelected.day.toString().padLeft(2, '0')}';
+                               });
+                             }
+                             print(date);
+                           },
+                           child: Row(
+                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                             children: [
+                               Text("First Delivery",style: appBarTextStyle.copyWith(
+                                   color: defaultGreen,
+                                   fontSize: 18
+                               ),),
+                               Text(
                                  DateFormat.E().format(dateSelected ??
                                      today.add(Duration(days: 2))) +
                                      ', ' +
@@ -421,8 +438,8 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                                      fontSize: 18,
                                      color: defaultGreen),
                                ),
-                             ),
-                           ],
+                             ],
+                           ),
                          ),
                        ),
                      ],
@@ -434,21 +451,12 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
 
               Container(
 
-                margin: EdgeInsets.only(top: 30, bottom: 20),
+                margin: EdgeInsets.only(top: 30, bottom: 20,left: 15,right: 15),
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                 decoration: BoxDecoration(
                   color: formBackground,
                   borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 4,
-                        color: Colors.black.withOpacity(0.25),
-                        spreadRadius: 0,
-                        offset: const Offset(0.0, 0.0),
-                      )
-                    ],
-
-                    border: Border.all(width: 1, color: Colors.grey),),
+                ),
                 child: Column(
                   children: [
                     Row(
@@ -527,22 +535,12 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                 ),
               ),
               Container(
-
-                margin: EdgeInsets.only(top: 20, bottom: 20),
+                margin: EdgeInsets.only(top: 30, bottom: 20,left: 15,right: 15),
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                 decoration: BoxDecoration(
                   color: formBackground,
                   borderRadius: BorderRadius.circular(15),
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 4,
-                      color: Colors.black.withOpacity(0.25),
-                      spreadRadius: 0,
-                      offset: const Offset(0.0, 0.0),
-                    )
-                  ],
-
-                  border: Border.all(width: 1, color: Colors.grey),),
+           ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -607,9 +605,12 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                                                                 color: deliveryTimeIndex == 0 ? defaultGreen : Color(0xFF77838F).withOpacity(0.3),
                                                                 borderRadius: BorderRadius.circular(15)
                                                             ),
-                                                            child: Center(child: Text("Morning\n6am - 12pm",textAlign: TextAlign.center,
-                                                              style: descriptionTextStyle.copyWith(color: Colors.white,fontSize: 14)
-                                                              ,)),
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.only(top : 22.0),
+                                                              child: Text("Morning\n6am - 12pm",textAlign: TextAlign.center,
+                                                                style: descriptionTextStyle.copyWith(color: Colors.white,fontSize: 14)
+                                                                ,),
+                                                            ),
                                                           ),
                                                           Positioned(
                                                               bottom : 10,
@@ -634,8 +635,11 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                                                                 color :  deliveryTimeIndex == 1 ? defaultGreen : Color(0xFF77838F).withOpacity(0.3),
                                                                 borderRadius: BorderRadius.circular(15)
                                                             ),
-                                                            child: Center(child: Text("Afternoon\n1pm - 6pm",textAlign: TextAlign.center,
-                                                                style: descriptionTextStyle.copyWith(color: Colors.white,fontSize: 14))),
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.only(top : 22.0),
+                                                              child: Text("Afternoon\n1pm - 6pm",textAlign: TextAlign.center,
+                                                                  style: descriptionTextStyle.copyWith(color: Colors.white,fontSize: 14)),
+                                                            ),
                                                           ),
                                                           Positioned(
                                                               bottom : 10,
