@@ -139,6 +139,12 @@ class _BookConsultationState extends State<BookConsultation>
   }
 
   @override
+  void didChangeDependencies() {
+    precacheImage(consultationBackground.image, context);
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var devWidth = MediaQuery.of(context).size.width;
     var devHeight = MediaQuery.of(context).size.height;
@@ -146,9 +152,7 @@ class _BookConsultationState extends State<BookConsultation>
     return SafeArea(
       child: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('images/consultation.jpg'),
-              fit: BoxFit.fitHeight),
+          image: consultationBackground,
         ),
         child: Scaffold(
           key: _scaffoldKey,
@@ -289,7 +293,7 @@ class _BookConsultationState extends State<BookConsultation>
                     borderRadius: BorderRadius.all(Radius.circular(40.0)),
                     color: Colors.transparent,
                     child: Container(
-                      height: devHeight * 0.2,
+                      height: devHeight * 0.18,
                       width: devWidth * 0.85,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(40.0)),
@@ -305,7 +309,7 @@ class _BookConsultationState extends State<BookConsultation>
                             Text(
                                 '${widget.consultation[consultationIndex].name} Package',
                                 style: consultationModeSelectStyle.copyWith(
-                                  color: questionnaireSelect,
+                                  color: white,
                                   fontWeight: FontWeight.w600,
                                 )),
                             SizedBox(height: devWidth * 0.02),

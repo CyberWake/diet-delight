@@ -12,10 +12,11 @@ class RegModel {
   String addressLine2;
   String addressSecondary1;
   String addressSecondary2;
+  int questionnaireStatus;
   String bmi;
-  String age;
-  String gender;
-  String recommendedCalories;
+  int age;
+  int gender;
+  int recommendedCalories;
 
   RegModel(
       {this.status = "0",
@@ -31,6 +32,7 @@ class RegModel {
       this.addressLine2,
       this.addressSecondary1,
       this.addressSecondary2,
+      this.questionnaireStatus,
       this.age,
       this.bmi,
       this.gender,
@@ -53,6 +55,7 @@ class RegModel {
         'primary_address_line2': this.addressLine2,
         'secondary_address_line1': this.addressSecondary1,
         'secondary_address_line2': this.addressSecondary2,
+        'questionnaire_status': this.questionnaireStatus,
       };
     }
     return {
@@ -64,6 +67,7 @@ class RegModel {
       'first_name': this.firstName,
       'last_name': this.lastName,
       'mobile': this.mobile,
+      'questionnaire_status': this.questionnaireStatus,
     };
   }
 
@@ -90,7 +94,8 @@ class RegModel {
         addressLine1: item['primary_address_line1'],
         addressLine2: item['primary_address_line2'],
         addressSecondary1: item['secondary_address_line1'],
-        addressSecondary2: item['secondary_address_line2']);
+        addressSecondary2: item['secondary_address_line2'],
+        questionnaireStatus: item['questionnaire_status']);
   }
 
   show() {
@@ -111,6 +116,7 @@ class RegModel {
     print('addressLine2: $addressLine2');
     print('addressSecondaryLine1: $addressSecondary1');
     print('addressSecondaryLine2: $addressSecondary2');
+    print('questionnaireStatus: $questionnaireStatus');
   }
 
   setUid(String uId) {
@@ -119,5 +125,16 @@ class RegModel {
 
   setPassword(String pass) {
     this.password = pass;
+  }
+
+  setQuestionnaireStatus(int questionnaireStatus) {
+    this.questionnaireStatus = questionnaireStatus;
+  }
+
+  addBmiInfo(int age, int gender, String bmi, int recommendedCalories) {
+    this.age = age;
+    this.gender = gender;
+    this.bmi = bmi;
+    this.recommendedCalories = recommendedCalories;
   }
 }

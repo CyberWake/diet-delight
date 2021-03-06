@@ -35,74 +35,107 @@ class _FavouritesPageState extends State<FavouritesPage> {
   }
 
   Widget item(FoodItemModel foodItem, AddFavouritesModel details) {
-    return InkWell(
-      onTap: () {},
+    return Material(
+      borderRadius: BorderRadius.circular(15.0),
+      elevation: 0,
+      color: Colors.transparent,
       child: Container(
+        margin: EdgeInsets.symmetric(
+            vertical: 10, horizontal: MediaQuery.of(context).size.width * 0.05),
+        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15.0),
+            color: questionnaireDisabled.withOpacity(0.4)),
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 22.0),
+          padding: const EdgeInsets.only(bottom: 0.0),
           child: Row(
             children: [
               Expanded(
                 flex: 8,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 45.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        height: 10,
-                        width: 10,
-                        child: Image.asset(
-                          foodItem.isVeg
-                              ? 'images/veg.png'
-                              : 'images/nonVeg.png',
-                          fit: BoxFit.fitHeight,
-                          scale: 0.5,
+                child: Container(
+                  height: MediaQuery.of(context).size.width * 0.275,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.width * 0.0375,
+                        left: 15.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: 15,
+                          width: 15,
+                          child: Image.asset(
+                            foodItem.isVeg
+                                ? 'images/veg.png'
+                                : 'images/nonVeg.png',
+                            fit: BoxFit.fitHeight,
+                            scale: 0.5,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        foodItem.foodName,
-                        style: appBarTextStyle.copyWith(
-                            fontSize: 14, fontWeight: FontWeight.w400),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-//                      Text(
-//                        foodItem.des,
-//                        style: appBarTextStyle.copyWith(
-//                            fontSize: 12,
-//                            fontWeight: FontWeight.w400,
-//                            color: Color.fromRGBO(144, 144, 144, 1)),
-//                      ),
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Container(
-                        alignment: Alignment.bottomRight,
-                        padding: EdgeInsets.only(right: 10),
-                        child: IconButton(
-                            onPressed: () async {
-                              await _apiCall.deleteFavourites(details);
-                              setState(() {
-                                getData();
-                              });
-                            },
-                            icon: Icon(Icons.favorite,
-                                size: 16, color: defaultPurple)),
-                      )
-                    ],
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          foodItem.foodName,
+                          style: appBarTextStyle.copyWith(
+                              fontSize: 13, fontWeight: FontWeight.w400),
+                        ),
+                        foodItem.featured == 1
+                            ? Padding(
+                                padding: EdgeInsets.only(left: 5.0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Icon(Icons.star,
+                                        color: featuredColor, size: 12),
+                                    Text(
+                                      'Featured',
+                                      style: appBarTextStyle.copyWith(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w600,
+                                          color: featuredColor),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : SizedBox(),
+//                       SizedBox(
+//                         height: 10,
+//                       ),
+// //                      Text(
+// //                        foodItem.des,
+// //                        style: appBarTextStyle.copyWith(
+// //                            fontSize: 12,
+// //                            fontWeight: FontWeight.w400,
+// //                            color: Color.fromRGBO(144, 144, 144, 1)),
+// //                      ),
+//                       SizedBox(
+//                         height: 4,
+//                       ),
+                        Spacer(),
+                        Container(
+                          alignment: Alignment.bottomRight,
+                          padding: EdgeInsets.only(right: 10),
+                          child: IconButton(
+                              onPressed: () async {
+                                await _apiCall.deleteFavourites(details);
+                                setState(() {
+                                  getData();
+                                });
+                              },
+                              icon: Icon(Icons.favorite,
+                                  size: 16, color: defaultPurple)),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
               Expanded(
                 flex: 3,
                 child: Container(
-                  margin: EdgeInsets.only(right: 20),
+                  margin: EdgeInsets.only(right: 15),
                   child: Material(
                     elevation: 2,
                     borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -120,8 +153,10 @@ class _FavouritesPageState extends State<FavouritesPage> {
                           ),
                         ),
                       ),
-                      placeholder: (context, url) =>
-                          CircularProgressIndicator(),
+                      placeholder: (context, url) => SpinKitChasingDots(
+                        color: defaultPurple,
+                        size: 32,
+                      ),
                       errorWidget: (context, url, error) => FlutterLogo(
                         size: 60,
                       ),
@@ -141,6 +176,13 @@ class _FavouritesPageState extends State<FavouritesPage> {
       isLoaded = false;
     });
     favourites = await _apiCall.getFavourites();
+    List fav = favourites[1];
+    favourites[1].sort((a, b) {
+      return a.menuItem.foodName
+          .toString()
+          .compareTo(b.menuItem.foodName.toString());
+    });
+    print('fav: $fav');
     if (mounted) {
       setState(() {
         isLoaded = true;
@@ -179,7 +221,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                 ))
               : Scaffold(
                   key: _scaffoldKey,
-                  backgroundColor: white,
+                  backgroundColor: Colors.transparent,
                   body: Container(
                       child: Padding(
                     padding: const EdgeInsets.only(top: 15.0),
@@ -209,13 +251,21 @@ class _FavouritesPageState extends State<FavouritesPage> {
                       ),
                       controller: _refreshController,
                       onRefresh: _onRefresh,
-                      child: ListView.builder(
-                          controller: _scrollController,
-                          itemCount: favourites[1].length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return item(favourites[1][index].menuItem,
-                                favourites[1][index]);
-                          }),
+                      child: favourites[1].length == 0
+                          ? Center(
+                              child: Text(
+                                  'No dishes have been added as favourite yet',
+                                  style: orderHistoryCardStyle.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18)),
+                            )
+                          : ListView.builder(
+                              controller: _scrollController,
+                              itemCount: favourites[1].length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return item(favourites[1][index].menuItem,
+                                    favourites[1][index]);
+                              }),
                     ),
                   )))),
     );

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
+import 'package:diet_delight/Screens/Auth Screens/revisedQuestionnaire.dart';
 
 class VerifyPhoneNumber extends StatefulWidget {
   final RegModel regDetails;
@@ -40,10 +41,11 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
       Navigator.push(
           context,
           CupertinoPageRoute(
-              builder: (context) => Questionnaire(
-                  username: widget.regDetails.firstName +
-                      " " +
-                      widget.regDetails.lastName)));
+              builder: (context) => NewQuestionnaire(
+                  // username: widget.regDetails.firstName +
+                  //     " " +
+                  //     widget.regDetails.lastName
+                  )));
     } else {
       showSnackBar('Something went wrong');
     }
@@ -152,10 +154,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
         body: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage('images/Group 7.png'),
-                  fit: BoxFit.cover
-              )
-          ),
+                  image: AssetImage('images/Group 7.png'), fit: BoxFit.cover)),
           child: Column(
             children: [
               Row(
@@ -246,7 +245,8 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 8.0, 0, 0),
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 8.0, 0, 0),
                                 child: Center(
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -299,7 +299,9 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                             ),
                           ),
                         ),
-                        SizedBox(height: MediaQuery.of(context).size.height*0.08,),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.08,
+                        ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(30, 40, 30, 0),
                           child: SizedBox(
@@ -314,9 +316,10 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                                   await signInWithPhoneNumber();
                                 } else {
                                   if (enteredOtp.isNotEmpty) {
-                                    _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                        content:
-                                            Text('Enter the OTP to continue')));
+                                    _scaffoldKey.currentState.showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'Enter the OTP to continue')));
                                   }
                                 }
                               },
@@ -334,8 +337,8 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                               style: TextButton.styleFrom(
                                   backgroundColor: defaultGreen,
                                   shape: const RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(20)))),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20)))),
                             ),
                           ),
                         ),

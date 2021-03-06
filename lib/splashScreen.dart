@@ -99,14 +99,9 @@ class _SplashScreenState extends State<SplashScreen>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      SpinKitWanderingCubes(
-                        itemBuilder: (BuildContext context, int index) {
-                          return DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: index.isEven ? Colors.red : Colors.green,
-                            ),
-                          );
-                        },
+                      SpinKitChasingDots(
+                        color: defaultPurple,
+                        size: 36,
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 20.0),

@@ -32,6 +32,7 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
   int menuId = 0;
   bool isLoaded = false;
   int itemIndex = 0;
+  bool favEnabled = true;
 
   get pageViewTabSelected => null;
   ScrollController _scrollCon = new ScrollController();
@@ -68,6 +69,10 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
 
   getData() async {
     await getFavourites();
+    setState(() {
+      favPressed = favourites[0];
+      print('favPressed: $favPressed');
+    });
     await getMenuCategories(menuId);
   }
 
@@ -143,109 +148,131 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
     return InkWell(
       onTap: () {},
       child: Container(
-        height: 125,
+        height: MediaQuery.of(context).size.width * 0.275,
         child: Row(
           children: [
             Expanded(
               flex: 8,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 45.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 13,
-                      width: 13,
-                      child: Image.asset(
-                        foodItem.isVeg ? 'images/veg.png' : 'images/nonVeg.png',
-                        fit: BoxFit.fitHeight,
-                        scale: 0.5,
+              child: Container(
+                height: MediaQuery.of(context).size.width * 0.275,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.width * 0.0375,
+                      left: 45.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 15,
+                        width: 15,
+                        child: Image.asset(
+                          foodItem.isVeg
+                              ? 'images/veg.png'
+                              : 'images/nonVeg.png',
+                          fit: BoxFit.fitHeight,
+                          scale: 0.5,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      foodItem.foodName,
-                      style: appBarTextStyle.copyWith(
-                          fontSize: 12, fontWeight: FontWeight.w400),
-                    ),
-                    foodItem.featured == 1
-                        ? Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Icon(Icons.star,
-                                    color: featuredColor,
-                                  size: 12),
-                              Text(
-                                'Featured',
-                                style: appBarTextStyle.copyWith(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w600,
-                                   color:
-                                  featuredColor
-                                ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        foodItem.foodName,
+                        style: appBarTextStyle.copyWith(
+                            fontSize: 12, fontWeight: FontWeight.w400),
+                      ),
+                      foodItem.featured == 1
+                          ? Padding(
+                              padding: EdgeInsets.only(left: 5.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Icon(Icons.star,
+                                      color: featuredColor, size: 12),
+                                  Text(
+                                    'Featured',
+                                    style: appBarTextStyle.copyWith(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w600,
+                                        color: featuredColor),
+                                  ),
+                                ],
                               ),
-                            ],
-                          )
-                        : SizedBox(),
-                    SizedBox(
-                      height: 6,
-                    ),
-                    Container(
-                      alignment: Alignment.bottomRight,
-                      padding: EdgeInsets.only(right: 10),
-                      child: favPressed.contains(foodItem.id) ||
-                              favourites[0].contains(foodItem.id)
-                          ? IconButton(
-                              onPressed: () async {
-                                var temp = (favourites[1]
-                                [favourites[0].indexOf(foodItem.id)]);
-
-                                setState(() {
-                                  favPressed.remove(foodItem.id);
-                                  favourites[0].remove(foodItem.id);
-                                });
-                                await _apiCall.deleteFavourites(temp);
-                                setState(() {
-                                  getFavourites();
-                                  print('deleted');
-                                });
-                              },
-                              icon: Icon(Icons.favorite,
-                                  size: 18, color: defaultPurple))
-                          : IconButton(
-                              onPressed: () async {
-                                setState(() {
-                                  favPressed.add(foodItem.id);
-                                  favourites[0].add(foodItem.id);
-                                });
-                                int userId = int.parse(Api.userInfo.id);
-                                AddFavouritesModel details = AddFavouritesModel(
-                                  menuItemId: foodItem.id,
-                                  userId: userId,
-                                );
-                                await _apiCall.addFavourites(details);
-                                getFavourites();
-                              },
-                              icon: Icon(
-                                Icons.favorite_border,
-                                size: 18,
-                                color: defaultPurple,
-                              )),
-                    ),
-                    SizedBox(
-                      height: 3,
-                    ),
-                  ],
+                            )
+                          : SizedBox(),
+                      // SizedBox(
+                      //   height: 4,
+                      // ),
+                      Spacer(),
+                      Container(
+                        alignment: Alignment.bottomRight,
+                        padding: EdgeInsets.only(right: 10),
+                        child: favPressed.contains(foodItem.id) ||
+                                favourites[0].contains(foodItem.id)
+                            ? IconButton(
+                                onPressed: favEnabled == false
+                                    ? null
+                                    : () async {
+                                        favEnabled = false;
+                                        int removeIndex =
+                                            favourites[0].indexOf(foodItem.id);
+                                        setState(() {
+                                          print(favourites[0]
+                                              .indexOf(foodItem.id));
+                                          favPressed.remove(foodItem.id);
+                                          print('favPressed: $favPressed');
+                                          print(favourites[0]);
+                                          print(foodItem.id);
+                                          print(favourites[0]
+                                              .indexOf(foodItem.id));
+                                        });
+                                        await _apiCall.deleteFavourites(
+                                            favourites[1][removeIndex]);
+                                        setState(() {
+                                          getFavourites();
+                                          print('favPressed: $favPressed');
+                                          favEnabled = true;
+                                          print('deleted');
+                                        });
+                                      },
+                                icon: Icon(Icons.favorite,
+                                    size: 18, color: defaultPurple))
+                            : IconButton(
+                                onPressed: favEnabled == false ||
+                                        favPressed.contains(foodItem.id)
+                                    ? null
+                                    : () async {
+                                        setState(() {
+                                          favEnabled = false;
+                                          favPressed.add(foodItem.id);
+                                        });
+                                        int userId = int.parse(Api.userInfo.id);
+                                        AddFavouritesModel details =
+                                            AddFavouritesModel(
+                                          menuItemId: foodItem.id,
+                                          userId: userId,
+                                        );
+                                        await _apiCall.addFavourites(details);
+                                        setState(() {
+                                          getFavourites();
+                                          favEnabled = true;
+                                        });
+                                      },
+                                icon: Icon(
+                                  Icons.favorite_border,
+                                  size: 18,
+                                  color: defaultPurple,
+                                )),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
             Expanded(
               flex: 3,
               child: Container(
-                height: 81.3,
                 margin: EdgeInsets.only(right: 20),
                 child: Material(
                   elevation: 2,
@@ -491,20 +518,16 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                   );
                 })
             : ListView.builder(
-
                 controller: _scrollController,
                 itemCount: foodItem.length,
                 itemBuilder: (BuildContext context, int index) {
                   return item(foodItem[index]);
                 })
         : ListView.builder(
-
             controller: _scrollController,
             itemCount: foodItem.length,
             itemBuilder: (BuildContext context, int index) {
               return item(foodItem[index]);
             });
   }
-
-
 }

@@ -45,6 +45,12 @@ class _SelectConsultationModeState extends State<SelectConsultationMode> {
   }
 
   @override
+  void didChangeDependencies() {
+    precacheImage(selectConsultationBackgroundImage.image, context);
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var devWidth = MediaQuery.of(context).size.width;
     var devHeight = MediaQuery.of(context).size.height;
@@ -52,9 +58,7 @@ class _SelectConsultationModeState extends State<SelectConsultationMode> {
     return SafeArea(
         child: Container(
       decoration: BoxDecoration(
-        image: DecorationImage(
-            image: AssetImage('images/consultation_pg1.jpg'),
-            fit: BoxFit.fitHeight),
+        image: selectConsultationBackgroundImage,
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -75,55 +79,44 @@ class _SelectConsultationModeState extends State<SelectConsultationMode> {
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: devWidth * 0.05),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Column(
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) => ConsultationPopUp(
-                                selectedIndex: selectedIndex,
-                                callBackFunction: updateSelectedConsultation,
-                              ));
-                    },
-                    child: Material(
-                      elevation: 0,
-                      borderRadius: BorderRadius.all(Radius.circular(40.0)),
-                      color: Colors.transparent,
-                      child: Container(
-                        height: devHeight * 0.2,
-                        width: devWidth * 0.9,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(40.0)),
-                          color: questionnaireDisabled.withOpacity(0.4),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: devWidth * 0.06,
-                              vertical: devWidth * 0.04),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                  '${widget.consultation[consultationIndex].name} Package',
+                  Material(
+                    elevation: 0,
+                    borderRadius: BorderRadius.all(Radius.circular(40.0)),
+                    color: Colors.transparent,
+                    child: Container(
+                      height: devHeight * 0.18,
+                      width: devWidth * 0.9,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(40.0)),
+                        color: questionnaireDisabled.withOpacity(0.4),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: devWidth * 0.06,
+                            vertical: devWidth * 0.04),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                '${widget.consultation[consultationIndex].name} Package',
+                                style: consultationModeSelectStyle.copyWith(
+                                  color: white,
+                                )),
+                            SizedBox(height: devWidth * 0.02),
+                            Padding(
+                              padding: EdgeInsets.only(left: devWidth * 0.03),
+                              child: Text(
+                                  '${widget.consultation[consultationIndex].subtitle}',
                                   style: consultationModeSelectStyle.copyWith(
-                                    color: white,
-                                    fontWeight: FontWeight.w600,
-                                  )),
-                              SizedBox(height: devWidth * 0.02),
-                              Padding(
-                                padding: EdgeInsets.only(left: devWidth * 0.03),
-                                child: Text(
-                                    '${widget.consultation[consultationIndex].subtitle}',
-                                    style: consultationModeSelectStyle.copyWith(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: white)),
-                              ),
-                            ],
-                          ),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.normal,
+                                      color: white)),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -138,7 +131,11 @@ class _SelectConsultationModeState extends State<SelectConsultationMode> {
                 ],
               ),
               Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
+                  // SizedBox(
+                  //   height: devHeight * 0.075,
+                  // ),
                   GestureDetector(
                     onTap: () {
                       int consultationMode = 1;
@@ -192,7 +189,7 @@ class _SelectConsultationModeState extends State<SelectConsultationMode> {
                               Padding(
                                 padding: EdgeInsets.only(left: devWidth * 0.03),
                                 child: Text(
-                                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                                    'Our consultant will get in touch with you via Whatsapp, Phone call or email. The consultation will happen via video conference.',
                                     style: consultationModeSelectStyle.copyWith(
                                         fontSize: 16,
                                         fontWeight: FontWeight.normal)),
@@ -208,7 +205,7 @@ class _SelectConsultationModeState extends State<SelectConsultationMode> {
                     ),
                   ),
                   SizedBox(
-                    height: devHeight * 0.075,
+                    height: devHeight * 0.05,
                   ),
                   GestureDetector(
                     onTap: () {
@@ -235,13 +232,13 @@ class _SelectConsultationModeState extends State<SelectConsultationMode> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Offline Consultation',
+                              Text('Consultation at Clinic',
                                   style: consultationModeSelectStyle),
                               SizedBox(height: devWidth * 0.02),
                               Padding(
                                 padding: EdgeInsets.only(left: devWidth * 0.03),
                                 child: Text(
-                                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                                    'Consultation will happen in-person at our office. You can schedule the meeting and just walk-in to our clinic.',
                                     style: consultationModeSelectStyle.copyWith(
                                         fontSize: 16,
                                         fontWeight: FontWeight.normal)),

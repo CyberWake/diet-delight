@@ -583,24 +583,24 @@ class _QuestionnaireState extends State<Questionnaire>
                                                                           content:
                                                                               Text('Please enter some value')));
                                                                 } else {
-                                                                  await _apiCall.sendOptionsAnswers(
-                                                                      answerId:
-                                                                          orderId,
-                                                                      questionId:
-                                                                          questions[_pageController.index]
-                                                                              .id,
-                                                                      additionalText:
-                                                                          addText,
-                                                                      answer:
-                                                                          ans,
-                                                                      question:
-                                                                          questions[_pageController.index]
-                                                                              .question,
-                                                                      type: questions[_pageController
-                                                                              .index]
-                                                                          .type,
-                                                                      optionSelected:
-                                                                          ans);
+                                                                  // await _apiCall.sendOptionsAnswers(
+                                                                  //     answerId:
+                                                                  //         orderId,
+                                                                  //     questionId:
+                                                                  //         questions[_pageController.index]
+                                                                  //             .id,
+                                                                  //     additionalText:
+                                                                  //         addText,
+                                                                  //     answer:
+                                                                  //         ans,
+                                                                  //     question:
+                                                                  //         questions[_pageController.index]
+                                                                  //             .question,
+                                                                  //     type: questions[_pageController
+                                                                  //             .index]
+                                                                  //         .type,
+                                                                  //     optionSelected:
+                                                                  //         ans);
                                                                   answer = null;
                                                                   setState(() {
                                                                     show =

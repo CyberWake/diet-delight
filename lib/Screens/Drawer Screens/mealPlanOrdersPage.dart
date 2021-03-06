@@ -13,7 +13,7 @@ import 'dart:ui';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class MealPlanOrderHistoryPage extends StatefulWidget {
   @override
@@ -171,164 +171,201 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
   @override
   Widget build(BuildContext context) {
     return loaded
-        ? ListView(
-            shrinkWrap: true,
-            children: List.generate(purchasedMeal.length, (index) {
-              return Material(
-                elevation: 0.0,
-                color: Colors.transparent,
-                child: Container(
-//                height: MediaQuery.of(context).size.height * 0.25,
-                  margin: EdgeInsets.all(15),
-                  padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
-                  decoration: BoxDecoration(
-                    color: white,
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 4,
-                        color: Colors.black.withOpacity(0.25),
-                        spreadRadius: 0,
-                        offset: const Offset(0.0, 0.0),
-                      )
-                    ],
+        ? purchasedMeal.length == 0
+            ? Center(
+                child: Material(
+                  elevation: 0.0,
+                  color: Colors.transparent,
+                  child: Container(
+                    margin: EdgeInsets.all(15),
+                    padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
+                    decoration: BoxDecoration(
+                      color: white,
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 4,
+                          color: Colors.black.withOpacity(0.25),
+                          spreadRadius: 0,
+                          offset: const Offset(0.0, 0.0),
+                        )
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                          'No Meal Plan Subscriptions have been purchased yet',
+                          style: orderHistoryCardStyle.copyWith(
+                              fontWeight: FontWeight.bold, fontSize: 18)),
+                    ),
                   ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Flexible(
-                          fit: FlexFit.loose,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(purchasedMeal[index].mealPlanName,
-                                    style: orderHistoryCardStyle.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14)),
-                                PopupMenuButton<int>(
-                                  child: Icon(Icons.more_vert, color: timeGrid),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0))),
-                                  itemBuilder: (BuildContext context) =>
-                                      <PopupMenuEntry<int>>[
-                                    PopupMenuItem<int>(
-                                      value: 0,
-                                      child: Material(
-                                        color: Colors.white,
-                                        child: ListTile(
-                                          onTap: () async {
-                                            MealModel getMealPackage =
-                                                await _apiCall.getMealPlan(
-                                                    purchasedMeal[index]
-                                                        .mealPlanId);
-                                            Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                    builder: (BuildContext
-                                                            context) =>
-                                                        MealSubscriptionPage(
-                                                          weekDaysSelected:
-                                                              purchasedMeal[
-                                                                      index]
-                                                                  .weekdays
-                                                                  .length,
-                                                          mealPackage:
-                                                              getMealPackage,
-                                                        )));
-                                          },
-                                          leading: Icon(
-                                            Icons.autorenew,
-                                            size: 24,
-                                            color: Colors.black,
-                                          ),
+                ),
+              )
+            : ListView(
+                shrinkWrap: true,
+                children: List.generate(purchasedMeal.length, (index) {
+                  return Material(
+                    elevation: 0.0,
+                    color: Colors.transparent,
+                    child: Container(
+//                height: MediaQuery.of(context).size.height * 0.25,
+                      margin: EdgeInsets.all(15),
+                      padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
+                      decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 4,
+                            color: Colors.black.withOpacity(0.25),
+                            spreadRadius: 0,
+                            offset: const Offset(0.0, 0.0),
+                          )
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Flexible(
+                              fit: FlexFit.loose,
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(purchasedMeal[index].mealPlanName,
+                                        style: orderHistoryCardStyle.copyWith(
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 15)),
+                                    PopupMenuButton<int>(
+                                      child: Icon(Icons.more_vert,
+                                          color: questionnaireDisabled),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10.0))),
+                                      itemBuilder: (BuildContext context) =>
+                                          <PopupMenuEntry<int>>[
+                                        PopupMenuItem<int>(
+                                          value: 0,
+                                          child: Material(
+                                            color: Colors.white,
+                                            child: ListTile(
+                                              onTap: () async {
+                                                MealModel getMealPackage =
+                                                    await _apiCall.getMealPlan(
+                                                        purchasedMeal[index]
+                                                            .mealPlanId);
+                                                Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                        builder: (BuildContext
+                                                                context) =>
+                                                            MealSubscriptionPage(
+                                                              weekDaysSelected:
+                                                                  purchasedMeal[
+                                                                          index]
+                                                                      .weekdays
+                                                                      .length,
+                                                              mealPackage:
+                                                                  getMealPackage,
+                                                            )));
+                                              },
+                                              leading: Icon(
+                                                Icons.autorenew,
+                                                size: 24,
+                                                color: Colors.black,
+                                              ),
 //                                            new Image.asset(
 //                                              "images/renew-purchase.svg",
 //                                              width: 30,
 //                                              height: 30,
 //                                            ),
-                                          title: Text(
-                                            'Renew Purchase',
-                                            style: orderHistoryPopUpStyle,
+                                              title: Text(
+                                                'Renew Purchase',
+                                                style: orderHistoryPopUpStyle,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                    PopupMenuItem<int>(
-                                      value: 1,
-                                      child: Material(
-                                        color: Colors.white,
-                                        child: ListTile(
-                                          onTap: () async {
-                                            await DownloadFile(
-                                                'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-                                                'Dummy PDF.pdf');
-                                            Navigator.pop(context);
-                                          },
-                                          leading: Icon(
-                                            Icons.file_download,
-                                            size: 24,
-                                            color: Colors.black,
-                                          ),
+                                        PopupMenuItem<int>(
+                                          value: 1,
+                                          child: Material(
+                                            color: Colors.white,
+                                            child: ListTile(
+                                              onTap: () async {
+                                                await DownloadFile(
+                                                    'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+                                                    'Dummy PDF.pdf');
+                                                Navigator.pop(context);
+                                              },
+                                              leading: Icon(
+                                                Icons.file_download,
+                                                size: 24,
+                                                color: Colors.black,
+                                              ),
 //                                            new Image.asset(
 //                                                "images/download_invoice.png",
 //                                                width: 20),
-                                          title: Text(
-                                            'Download Invoice',
-                                            style: orderHistoryPopUpStyle,
+                                              title: Text(
+                                                'Download Invoice',
+                                                style: orderHistoryPopUpStyle,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
-                          )),
-                      daysField(
-                        fieldName: 'Subscription:',
-                        fieldValue1:
-                            purchasedMeal[index].mealPlanDuration + ' Days',
-                        fieldValue2: purchasedMeal[index].showWeek(),
-                      ),
-                      dataField(
-                        fieldName: 'Remaining Days:',
-                        fieldValue: '12',
-                      ),
-                      Flexible(
-                          fit: FlexFit.loose,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Icon(Icons.schedule, size: 18, color: timeGrid),
-                                SizedBox(
-                                  width: 10,
+                              )),
+                          daysField(
+                            fieldName: 'Subscription:',
+                            fieldValue1:
+                                purchasedMeal[index].mealPlanDuration + ' Days',
+                            fieldValue2: purchasedMeal[index].showWeek(),
+                          ),
+                          dataField(
+                            fieldName: 'Remaining Days:',
+                            fieldValue: '12',
+                          ),
+                          Flexible(
+                              fit: FlexFit.loose,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Icon(Icons.schedule,
+                                        size: 18, color: timeGrid),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                        formatDate(
+                                            DateTime.parse(
+                                                purchasedMeal[index].createdAt),
+                                            format),
+                                        style: orderHistoryCardStyle),
+                                    Spacer(),
+                                    Text(
+                                        purchasedMeal[index].amountPaid +
+                                            ' BHD',
+                                        style: orderHistoryCardStyle)
+                                  ],
                                 ),
-                                Text(
-                                    formatDate(
-                                        DateTime.parse(
-                                            purchasedMeal[index].createdAt),
-                                        format),
-                                    style: orderHistoryCardStyle),
-                                Spacer(),
-                                Text(purchasedMeal[index].amountPaid + ' BHD',
-                                    style: orderHistoryCardStyle)
-                              ],
-                            ),
-                          ))
-                    ],
-                  ),
-                ),
-              );
-            }),
-          )
+                              ))
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+              )
         : Center(
-            child: CircularProgressIndicator(),
+            child: SpinKitThreeBounce(
+              color: defaultPurple,
+              size: 32,
+            ),
           );
   }
 }
