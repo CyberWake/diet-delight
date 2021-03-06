@@ -175,7 +175,13 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                         ? Row(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Icon(Icons.star, color: featuredColor, size: 12),
+                              ImageIcon(
+                                AssetImage('images/featured_star_new1.png'),
+                                color: featuredColor,
+                                size: 12,
+                              ),
+                              SizedBox(width: 2),
+                              // Icon(Icons.star, color: featuredColor, size: 12),
                               Text(
                                 'Featured',
                                 style: appBarTextStyle.copyWith(

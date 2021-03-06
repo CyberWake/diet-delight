@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     'Dashboard',
     'Favourites',
     'Order History',
-    'Notifications',
+    // 'Notifications',
     'Settings',
     'Contact Us',
     'Logout'
@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     'Dashboard',
     'Favourites',
     'Order History',
-    'Notifications',
+    // 'Notifications',
     'Settings',
     'Contact Us'
   ];
