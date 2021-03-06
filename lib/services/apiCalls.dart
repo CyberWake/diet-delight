@@ -137,7 +137,9 @@ class Api {
       if (response.statusCode == 200) {
         print('Success getting user info');
         var body = convert.jsonDecode(response.body);
+        print('user model body: $body');
         userInfo = RegModel.fromMap(body);
+        print(userInfo.gender);
         await FlutterSecureStorage().write(key: 'calorie', value: recommendedCalories.toString());
         return userInfo;
       } else {
@@ -436,44 +438,6 @@ class Api {
     }
   }
 
-  Future<void> putMealPurchase(var orderDetails,String calorie) async {
-    print("putMealPurchaseCalled");
-
-    try {
-      Map<String, String> headers = {
-        HttpHeaders.contentTypeHeader: "application/json",
-        HttpHeaders.authorizationHeader: "Bearer $token"
-      };
-      var data = {
-        "user_id": int.parse( orderDetails.userId),
-        "meal_plan_id": int.parse(orderDetails.mealPlanId),
-        "payment_id": int.parse(orderDetails.paymentId),
-        "meal_plan_name": orderDetails.mealPlanName,
-        "meal_plan_duration": int.parse( orderDetails.mealPlanDuration),
-        "amount_paid": orderDetails.amountPaid.toString(),
-        "start_date": orderDetails.startDate.toString(),
-        "kcal": int.parse(calorie),
-      };
-      var body = jsonEncode(data);
-      print(body);
-      final response = await http.put(uri + '/api/v1/my-meal-purchases/${orderDetails.mealPlanId}',
-          headers: headers, body: body);
-      print(response.statusCode);
-      if (response.statusCode == 201) {
-        print('meal purchase put success');
-        var body = convert.jsonDecode(response.body);
-        print(body);
-
-      } else {
-        print(response.statusCode);
-        print(response.body);
-        return null;
-      }
-    } on Exception catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
   //Consultation buy
   Future<String> postConsultationPurchase(ConsPurchaseModel order) async {
     try {
@@ -581,7 +545,6 @@ class Api {
       return null;
     }
   }
-
   Future<List<ConsAppointmentModel>> getConsultationAppointments() async {
     try {
       itemAppointments = [];
@@ -819,7 +782,6 @@ class Api {
       print(body);
       final response = await http.post(uri + '/api/v1/my-menu-orders',
           headers: headers, body: body);
-
       if (response.statusCode == 201) {
         print('Success posting meal menu order');
         var body = convert.jsonDecode(response.body);
@@ -853,7 +815,8 @@ class Api {
         print('Success getting question');
         var body = convert.jsonDecode(response.body);
         List data = body['data'];
-        print('Questiondata : $data');
+        print("||||||||||||||||||");
+        print(data);
         data.forEach((element) {
           QuestionnaireModel item = QuestionnaireModel.fromMap(element);
           itemsQuestionnaire.add(item);
@@ -998,8 +961,7 @@ class Api {
             OptionsModel model = OptionsModel.fromMap(element);
             options.add(model);
           });
-          // OptionsModel model = OptionsModel.fromMap(data);
-          // options.add(model);
+
         } else {
           print(response.statusCode);
           print(response.body);
@@ -1171,6 +1133,7 @@ class Api {
     }
   }
 
+
   Future<List<dynamic>> getBreakTakenDay() async {
     // ADD API CAll HERE
     print('breakTakenApiCalled');
@@ -1185,6 +1148,7 @@ class Api {
           await http.get(uri + "/api/v1/my-order-breaks", headers: headers);
 
       if (response.statusCode == 200) {
+
         print('Success getting breaks');
         print(response.statusCode);
         print(response.body);
@@ -1192,6 +1156,7 @@ class Api {
         var body = convert.jsonDecode(response.body)["data"];
 
         return body;
+
       } else {
         print(response.statusCode);
         print(response.body);
@@ -1234,6 +1199,7 @@ class Api {
           headers: headers, body: jsonEncode(body));
 
       if (response.statusCode == 201) {
+
         print('Success making Post call');
         print(response.statusCode);
         print(response.body);
@@ -1241,6 +1207,7 @@ class Api {
         var body = convert.jsonDecode(response.body)["data"];
 
         return body;
+
       } else {
         print(response.statusCode);
         print(response.body);
@@ -1250,6 +1217,8 @@ class Api {
       print(e.toString());
       return [];
     }
+
+
   }
 
   Future<void> putBreakTakenDay(
@@ -1283,18 +1252,23 @@ class Api {
       print(response.body);
       print(response.statusCode);
       if (response.statusCode == 201) {
+
         print('Success making Put call');
 
         var body = convert.jsonDecode(response.body)["data"];
 
         return body;
+
       } else {
+
         //return [];
       }
     } on Exception catch (e) {
       print(e.toString());
       return [];
     }
+
+
   }
 
   Future<void> postAddressBreakTakenDay(

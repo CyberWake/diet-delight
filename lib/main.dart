@@ -26,6 +26,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    precacheImage(AssetImage('images/user_dashboard_bg.jpg'), context);
+    precacheImage(AssetImage('images/order_history.jpg'), context);
+    precacheImage(AssetImage('images/popup_background.jpg'), context);
     precacheImage(AssetImage("images/Group 7.png"), context);
     return MaterialApp(
       initialRoute: '/',
