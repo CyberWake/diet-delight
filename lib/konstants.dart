@@ -53,7 +53,7 @@ const TextStyle unSelectedTab = TextStyle(
 );
 
 const TextStyle selectedTab = TextStyle(
-  fontFamily: 'RobotoCondensedReg',
+  fontFamily: 'RobotoReg',
   fontSize: 18,
   fontWeight: FontWeight.bold,
 );
@@ -257,164 +257,134 @@ List<Widget> mealPlanDropdownItems = List.generate(
   ),
 );
 
-
 String setMonthStringValue(int month) {
-  if(month == 1) {
+  if (month == 1) {
     return "01";
-  }
-  else if(month == 2){
-    return  "02";
-  }else if(month == 3){
+  } else if (month == 2) {
+    return "02";
+  } else if (month == 3) {
     return "03";
-  }
-  else if(month == 4){
-    return  "04";
-  }
-  else if(month == 5){
+  } else if (month == 4) {
+    return "04";
+  } else if (month == 5) {
     return "05";
-  }
-  else if(month == 6){
-    return  "06";
-  }
-  else if(month == 7){
-    return  "07";
-  }
-  else if(month == 8){
-    return"08";
-  }
-  else if(month == 9){
+  } else if (month == 6) {
+    return "06";
+  } else if (month == 7) {
+    return "07";
+  } else if (month == 8) {
+    return "08";
+  } else if (month == 9) {
     return "09";
-  }
-  else if(month == 10){
+  } else if (month == 10) {
     return "10";
-  }
-  else if(month == 11){
+  } else if (month == 11) {
     return "11";
-  }
-  else if(month == 12){
+  } else if (month == 12) {
     return "12";
   }
 }
 
 final List<String> _weekDaysFull = [
-  "Monday","Tuesday","Wednesday","Thursday","Friday",'Saturday',"Sunday"
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  'Saturday',
+  "Sunday"
 ];
 
-final List<String> _weekDays =
-['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+final List<String> _weekDays = [
+  'MON',
+  'TUE',
+  'WED',
+  'THU',
+  'FRI',
+  'SAT',
+  'SUN'
+];
 
-bool currentMonthContainsExtraDay(int month){
-  if(month == 1) {
+bool currentMonthContainsExtraDay(int month) {
+  if (month == 1) {
     return true;
-  }
-  else if(month == 2){
-    return  false;
-  }else if(month == 3){
-    return true;
-  }
-  else if(month == 4){
-    return  false;
-  }
-  else if(month == 5){
-    return true;
-  }
-  else if(month == 6){
-    return  false;
-  }
-  else if(month == 7){
-    return  true;
-  }
-  else if(month == 8){
-    return true;
-  }
-  else if(month == 9){
+  } else if (month == 2) {
     return false;
-  }
-  else if(month == 10){
+  } else if (month == 3) {
     return true;
-  }
-  else if(month == 11){
+  } else if (month == 4) {
     return false;
-  }
-  else if(month == 12){
+  } else if (month == 5) {
+    return true;
+  } else if (month == 6) {
+    return false;
+  } else if (month == 7) {
+    return true;
+  } else if (month == 8) {
+    return true;
+  } else if (month == 9) {
+    return false;
+  } else if (month == 10) {
+    return true;
+  } else if (month == 11) {
+    return false;
+  } else if (month == 12) {
     return true;
   }
 }
 
-String currentMonth(int month){
-  if(month == 1) {
+String currentMonth(int month) {
+  if (month == 1) {
     return "January";
-  }
-  else if(month == 2){
-    return  "February";
-  }else if(month == 3){
+  } else if (month == 2) {
+    return "February";
+  } else if (month == 3) {
     return "March";
-  }
-  else if(month == 4){
-    return  "April";
-  }
-  else if(month == 5){
+  } else if (month == 4) {
+    return "April";
+  } else if (month == 5) {
     return "May";
-  }
-  else if(month == 6){
-    return  "June";
-  }
-  else if(month == 7){
-    return  "July";
-  }
-  else if(month == 8){
-    return"August";
-  }
-  else if(month == 9){
+  } else if (month == 6) {
+    return "June";
+  } else if (month == 7) {
+    return "July";
+  } else if (month == 8) {
+    return "August";
+  } else if (month == 9) {
     return "September";
-  }
-  else if(month == 10){
+  } else if (month == 10) {
     return "October";
-  }
-  else if(month == 11){
+  } else if (month == 11) {
     return "November";
-  }
-  else if(month == 12){
+  } else if (month == 12) {
     return "December";
   }
 }
 
-
-String monthIntegerValueInString ({month}){
-
-  if(month == 1) {
+String monthIntegerValueInString({month}) {
+  if (month == 1) {
     return "01";
-  }
-  else if(month == 2){
-    return  "02";
-  }else if(month == 3){
+  } else if (month == 2) {
+    return "02";
+  } else if (month == 3) {
     return "03";
-  }
-  else if(month == 4){
-    return  "04";
-  }
-  else if(month == 5){
+  } else if (month == 4) {
+    return "04";
+  } else if (month == 5) {
     return "05";
-  }
-  else if(month == 6){
-    return  "06";
-  }
-  else if(month == 7){
-    return  "07";
-  }
-  else if(month == 8){
-    return"08";
-  }
-  else if(month == 9){
+  } else if (month == 6) {
+    return "06";
+  } else if (month == 7) {
+    return "07";
+  } else if (month == 8) {
+    return "08";
+  } else if (month == 9) {
     return "09";
-  }
-  else if(month == 10){
+  } else if (month == 10) {
     return "10";
-  }
-  else if(month == 11){
+  } else if (month == 11) {
     return "11";
-  }
-  else if(month == 12){
+  } else if (month == 12) {
     return "12";
   }
 }
@@ -443,10 +413,7 @@ var faqAnswers = [
   "Hydration is very important – drink at least 2 Liters water daily. Besides water, you can have plain coffee or tea.  ",
 ];
 
-
-Future<bool> sendEmail(name,emailAddress,content) async{
-
-
+Future<bool> sendEmail(name, emailAddress, content) async {
   final Email email = Email(
     body: content,
     subject: '$name',
@@ -455,10 +422,7 @@ Future<bool> sendEmail(name,emailAddress,content) async{
   );
   print("hey");
   await FlutterEmailSender.send(email);
-
-
 }
-
 
 int selectedAddressIndex;
 bool isAddressSelected;

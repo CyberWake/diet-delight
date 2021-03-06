@@ -66,7 +66,6 @@ class _ContactUsPageState extends State<ContactUsPage> {
       padding: EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: white,
-
         borderRadius: BorderRadius.circular(5),
         boxShadow: [
           BoxShadow(
@@ -118,7 +117,6 @@ class _ContactUsPageState extends State<ContactUsPage> {
       padding: EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: white,
-
         borderRadius: BorderRadius.circular(5),
         boxShadow: [
           BoxShadow(
@@ -130,13 +128,16 @@ class _ContactUsPageState extends State<ContactUsPage> {
         ],
       ),
       child: TextField(
-        onChanged: (value){
-          if(value == null || value.length == 0 || !value.contains('@') || value.length<3){
+        onChanged: (value) {
+          if (value == null ||
+              value.length == 0 ||
+              !value.contains('@') ||
+              value.length < 3) {
             setState(() {
               emailError = true;
               print('true');
             });
-          }else{
+          } else {
             setState(() {
               emailError = false;
               print('false');
@@ -145,37 +146,36 @@ class _ContactUsPageState extends State<ContactUsPage> {
         },
         decoration: authInputFieldDecoration.copyWith(hintText: hint),
         textInputAction:
-        index != 2 ? TextInputAction.next : TextInputAction.done,
+            index != 2 ? TextInputAction.next : TextInputAction.done,
         keyboardType:
-        index != 1 ? TextInputType.text : TextInputType.emailAddress,
+            index != 1 ? TextInputType.text : TextInputType.emailAddress,
         focusNode: index == 0
             ? nameField
             : index == 1
-            ? emailField
-            : commentField,
+                ? emailField
+                : commentField,
         controller: index == 0
             ? name
             : index == 1
-            ? email
-            : comment,
+                ? email
+                : comment,
         onSubmitted: (done) {
           index == 0
               ? nameField.unfocus()
               : index == 1
-              ? emailField.unfocus()
-              : commentField.unfocus();
+                  ? emailField.unfocus()
+                  : commentField.unfocus();
           FocusScope.of(context).requestFocus(
             index == 0
                 ? emailField
                 : index == 1
-                ? commentField
-                : submitButton,
+                    ? commentField
+                    : submitButton,
           );
         },
       ),
     );
   }
-
 
   Widget bottomButtons({Widget child, Function onPress, bool shapeWithBorder}) {
     return Expanded(
@@ -197,8 +197,8 @@ class _ContactUsPageState extends State<ContactUsPage> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    print('dispose called');
   }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -219,20 +219,26 @@ class _ContactUsPageState extends State<ContactUsPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 inputField(
-                    hint: 'Name',
-                    index: 0,
-                    height: MediaQuery.of(context).size.height * 0.07,
+                  hint: 'Name',
+                  index: 0,
+                  height: MediaQuery.of(context).size.height * 0.07,
                 ),
-                nameError ? Padding(
-                  padding: const EdgeInsets.only(bottom : 8.0),
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text("Please enter your name",style: TextStyle(
-                      color: defaultGreen,
-                    ),),
-                  ),
-                ) : Container()
+                nameError
+                    ? Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Container(
+                          margin:
+                              EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Text(
+                            "Please enter your name",
+                            style: TextStyle(
+                              color: defaultGreen,
+                            ),
+                          ),
+                        ),
+                      )
+                    : Container()
               ],
             ),
             Column(
@@ -242,16 +248,22 @@ class _ContactUsPageState extends State<ContactUsPage> {
                     hint: 'Email',
                     index: 1,
                     height: MediaQuery.of(context).size.height * 0.07),
-                emailError ? Padding(
-                  padding: const EdgeInsets.only(bottom : 8.0),
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text("Please enter valid email address.",style: TextStyle(
-                      color:defaultGreen,
-                    ),),
-                  ),
-                ) : Container()
+                emailError
+                    ? Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Container(
+                          margin:
+                              EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Text(
+                            "Please enter valid email address.",
+                            style: TextStyle(
+                              color: defaultGreen,
+                            ),
+                          ),
+                        ),
+                      )
+                    : Container()
               ],
             ),
             Column(
@@ -261,46 +273,56 @@ class _ContactUsPageState extends State<ContactUsPage> {
                     hint: 'Comment',
                     index: 2,
                     height: MediaQuery.of(context).size.height * 0.15),
-                commentError ? Padding(
-                  padding: const EdgeInsets.only(bottom : 8.0),
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text("Please enter comment.",style: TextStyle(
-                      color:defaultGreen
-                    ),),
-                  ),
-                ) : Container()
+                commentError
+                    ? Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Container(
+                          margin:
+                              EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Text(
+                            "Please enter comment.",
+                            style: TextStyle(color: defaultGreen),
+                          ),
+                        ),
+                      )
+                    : Container()
               ],
             ),
             Row(
               children: [
                 Spacer(),
                 TextButton(
-                  onPressed: email != null && comment.text != null && comment.text.length >0 && name.text.length >0 && name.text != null ? () async {
-                    print('called');
-                    print(comment.text);
-                    print(name.text);
-                    await sendEmail(name.text, email.text, comment.text);
-                  }
-                  :  () {
-                    print(commentError);
-                    if(email == null){
-                      setState(() {
-                        emailError = true;
-                      });
-                    }
-                    if(comment.text == null ||  comment.text.length <=0 ){
-                      setState(() {
-                        commentError = true;
-                      });
-                    }
-                    if(name.text == null ||  name.text.length <=0 ){
-                      setState(() {
-                        nameError = true;
-                      });
-                    }
-                  },
+                  onPressed: email != null &&
+                          comment.text != null &&
+                          comment.text.length > 0 &&
+                          name.text.length > 0 &&
+                          name.text != null
+                      ? () async {
+                          print('called');
+                          print(comment.text);
+                          print(name.text);
+                          await sendEmail(name.text, email.text, comment.text);
+                        }
+                      : () {
+                          print(commentError);
+                          if (email == null) {
+                            setState(() {
+                              emailError = true;
+                            });
+                          }
+                          if (comment.text == null ||
+                              comment.text.length <= 0) {
+                            setState(() {
+                              commentError = true;
+                            });
+                          }
+                          if (name.text == null || name.text.length <= 0) {
+                            setState(() {
+                              nameError = true;
+                            });
+                          }
+                        },
                   style: TextButton.styleFrom(
                       backgroundColor: defaultGreen,
                       shape: const RoundedRectangleBorder(
@@ -309,7 +331,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                     padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
                     child: Text(
                       'Send',
-                      style:  TextStyle(
+                      style: TextStyle(
                         fontFamily: 'RobotoCondensedReg',
                         fontSize: 20,
                         fontWeight: FontWeight.normal,
@@ -342,7 +364,6 @@ class _ContactUsPageState extends State<ContactUsPage> {
                           "917259384025", "Hello");
                     }
                   },
-
                   child: iconButtons[index],
                   shapeWithBorder: false,
                 );

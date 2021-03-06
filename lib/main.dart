@@ -8,7 +8,6 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:diet_delight/konstants.dart';
 
 Future<void> main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterDownloader.initialize(
       debug: true // optional: set false to disable printing logs to console
@@ -30,6 +29,8 @@ class _MyAppState extends State<MyApp> {
     precacheImage(AssetImage('images/order_history.jpg'), context);
     precacheImage(AssetImage('images/popup_background.jpg'), context);
     precacheImage(AssetImage("images/Group 7.png"), context);
+    precacheImage(AssetImage("images/Group 57.png"), context);
+    precacheImage(AssetImage('images/user_dashboard_bg.jpg'), context);
     return MaterialApp(
       initialRoute: '/',
       routes: {

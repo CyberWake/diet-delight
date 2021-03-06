@@ -274,6 +274,7 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
             Expanded(
               flex: 3,
               child: Container(
+                height: 81.3,
                 margin: EdgeInsets.only(right: 20),
                 child: Material(
                   elevation: 2,
@@ -444,32 +445,43 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                 ),
                 isLoaded
                     ? Container(
-                  height: MediaQuery.of(context).size.height*11.4/13-kTextTabBarHeight,
-                      child: TabBarView(
-                          controller: _pageController,
-                          children: List.generate(mainCategoryItems.length, (index) {
-                            return Container(
-                              margin: index == 0
-                                  ? EdgeInsets.only(top: 0)
-                                  : EdgeInsets.zero,
-                              child: foodItems[index] == null || foodItems[index].length == 0 ?
-                              Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(bottom : 58.0),
-                                  child: Text("Nothing to display",style: TextStyle(
-                                      color: Color.fromRGBO(144, 144, 144, 1),
-                                      fontFamily: 'MontserratMed',
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 14),),
-                                ),
-                              ) :
-                              menuUi(
-                                  foodItems[index], categoryItems[index].parent),
-                            );
-                          })),
-                    )
+                        height: MediaQuery.of(context).size.height * 11.4 / 13 -
+                            kTextTabBarHeight,
+                        child: TabBarView(
+                            controller: _pageController,
+                            children: List.generate(mainCategoryItems.length,
+                                (index) {
+                              return Container(
+                                margin: index == 0
+                                    ? EdgeInsets.only(top: 0)
+                                    : EdgeInsets.zero,
+                                child: foodItems[index] == null ||
+                                        foodItems[index].length == 0
+                                    ? Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 58.0),
+                                          child: Text(
+                                            "Nothing to display",
+                                            style: TextStyle(
+                                                color: Color.fromRGBO(
+                                                    144, 144, 144, 1),
+                                                fontFamily: 'MontserratMed',
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 14),
+                                          ),
+                                        ),
+                                      )
+                                    //Crashing the code
+                                    // : Container(child: Text('hello'))
+                                    : menuUi(foodItems[index],
+                                        categoryItems[index].parent),
+                              );
+                            })),
+                      )
                     : Center(
-                        child: SpinKitThreeBounce(color: defaultPurple, size: 32))
+                        child:
+                            SpinKitThreeBounce(color: defaultPurple, size: 32))
               ]))
             ],
           ),
