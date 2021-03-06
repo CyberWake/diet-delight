@@ -452,6 +452,7 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                                         ),
                                       )
                                     //Crashing the code
+                                    // : Container(child: Text('hello'))
                                     : menuUi(foodItems[index],
                                         categoryItems[index].parent),
                               );

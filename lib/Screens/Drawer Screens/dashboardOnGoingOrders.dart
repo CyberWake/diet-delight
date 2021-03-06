@@ -256,7 +256,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                                             blurRadius: 4,
                                             color: Colors.grey[500],
                                             spreadRadius: 0,
-                                            offset: const Offset(0.0, 0.0),
+                                            offset: const Offset(0.0, 4.0),
                                           )
                                         ],
                                       ),
