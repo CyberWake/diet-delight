@@ -43,6 +43,20 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
   bool orderPlaced = false;
   double _height = 250;
   int menuId = 0;
+  List<int> favPressed = List();
+  List<List> favourites = List();
+
+
+  getFavourites() async {
+    var data = await _apiCall.getFavourites();
+    setState(() {
+      favourites = data;
+      favPressed = favourites[0];
+      print('favPressed: $favPressed');
+    });
+    print('favvvvvvvvvvvvvvv $favourites');
+  }
+
 
   getData() async {
     DateTime today = DateTime.now();
@@ -55,7 +69,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
         break;
       }
     }
-
+    await getFavourites();
 
     var resources = await _apiCall.getCalorieDataa(menuId);
     print(resources);
@@ -224,6 +238,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     });
   }
 
+  bool favEnabled = true;
   var intake;
 
   @override
@@ -336,10 +351,27 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                       items: data.map((String value) {
                                         return new DropdownMenuItem<String>(
                                           value: value,
-                                          child: new Text(value,style: TextStyle(
-                                              color: Colors.black,
-                                            fontSize: 12
-                                          ),),
+                                          child:  value != data[data.length-1] ? Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Text(value,style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 12
+                                              ) ),
+                                              Divider(color: Color(0xFFDFDFFF).withOpacity(0.5),),
+                                            ],
+                                          ) : Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Text("$value (Recommended)",style: TextStyle(
+                                                  color: Color(0xFFF79E1B),
+                                                fontSize: 12
+                                              ),),
+                                              Divider(color: Color(0xFFDFDFFF).withOpacity(0.5),),
+                                            ],
+                                          ),
                                         );
                                       }).toList(),
                                       onChanged: (newVal) async {
@@ -600,14 +632,64 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                       Container(
                         alignment: Alignment.bottomRight,
                         padding: EdgeInsets.only(right: 10),
-                        child: IconButton(
-                            onPressed: () {},
+                        child: favPressed.contains(item.id) ||
+                            favourites[0].contains(item.id)
+                            ? IconButton(
+                            onPressed: favEnabled == false
+                                ? null
+                                : () async {
+                              favEnabled = false;
+                              int removeIndex =
+                              favourites[0].indexOf(item.id);
+                              setState(() {
+                                print(favourites[0]
+                                    .indexOf(item.id));
+                                favPressed.remove(item.id);
+                                favourites[0].remove(item.id);
+                                print('favPressed: $favPressed');
+                                print(favourites[0]);
+                                print(item.id);
+                                print(favourites[0]
+                                    .indexOf(item.id));
+                              });
+                              await _apiCall.deleteFavourites(
+                                  favourites[1][removeIndex]);
+                              setState(() {
+                                // getFavourites();
+                                print('favPressed: $favPressed');
+                                favEnabled = true;
+                                print('deleted');
+                              });
+                            },
+                            icon: Icon(Icons.favorite,
+                                size: 18, color: defaultPurple))
+                            : IconButton(
+                            onPressed: favEnabled == false ||
+                                favPressed.contains(item.id)
+                                ? null
+                                : () async {
+                              setState(() {
+                                favEnabled = false;
+                                favPressed.add(item.id);
+                              });
+                              int userId = int.parse(Api.userInfo.id);
+                              AddFavouritesModel details =
+                              AddFavouritesModel(
+                                menuItemId: item.id,
+                                userId: userId,
+                              );
+                              await _apiCall.addFavourites(details);
+                              setState(() {
+                                // getFavourites();
+                                favEnabled = true;
+                              });
+                            },
                             icon: Icon(
                               Icons.favorite_border,
-                              size: 15,
-                              color: Color(0xFF77838F),
+                              size: 18,
+                              color: defaultPurple,
                             )),
-                      ),
+                      )
                     ],
                   ),
                   SizedBox(
@@ -627,7 +709,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                     child: Container(
                       margin: EdgeInsets.only(right: 20),
                       height: 85,
-                      width: 82,
+                      width: 94,
                       decoration: authFieldDecoration,
                       child: CachedNetworkImage(
                         imageUrl: item.picture ??
@@ -650,7 +732,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                     )),
                 Positioned(
                   top: 70.0,
-                  left:1,
+                  left:7,
                   child: SizedBox(
                     width: 80,
                     height: 33,
@@ -751,7 +833,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                         },
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
-                          child: Text(item.isSelected ? 'Selected' : 'Select',
+                          child: Text(item.isSelected ? 'Selected'.toUpperCase() : "Select".toUpperCase(),
                               style: selectedTab.copyWith(
                                   color: item.isSelected ? white :  Color(0xFF079404),
                                   fontSize: 15)),

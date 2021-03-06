@@ -362,6 +362,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                     Divider(),
                     SizedBox(height: 20,),
                     Container(
+                      height: 60,
                       decoration: BoxDecoration(
                         color: Color(0xFFC4C4C4).withOpacity(0.6),
                         borderRadius: BorderRadius.circular(10)
@@ -383,6 +384,12 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                                   });
                                 },
                                 decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    focusedBorder: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                    errorBorder: InputBorder.none,
+                                    disabledBorder: InputBorder.none,
+
                                   hintStyle:  appBarTextStyle.copyWith(
                                       color: Color(0xFF303030),
                                       fontSize: 17,
@@ -392,20 +399,23 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                                 ),
                               ),
                             ) :Expanded(
-                              child: GestureDetector(
-                                onTap: (){
-                                  setState(() {
-                                    hasCoupon = true;
-                                  });
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                                  child: Text("APPLY COUPON",
-                                    style: appBarTextStyle.copyWith(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w700
-                                    ),
-                                    overflow: TextOverflow.ellipsis,),
+                              child: Container(
+
+                                child: GestureDetector(
+                                  onTap: (){
+                                    setState(() {
+                                      hasCoupon = true;
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                                    child: Text("APPLY COUPON",
+                                      style: appBarTextStyle.copyWith(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w700
+                                      ),
+                                      overflow: TextOverflow.ellipsis,),
+                                  ),
                                 ),
                               ),
                             ),
@@ -420,8 +430,8 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                                   child: Icon(Icons.navigate_next,size: 30,)) :  GestureDetector(
                                 onTap: () async{
                                   print("called");
-                                 var data= await _apiCall.getCoupons();
-                                 print(data);
+                                 var data= await _apiCall.getCouponCode();
+
                                 },
                                     child: Text("APPLY",style: appBarTextStyle.copyWith(
                                     fontSize: 18,

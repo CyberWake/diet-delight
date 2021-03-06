@@ -853,7 +853,6 @@ class Api {
         print('Success getting question');
         var body = convert.jsonDecode(response.body);
         List data = body['data'];
-        print("||||||||||||||||||");
         print('Questiondata : $data');
         data.forEach((element) {
           QuestionnaireModel item = QuestionnaireModel.fromMap(element);
@@ -1529,7 +1528,7 @@ class Api {
 
 
 
-  Future<List<dynamic>> getCouponCode() async {
+  Future<void> getCouponCode() async {
 
     print('getCoupon');
     print(token);
