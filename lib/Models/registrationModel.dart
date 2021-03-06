@@ -14,8 +14,8 @@ class RegModel {
   String addressSecondary2;
   String bmi;
   String age;
-  String gender;
-  String recommendedCalories;
+  int gender;
+  int recommendedCalories;
 
   RegModel(
       {this.status = "0",
@@ -49,6 +49,9 @@ class RegModel {
         'last_name': this.lastName,
         'mobile': this.mobile,
         'password': this.password,
+        'gender': this.gender,
+        'recommended_calories': this.recommendedCalories,
+        'bmi': this.bmi,
         'primary_address_line1': this.addressLine1,
         'primary_address_line2': this.addressLine2,
         'secondary_address_line1': this.addressSecondary1,
@@ -60,6 +63,9 @@ class RegModel {
       'firebase_uid': this.firebaseUid,
       'name': this.name,
       'email': this.email,
+      'gender': this.gender,
+      'recommended_calories': this.recommendedCalories,
+      'bmi': this.bmi,
       'password': this.password,
       'first_name': this.firstName,
       'last_name': this.lastName,
@@ -85,6 +91,9 @@ class RegModel {
         email: item['email'],
         password: item['password'],
         firstName: item['first_name'],
+        gender: item['gender'],
+        bmi: item['bmi'],
+        recommendedCalories: item['recommended_calories'],
         lastName: item['last_name'],
         mobile: item['mobile'],
         addressLine1: item['primary_address_line1'],

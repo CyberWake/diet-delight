@@ -132,7 +132,9 @@ class Api {
       if (response.statusCode == 200) {
         print('Success getting user info');
         var body = convert.jsonDecode(response.body);
+        print('user model body: $body');
         userInfo = RegModel.fromMap(body);
+        print(userInfo.gender);
         return userInfo;
       } else {
         print(response.statusCode);
@@ -537,6 +539,7 @@ class Api {
       return null;
     }
   }
+
   Future<List<ConsAppointmentModel>> getConsultationAppointments() async {
     try {
       itemAppointments = [];
@@ -1082,7 +1085,6 @@ class Api {
     }
   }
 
-
   Future<List<dynamic>> getBreakTakenDay() async {
     // ADD API CAll HERE
     print('breakTakenApiCalled');
@@ -1093,11 +1095,10 @@ class Api {
         HttpHeaders.authorizationHeader: "Bearer $token"
       };
 
-      final response = await http.get(uri + "/api/v1/my-order-breaks",
-          headers: headers);
+      final response =
+          await http.get(uri + "/api/v1/my-order-breaks", headers: headers);
 
       if (response.statusCode == 200) {
-
         print('Success getting breaks');
         print(response.statusCode);
         print(response.body);
@@ -1105,7 +1106,6 @@ class Api {
         var body = convert.jsonDecode(response.body)["data"];
 
         return body;
-
       } else {
         print(response.statusCode);
         print(response.body);
@@ -1115,17 +1115,16 @@ class Api {
       print(e.toString());
       return [];
     }
-
-
   }
 
-  Future<void> postBreakTakenDay({breakDays,mealId,status,primaryAndSecondary}) async {
+  Future<void> postBreakTakenDay(
+      {breakDays, mealId, status, primaryAndSecondary}) async {
     List<String> breakList = [];
     var primaryAddress = jsonEncode(primaryAndSecondary[0]);
     var secondaryAddress = jsonEncode(primaryAndSecondary[1]);
 
-    for(int  i =0;i<breakDays.length;i++){
-      breakList.add((breakDays[i]+" 00:00:00").toString());
+    for (int i = 0; i < breakDays.length; i++) {
+      breakList.add((breakDays[i] + " 00:00:00").toString());
     }
     print('breakTakenPostApiCalled');
     print(breakDays);
@@ -1149,7 +1148,6 @@ class Api {
           headers: headers, body: jsonEncode(body));
 
       if (response.statusCode == 201) {
-
         print('Success making Post call');
         print(response.statusCode);
         print(response.body);
@@ -1157,7 +1155,6 @@ class Api {
         var body = convert.jsonDecode(response.body)["data"];
 
         return body;
-
       } else {
         print(response.statusCode);
         print(response.body);
@@ -1167,16 +1164,15 @@ class Api {
       print(e.toString());
       return [];
     }
-
-
   }
 
-  Future<void> putBreakTakenDay({breakDays,mealId,status,id,primaryAndSecondary}) async {
+  Future<void> putBreakTakenDay(
+      {breakDays, mealId, status, id, primaryAndSecondary}) async {
     List<String> breakList = [];
     var primaryAddress = jsonEncode(primaryAndSecondary[0]);
     var secondaryAddress = jsonEncode(primaryAndSecondary[1]);
-    for(int  i =0;i<breakDays.length;i++){
-      breakList.add((breakDays[i]+" 00:00:00").toString());
+    for (int i = 0; i < breakDays.length; i++) {
+      breakList.add((breakDays[i] + " 00:00:00").toString());
     }
     print('breakTakenPutApiCalled');
     print(breakList);
@@ -1201,36 +1197,33 @@ class Api {
       print(response.body);
       print(response.statusCode);
       if (response.statusCode == 201) {
-
         print('Success making Put call');
 
         var body = convert.jsonDecode(response.body)["data"];
 
         return body;
-
       } else {
-
         //return [];
       }
     } on Exception catch (e) {
       print(e.toString());
       return [];
     }
-
-
   }
 
-  Future<void> postAddressBreakTakenDay({primaryDays,secondaryDays,mealId,status,dateList}) async {
+  Future<void> postAddressBreakTakenDay(
+      {primaryDays, secondaryDays, mealId, status, dateList}) async {
     List<String> primaryList = [];
     List<String> secondaryList = [];
-    for(int  i =0;i<primaryDays.length;i++){
-      primaryList.add((primaryDays[i]+" 00:00:00").toString());
+    for (int i = 0; i < primaryDays.length; i++) {
+      primaryList.add((primaryDays[i] + " 00:00:00").toString());
     }
-    for(int  i =0;i<secondaryDays.length;i++){
-      secondaryList.add((secondaryDays[i]+" 00:00:00").toString());
+    for (int i = 0; i < secondaryDays.length; i++) {
+      secondaryList.add((secondaryDays[i] + " 00:00:00").toString());
     }
     print('AddressPostApiCalled');
-    print(primaryList);    print(secondaryList);
+    print(primaryList);
+    print(secondaryList);
 
     try {
       Map<String, String> headers = {
@@ -1251,7 +1244,6 @@ class Api {
           headers: headers, body: jsonEncode(body));
 
       if (response.statusCode == 201) {
-
         print('Success making AddressPostApiCalled');
         print(response.statusCode);
         print(response.body);
@@ -1259,7 +1251,6 @@ class Api {
         var body = convert.jsonDecode(response.body)["data"];
 
         return body;
-
       } else {
         print(response.statusCode);
         print(response.body);
@@ -1269,21 +1260,21 @@ class Api {
       print(e.toString());
       return [];
     }
-
-
   }
 
-  Future<void> putAddressBreakTakenDay({primaryDays,secondaryDays,mealId,status,id,dateList}) async {
+  Future<void> putAddressBreakTakenDay(
+      {primaryDays, secondaryDays, mealId, status, id, dateList}) async {
     List<String> primaryList = [];
     List<String> secondaryList = [];
-    for(int  i =0;i<primaryDays.length;i++){
-      primaryList.add((primaryDays[i]+" 00:00:00").toString());
+    for (int i = 0; i < primaryDays.length; i++) {
+      primaryList.add((primaryDays[i] + " 00:00:00").toString());
     }
-    for(int  i =0;i<secondaryDays.length;i++){
-      secondaryList.add((secondaryDays[i]+" 00:00:00").toString());
+    for (int i = 0; i < secondaryDays.length; i++) {
+      secondaryList.add((secondaryDays[i] + " 00:00:00").toString());
     }
     print('AddressPutApiCalled');
-    print(primaryList);    print(secondaryList);
+    print(primaryList);
+    print(secondaryList);
 
     try {
       Map<String, String> headers = {
@@ -1304,7 +1295,6 @@ class Api {
           headers: headers, body: jsonEncode(body));
 
       if (response.statusCode == 201) {
-
         print('Success making AddressPutApiCalled');
         print(response.statusCode);
         print(response.body);
@@ -1312,7 +1302,6 @@ class Api {
         var body = convert.jsonDecode(response.body)["data"];
 
         return body;
-
       } else {
         print(response.statusCode);
         print(response.body);
@@ -1322,7 +1311,5 @@ class Api {
       print(e.toString());
       return [];
     }
-
-
   }
 }

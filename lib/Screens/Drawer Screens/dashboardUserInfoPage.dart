@@ -1,5 +1,6 @@
 import 'package:diet_delight/Models/export_models.dart';
 import 'package:diet_delight/Screens/export.dart';
+import 'package:diet_delight/Widgets/shadow_text.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -48,24 +49,35 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
         children: [
           Flexible(
             flex: 3,
-            child: TextField(
-              controller: name,
-              onSubmitted: (done) {
-                name.text = done;
-              },
+            child: ShadowText(
+              name.text,
               style: authInputTextStyle.copyWith(
-                  color: Color(0xFF303960),
-                  fontSize: 30,
-                  fontWeight: FontWeight.w600),
-              textAlign: TextAlign.left,
-              keyboardType: TextInputType.text,
-              textInputAction: TextInputAction.next,
-              focusNode: focusNode,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Username',
+                color: Color(0xFF303960),
+                fontSize: 30,
+                fontWeight: FontWeight.w700,
+                fontFamily: 'RobotoReg',
               ),
+              maxLines: 1,
             ),
+            // child: TextField(
+            //   controller: name,
+            //   onSubmitted: (done) {
+            //     name.text = done;
+            //   },
+            //   style: authInputTextStyle.copyWith(
+            //       color: Color(0xFF303960),
+            //       fontSize: 30,
+            //       fontWeight: FontWeight.w700,
+            //       fontFamily: 'RobotoReg'),
+            //   textAlign: TextAlign.left,
+            //   keyboardType: TextInputType.text,
+            //   textInputAction: TextInputAction.next,
+            //   focusNode: focusNode,
+            //   decoration: InputDecoration(
+            //     border: InputBorder.none,
+            //     hintText: 'Username',
+            //   ),
+            // ),
           ),
         ],
       ),
@@ -74,10 +86,10 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
 
   Widget generateStaticTextField({IconData fieldIcon, String fieldValue}) {
     return Padding(
-      padding: const EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.only(top: 20, left: 48),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(
             height: 41,
@@ -94,17 +106,21 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                 shape: CircleBorder()),
           ),
           SizedBox(
-            width: MediaQuery.of(context).size.width * 0.07,
+            width: MediaQuery.of(context).size.width * 0.05,
           ),
           SizedBox(
-            width: MediaQuery.of(context).size.width * 0.4,
-            child: Text(
-              fieldValue,
-              style: selectedTab.copyWith(
+            // width: MediaQuery.of(context).size.width * 0.4,
+            child: Text(fieldValue,
+                // style: selectedTab.copyWith(
+                //     color: Color(0xFF303960),
+                //     fontSize: 18,
+                //     fontWeight: FontWeight.w400),
+                style: TextStyle(
                   color: Color(0xFF303960),
                   fontSize: 18,
-                  fontWeight: FontWeight.w400),
-            ),
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'RobotReg',
+                )),
           ),
         ],
       ),
@@ -120,7 +136,7 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
         fillColor: Color(0xffF5F5F5),
         child: Icon(
           present
-              ? Icons.where_to_vote_rounded
+              ? Icons.location_on_outlined
               : Icons.add_location_alt_outlined,
           size: 16,
           color: Color(0xFF303960),
@@ -133,13 +149,13 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
 
   Widget generateOnTapFields({String fieldName, int index, Function onPress}) {
     return Padding(
-      padding: const EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.only(top: 20, left: 48),
       child: AddressButtonWithModal(
         index: index,
         addNewAddressOnly: true,
         callBackFunction: callback,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             index == 0
@@ -150,10 +166,10 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                     ? addressMarkWidget(present: true)
                     : addressMarkWidget(present: false),
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.07,
+              width: MediaQuery.of(context).size.width * 0.05,
             ),
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.4,
+              // width: MediaQuery.of(context).size.width * 0.4,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,10 +182,16 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                         : secondaryAddressLine1.isNotEmpty
                             ? fieldName
                             : 'Add $fieldName',
-                    style: selectedTab.copyWith(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFF303960)),
+                    // style: selectedTab.copyWith(
+                    //     fontSize: 18,
+                    //     fontWeight: FontWeight.w400,
+                    //     color: Color(0xFF303960)),
+                    style: TextStyle(
+                      color: Color(0xFF303960),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'RobotReg',
+                    ),
                   ),
                   index == 0
                       ? primaryAddressLine1.isNotEmpty
@@ -197,7 +219,8 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
         style: TextStyle(
             color: Color(0xFF77838F),
             fontSize: 14,
-            fontWeight: FontWeight.w400),
+            fontWeight: FontWeight.w400,
+            fontFamily: 'RobotoReg'),
       ),
     );
   }
@@ -208,23 +231,34 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
       child: Row(
         children: [
           Text(
-            '${Api.userInfo.age} yrs',
+            '${Api.userInfo.age ?? 'N/A'} yrs',
             style: TextStyle(
-                color: Color(0xFF303960), fontWeight: FontWeight.w600),
+                color: Color(0xFF303960),
+                fontWeight: FontWeight.w600,
+                fontFamily: 'RobotoReg'),
           ),
           SizedBox(
             width: 30,
           ),
           Text(
-            Api.userInfo.gender,
+            Api.userInfo.gender == 0 ? 'Male' : 'Female',
             style: TextStyle(
-                color: Color(0xFF303960), fontWeight: FontWeight.w600),
+                color: Color(0xFF303960),
+                fontWeight: FontWeight.w600,
+                fontFamily: 'RobotoReg'),
           ),
-          FaIcon(Api.userInfo.gender == 'Male'
-              ? FontAwesomeIcons.male
-              : Api.userInfo.gender == 'Female'
-                  ? FontAwesomeIcons.female
-                  : FontAwesomeIcons.genderless)
+          SizedBox(width: 8),
+          Image.asset(
+            Api.userInfo.gender == 0 ? 'images/male.png' : 'images/female.png',
+            height: 18,
+            width: 18,
+          ),
+
+          // FaIcon(Api.userInfo.gender == 1
+          //     ? FontAwesomeIcons.female
+          //     : Api.userInfo.gender == 0
+          //         ? FontAwesomeIcons.male
+          //         : FontAwesomeIcons.fighterJet)
         ],
       ),
     );
@@ -267,12 +301,13 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                       fit: FlexFit.loose,
                       child: Text(
                         index == 0
-                            ? Api.userInfo.bmi
-                            : Api.userInfo.recommendedCalories,
+                            ? Api.userInfo.bmi ?? 'N/A'
+                            : '${Api.userInfo.recommendedCalories}',
                         style: TextStyle(
                             fontSize: 40,
                             fontWeight: FontWeight.w700,
-                            color: white),
+                            color: white,
+                            fontFamily: 'KalamReg'),
                       ),
                     ),
                     Flexible(
@@ -285,7 +320,8 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                           style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
-                              color: white),
+                              color: white,
+                              fontFamily: 'KalamReg'),
                         ))
                   ],
                 ),
@@ -335,11 +371,11 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
           child: Text(
             updateInProgress ? 'RRecalculate BMIe' : 'Recalculate BMI',
             style: TextStyle(
-              fontFamily: 'RobotoCondensedReg',
-              fontSize: 20,
-              fontWeight: FontWeight.normal,
-              color: Colors.white,
-            ),
+                // fontFamily: 'RobotoCondensedReg',
+                fontSize: 20,
+                fontWeight: FontWeight.normal,
+                color: Colors.white,
+                fontFamily: 'RobotReg'),
           ),
           style: TextButton.styleFrom(
               backgroundColor: Color(0xFF303960),
@@ -355,10 +391,16 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
     return ListView(
       shrinkWrap: true,
       children: [
-        generateTextField(focusNode: fullName, index: 0),
+        SizedBox(height: 20),
+        IgnorePointer(
+            ignoring: true,
+            child: generateTextField(focusNode: fullName, index: 0)),
         generateInfoCard(),
+        SizedBox(height: 30),
         generateStatCard(),
+        SizedBox(height: 20),
         generateReCalculateButton(),
+        SizedBox(height: 20),
         Container(
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: Divider(

@@ -22,6 +22,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui' as ui;
 
 class HomePage extends StatefulWidget {
   final int openPage;
@@ -67,7 +68,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     [],
     ['Consultation Orders', 'Meal Plan Orders'],
     [],
-    [ 'Security','Terms and Conditions', 'FAQ', 'Privacy Policy',],
+    [
+      'Security',
+      'Terms and Conditions',
+      'FAQ',
+      'Privacy Policy',
+    ],
     [],
   ];
 
@@ -80,6 +86,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     'Settings',
     'Contact Us'
   ];
+
+  int selectedIndex = 0;
 
   Future<void> initPlatformState() async {
     String platformVersion;
@@ -136,120 +144,171 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     }
   }
 
+  Size _textSize(String text, TextStyle style) {
+    final TextPainter textPainter = TextPainter(
+        text: TextSpan(text: text, style: style),
+        maxLines: 1,
+        textDirection: TextDirection.ltr)
+      ..layout(minWidth: 0, maxWidth: double.infinity);
+    return textPainter.size;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
         decoration: page == 3
             ? BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('images/order_history.jpg'),
-              fit: BoxFit.fitHeight),
-        )
-            : page == 5 || page == 6 ?BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('images/Group 7.png'),
-                fit: BoxFit.fitHeight
-            )
-        ) :  BoxDecoration(),
+                image: DecorationImage(
+                    image: AssetImage('images/order_history.jpg'),
+                    fit: BoxFit.fitHeight),
+              )
+            : page == 5 || page == 6
+                ? BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('images/Group 7.png'),
+                        fit: BoxFit.fitHeight))
+                : BoxDecoration(),
         child: Scaffold(
           key: _scaffoldKey,
-          backgroundColor: page == 3 ||  page == 5 || page == 6 ? Colors.transparent : white,
+          backgroundColor:
+              page == 3 || page == 5 || page == 6 ? Colors.transparent : white,
           appBar: AppBar(
             iconTheme: IconThemeData(
-                color: page == 0 ||  page == 3 ||  page == 5 || page == 6 ? defaultGreen : white),
+                color: page == 0 || page == 3 || page == 5 || page == 6
+                    ? defaultGreen
+                    : white),
             elevation: 0.0,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(20.0),
-                    bottomRight: Radius.circular(20.0))),
-            shadowColor:  page == 3 ||  page == 5 || page == 6  ? (Color(0x26000000)) : Colors.transparent,
-            backgroundColor: page == 0 ||  page == 5 || page == 6 ? white : defaultGreen,
+            // shape: RoundedRectangleBorder(
+            //     borderRadius: BorderRadius.only(
+            //         bottomLeft: Radius.circular(20.0),
+            //         bottomRight: Radius.circular(20.0))),
+            shadowColor: page == 3 || page == 5 || page == 6
+                ? (Color(0x26000000))
+                : Colors.transparent,
+            backgroundColor:
+                page == 0 || page == 5 || page == 6 ? white : white,
             centerTitle: page == 0 ? true : false,
             title: page == 0
                 ? Image.asset(
-              'images/Group 57.png',
-              height: 50.0,
-              fit: BoxFit.fitHeight,
-            )
+                    'images/Group 57.png',
+                    height: 50.0,
+                    fit: BoxFit.fitHeight,
+                  )
                 : Text(pageTitle[page],
-                style: appBarTextStyle.copyWith(
-                    fontFamily: 'RobotoReg',
-                    color:  page == 3 ||  page == 5 || page == 6 ? defaultGreen : white,
-                    fontWeight: FontWeight.bold)),
+                    style: appBarTextStyle.copyWith(
+                        fontFamily: 'RobotoReg',
+                        color: page == 3 || page == 5 || page == 6
+                            ? defaultGreen
+                            : defaultGreen,
+                        fontWeight: FontWeight.bold)),
             leading: IconButton(
-              icon: Icon(Icons.menu),
+              icon: Icon(Icons.menu, color: defaultGreen),
               onPressed: () => _scaffoldKey.currentState.openDrawer(),
             ),
             actions: page == 0
                 ? [
-              GestureDetector(
-                onTap: () {
-                  FlutterOpenWhatsapp.sendSingleMessage(
-                      "917259384025", "Hello");
-                },
-                child: Image.asset(
-                  'images/Group 22.png',
-                  width: 28.0,
-                  height: 28.0,
-                ),
-              ),
-              SizedBox(
-                width: 20,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (BuildContext context) =>
-                              CouponCode()));
-                },
-                child: Image.asset(
-                  'images/Group 24.png',
-                  width: 25.0,
-                  height: 25.0,
-                ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-            ]
+                    GestureDetector(
+                      onTap: () {
+                        FlutterOpenWhatsapp.sendSingleMessage(
+                            "917259384025", "Hello");
+                      },
+                      child: Image.asset(
+                        'images/Group 22.png',
+                        width: 28.0,
+                        height: 28.0,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (BuildContext context) =>
+                                    CouponCode()));
+                      },
+                      child: Image.asset(
+                        'images/Group 24.png',
+                        width: 25.0,
+                        height: 25.0,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                  ]
                 : [],
             bottom: page == 1 || page == 3 || page == 5
                 ? TabBar(
-                controller: page == 5
-                    ? _pageController3
-                    : page == 3
-                    ? _pageController2
-                    : _pageController1,
-                isScrollable: true,
-                onTap: (index) async {},
-                labelStyle: selectedTab.copyWith(
-                    fontSize: 18,
-                    color: defaultPurple,
-                    fontWeight: FontWeight.w600),
-                indicatorColor: defaultGreen,
-                indicatorWeight: 3.0,
-                indicatorSize: TabBarIndicatorSize.tab,
-                labelColor: defaultPurple,
-                labelPadding: EdgeInsets.symmetric(horizontal: 13),
-                unselectedLabelStyle: unSelectedTab.copyWith(
-                    fontSize: 18,
-                    color: questionnaireDisabled,
-                    fontWeight: FontWeight.w400),
-                unselectedLabelColor: questionnaireDisabled,
-                tabs: List.generate(tabItemsTitle[page].length, (index) {
-                  return Tab(
-                    text: tabItemsTitle[page][index],
-                  );
-                }))
+                    controller: page == 5
+                        ? _pageController3
+                        : page == 3
+                            ? _pageController2
+                            : _pageController1,
+                    isScrollable: true,
+                    onTap: (index) => setState(() => selectedIndex = index),
+                    labelStyle: selectedTab.copyWith(
+                        fontSize: 18,
+                        color: defaultPurple,
+                        fontWeight: FontWeight.w600),
+                    indicatorColor: white,
+                    indicatorWeight: 1.0,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    labelColor: defaultPurple,
+                    labelPadding: EdgeInsets.symmetric(horizontal: 13),
+                    unselectedLabelStyle: unSelectedTab.copyWith(
+                        fontSize: 18,
+                        color: questionnaireDisabled,
+                        fontWeight: FontWeight.w400),
+                    unselectedLabelColor: questionnaireDisabled,
+                    tabs: List.generate(tabItemsTitle[page].length, (index) {
+                      return Row(
+                        children: [
+                          Tab(
+                            // text: tabItemsTitle[page][index],
+
+                            // text: tabItemsTitle[page][index],
+                            child: Column(
+                              children: [
+                                SizedBox(height: 8),
+                                Text(
+                                  tabItemsTitle[page][index],
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                SizedBox(height: 8),
+                                selectedIndex == index
+                                    ? Container(
+                                        width: _textSize(
+                                                    tabItemsTitle[page][index],
+                                                    TextStyle(fontSize: 16))
+                                                .width +
+                                            4,
+                                        height: 3,
+                                        color: defaultGreen,
+                                      )
+                                    : Container(),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                              width: double.parse(index.toString()) !=
+                                      double.parse(
+                                          (tabItemsTitle[page].length - 1)
+                                              .toString())
+                                  ? 100
+                                  : 0),
+                        ],
+                      );
+                    }))
                 : PreferredSize(child: Container(), preferredSize: Size(0, 0)),
           ),
           drawer: ClipRRect(
-            borderRadius: BorderRadius.only(
-                topRight: Radius.circular(30.0),
-                bottomRight: Radius.circular(30.0)),
+            // borderRadius: BorderRadius.only(
+            //     topRight: Radius.circular(30.0),
+            //     bottomRight: Radius.circular(30.0)),
             child: Container(
               width: MediaQuery.of(context).size.width * 0.75,
               child: Drawer(
@@ -264,7 +323,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             padding: EdgeInsets.only(
                                 top: MediaQuery.of(context).size.height * 0.03,
                                 bottom:
-                                MediaQuery.of(context).size.height * 0.05),
+                                    MediaQuery.of(context).size.height * 0.05),
                             child: Image.asset(
                               'images/Group 57.png',
                               height: 80.0,
@@ -290,8 +349,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       ),
                                       SizedBox(
                                           width: MediaQuery.of(context)
-                                              .size
-                                              .width *
+                                                  .size
+                                                  .width *
                                               0.02),
                                       drawerIcons[index - 1],
                                     ],

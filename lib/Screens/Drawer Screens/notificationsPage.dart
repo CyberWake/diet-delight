@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 
 class NotificationsPage extends StatefulWidget {
@@ -23,22 +24,32 @@ class _NotificationsPageState extends State<NotificationsPage> {
               Expanded(
                 flex: 3,
                 child: Container(
-                  child: CachedNetworkImage(
-                    imageUrl:
-                        "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                    imageBuilder: (context, imageProvider) => Container(
-                      height: 80,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
+                  margin: EdgeInsets.only(right: 20),
+                  child: Material(
+                    elevation: 2,
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+                      imageBuilder: (context, imageProvider) => Container(
+                        height: MediaQuery.of(context).size.width * 0.2,
+                        constraints: BoxConstraints(),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                    ),
-                    placeholder: (context, url) => CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => FlutterLogo(
-                      size: 80,
+                      placeholder: (context, url) => SpinKitChasingDots(
+                        color: defaultPurple,
+                        size: 32,
+                      ),
+                      errorWidget: (context, url, error) => FlutterLogo(
+                        size: 60,
+                      ),
                     ),
                   ),
                 ),
@@ -102,7 +113,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
             padding: const EdgeInsets.only(top: 18.0, left: 25, right: 20),
             child: item(
                 notifications: "You won 1 Coupons",
-                des: "You get 1 coupon on spend 7799.0000 on CAFE ROUGE"),
+                des: "You get 50% off on your next meal plan subscription"),
           ),
         ],
       ),
