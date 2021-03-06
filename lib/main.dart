@@ -23,6 +23,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
+    precacheImage(AssetImage('images/user_dashboard_bg.jpg'), context);
     return MaterialApp(
       initialRoute: '/',
       routes: {

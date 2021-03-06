@@ -227,7 +227,10 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
 
   Widget generateInfoCard() {
     return Padding(
-      padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.1),
+      padding: EdgeInsets.only(
+        left: MediaQuery.of(context).size.width * 0.1,
+        top: 8,
+      ),
       child: Row(
         children: [
           Text(
@@ -388,36 +391,44 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      shrinkWrap: true,
-      children: [
-        SizedBox(height: 20),
-        IgnorePointer(
-            ignoring: true,
-            child: generateTextField(focusNode: fullName, index: 0)),
-        generateInfoCard(),
-        SizedBox(height: 30),
-        generateStatCard(),
-        SizedBox(height: 20),
-        generateReCalculateButton(),
-        SizedBox(height: 20),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Divider(
-            thickness: 1.5,
+    return Container(
+      decoration: BoxDecoration(
+          image: DecorationImage(
+        image: AssetImage('images/user_dashboard_bg.jpg'),
+        fit: BoxFit.cover,
+      )),
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          SizedBox(height: 20),
+          IgnorePointer(
+              ignoring: true,
+              child: generateTextField(focusNode: fullName, index: 0)),
+          generateInfoCard(),
+          SizedBox(height: 30),
+          generateStatCard(),
+          SizedBox(height: 20),
+          generateReCalculateButton(),
+          SizedBox(height: 20),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Divider(
+              thickness: 1.5,
+            ),
           ),
-        ),
-        generateStaticTextField(
-            fieldIcon: Icons.phone, fieldValue: mobileNo.text),
-        generateStaticTextField(fieldIcon: Icons.email, fieldValue: email.text),
-        generateOnTapFields(
-            fieldName: 'Primary Address', index: 0, onPress: () {}),
-        generateOnTapFields(
-            fieldName: 'Secondary Address', index: 1, onPress: () {}),
-        SizedBox(
-          height: 40,
-        )
-      ],
+          generateStaticTextField(
+              fieldIcon: Icons.phone, fieldValue: mobileNo.text),
+          generateStaticTextField(
+              fieldIcon: Icons.email, fieldValue: email.text),
+          generateOnTapFields(
+              fieldName: 'Primary Address', index: 0, onPress: () {}),
+          generateOnTapFields(
+              fieldName: 'Secondary Address', index: 1, onPress: () {}),
+          SizedBox(
+            height: 40,
+          )
+        ],
+      ),
     );
   }
 }
