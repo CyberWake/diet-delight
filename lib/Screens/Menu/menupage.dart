@@ -221,6 +221,7 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                                           print(favourites[0]
                                               .indexOf(foodItem.id));
                                           favPressed.remove(foodItem.id);
+                                          favourites[0].remove(foodItem.id);
                                           print('favPressed: $favPressed');
                                           print(favourites[0]);
                                           print(foodItem.id);
@@ -230,7 +231,7 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                                         await _apiCall.deleteFavourites(
                                             favourites[1][removeIndex]);
                                         setState(() {
-                                          getFavourites();
+                                          // getFavourites();
                                           print('favPressed: $favPressed');
                                           favEnabled = true;
                                           print('deleted');
@@ -255,7 +256,7 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                                         );
                                         await _apiCall.addFavourites(details);
                                         setState(() {
-                                          getFavourites();
+                                          // getFavourites();
                                           favEnabled = true;
                                         });
                                       },
