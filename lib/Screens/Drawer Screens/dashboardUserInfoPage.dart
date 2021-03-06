@@ -156,7 +156,7 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
         callBackFunction: callback,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             index == 0
                 ? primaryAddressLine1.isNotEmpty
@@ -170,37 +170,40 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
             ),
             SizedBox(
               // width: MediaQuery.of(context).size.width * 0.4,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 4.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      index == 0
+                          ? primaryAddressLine1.isNotEmpty
+                              ? fieldName
+                              : 'Add $fieldName'
+                          : secondaryAddressLine1.isNotEmpty
+                              ? fieldName
+                              : 'Add $fieldName',
+                      // style: selectedTab.copyWith(
+                      //     fontSize: 18,
+                      //     fontWeight: FontWeight.w400,
+                      //     color: Color(0xFF303960)),
+                      style: TextStyle(
+                        color: Color(0xFF303960),
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'RobotReg',
+                      ),
+                    ),
                     index == 0
                         ? primaryAddressLine1.isNotEmpty
-                            ? fieldName
-                            : 'Add $fieldName'
+                            ? showAddress(index)
+                            : Container()
                         : secondaryAddressLine1.isNotEmpty
-                            ? fieldName
-                            : 'Add $fieldName',
-                    // style: selectedTab.copyWith(
-                    //     fontSize: 18,
-                    //     fontWeight: FontWeight.w400,
-                    //     color: Color(0xFF303960)),
-                    style: TextStyle(
-                      color: Color(0xFF303960),
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'RobotReg',
-                    ),
-                  ),
-                  index == 0
-                      ? primaryAddressLine1.isNotEmpty
-                          ? showAddress(index)
-                          : Container()
-                      : secondaryAddressLine1.isNotEmpty
-                          ? showAddress(index)
-                          : Container()
-                ],
+                            ? showAddress(index)
+                            : Container()
+                  ],
+                ),
               ),
             )
           ],
@@ -302,15 +305,19 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                   children: [
                     Flexible(
                       fit: FlexFit.loose,
-                      child: Text(
-                        index == 0
-                            ? Api.userInfo.bmi ?? 'N/A'
-                            : '${Api.userInfo.recommendedCalories}',
-                        style: TextStyle(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: index == 0 ? 8.0 : 12.0),
+                        child: Text(
+                          index == 0
+                              ? Api.userInfo.bmi ?? 'N/A'
+                              : '${Api.userInfo.recommendedCalories}',
+                          style: TextStyle(
                             fontSize: 40,
                             fontWeight: FontWeight.w700,
                             color: white,
-                            fontFamily: 'KalamReg'),
+                            fontFamily: 'KalamReg',
+                          ),
+                        ),
                       ),
                     ),
                     Flexible(
