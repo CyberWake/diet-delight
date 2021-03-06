@@ -3,7 +3,6 @@ import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 class AddressButtonWithModal extends StatefulWidget {
   final bool addNewAddressOnly;
@@ -55,14 +54,6 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
   void initState() {
     getUserInfo();
     super.initState();
-
-    var keyboardVisibilityController = KeyboardVisibilityController();
-    // Query
-    print(
-        'Keyboard visibility direct query: ${keyboardVisibilityController.isVisible}');
-    keyboardVisibilityController.onChange.listen((bool visible) {
-      print('Keyboard visibility update. Is visible: $visible');
-    });
     addressLine1.addListener(() {
       if (addressLine1.hasFocus) {
         print('height increased');
