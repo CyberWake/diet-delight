@@ -67,7 +67,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     [],
     ['Consultation Orders', 'Meal Plan Orders'],
     [],
-    [ 'Security','Terms and Conditions', 'FAQ', 'Privacy Policy',],
+    [
+      'Security',
+      'Terms and Conditions',
+      'FAQ',
+      'Privacy Policy',
+    ],
     [],
   ];
 
@@ -142,108 +147,121 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       child: Container(
         decoration: page == 3
             ? BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('images/order_history.jpg'),
-              fit: BoxFit.fitHeight),
-        )
-            : page == 5  || page == 6? BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('images/questionnaire_background.jpg'),
-                fit: BoxFit.fitHeight
-            ) ):  BoxDecoration(),
+                image: DecorationImage(
+                    image: AssetImage('images/order_history.jpg'),
+                    fit: BoxFit.fitHeight),
+              )
+            : page == 5 || page == 6
+                ? BoxDecoration(
+                    image: DecorationImage(
+                        image:
+                            AssetImage('images/questionnaire_background.jpg'),
+                        fit: BoxFit.fitHeight))
+                : BoxDecoration(),
         child: Scaffold(
           key: _scaffoldKey,
-          backgroundColor: page == 3 ||  page == 5 || page == 6 ? Colors.transparent : white,
+          backgroundColor:
+              page == 3 || page == 5 || page == 6 ? Colors.transparent : white,
           appBar: AppBar(
             iconTheme: IconThemeData(
-                color: page == 0 ||  page == 3 ||  page == 5 || page == 6 ? defaultGreen : white),
+                color: page == 0 || page == 3 || page == 5 || page == 6
+                    ? defaultGreen
+                    : white),
             elevation: 2.0,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(20.0),
                     bottomRight: Radius.circular(20.0))),
             bottomOpacity: 1,
-            shadowColor:  page == 3 ||  page == 5 || page == 6  ? (Color(0x26000000)) : Colors.transparent,
-            backgroundColor: page == 0 ||  page == 5 || page == 6 ? white : defaultGreen,
+            shadowColor: page == 3 || page == 5 || page == 6
+                ? (Color(0x26000000))
+                : Colors.transparent,
+            backgroundColor:
+                page == 0 || page == 5 || page == 6 ? white : defaultGreen,
             centerTitle: page == 0 ? true : false,
             title: page == 0
                 ? Image.asset(
-              'images/Group 57.png',
-              height: 50.0,
-              fit: BoxFit.fitHeight,
-            )
+                    'images/Group 57.png',
+                    height: 50.0,
+                    fit: BoxFit.fitHeight,
+                  )
                 : Text(pageTitle[page],
-                style: appBarTextStyle.copyWith(
-                    fontFamily: 'RobotoReg',
-                    color:  page == 3 ||  page == 5 || page == 6 ? defaultGreen : white,
-                    fontWeight: FontWeight.bold)),
+                    style: appBarTextStyle.copyWith(
+                        fontFamily: 'RobotoReg',
+                        color: page == 3 || page == 5 || page == 6
+                            ? defaultGreen
+                            : white,
+                        fontWeight: FontWeight.bold)),
             leading: IconButton(
               icon: Icon(Icons.menu),
-              onPressed: () => _scaffoldKey.currentState.openDrawer(),
+              onPressed: () {
+                WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
+                _scaffoldKey.currentState.openDrawer();
+              },
             ),
             actions: page == 0
                 ? [
-              GestureDetector(
-                onTap: () {
-                  FlutterOpenWhatsapp.sendSingleMessage(
-                      "917259384025", "Hello");
-                },
-                child: Image.asset(
-                  'images/Group 22.png',
-                  width: 28.0,
-                  height: 28.0,
-                ),
-              ),
-              SizedBox(
-                width: 20,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (BuildContext context) =>
-                              CouponCode()));
-                },
-                child: Image.asset(
-                  'images/Group 24.png',
-                  width: 25.0,
-                  height: 25.0,
-                ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-            ]
+                    GestureDetector(
+                      onTap: () {
+                        FlutterOpenWhatsapp.sendSingleMessage(
+                            "917259384025", "Hello");
+                      },
+                      child: Image.asset(
+                        'images/Group 22.png',
+                        width: 28.0,
+                        height: 28.0,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (BuildContext context) =>
+                                    CouponCode()));
+                      },
+                      child: Image.asset(
+                        'images/Group 24.png',
+                        width: 25.0,
+                        height: 25.0,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                  ]
                 : [],
             bottom: page == 1 || page == 3 || page == 5
                 ? TabBar(
-                controller: page == 5
-                    ? _pageController3
-                    : page == 3
-                    ? _pageController2
-                    : _pageController1,
-                isScrollable: true,
-                onTap: (index) async {},
-                labelStyle: selectedTab.copyWith(
-                    fontSize: 18,
-                    color: defaultPurple,
-                    fontWeight: FontWeight.w600),
-                indicatorColor: defaultGreen,
-                indicatorWeight: 3.0,
-                indicatorSize: TabBarIndicatorSize.tab,
-                labelColor: defaultPurple,
-                labelPadding: EdgeInsets.symmetric(horizontal: 13),
-                unselectedLabelStyle: unSelectedTab.copyWith(
-                    fontSize: 18,
-                    color: questionnaireDisabled,
-                    fontWeight: FontWeight.w400),
-                unselectedLabelColor: questionnaireDisabled,
-                tabs: List.generate(tabItemsTitle[page].length, (index) {
-                  return Tab(
-                    text: tabItemsTitle[page][index],
-                  );
-                }))
+                    controller: page == 5
+                        ? _pageController3
+                        : page == 3
+                            ? _pageController2
+                            : _pageController1,
+                    isScrollable: true,
+                    onTap: (index) async {},
+                    labelStyle: selectedTab.copyWith(
+                        fontSize: 18,
+                        color: defaultPurple,
+                        fontWeight: FontWeight.w600),
+                    indicatorColor: defaultGreen,
+                    indicatorWeight: 3.0,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    labelColor: defaultPurple,
+                    labelPadding: EdgeInsets.symmetric(horizontal: 13),
+                    unselectedLabelStyle: unSelectedTab.copyWith(
+                        fontSize: 18,
+                        color: questionnaireDisabled,
+                        fontWeight: FontWeight.w400),
+                    unselectedLabelColor: questionnaireDisabled,
+                    tabs: List.generate(tabItemsTitle[page].length, (index) {
+                      return Tab(
+                        text: tabItemsTitle[page][index],
+                      );
+                    }))
                 : PreferredSize(child: Container(), preferredSize: Size(0, 0)),
           ),
           drawer: ClipRRect(
@@ -260,13 +278,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       shrinkWrap: true,
                       children: List.generate(drawerItems.length, (index) {
                         if (index == 0) {
-
                           print('called');
                           return Padding(
                             padding: EdgeInsets.only(
                                 top: MediaQuery.of(context).size.height * 0.03,
                                 bottom:
-                                MediaQuery.of(context).size.height * 0.05),
+                                    MediaQuery.of(context).size.height * 0.05),
                             child: Image.asset(
                               'images/Group 57.png',
                               height: 80.0,
@@ -292,8 +309,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       ),
                                       SizedBox(
                                           width: MediaQuery.of(context)
-                                              .size
-                                              .width *
+                                                  .size
+                                                  .width *
                                               0.02),
                                       drawerIcons[index - 1],
                                     ],
