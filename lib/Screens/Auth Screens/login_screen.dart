@@ -4,6 +4,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:diet_delight/Screens/Auth Screens/revisedQuestionnaire.dart';
 
 class Login extends StatefulWidget {
   final String token;
@@ -179,10 +180,16 @@ class _LoginState extends State<Login> {
                             loginDetails.show();
                             bool result = await _apiCall.login(loginDetails);
                             if (result) {
-                              Navigator.pushReplacement(
-                                  context,
-                                  CupertinoPageRoute(
-                                      builder: (context) => HomePage()));
+                              Api.userInfo.questionnaireStatus == 0
+                                  ? Navigator.pushReplacement(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (context) =>
+                                              NewQuestionnaire()))
+                                  : Navigator.pushReplacement(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (context) => HomePage()));
                             }
                           } else {
                             Scaffold.of(context).showSnackBar(SnackBar(

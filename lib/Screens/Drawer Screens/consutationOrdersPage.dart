@@ -191,178 +191,213 @@ class _ConsultationOrderHistoryPageState
   @override
   Widget build(BuildContext context) {
     return loaded
-        ? ListView(
-            shrinkWrap: true,
-            children: List.generate(appointments.length, (index) {
-              String name = (consultationData[index].name).toString();
-              DateTime createdDateTime =
-                  DateTime.parse(appointments[index].createdAt);
-              DateTime appointmentDateTime =
-                  appointments[index].consultationTime != null ||
-                          appointments[index].consultationTime != 'null'
-                      ? DateTime.parse(appointments[index].consultationTime)
-                      : DateTime.now();
-              int packageIndex = name.contains("SILVER")
-                  ? 0
-                  : name.contains("GOLD")
-                      ? 2
-                      : 1;
-              return Material(
-                elevation: 0.0,
-                color: Colors.transparent,
-                child: Container(
-                  margin: EdgeInsets.all(15),
-                  padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
-                  decoration: BoxDecoration(
-                    color: white,
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 4,
-                        color: Colors.black.withOpacity(0.25),
-                        spreadRadius: 0,
-                        offset: const Offset(0.0, 0.0),
-                      )
-                    ],
+        ? appointments.length == 0
+            ? Center(
+                child: Material(
+                  elevation: 0.0,
+                  color: Colors.transparent,
+                  child: Container(
+                    margin: EdgeInsets.all(15),
+                    padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
+                    decoration: BoxDecoration(
+                      color: white,
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 4,
+                          color: Colors.black.withOpacity(0.25),
+                          spreadRadius: 0,
+                          offset: const Offset(0.0, 0.0),
+                        )
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                          'No Consultation Appointments have been booked yet',
+                          style: orderHistoryCardStyle.copyWith(
+                              fontWeight: FontWeight.bold, fontSize: 18)),
+                    ),
                   ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Flexible(
-                          fit: FlexFit.loose,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                    (consultationData[index].name).toString() +
-                                        ' Consultation Package',
-                                    style: orderHistoryCardStyle.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14)),
-                                PopupMenuButton<int>(
-                                  child: Icon(Icons.more_vert, color: timeGrid),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0))),
-                                  itemBuilder: (BuildContext context) =>
-                                      <PopupMenuEntry<int>>[
-                                    PopupMenuItem<int>(
-                                      value: 0,
-                                      child: Material(
-                                        color: Colors.white,
-                                        child: ListTile(
-                                          onTap: () {
-                                            Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                    builder: (BuildContext
-                                                            context) =>
-                                                        BookConsultation(
-                                                          packageIndex:
-                                                              packageIndex,
-                                                          consultation:
-                                                              consultationData,
-                                                        )));
-                                          },
-                                          leading: Icon(
-                                            Icons.autorenew,
-                                            size: 24,
-                                            color: Colors.black,
-                                          ),
+                ),
+              )
+            : ListView(
+                shrinkWrap: true,
+                children: List.generate(appointments.length, (index) {
+                  String name = (consultationData[index].name).toString();
+                  DateTime createdDateTime =
+                      DateTime.parse(appointments[index].createdAt);
+                  DateTime appointmentDateTime =
+                      appointments[index].consultationTime != null ||
+                              appointments[index].consultationTime != 'null'
+                          ? DateTime.parse(appointments[index].consultationTime)
+                          : DateTime.now();
+                  int packageIndex = name.contains("SILVER")
+                      ? 0
+                      : name.contains("GOLD")
+                          ? 2
+                          : 1;
+                  return Material(
+                    elevation: 0.0,
+                    color: Colors.transparent,
+                    child: Container(
+                      margin: EdgeInsets.all(15),
+                      padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
+                      decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 4,
+                            color: Colors.black.withOpacity(0.25),
+                            spreadRadius: 0,
+                            offset: const Offset(0.0, 0.0),
+                          )
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Flexible(
+                              fit: FlexFit.loose,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                        (consultationData[index].name)
+                                                .toString() +
+                                            ' Consultation Package',
+                                        style: orderHistoryCardStyle.copyWith(
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 15)),
+                                    PopupMenuButton<int>(
+                                      child: Icon(Icons.more_vert,
+                                          color: questionnaireDisabled),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10.0))),
+                                      itemBuilder: (BuildContext context) =>
+                                          <PopupMenuEntry<int>>[
+                                        PopupMenuItem<int>(
+                                          value: 0,
+                                          child: Material(
+                                            color: Colors.white,
+                                            child: ListTile(
+                                              onTap: () {
+                                                Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                        builder: (BuildContext
+                                                                context) =>
+                                                            BookConsultation(
+                                                              packageIndex:
+                                                                  packageIndex,
+                                                              consultation:
+                                                                  consultationData,
+                                                            )));
+                                              },
+                                              leading: Icon(
+                                                Icons.autorenew,
+                                                size: 24,
+                                                color: Colors.black,
+                                              ),
 //                                            new Image.asset(
 //                                              "images/renew-purchase.svg",
 //                                              width: 30,
 //                                              height: 30,
 //                                            ),
-                                          title: Text(
-                                            'Renew Purchase',
-                                            style: orderHistoryPopUpStyle,
+                                              title: Text(
+                                                'Renew Purchase',
+                                                style: orderHistoryPopUpStyle,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                    PopupMenuItem<int>(
-                                      value: 1,
-                                      child: Material(
-                                        color: Colors.white,
-                                        child: ListTile(
-                                          onTap: () async {
-                                            await DownloadFile(
-                                                'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-                                                'Dummy PDF.pdf');
-                                            Navigator.pop(context);
-                                          },
-                                          leading: Icon(
-                                            Icons.file_download,
-                                            size: 24,
-                                            color: Colors.black,
-                                          ),
+                                        PopupMenuItem<int>(
+                                          value: 1,
+                                          child: Material(
+                                            color: Colors.white,
+                                            child: ListTile(
+                                              onTap: () async {
+                                                await DownloadFile(
+                                                    'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+                                                    'Dummy PDF.pdf');
+                                                Navigator.pop(context);
+                                              },
+                                              leading: Icon(
+                                                Icons.file_download,
+                                                size: 24,
+                                                color: Colors.black,
+                                              ),
 //                                            new Image.asset(
 //                                                "images/download_invoice.png",
 //                                                width: 20),
-                                          title: Text(
-                                            'Download Invoice',
-                                            style: orderHistoryPopUpStyle,
+                                              title: Text(
+                                                'Download Invoice',
+                                                style: orderHistoryPopUpStyle,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
-                          )),
-                      appointments[index].consultationTime ==
-                                  '0000-00-00 00:00:00' ||
-                              appointments[index].consultationTime == 'null'
-                          ? SizedBox()
-                          : dataField(
-                              fieldName: 'Appointment:',
-                              fieldValue:
-                                  formatDate(appointmentDateTime, format),
-                            ),
-                      meetingDataField(
-                        fieldName: 'Consultation Mode: ',
-                        fieldValue: appointments[index].consultationTime ==
-                                    '0000-00-00 00:00:00' ||
-                                appointments[index].consultationTime == 'null'
-                            ? 'Online'
-                            : 'Offline',
-                      ),
-                      dataField(
-                        fieldName: 'Consultant:',
-                        fieldValue: appointments[index].consultantName,
-                      ),
-                      Flexible(
-                          fit: FlexFit.loose,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Icon(Icons.schedule, size: 18, color: timeGrid),
-                                SizedBox(
-                                  width: 10,
+                              )),
+                          appointments[index].consultationTime ==
+                                      '0000-00-00 00:00:00' ||
+                                  appointments[index].consultationTime == 'null'
+                              ? SizedBox()
+                              : dataField(
+                                  fieldName: 'Appointment:',
+                                  fieldValue:
+                                      formatDate(appointmentDateTime, format),
                                 ),
-                                Text(formatDate(createdDateTime, format),
-                                    style: orderHistoryCardStyle),
-                                Spacer(),
-                                Text(
-                                    consultationPurchases[index].amountPaid +
-                                        ' BHD',
-                                    style: orderHistoryCardStyle)
-                              ],
-                            ),
-                          )),
-                    ],
-                  ),
-                ),
-              );
-            }),
-          )
+                          meetingDataField(
+                            fieldName: 'Consultation Mode: ',
+                            fieldValue: appointments[index].consultationTime ==
+                                        '0000-00-00 00:00:00' ||
+                                    appointments[index].consultationTime ==
+                                        'null'
+                                ? 'Online'
+                                : 'Offline',
+                          ),
+                          dataField(
+                            fieldName: 'Consultant:',
+                            fieldValue: appointments[index].consultantName,
+                          ),
+                          Flexible(
+                              fit: FlexFit.loose,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Icon(Icons.schedule,
+                                        size: 18, color: timeGrid),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(formatDate(createdDateTime, format),
+                                        style: orderHistoryCardStyle),
+                                    Spacer(),
+                                    Text(
+                                        consultationPurchases[index]
+                                                .amountPaid +
+                                            ' BHD',
+                                        style: orderHistoryCardStyle)
+                                  ],
+                                ),
+                              )),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+              )
         : Center(
             child: SpinKitThreeBounce(
               color: defaultPurple,

@@ -216,13 +216,13 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
             width: 30,
           ),
           Text(
-            Api.userInfo.gender,
+            Api.userInfo.gender == 0 ? 'Male' : 'Female',
             style: TextStyle(
                 color: Color(0xFF303960), fontWeight: FontWeight.w600),
           ),
-          FaIcon(Api.userInfo.gender == 'Male'
+          FaIcon(Api.userInfo.gender == 0
               ? FontAwesomeIcons.male
-              : Api.userInfo.gender == 'Female'
+              : Api.userInfo.gender == 1
                   ? FontAwesomeIcons.female
                   : FontAwesomeIcons.genderless)
         ],

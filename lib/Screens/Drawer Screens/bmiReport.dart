@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/Models/registrationModel.dart';
+import 'package:diet_delight/services/apiCalls.dart';
+import 'package:diet_delight/landingPage.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class BmiReport extends StatefulWidget {
@@ -9,8 +12,9 @@ class BmiReport extends StatefulWidget {
   int report;
   bool questionnaire;
   int gender;
+  int age;
 
-  BmiReport({this.bmi, this.report, this.questionnaire, this.gender});
+  BmiReport({this.bmi, this.report, this.questionnaire, this.gender, this.age});
   @override
   _BmiReportState createState() => _BmiReportState();
 }
@@ -24,6 +28,7 @@ class _BmiReportState extends State<BmiReport> {
   ];
   List<String> calories_male = ['1600-1800', '1400', '1400', '1600'];
   List<String> calories_female = ['1400-1600', '1200', '1200', '1400'];
+  final _apiCall = Api.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +75,7 @@ class _BmiReportState extends State<BmiReport> {
                                 : defaultPurple,
                             shape: CircleBorder(),
                             child: CircularPercentIndicator(
-                              radius: 130.0,
+                              radius: 150.0,
                               lineWidth: 10.0,
                               percent: 100 / 100,
                               center: new Text(
@@ -100,10 +105,13 @@ class _BmiReportState extends State<BmiReport> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            'Recommended Calorie Intake',
-                            style: questionnaireTitleStyle.copyWith(
-                                color: questionnaireDisabled, fontSize: 24),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Recommended Calorie Intake',
+                              style: questionnaireTitleStyle.copyWith(
+                                  color: questionnaireDisabled, fontSize: 24),
+                            ),
                           ),
                           SizedBox(height: devHeight * 0.02),
                           Center(
@@ -128,75 +136,88 @@ class _BmiReportState extends State<BmiReport> {
                             style: questionnaireTitleStyle.copyWith(
                                 color: questionnaireDisabled, fontSize: 16),
                           ),
-                          Row(
-                            children: [
-                              Icon(Icons.arrow_right_alt_rounded,
-                                  color: widget.gender == 0
-                                      ? defaultGreen
-                                      : defaultPurple,
-                                  size: 28),
-                              Text(
-                                'have a pre-existing medical condition',
-                                style: questionnaireTitleStyle.copyWith(
-                                    color: questionnaireDisabled,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12),
+                          Center(
+                            child: Container(
+                              width: devWidth * 0.8,
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(Icons.arrow_right_alt_rounded,
+                                          color: widget.gender == 0
+                                              ? defaultGreen
+                                              : defaultPurple,
+                                          size: 28),
+                                      Text(
+                                        'have a pre-existing medical condition',
+                                        style: questionnaireTitleStyle.copyWith(
+                                            color: questionnaireDisabled,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 12),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(Icons.arrow_right_alt_rounded,
+                                          color: widget.gender == 0
+                                              ? defaultGreen
+                                              : defaultPurple,
+                                          size: 28),
+                                      Text(
+                                        'are less than 18 or more than 60 years of age',
+                                        style: questionnaireTitleStyle.copyWith(
+                                            color: questionnaireDisabled,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 12),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(Icons.arrow_right_alt_rounded,
+                                          color: widget.gender == 0
+                                              ? defaultGreen
+                                              : defaultPurple,
+                                          size: 28),
+                                      Expanded(
+                                        child: Text(
+                                          'are trying to gain weight, are an athlete or a body-builder',
+                                          style:
+                                              questionnaireTitleStyle.copyWith(
+                                                  color: questionnaireDisabled,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 12),
+                                          maxLines: 2,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  widget.gender == 0
+                                      ? SizedBox()
+                                      : Row(
+                                          children: [
+                                            Icon(Icons.arrow_right_alt_rounded,
+                                                color: widget.gender == 0
+                                                    ? defaultGreen
+                                                    : defaultPurple,
+                                                size: 28),
+                                            Text(
+                                              'are pregnant or a breastfeeding mother.',
+                                              style: questionnaireTitleStyle
+                                                  .copyWith(
+                                                      color:
+                                                          questionnaireDisabled,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 12),
+                                            ),
+                                          ],
+                                        ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                          Row(
-                            children: [
-                              Icon(Icons.arrow_right_alt_rounded,
-                                  color: widget.gender == 0
-                                      ? defaultGreen
-                                      : defaultPurple,
-                                  size: 28),
-                              Text(
-                                'are less than 18 or more than 60 years of age',
-                                style: questionnaireTitleStyle.copyWith(
-                                    color: questionnaireDisabled,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.arrow_right_alt_rounded,
-                                  color: widget.gender == 0
-                                      ? defaultGreen
-                                      : defaultPurple,
-                                  size: 28),
-                              Expanded(
-                                child: Text(
-                                  'are trying to gain weight, are an athlete or a body-builder',
-                                  style: questionnaireTitleStyle.copyWith(
-                                      color: questionnaireDisabled,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12),
-                                  maxLines: 2,
-                                ),
-                              ),
-                            ],
-                          ),
-                          widget.gender == 0
-                              ? SizedBox()
-                              : Row(
-                                  children: [
-                                    Icon(Icons.arrow_right_alt_rounded,
-                                        color: widget.gender == 0
-                                            ? defaultGreen
-                                            : defaultPurple,
-                                        size: 28),
-                                    Text(
-                                      'are pregnant or a breastfeeding mother.',
-                                      style: questionnaireTitleStyle.copyWith(
-                                          color: questionnaireDisabled,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 12),
-                                    ),
-                                  ],
-                                ),
                         ],
                       ),
                       widget.questionnaire == true
@@ -206,220 +227,186 @@ class _BmiReportState extends State<BmiReport> {
                                 width: double.infinity,
                                 height: 50.0,
                                 child: TextButton(
-                                  onPressed: () {
+                                  onPressed: () async {
+                                    RegModel updateUserData = Api.userInfo;
+                                    updateUserData.addBmiInfo(
+                                        widget.age,
+                                        widget.gender,
+                                        widget.bmi,
+                                        widget.gender == 0
+                                            ? int.parse(
+                                                calories_male[widget.report])
+                                            : int.parse(calories_female[
+                                                widget.report]));
+                                    bool result = false;
+                                    result = await _apiCall
+                                        .putUserInfo(updateUserData);
+                                    if (result) {
+                                      print('BMI Updated Successfully');
+                                    } else {
+                                      print(
+                                          'There was an issue updating the BMI');
+                                    }
                                     showDialog(
                                         context: context,
-                                        builder: (BuildContext context) =>
-//                                          CupertinoPopupSurface(
-//                                        isSurfacePainted: true,
-//                                        child: Container(
-//                                          decoration: BoxDecoration(
-//                                            image: DecorationImage(
-//                                                image: AssetImage(
-//                                                    'images/popup_background.jpg'),
-//                                                fit: BoxFit.fill),
-//                                          ),
-//                                          child: CupertinoAlertDialog(
-////                                                  title: new
-//                                            content: Column(
-//                                              crossAxisAlignment:
-//                                                  CrossAxisAlignment.start,
-//                                              children: [
-//                                                Text(
-//                                                  "Hello there!",
-//                                                  style:
-//                                                      questionnaireOptionsStyle
-//                                                          .copyWith(
-//                                                              fontWeight:
-//                                                                  FontWeight
-//                                                                      .w600,
-//                                                              fontSize: 13),
-//                                                ),
-//                                                Text(
-//                                                  "Are you unsure about what you need? Why not book an consultation with one of our experts to help you through the process?",
-//                                                  style:
-//                                                      questionnaireOptionsStyle
-//                                                          .copyWith(
-//                                                              fontWeight:
-//                                                                  FontWeight
-//                                                                      .w600,
-//                                                              fontSize: 13),
-//                                                ),
-//                                              ],
-//                                            ),
-//                                            actions: <Widget>[
-//                                              CupertinoDialogAction(
-//                                                child: Text("NO THANKS",
-//                                                    style:
-//                                                        questionnaireOptionsStyle
-//                                                            .copyWith(
-//                                                                fontSize: 16)),
-//                                                onPressed: () {
-//                                                  Navigator.pop(context);
-//                                                },
-//                                              ),
-//                                              CupertinoDialogAction(
-//                                                child: Text("OKAY",
-//                                                    style:
-//                                                        questionnaireOptionsStyle
-//                                                            .copyWith(
-//                                                                fontSize: 16)),
-//                                                onPressed: () {
-//                                                  Navigator.pop(context);
-//                                                },
-//                                              )
-//                                            ],
-//                                          ),
-//                                        ),
-//                                      ),
-                                            Dialog(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          30.0)),
-                                              child: Container(
-                                                  decoration: BoxDecoration(
-                                                    image: DecorationImage(
-                                                        image: AssetImage(
-                                                            'images/popup_background.jpg'),
-                                                        fit: BoxFit.fill),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                30.0)),
-                                                  ),
-                                                  height: devHeight * 0.3,
-                                                  child: Center(
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        Container(
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
+                                        builder:
+                                            (BuildContext context) => Dialog(
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              30.0)),
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  child: Container(
+                                                      decoration: BoxDecoration(
+                                                        image: DecorationImage(
+                                                            image: AssetImage(
+                                                                'images/popup_background.jpg'),
+                                                            fit: BoxFit.fill),
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    30.0)),
+                                                      ),
+                                                      height: devHeight * 0.3,
+                                                      child: Center(
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: <Widget>[
+                                                            Container(
+                                                              child: Padding(
+                                                                padding:
+                                                                    EdgeInsets
                                                                         .only(
-                                                                    top: 30,
-                                                                    left: 25,
-                                                                    right: 8),
-                                                            child: Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Text(
-                                                                  "Hello there!",
-                                                                  style: questionnaireOptionsStyle.copyWith(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .normal,
-                                                                      fontSize:
-                                                                          14),
+                                                                  top:
+                                                                      devHeight *
+                                                                          0.06,
+                                                                  left:
+                                                                      devWidth *
+                                                                          0.08,
+                                                                  right:
+                                                                      devWidth *
+                                                                          0.08,
                                                                 ),
-                                                                SizedBox(height: 5,),
-                                                                Text(
-                                                                  "Are you unsure about what you need? Why not book an consultation with one of our experts to help you through the process?",
-                                                                  style: questionnaireOptionsStyle.copyWith(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .normal,
-                                                                      fontSize:
-                                                                          14),
+                                                                child: Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceEvenly,
+                                                                  children: [
+                                                                    Text(
+                                                                      "Hello there!",
+                                                                      style: questionnaireOptionsStyle.copyWith(
+                                                                          fontWeight: FontWeight
+                                                                              .w600,
+                                                                          fontSize:
+                                                                              14),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height:
+                                                                          devHeight *
+                                                                              0.03,
+                                                                    ),
+                                                                    Text(
+                                                                      "Are you unsure about what you need? Why not book an consultation with one of our experts to help you through the process?",
+                                                                      style: questionnaireOptionsStyle.copyWith(
+                                                                          fontWeight: FontWeight
+                                                                              .w600,
+                                                                          fontSize:
+                                                                              14),
+                                                                    ),
+                                                                  ],
                                                                 ),
-                                                              ],
+                                                              ),
                                                             ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 20,
-                                                        ),
-                                                        Spacer(),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .only(top: 8),
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceEvenly,
-                                                            children: <Widget>[
-                                                              Expanded(
-                                                                child:
-                                                                    GestureDetector(
-                                                                  onTap: () {
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                  },
-                                                                  child:
-                                                                      Container(
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      color: questionnaireDisabled
-                                                                          .withOpacity(
-                                                                              0.5),
-                                                                      borderRadius:
-                                                                          BorderRadius.only(
-                                                                              bottomLeft: Radius.circular(5.0)),
-                                                                    ),
+                                                            SizedBox(
+                                                              height: 20,
+                                                            ),
+                                                            Spacer(),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 8),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceEvenly,
+                                                                children: <
+                                                                    Widget>[
+                                                                  Expanded(
                                                                     child:
-                                                                        Padding(
-                                                                      padding: const EdgeInsets
-                                                                              .all(
-                                                                          12.0),
+                                                                        GestureDetector(
+                                                                      onTap:
+                                                                          () {
+                                                                        Navigator.push(
+                                                                            context,
+                                                                            MaterialPageRoute(builder: (context) => HomePage(openPage: 0)));
+                                                                      },
                                                                       child:
-                                                                          Center(
-                                                                        child: Text(
-                                                                            'NO THANKS',
-                                                                            style:
-                                                                                questionnaireOptionsStyle.copyWith(fontSize: 16)),
+                                                                          Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              questionnaireDisabled.withOpacity(0.5),
+                                                                          borderRadius:
+                                                                              BorderRadius.only(bottomLeft: Radius.circular(30.0)),
+                                                                        ),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.all(12.0),
+                                                                          child:
+                                                                              Center(
+                                                                            child:
+                                                                                Text('NO THANKS', style: questionnaireOptionsStyle.copyWith(fontSize: 16)),
+                                                                          ),
+                                                                        ),
                                                                       ),
                                                                     ),
                                                                   ),
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                child:
-                                                                    GestureDetector(
-                                                                  onTap:
-                                                                      () async {},
-                                                                  child:
-                                                                      Container(
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      color: questionnaireDisabled
-                                                                          .withOpacity(
-                                                                              0.5),
-                                                                      borderRadius:
-                                                                          BorderRadius.only(
-                                                                              bottomRight: Radius.circular(5.0)),
-                                                                    ),
+                                                                  Expanded(
                                                                     child:
-                                                                        Padding(
-                                                                      padding: const EdgeInsets
-                                                                              .all(
-                                                                          12.0),
+                                                                        GestureDetector(
+                                                                      onTap:
+                                                                          () async {
+                                                                        Navigator.push(
+                                                                            context,
+                                                                            MaterialPageRoute(builder: (context) => HomePage(openPage: 0, consultationScroll: true)));
+                                                                      },
                                                                       child:
-                                                                          Center(
-                                                                        child: Text(
-                                                                            'OKAY',
-                                                                            style:
-                                                                                questionnaireOptionsStyle.copyWith(fontSize: 16)),
+                                                                          Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              questionnaireDisabled.withOpacity(0.5),
+                                                                          borderRadius:
+                                                                              BorderRadius.only(bottomRight: Radius.circular(30.0)),
+                                                                        ),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.all(12.0),
+                                                                          child:
+                                                                              Center(
+                                                                            child:
+                                                                                Text('OKAY', style: questionnaireOptionsStyle.copyWith(fontSize: 16)),
+                                                                          ),
+                                                                        ),
                                                                       ),
                                                                     ),
                                                                   ),
-                                                                ),
+                                                                ],
                                                               ),
-                                                            ],
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  )),
-                                            ));
+                                                            )
+                                                          ],
+                                                        ),
+                                                      )),
+                                                ));
                                   },
                                   child: Text(
                                     'CONTINUE',

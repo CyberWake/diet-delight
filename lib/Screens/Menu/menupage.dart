@@ -32,6 +32,7 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
   int menuId = 0;
   bool isLoaded = false;
   int itemIndex = 0;
+  bool favEnabled = true;
 
   get pageViewTabSelected => null;
   ScrollController _scrollCon = new ScrollController();
@@ -68,6 +69,10 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
 
   getData() async {
     await getFavourites();
+    setState(() {
+      favPressed = favourites[0];
+      print('favPressed: $favPressed');
+    });
     await getMenuCategories(menuId);
   }
 
@@ -143,95 +148,125 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
     return InkWell(
       onTap: () {},
       child: Container(
-        height: 125,
+        height: MediaQuery.of(context).size.width * 0.275,
         child: Row(
           children: [
             Expanded(
               flex: 8,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 45.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 10,
-                      width: 10,
-                      child: Image.asset(
-                        foodItem.isVeg ? 'images/veg.png' : 'images/nonVeg.png',
-                        fit: BoxFit.fitHeight,
-                        scale: 0.5,
+              child: Container(
+                height: MediaQuery.of(context).size.width * 0.275,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.width * 0.0375,
+                      left: 45.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 15,
+                        width: 15,
+                        child: Image.asset(
+                          foodItem.isVeg
+                              ? 'images/veg.png'
+                              : 'images/nonVeg.png',
+                          fit: BoxFit.fitHeight,
+                          scale: 0.5,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      foodItem.foodName,
-                      style: appBarTextStyle.copyWith(
-                          fontSize: 12, fontWeight: FontWeight.w400),
-                    ),
-                    foodItem.featured == 1
-                        ? Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Icon(Icons.star,
-                                    color: featuredColor,
-                                  size: 12),
-                              Text(
-                                'Featured',
-                                style: appBarTextStyle.copyWith(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w600,
-                                   color:
-                                  featuredColor
-                                ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        foodItem.foodName,
+                        style: appBarTextStyle.copyWith(
+                            fontSize: 12, fontWeight: FontWeight.w400),
+                      ),
+                      foodItem.featured == 1
+                          ? Padding(
+                              padding: EdgeInsets.only(left: 5.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Icon(Icons.star,
+                                      color: featuredColor, size: 12),
+                                  Text(
+                                    'Featured',
+                                    style: appBarTextStyle.copyWith(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w600,
+                                        color: featuredColor),
+                                  ),
+                                ],
                               ),
-                            ],
-                          )
-                        : SizedBox(),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Container(
-                      alignment: Alignment.bottomRight,
-                      padding: EdgeInsets.only(right: 10),
-                      child: favPressed.contains(foodItem.id) ||
-                              favourites[0].contains(foodItem.id)
-                          ? IconButton(
-                              onPressed: () async {
-                                setState(() {
-                                  favPressed.remove(foodItem.id);
-                                });
-                                await _apiCall.deleteFavourites(favourites[1]
-                                    [favourites[0].indexOf(foodItem.id)]);
-                                setState(() {
-                                  getFavourites();
-                                  print('deleted');
-                                });
-                              },
-                              icon: Icon(Icons.favorite,
-                                  size: 18, color: defaultPurple))
-                          : IconButton(
-                              onPressed: () async {
-                                setState(() {
-                                  favPressed.add(foodItem.id);
-                                });
-                                int userId = int.parse(Api.userInfo.id);
-                                AddFavouritesModel details = AddFavouritesModel(
-                                  menuItemId: foodItem.id,
-                                  userId: userId,
-                                );
-                                await _apiCall.addFavourites(details);
-                                getFavourites();
-                              },
-                              icon: Icon(
-                                Icons.favorite_border,
-                                size: 18,
-                                color: defaultPurple,
-                              )),
-                    )
-                  ],
+                            )
+                          : SizedBox(),
+                      // SizedBox(
+                      //   height: 4,
+                      // ),
+                      Spacer(),
+                      Container(
+                        alignment: Alignment.bottomRight,
+                        padding: EdgeInsets.only(right: 10),
+                        child: favPressed.contains(foodItem.id) ||
+                                favourites[0].contains(foodItem.id)
+                            ? IconButton(
+                                onPressed: favEnabled == false
+                                    ? null
+                                    : () async {
+                                        favEnabled = false;
+                                        int removeIndex =
+                                            favourites[0].indexOf(foodItem.id);
+                                        setState(() {
+                                          print(favourites[0]
+                                              .indexOf(foodItem.id));
+                                          favPressed.remove(foodItem.id);
+                                          print('favPressed: $favPressed');
+                                          print(favourites[0]);
+                                          print(foodItem.id);
+                                          print(favourites[0]
+                                              .indexOf(foodItem.id));
+                                        });
+                                        await _apiCall.deleteFavourites(
+                                            favourites[1][removeIndex]);
+                                        setState(() {
+                                          getFavourites();
+                                          print('favPressed: $favPressed');
+                                          favEnabled = true;
+                                          print('deleted');
+                                        });
+                                      },
+                                icon: Icon(Icons.favorite,
+                                    size: 18, color: defaultPurple))
+                            : IconButton(
+                                onPressed: favEnabled == false ||
+                                        favPressed.contains(foodItem.id)
+                                    ? null
+                                    : () async {
+                                        setState(() {
+                                          favEnabled = false;
+                                          favPressed.add(foodItem.id);
+                                        });
+                                        int userId = int.parse(Api.userInfo.id);
+                                        AddFavouritesModel details =
+                                            AddFavouritesModel(
+                                          menuItemId: foodItem.id,
+                                          userId: userId,
+                                        );
+                                        await _apiCall.addFavourites(details);
+                                        setState(() {
+                                          getFavourites();
+                                          favEnabled = true;
+                                        });
+                                      },
+                                icon: Icon(
+                                  Icons.favorite_border,
+                                  size: 18,
+                                  color: defaultPurple,
+                                )),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -281,17 +316,24 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
         key: _scaffoldKey,
         backgroundColor: white,
         body: CustomScrollView(
-         // controller: _scrollCon,
+          // controller: _scrollCon,
           slivers: <Widget>[
             SliverAppBar(
-              automaticallyImplyLeading:  true,
-              leading: GestureDetector(onTap : (){
-                Navigator.pop(context);
-              },child: Icon(Icons.keyboard_backspace,color: defaultGreen,size: 30,)),
+              automaticallyImplyLeading: true,
+              leading: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.keyboard_backspace,
+                    color: defaultGreen,
+                    size: 30,
+                  )),
               expandedHeight: MediaQuery.of(context).size.height * 3 / 13,
               backgroundColor: Colors.white,
               title: Text(widget.menu.name,
-                  style: selectedTab.copyWith(fontSize: 18,color: Colors.black)),
+                  style:
+                      selectedTab.copyWith(fontSize: 18, color: Colors.black)),
               flexibleSpace: FlexibleSpaceBar(
                 background: Container(
                   child: Padding(
@@ -309,7 +351,6 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-
                                 SizedBox(
                                   height: 10,
                                 ),
@@ -344,19 +385,21 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                                     "http://via.placeholder.com/350x150",
                                 imageBuilder: (context, imageProvider) =>
                                     Container(
-                                      decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: Color(0x26000000), blurRadius: 5)
-                                        ],
-                                        shape: BoxShape.circle,
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Color(0x26000000),
+                                          blurRadius: 5)
+                                    ],
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
                                     ),
-                                placeholder: (context, url) => SpinKitChasingDots(
+                                  ),
+                                ),
+                                placeholder: (context, url) =>
+                                    SpinKitChasingDots(
                                   color: defaultPurple,
                                   size: 32,
                                 ),
@@ -378,7 +421,9 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: white,
-                  boxShadow: [BoxShadow(color: Color(0x26000000), blurRadius: 5)],
+                  boxShadow: [
+                    BoxShadow(color: Color(0x26000000), blurRadius: 5)
+                  ],
                 ),
                 child: Center(
                   child: TabBar(
@@ -391,7 +436,9 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                     indicatorSize: TabBarIndicatorSize.tab,
                     indicatorPadding: EdgeInsets.symmetric(horizontal: 35.0),
                     labelColor: defaultPurple,
-                    labelPadding: mainCategoryItems.length == 2 ? EdgeInsets.symmetric(horizontal: 60) : EdgeInsets.symmetric(horizontal: 40),
+                    labelPadding: mainCategoryItems.length == 2
+                        ? EdgeInsets.symmetric(horizontal: 60)
+                        : EdgeInsets.symmetric(horizontal: 40),
                     //          unselectedLabelStyle:
                     //    tabBarLabelStyle.copyWith(color: inactiveTime),
                     unselectedLabelColor: Colors.grey,
@@ -405,19 +452,21 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
               ),
               isLoaded
                   ? Container(
-                height: MediaQuery.of(context).size.height*11.4/13-kTextTabBarHeight,
-                    child: TabBarView(
-                        controller: _pageController,
-                        children: List.generate(mainCategoryItems.length, (index) {
-                          return Container(
-                            margin: index == 0
-                                ? EdgeInsets.only(top: 10)
-                                : EdgeInsets.zero,
-                            child: menuUi(
-                                foodItems[index], categoryItems[index].parent),
-                          );
-                        })),
-                  )
+                      height: MediaQuery.of(context).size.height * 11.4 / 13 -
+                          kTextTabBarHeight,
+                      child: TabBarView(
+                          controller: _pageController,
+                          children:
+                              List.generate(mainCategoryItems.length, (index) {
+                            return Container(
+                              margin: index == 0
+                                  ? EdgeInsets.only(top: 10)
+                                  : EdgeInsets.zero,
+                              child: menuUi(foodItems[index],
+                                  categoryItems[index].parent),
+                            );
+                          })),
+                    )
                   : Center(
                       child: SpinKitThreeBounce(color: defaultPurple, size: 32))
             ]))
@@ -428,11 +477,9 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
   }
 
   Widget menuUi(List<FoodItemModel> foodItem, int parentId) {
-
     return subCategoryItems.isNotEmpty
         ? subCategoryItems[parentId].length != 0
             ? ListView.builder(
-
                 controller: _scrollController,
                 itemCount: subCategoryItems[parentId].length,
                 itemBuilder: (BuildContext context, int index) {
@@ -468,20 +515,16 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                   );
                 })
             : ListView.builder(
-
                 controller: _scrollController,
                 itemCount: foodItem.length,
                 itemBuilder: (BuildContext context, int index) {
                   return item(foodItem[index]);
                 })
         : ListView.builder(
-
             controller: _scrollController,
             itemCount: foodItem.length,
             itemBuilder: (BuildContext context, int index) {
               return item(foodItem[index]);
             });
   }
-
-
 }
