@@ -98,11 +98,7 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
                 elevation: 0.0,
                 onPressed: () {},
                 fillColor: Color(0xffF5F5F5),
-                child: Icon(
-                  fieldIcon,
-                  color: Color(0xFF303960),
-                  size: 16,
-                ),
+                child: Icon(fieldIcon, color: Color(0xFF303960), size: 16),
                 shape: CircleBorder()),
           ),
           SizedBox(
