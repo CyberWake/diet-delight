@@ -2,8 +2,6 @@ import 'dart:ui';
 
 import 'package:date_format/date_format.dart';
 import 'package:diet_delight/Models/consultationModel.dart';
-import 'package:diet_delight/Screens/Consultation/confirmConsultation.dart';
-import 'package:diet_delight/Widgets/consultation_pop_up.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +9,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:diet_delight/Models/consultationAppointmentModel.dart';
-import 'package:diet_delight/Models/consultationModel.dart';
 import 'package:diet_delight/Models/consultationPurchaseModel.dart';
 import 'package:diet_delight/Screens/Consultation/prePaymentConsultation.dart';
 import 'package:diet_delight/services/apiCalls.dart';
@@ -160,10 +157,6 @@ class _BookConsultationState extends State<BookConsultation>
           appBar: AppBar(
             elevation: 0.0,
             backgroundColor: Colors.transparent,
-//          shape: RoundedRectangleBorder(
-//              borderRadius: BorderRadius.only(
-//                  bottomLeft: Radius.circular(20.0),
-//                  bottomRight: Radius.circular(20.0))),
             centerTitle: false,
             leading: IconButton(
               onPressed: () {
@@ -186,105 +179,6 @@ class _BookConsultationState extends State<BookConsultation>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-//              Padding(
-//                padding: EdgeInsets.fromLTRB(
-//                    devWidth * 0.075, 0, devWidth * 0.075, 0),
-//                child: Column(
-//                  mainAxisSize: MainAxisSize.max,
-//                  crossAxisAlignment: CrossAxisAlignment.start,
-//                  children: [
-//                    TextButton(
-//                      child: ddItems[consultationIndex],
-//                      onPressed: () {
-//                        showDialog(
-//                            context: context,
-//                            builder: (BuildContext context) =>
-//                                ConsultationPopUp(
-//                                  selectedIndex: selectedIndex,
-//                                  callBackFunction: updateSelectedConsultation,
-//                                ));
-//                      },
-//                    ),
-//                    Padding(
-//                      padding: const EdgeInsets.fromLTRB(0, 5.0, 0, 0),
-//                      child: Text(
-//                        widget.consultation[consultationIndex].details,
-//                        textAlign: TextAlign.left,
-//                        style: TextStyle(
-//                          fontFamily: 'RobotoCondensedReg',
-//                          fontSize: 11,
-//                          fontWeight: FontWeight.normal,
-//                          color: cardGray,
-//                        ),
-//                      ),
-//                    ),
-//                  ],
-//                ),
-//              ),
-//              Padding(
-//                padding: EdgeInsets.fromLTRB(
-//                    devWidth * 0.075, 25, devWidth * 0.075, 0),
-//                child: Column(
-//                  crossAxisAlignment: CrossAxisAlignment.start,
-//                  children: [
-//                    Text(
-//                      'Select the mode of Consultation',
-//                      style: TextStyle(
-//                        fontFamily: 'RobotoCondensedReg',
-//                        fontSize: 20,
-//                        fontWeight: FontWeight.normal,
-//                        color: Colors.black,
-//                      ),
-//                    ),
-//                    SizedBox(
-//                      height: 10,
-//                    ),
-//                    Center(
-//                      child: ToggleButtons(
-//                        selectedBorderColor: defaultGreen,
-//                        fillColor: defaultGreen,
-//                        borderRadius: BorderRadius.circular(25),
-//                        children: <Widget>[
-//                          Padding(
-//                            padding:
-//                                const EdgeInsets.fromLTRB(15.0, 5.0, 12, 5.0),
-//                            child: isSelected[0]
-//                                ? Text('Online',
-//                                    style: toggleTextStyle.copyWith(
-//                                        color: Colors.white))
-//                                : Text('Online', style: toggleTextStyle),
-//                          ),
-//                          Padding(
-//                            padding:
-//                                const EdgeInsets.fromLTRB(12.0, 5.0, 15, 5.0),
-//                            child: isSelected[1]
-//                                ? Text('Offline',
-//                                    style: toggleTextStyle.copyWith(
-//                                        color: Colors.white))
-//                                : Text('Offline', style: toggleTextStyle),
-//                          ),
-//                        ],
-//                        onPressed: (int index) {
-//                          setState(() {
-//                            for (int buttonIndex = 0;
-//                                buttonIndex < isSelected.length;
-//                                buttonIndex++) {
-//                              if (buttonIndex == index) {
-//                                isSelected[buttonIndex] = true;
-//                              } else {
-//                                isSelected[buttonIndex] = false;
-//                              }
-//                            }
-//                          });
-//                        },
-//                        isSelected: isSelected,
-//                      ),
-//                    ),
-//                  ],
-//                ),
-//              ),
-//              isSelected[1]
-//                  ?
                 Padding(
                   padding: EdgeInsets.fromLTRB(
                       devWidth * 0.075, 0, devWidth * 0.075, 0),
@@ -665,46 +559,7 @@ class _BookConsultationState extends State<BookConsultation>
                                         consultationMode:
                                             consultationMode.toString(),
                                       )));
-//                        Navigator.push(
-//                            context,
-//                            CupertinoPageRoute(
-//                                builder: (context) => ConfirmConsultation(
-//                                      package: consultationIndex,
-//                                      selectedDate: dateSelected,
-//                                      consultationTime: time,
-//                                      consultation: widget.consultation,
-//                                    )));
                         }
-//                      else if (isSelected[0] == true) {
-//                        ConsAppointmentModel appointment = ConsAppointmentModel(
-//                          userId: Api.userInfo.id,
-//                          consultationTime: DateTime.now().toString(),
-//                        );
-//                        ConsPurchaseModel purchaseDetails = ConsPurchaseModel(
-//                            consultationName:
-//                                widget.consultation[consultationIndex].name,
-//                            consultationPackageId: widget
-//                                .consultation[consultationIndex].id
-//                                .toString(),
-//                            consultationPackageDuration: widget
-//                                .consultation[consultationIndex].duration
-//                                .toString(),
-//                            amountPaid: widget
-//                                .consultation[consultationIndex].price
-//                                .toString());
-//                        print(purchaseDetails.consultationPackageId);
-//                        print(consultationIndex);
-//                        Navigator.push(
-//                            context,
-//                            MaterialPageRoute(
-//                                builder: (context) => PrePayment(
-//                                      appointment: appointment,
-//                                      orderDetails: purchaseDetails,
-//                                      package: consultationIndex,
-//                                      consultation: widget.consultation,
-//
-//                                    )));
-//                      }
                         else {
                           if (date == null) {
                             _scaffoldKey.currentState.showSnackBar(SnackBar(

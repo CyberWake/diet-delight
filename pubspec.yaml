@@ -23,11 +23,11 @@ dependencies:
   shared_preferences: ^0.5.12+4
   firebase_core: ^0.7.0
   firebase_auth: ^0.20.0+1
+  google_sign_in: ^4.5.3
   flutter_open_whatsapp: ^0.1.2
   flutter_dropdown: ^0.0.8
   date_format: ^1.0.9
   cached_network_image: ^2.5.0
-  syncfusion_flutter_datepicker: ^18.4.41-beta
   percent_indicator: ^2.1.9+1
   flutter_email_sender: ^4.0.0
   font_awesome_flutter: ^8.11.0
@@ -35,7 +35,7 @@ dependencies:
 
   path_provider: ^1.6.9
   permission_handler: ^4.0.0
-  pull_to_refresh: 1.6.3
+  pull_to_refresh: ^1.6.4
 
 
 dev_dependencies:

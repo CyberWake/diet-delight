@@ -19,10 +19,15 @@ import 'package:diet_delight/Models/questionnaireModel.dart';
 import 'package:diet_delight/Models/postQuestionnaireModel.dart';
 import 'package:diet_delight/Models/registrationModel.dart';
 import 'package:diet_delight/Models/couponModel.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../Models/loginModel.dart';
+import '../Models/registrationModel.dart';
 
 var currentMealPlanCache = [];
 var mealPlanCacheData = [];
@@ -31,26 +36,28 @@ var menuCategoryCacheData = [];
 var recommendedCalories = "0";
 class Api {
   static var client;
-  static List<QuestionnaireModel> itemsQuestionnaire = List();
-  static List<OptionsModel> itemsOptions = List();
-  static List<ConsultationModel> itemsConsultation = List();
-  static List<MenuModel> itemsMenu = List();
-  static List<MealModel> itemsMeal = List();
-  static List<MenuCategoryModel> itemsMenuCategory = List();
-  static List<ConsPurchaseModel> itemsConsultationPurchases = List();
-  static List<FoodItemModel> itemsFood = List();
-  static List<MenuOrderModel> itemsOrderedFood = List();
-  static List<ConsAppointmentModel> itemAppointments = List();
-  static List<MealPurchaseModel> itemMealPurchases = List();
-  static List<MealPurchaseModel> itemPresentMealPurchases = List();
-  static List<DurationModel> itemDurations = List();
-  static List<AddFavouritesModel> favouriteItems = List();
-  static List<int> favouriteIds = List();
-  static List<List> favourites = List();
-  static List<CouponModel> couponList = List();
-  static List<String> couponCodes = List();
-  static List<List> coupons = List();
-  static List<FoodItemModel> featuredMenu = List();
+  static UserCredential userCredential;
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
+  static List<QuestionnaireModel> itemsQuestionnaire = [];
+  static List<OptionsModel> itemsOptions = [];
+  static List<ConsultationModel> itemsConsultation = [];
+  static List<MenuModel> itemsMenu = [];
+  static List<MealModel> itemsMeal = [];
+  static List<MenuCategoryModel> itemsMenuCategory = [];
+  static List<ConsPurchaseModel> itemsConsultationPurchases = [];
+  static List<FoodItemModel> itemsFood = [];
+  static List<MenuOrderModel> itemsOrderedFood = [];
+  static List<ConsAppointmentModel> itemAppointments = [];
+  static List<MealPurchaseModel> itemMealPurchases = [];
+  static List<MealPurchaseModel> itemPresentMealPurchases = [];
+  static List<DurationModel> itemDurations = [];
+  static List<AddFavouritesModel> favouriteItems = [];
+  static List<int> favouriteIds = [];
+  static List<List> favourites = [];
+  static List<CouponModel> couponList = [];
+  static List<String> couponCodes = [];
+  static List<List> coupons = [];
+  static List<FoodItemModel> featuredMenu = [];
   static RegModel userInfo = RegModel();
   static String token;
 
@@ -75,6 +82,42 @@ class Api {
     await getUserInfo();
   }
 
+  Future<bool> googleAuth()async{
+    try {
+      final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication googleAuth =
+      await googleUser.authentication;
+      final GoogleAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      userCredential = await _auth.signInWithCredential(credential);
+      List name = userCredential.user.displayName.split(' ');
+      if(userCredential.additionalUserInfo.isNewUser){
+        print('register');
+        RegModel registerUser = RegModel(
+
+            name: userCredential.user.displayName,
+            firebaseUid: userCredential.user.uid,
+            firstName: name[0],
+            lastName: name[1],
+            password: userCredential.user.uid,
+            email: userCredential.user.email,
+            mobile: userCredential.user.phoneNumber);
+        bool success = await register(registerUser);
+        return success;
+      }else{
+        print('login');
+        LogModel loginUser = LogModel(email: userCredential.user.email,password: userCredential.user.uid);
+        bool success = await login(loginUser);
+        return success;
+      }
+    } catch (e) {
+      print("google login error: " + e.toString());
+      return false;
+    }
+  }
+
   Future<bool> register(RegModel registerData) async {
     Map<String, String> headers = {
       HttpHeaders.contentTypeHeader: "application/json",
@@ -91,10 +134,10 @@ class Api {
       bool result = await login(loginDetails);
       return result;
     } else if (response.statusCode == 400) {
-      print(response.statusCode);
+      print(response.body);
       return false;
     } else {
-      print(response.statusCode);
+      print(response.body);
       return false;
     }
   }
@@ -318,7 +361,6 @@ class Api {
   Future<List<MenuCategoryModel>> getMenuCategories(int menuId) async {
     try {
       itemsMenuCategory = [];
-      var cachedData = [];
       Map<String, String> headers = {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token"

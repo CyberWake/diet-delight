@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'Screens/Auth Screens/revisedQuestionnaire.dart';
+
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -22,8 +24,12 @@ class _SplashScreenState extends State<SplashScreen>
     if (prefs.containsKey('accessToken')) {
       await Future.delayed(Duration(seconds: 2));
       _apiCall.autoLogin().whenComplete(() {
-        Navigator.of(context).pushReplacement(CupertinoPageRoute(
-            builder: (BuildContext context) => HomePage(openPage: 0)));
+        Navigator.pushReplacement(
+            context,
+            CupertinoPageRoute(
+                builder: (context) =>
+                Api.userInfo.questionnaireStatus != 0
+                    ?NewQuestionnaire():HomePage()));
       });
     } else {
       await Future.delayed(Duration(seconds: 2));

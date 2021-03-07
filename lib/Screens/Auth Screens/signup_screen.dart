@@ -4,6 +4,8 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'revisedQuestionnaire.dart';
+
 class SignUp extends StatefulWidget {
   final String token;
   var height;
@@ -13,6 +15,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  final _apiCall = Api.instance;
   FocusNode first = FocusNode();
   FocusNode last = FocusNode();
   FocusNode country = FocusNode();
@@ -378,31 +381,31 @@ class _SignUpState extends State<SignUp> {
                                     )));
                       } else {
                         if (confirmPass.text != password.text) {
-                          Scaffold.of(context).showSnackBar(SnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text('Passwords do not match')));
                         } else if (confirmPass.text.isEmpty) {
                           print(confirmPass.text);
-                          Scaffold.of(context).showSnackBar(SnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content:
                                   Text('Enter the confirmation password')));
                         } else if (countryCode.text.isEmpty) {
-                          Scaffold.of(context).showSnackBar(SnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text('Country code cannot be empty')));
                         } else if (password.text.isEmpty) {
-                          Scaffold.of(context).showSnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Enter the password')));
                         } else if (firstName.text.isEmpty) {
-                          Scaffold.of(context).showSnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Enter your first name')));
                         } else if (lastName.text.isEmpty) {
-                          Scaffold.of(context).showSnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Enter your last name')));
                         }
                       }
                     } else {
                       print(email.text);
                       print(EmailValidator.validate(email.text));
-                      Scaffold.of(context).showSnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Enter a valid email')));
                     }
                   },
@@ -464,7 +467,19 @@ class _SignUpState extends State<SignUp> {
                   SizedBox(
                     width: 100.0,
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: ()async {
+                        bool result = await _apiCall.googleAuth();
+                        if(result== true){
+                          Navigator.pushReplacement(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) =>Api.userInfo.questionnaireStatus == 0
+                                      ?
+                                  NewQuestionnaire():HomePage()));
+                        }else{
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed')));
+                        }
+                      },
                       child: Image.asset('images/Group 58.png', width: 18),
                       style: TextButton.styleFrom(
                           backgroundColor: gColor,

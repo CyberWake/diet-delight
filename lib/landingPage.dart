@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
@@ -69,7 +70,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     ['Profile', 'Ongoing Meal Plans'],
     [],
     ['Consultation Orders', 'Meal Plan Orders'],
-    [],
     [
       'Security',
       'Terms and Conditions',
@@ -84,7 +84,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     'Dashboard',
     'Favourites',
     'Order History',
-    // 'Notifications',
     'Settings',
     'Contact Us'
   ];
@@ -133,14 +132,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   drawerOnTaps(int index) async {
     if (index == page) {
       Navigator.pop(context);
-    } else if (index != 7) {
+    } else if (index != 6) {
       Navigator.pop(context);
       setState(() {
         page = index;
       });
       print(page);
     }
-    if (index == 7) {
+    if (index == 6) {
+      await GoogleSignIn().signOut();
       SharedPreferences prefs = await SharedPreferences.getInstance();
       bool result = await prefs.clear();
       if (result) {
@@ -270,9 +270,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       return Row(
                         children: [
                           Tab(
-                            // text: tabItemsTitle[page][index],
-
-                            // text: tabItemsTitle[page][index],
                             child: Column(
                               children: [
                                 SizedBox(height: 8),
@@ -305,33 +302,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         ],
                       );
                     }))
-                // ? TabBar(
-                // controller: page == 5
-                //     ? _pageController3
-                //     : page == 3
-                //     ? _pageController2
-                //     : _pageController1,
-                // isScrollable: true,
-                // onTap: (index) async {},
-                // labelStyle: selectedTab.copyWith(
-                //     fontSize: 18,
-                //     color: defaultPurple,
-                //     fontWeight: FontWeight.w600),
-                // indicatorColor: defaultGreen,
-                // indicatorWeight: 3.0,
-                // indicatorSize: TabBarIndicatorSize.tab,
-                // labelColor: defaultPurple,
-                // labelPadding: EdgeInsets.symmetric(horizontal: 13),
-                // unselectedLabelStyle: unSelectedTab.copyWith(
-                //     fontSize: 18,
-                //     color: questionnaireDisabled,
-                //     fontWeight: FontWeight.w400),
-                // unselectedLabelColor: questionnaireDisabled,
-                // tabs: List.generate(tabItemsTitle[page].length, (index) {
-                //   return Tab(
-                //     text: tabItemsTitle[page][index],
-                //   );
-                // }))
                 : PreferredSize(child: Container(), preferredSize: Size(0, 0)),
           ),
           drawer: ClipRRect(
@@ -408,10 +378,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             index: page,
             children: [
               HomeScreen(consultationScroll: widget.consultationScroll),
-              TabBarView(controller: _pageController1, children: [
-                DashBoardUserInfoPage(snackBarKey: _scaffoldKey),
-                DashBoardOngoingOrders(),
-              ]),
+              Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('images/user_dashboard_bg.jpg'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),),
+                  TabBarView(controller: _pageController1, children: [
+                    DashBoardUserInfoPage(snackBarKey: _scaffoldKey),
+                    DashBoardOngoingOrders(),
+                  ]),
+                ],
+              ),
               FavouritesPage(),
               TabBarView(controller: _pageController2, children: [
                 ConsultationOrderHistoryPage(),
