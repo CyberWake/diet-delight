@@ -60,7 +60,7 @@ const TextStyle selectedTab = TextStyle(
 
 const TextStyle drawerItemsStyle = TextStyle(
   fontFamily: 'MontserratMed',
-  fontSize: 20,
+  fontSize: 22,
   fontWeight: FontWeight.normal,
   color: questionnaireSelect,
 );
@@ -180,6 +180,12 @@ const consultationModeSelectStyle = TextStyle(
   fontWeight: FontWeight.w600,
   color: questionnaireSelect,
 );
+
+const nullSafetyStyle = TextStyle(
+    fontFamily: 'MontserratMed',
+    fontSize: 14,
+    fontWeight: FontWeight.w700,
+    color: questionnaireSelect);
 
 BoxDecoration authFieldDecoration = BoxDecoration(
     color: Colors.white,

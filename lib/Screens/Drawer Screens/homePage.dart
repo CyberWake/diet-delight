@@ -52,6 +52,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   getFavourites() async {
     favourites = await _apiCall.getFavourites();
+    setState(() {
+      favEnabled = true;
+    });
   }
 
   @override
@@ -211,7 +214,8 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                    padding: EdgeInsets.only(top: 10.0, bottom: 10.0,left: 10,right: 10),
+                    padding: EdgeInsets.only(
+                        top: 10.0, bottom: 10.0, left: 10, right: 10),
                     child: Text(
                       durations[pos].title,
                       style: TextStyle(
@@ -704,91 +708,76 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     SizedBox(
                                                       width: 5,
                                                     ),
-                                                    favPressed.contains(
-                                                                featuredMenu[
-                                                                        pos]
-                                                                    .id) ||
-                                                            favourites[0]
-                                                                .contains(
-                                                                    featuredMenu[
-                                                                            pos]
-                                                                        .id)
+                                                    favEnabled == false
                                                         ? IconButton(
-                                                            onPressed:
-                                                                favEnabled ==
-                                                                        false
-                                                                    ? null
-                                                                    : () async {
-                                                                        int removeIndex =
-                                                                            favourites[0].indexOf(featuredMenu[pos].id);
-                                                                        setState(
-                                                                            () {
-                                                                          favEnabled =
-                                                                              false;
-                                                                          favPressed
-                                                                              .remove(featuredMenu[pos].id);
-                                                                        });
-//                                                              print(favourites[
-//                                                                      0]
-//                                                                  .indexWhere((f) => f
-//                                                                      .featuredMenu[
-//                                                                          pos]
-//                                                                      .id));
-                                                                        await _apiCall.deleteFavourites(favourites[1]
-                                                                            [
-                                                                            removeIndex]);
-                                                                        setState(
-                                                                            () {
-                                                                          getFavourites();
-                                                                          favEnabled =
-                                                                              true;
-                                                                        });
-                                                                      },
-                                                            icon: Icon(
-                                                                Icons.favorite,
-                                                                size: 18,
-                                                                color:
-                                                                    defaultPurple))
-                                                        : IconButton(
-                                                            onPressed:
-                                                                favEnabled ==
-                                                                        false
-                                                                    ? null
-                                                                    : () async {
-                                                                        setState(
-                                                                            () {
-                                                                          favEnabled =
-                                                                              false;
-                                                                          favPressed
-                                                                              .add(featuredMenu[pos].id);
-                                                                        });
-                                                                        int userId = int.parse(Api
-                                                                            .userInfo
-                                                                            .id);
-                                                                        AddFavouritesModel
-                                                                            details =
-                                                                            AddFavouritesModel(
-                                                                          menuItemId:
-                                                                              featuredMenu[pos].id,
-                                                                          userId:
-                                                                              userId,
-                                                                        );
-                                                                        await _apiCall
-                                                                            .addFavourites(details);
-                                                                        setState(
-                                                                            () {
-                                                                          getFavourites();
-                                                                          favEnabled =
-                                                                              true;
-                                                                        });
-                                                                      },
-                                                            icon: Icon(
-                                                              Icons
-                                                                  .favorite_border,
-                                                              size: 18,
+                                                            icon:
+                                                                SpinKitChasingDots(
                                                               color:
                                                                   defaultPurple,
-                                                            )),
+                                                              size: 18,
+                                                            ),
+                                                          )
+                                                        : favourites[0].contains(
+                                                                featuredMenu[
+                                                                        pos]
+                                                                    .id)
+                                                            ? IconButton(
+                                                                onPressed:
+                                                                    () async {
+                                                                  setState(() {
+                                                                    favEnabled =
+                                                                        false;
+                                                                  });
+                                                                  int removeIndex =
+                                                                      favourites[
+                                                                              0]
+                                                                          .indexOf(
+                                                                              featuredMenu[pos].id);
+                                                                  await _apiCall
+                                                                      .deleteFavourites(
+                                                                          favourites[1]
+                                                                              [
+                                                                              removeIndex]);
+                                                                  getFavourites();
+                                                                },
+                                                                icon: Icon(
+                                                                    Icons
+                                                                        .favorite,
+                                                                    size: 18,
+                                                                    color:
+                                                                        defaultPurple))
+                                                            : IconButton(
+                                                                onPressed:
+                                                                    () async {
+                                                                  setState(() {
+                                                                    favEnabled =
+                                                                        false;
+                                                                  });
+                                                                  int userId = int
+                                                                      .parse(Api
+                                                                          .userInfo
+                                                                          .id);
+                                                                  AddFavouritesModel
+                                                                      details =
+                                                                      AddFavouritesModel(
+                                                                    menuItemId:
+                                                                        featuredMenu[pos]
+                                                                            .id,
+                                                                    userId:
+                                                                        userId,
+                                                                  );
+                                                                  await _apiCall
+                                                                      .addFavourites(
+                                                                          details);
+                                                                  getFavourites();
+                                                                },
+                                                                icon: Icon(
+                                                                  Icons
+                                                                      .favorite_border,
+                                                                  size: 18,
+                                                                  color:
+                                                                      defaultPurple,
+                                                                )),
                                                   ],
                                                 ),
                                               ),
@@ -843,7 +832,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(
                           padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                           child: Container(
-                              height: 0.35 * devHeight,
+                              height: 0.38 * devHeight,
                               child: ListView.builder(
                                 itemCount: consultationPackages.length,
                                 scrollDirection: Axis.horizontal,

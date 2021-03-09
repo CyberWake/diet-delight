@@ -30,7 +30,7 @@ class _BookConsultationState extends State<BookConsultation>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int consultationIndex;
   int consultationMode = 0;
-  List<String> format = [yyyy, '-', mm, '-', dd];
+  List<String> format = [dd, '-', 'M', '-', yyyy];
   String dropdownValue = 'One';
   DateTime today;
   DateTime dateSelected;
@@ -398,12 +398,14 @@ class _BookConsultationState extends State<BookConsultation>
                                         vertical: 5, horizontal: 10),
                                     child: Container(
                                       child: Text(
-                                        DateFormat.E()
-                                                .format(dateSelected ?? today) +
-                                            ', ' +
-                                            DateFormat.MMM()
-                                                .add_d()
-                                                .format(dateSelected ?? today),
+                                        formatDate(
+                                            dateSelected ?? today, format),
+                                        // DateFormat.E()
+                                        //         .format(dateSelected ?? today) +
+                                        //     ', ' +
+                                        //     DateFormat.MMM()
+                                        //         .add_d()
+                                        //         .format(dateSelected ?? today),
                                         style: TextStyle(
                                             fontFamily: 'RobotoCondensedReg',
                                             fontSize: 12,

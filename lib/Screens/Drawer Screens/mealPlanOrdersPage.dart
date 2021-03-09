@@ -25,7 +25,7 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
   List<MealPurchaseModel> purchasedMeal;
   final _apiCall = Api.instance;
   bool loaded = false;
-  List<String> format = [hh, ':', nn, ' ', am, ', ', dd, ' ', 'M', ', ', yyyy];
+  List<String> format = [hh, ':', nn, ' ', am, ' ', dd, ' ', 'M', ', ', yyyy];
   ReceivePort _port = ReceivePort();
   bool _permissionReady = false;
 
@@ -194,8 +194,7 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
                     child: Center(
                       child: Text(
                           'No Meal Plan Subscriptions have been purchased yet',
-                          style: orderHistoryCardStyle.copyWith(
-                              fontWeight: FontWeight.bold, fontSize: 18)),
+                          style: nullSafetyStyle),
                     ),
                   ),
                 ),

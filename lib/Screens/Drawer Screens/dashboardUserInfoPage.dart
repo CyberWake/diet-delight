@@ -3,6 +3,7 @@ import 'package:diet_delight/Screens/export.dart';
 import 'package:diet_delight/Widgets/shadow_text.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:diet_delight/Screens/Drawer Screens/recalculateBmiScreen.dart';
 
 class DashBoardUserInfoPage extends StatefulWidget {
   final GlobalKey<ScaffoldState> snackBarKey;
@@ -347,6 +348,8 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
         height: 40,
         child: TextButton(
           onPressed: () async {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => RecalculateBmi()));
             /*SharedPreferences prefs = await SharedPreferences.getInstance();
             String password = prefs.getString('password');
             setState(() {});

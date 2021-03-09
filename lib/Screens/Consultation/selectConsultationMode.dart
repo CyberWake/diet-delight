@@ -88,7 +88,7 @@ class _SelectConsultationModeState extends State<SelectConsultationMode> {
                     borderRadius: BorderRadius.all(Radius.circular(40.0)),
                     color: Colors.transparent,
                     child: Container(
-                      height: devHeight * 0.18,
+                      height: devHeight * 0.2,
                       width: devWidth * 0.9,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(40.0)),
@@ -172,6 +172,8 @@ class _SelectConsultationModeState extends State<SelectConsultationMode> {
                       elevation: 2,
                       borderRadius: BorderRadius.all(Radius.circular(40.0)),
                       child: Container(
+                        height: devHeight * 0.2,
+                        width: devWidth * 0.9,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(40.0)),
                           color: onlineConsultation,
@@ -221,6 +223,8 @@ class _SelectConsultationModeState extends State<SelectConsultationMode> {
                       elevation: 2,
                       borderRadius: BorderRadius.all(Radius.circular(40.0)),
                       child: Container(
+                        height: devHeight * 0.2,
+                        width: devWidth * 0.9,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(40.0)),
                           color: offlineConsultation,

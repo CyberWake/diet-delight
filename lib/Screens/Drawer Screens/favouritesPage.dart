@@ -255,9 +255,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                           ? Center(
                               child: Text(
                                   'No dishes have been added as favourite yet',
-                                  style: orderHistoryCardStyle.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18)),
+                                  style: nullSafetyStyle),
                             )
                           : ListView.builder(
                               controller: _scrollController,

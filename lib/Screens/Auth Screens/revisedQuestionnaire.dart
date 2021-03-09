@@ -56,6 +56,7 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
   List<QuestionnaireModel> questions;
   List<OptionsModel> options;
   List<PostQuestionnaire> postList;
+  List<bool> postRes;
   var answer;
   int _currentIndex;
 
@@ -63,6 +64,7 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
     await _apiCall.getUserInfo();
     questions = await _apiCall.getQuestions();
     postList = List<PostQuestionnaire>(questions.length);
+    postRes = List<bool>(questions.length);
     options = await _apiCall.getOptions(questions);
     print(questions.length);
     _currentIndex = 0;
@@ -274,6 +276,11 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                     )
                                                                   : Container(
                                                                       decoration: BoxDecoration(
+                                                                          border: Border.all(
+                                                                              width:
+                                                                                  2.0,
+                                                                              color:
+                                                                                  questionnaireSelect),
                                                                           borderRadius: BorderRadius.circular(
                                                                               25),
                                                                           color:
@@ -402,6 +409,7 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                         child:
                                                                             Container(
                                                                           decoration: BoxDecoration(
+                                                                              border: Border.all(width: comment[0] == 1 ? 0 : 2.0, color: questionnaireSelect),
                                                                               borderRadius: comment[0] == 1 ? BorderRadius.only(topLeft: Radius.circular(25.0), topRight: Radius.circular(25.0), bottomRight: Radius.circular(0), bottomLeft: Radius.circular(0)) : BorderRadius.circular(25),
 //                                                                  boxShadow: [
 //                                                                    BoxShadow(
@@ -433,7 +441,7 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                           comment[0] =
                                                                               0;
                                                                           PostQuestionnaire item = PostQuestionnaire(
-                                                                              answerOptionId: 0,
+                                                                              answerOptionId: 1,
                                                                               questionId: questions[1].id,
                                                                               questionAdditionalText: '0',
                                                                               answer: 'no',
@@ -449,7 +457,7 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                         decoration: BoxDecoration(
                                                                             borderRadius:
                                                                                 BorderRadius.circular(25),
-                                                                            border: Border.all(width: comment[0] == 0 ? 2.0 : 0.0, color: questionnaireSelect),
+                                                                            border: Border.all(width: 2.0, color: questionnaireSelect),
                                                                             color: comment[0] == 0 ? white : questionnaireSelect),
                                                                         padding: EdgeInsets.symmetric(
                                                                             vertical: devWidth *
@@ -517,7 +525,7 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                                       child: TextFormField(
                                                                                           onChanged: (String account) {
                                                                                             question1Controller.text = account;
-                                                                                            PostQuestionnaire item = PostQuestionnaire(answerOptionId: 0, questionId: questions[1].id, questionAdditionalText: question1Controller.text, answer: 'yes', questionQuestion: questions[1].question, questionType: questions[1].type, answerOptionOption: 'yes');
+                                                                                            PostQuestionnaire item = PostQuestionnaire(answerOptionId: 0, questionId: questions[1].id, questionAdditionalText: "0", answer: question1Controller.text, questionQuestion: questions[1].question, questionType: questions[1].type, answerOptionOption: 'yes');
                                                                                             postList[1] = item;
                                                                                           },
                                                                                           onFieldSubmitted: (done) {
@@ -627,6 +635,7 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                         child:
                                                                             Container(
                                                                           decoration: BoxDecoration(
+                                                                              border: Border.all(width: comment[1] == 0 ? 2.0 : 0.0, color: questionnaireSelect),
                                                                               borderRadius: comment[1] == 1 ? BorderRadius.only(topLeft: Radius.circular(25.0), topRight: Radius.circular(25.0), bottomRight: Radius.circular(0), bottomLeft: Radius.circular(0)) : BorderRadius.circular(25),
 //                                                                  boxShadow: [
 //                                                                    BoxShadow(
@@ -658,7 +667,7 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                           comment[1] =
                                                                               0;
                                                                           PostQuestionnaire item = PostQuestionnaire(
-                                                                              answerOptionId: 0,
+                                                                              answerOptionId: 1,
                                                                               questionId: questions[2].id,
                                                                               questionAdditionalText: '0',
                                                                               answer: 'no',
@@ -674,7 +683,7 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                         decoration: BoxDecoration(
                                                                             borderRadius:
                                                                                 BorderRadius.circular(25),
-                                                                            border: Border.all(width: comment[1] == 0 ? 2.0 : 0.0, color: questionnaireSelect),
+                                                                            border: Border.all(width: 2.0, color: questionnaireSelect),
                                                                             color: comment[1] == 0 ? white : questionnaireSelect),
                                                                         padding: EdgeInsets.symmetric(
                                                                             vertical: devWidth *
@@ -742,7 +751,7 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                                       child: TextFormField(
                                                                                           onChanged: (String account) {
                                                                                             question2Controller.text = account;
-                                                                                            PostQuestionnaire item = PostQuestionnaire(answerOptionId: 0, questionId: questions[2].id, questionAdditionalText: question2Controller.text, answer: 'yes', questionQuestion: questions[2].question, questionType: questions[2].type, answerOptionOption: 'yes');
+                                                                                            PostQuestionnaire item = PostQuestionnaire(answerOptionId: 0, questionId: questions[2].id, questionAdditionalText: "0", answer: question2Controller.text, questionQuestion: questions[2].question, questionType: questions[2].type, answerOptionOption: 'yes');
                                                                                             postList[2] = item;
                                                                                           },
                                                                                           onFieldSubmitted: (done) {
@@ -845,8 +854,8 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                               ),
                                                                               child: Column(
                                                                                 children: [
-                                                                                  Icon(
-                                                                                    FontAwesomeIcons.mars,
+                                                                                  ImageIcon(
+                                                                                    AssetImage('images/male.png'),
                                                                                     color: gender == 0 ? Colors.white : questionnaireDisabled,
                                                                                     size: 36,
                                                                                   ),
@@ -894,8 +903,8 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                               ),
                                                                               child: Column(
                                                                                 children: [
-                                                                                  Icon(
-                                                                                    FontAwesomeIcons.venus,
+                                                                                  ImageIcon(
+                                                                                    AssetImage('images/female.png'),
                                                                                     color: gender == 1 ? Colors.white : questionnaireDisabled,
                                                                                     size: 36,
                                                                                   ),
@@ -1148,46 +1157,6 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                       report =
                                                                           3;
                                                                     }
-                                                                    if (gender ==
-                                                                        0) {
-                                                                      PostQuestionnaire item = PostQuestionnaire(
-                                                                          answerOptionId:
-                                                                              0,
-                                                                          questionId: questions[3]
-                                                                              .id,
-                                                                          questionAdditionalText:
-                                                                              '0',
-                                                                          answer:
-                                                                              'Male',
-                                                                          questionQuestion: questions[3]
-                                                                              .question,
-                                                                          questionType: questions[3]
-                                                                              .type,
-                                                                          answerOptionOption:
-                                                                              'Male');
-                                                                      postList[
-                                                                              3] =
-                                                                          item;
-                                                                    } else {
-                                                                      PostQuestionnaire item = PostQuestionnaire(
-                                                                          answerOptionId:
-                                                                              0,
-                                                                          questionId: questions[3]
-                                                                              .id,
-                                                                          questionAdditionalText:
-                                                                              '0',
-                                                                          answer:
-                                                                              'Female',
-                                                                          questionQuestion: questions[3]
-                                                                              .question,
-                                                                          questionType: questions[3]
-                                                                              .type,
-                                                                          answerOptionOption:
-                                                                              'Female');
-                                                                      postList[
-                                                                              3] =
-                                                                          item;
-                                                                    }
                                                                     print(
                                                                         'postList: $postList');
                                                                     if (postList
@@ -1203,32 +1172,41 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                     } else {
                                                                       bool
                                                                           allQuestionsSubmitted =
-                                                                          false;
+                                                                          true;
                                                                       postList.forEach(
                                                                           (item) async {
-                                                                        await _apiCall
-                                                                            .sendOptionsAnswers(item);
-                                                                        RegModel
-                                                                            updateUserData =
-                                                                            Api.userInfo;
-                                                                        updateUserData
-                                                                            .setQuestionnaireStatus(1);
                                                                         bool
-                                                                            result =
-                                                                            false;
-                                                                        result =
-                                                                            await _apiCall.putUserInfo(updateUserData);
-                                                                        if (result) {
-                                                                          print(
-                                                                              'Questionnaire filled Successfully');
-                                                                          Navigator.push(
-                                                                              context,
-                                                                              MaterialPageRoute(builder: (context) => BmiReport(bmi: display_bmi, report: report, age: age, gender: gender, questionnaire: true)));
-                                                                        } else {
-                                                                          print(
-                                                                              'There was an issue submitting the questionnaire');
-                                                                        }
+                                                                            res =
+                                                                            await _apiCall.sendOptionsAnswers(item);
+                                                                        postRes.add(
+                                                                            res);
                                                                       });
+                                                                      if (postRes
+                                                                          .contains(
+                                                                              false)) {
+                                                                        allQuestionsSubmitted =
+                                                                            false;
+                                                                      }
+                                                                      // RegModel
+                                                                      //     updateUserData =
+                                                                      //     Api.userInfo;
+                                                                      // updateUserData
+                                                                      //     .setQuestionnaireStatus(1);
+                                                                      // bool
+                                                                      //     result =
+                                                                      //     false;
+                                                                      // result =
+                                                                      //     await _apiCall.putUserInfo(updateUserData);
+                                                                      if (allQuestionsSubmitted) {
+                                                                        print(
+                                                                            'Questionnaire filled Successfully');
+                                                                        Navigator.push(
+                                                                            context,
+                                                                            MaterialPageRoute(builder: (context) => BmiReport(bmi: display_bmi, report: report, age: age, gender: gender, questionnaire: true)));
+                                                                      } else {
+                                                                        print(
+                                                                            'There was an issue submitting the questionnaire');
+                                                                      }
                                                                     }
                                                                   },
                                                                   child: Text(
