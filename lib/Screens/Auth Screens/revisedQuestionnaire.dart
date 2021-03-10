@@ -104,14 +104,14 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
     super.initState();
   }
 
-  @override
-  void didChangeDependencies() {
-    precacheImage(question1Background.image, context);
-    precacheImage(question2Background1.image, context);
-    precacheImage(question2Background2.image, context);
-    precacheImage(bmiBackground.image, context);
-    super.didChangeDependencies();
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   precacheImage(question1Background.image, context);
+  //   precacheImage(question2Background1.image, context);
+  //   precacheImage(question2Background2.image, context);
+  //   precacheImage(bmiBackground.image, context);
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {

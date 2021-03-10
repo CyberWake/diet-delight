@@ -44,11 +44,11 @@ class _SelectConsultationModeState extends State<SelectConsultationMode> {
     consultationIndex = widget.packageIndex;
   }
 
-  @override
-  void didChangeDependencies() {
-    precacheImage(selectConsultationBackgroundImage.image, context);
-    super.didChangeDependencies();
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   precacheImage(selectConsultationBackgroundImage.image, context);
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {

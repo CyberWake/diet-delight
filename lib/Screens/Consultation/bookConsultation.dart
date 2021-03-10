@@ -30,7 +30,7 @@ class _BookConsultationState extends State<BookConsultation>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int consultationIndex;
   int consultationMode = 0;
-  List<String> format = [dd, '-', 'M', '-', yyyy];
+  List<String> format = [dd, ' ', 'M', ' ', yyyy];
   String dropdownValue = 'One';
   DateTime today;
   DateTime dateSelected;
@@ -138,11 +138,11 @@ class _BookConsultationState extends State<BookConsultation>
     });
   }
 
-  @override
-  void didChangeDependencies() {
-    precacheImage(consultationBackground.image, context);
-    super.didChangeDependencies();
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   precacheImage(consultationBackground.image, context);
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {

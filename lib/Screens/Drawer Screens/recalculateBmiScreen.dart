@@ -35,12 +35,6 @@ class _RecalculateBmiState extends State<RecalculateBmi> {
   int report = 0;
 
   @override
-  void didChangeDependencies() {
-    precacheImage(bmiBackground.image, context);
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     var devWidth = MediaQuery.of(context).size.width;
     var devHeight = MediaQuery.of(context).size.height;

@@ -135,11 +135,11 @@ class _PrePaymentState extends State<PrePayment> {
     );
   }
 
-  @override
-  void didChangeDependencies() {
-    precacheImage(consultationBackground.image, context);
-    super.didChangeDependencies();
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   precacheImage(consultationBackground.image, context);
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -330,11 +330,25 @@ class _PrePaymentState extends State<PrePayment> {
                               ? TextFormField(
                                   onChanged: (String account) {
                                     couponController.text = account;
+                                    if (couponFocus.hasFocus == false &&
+                                        (couponController.text == "" ||
+                                            couponController.text == null)) {
+                                      setState(() {
+                                        couponCheck = false;
+                                      });
+                                    }
                                   },
                                   onFieldSubmitted: (done) {
                                     couponController.text = done;
                                     couponFocus.unfocus();
+                                    if (couponController.text == "" ||
+                                        couponController.text == null) {
+                                      setState(() {
+                                        couponCheck = false;
+                                      });
+                                    }
                                   },
+                                  autofocus: true,
                                   style: questionnaireTitleStyle.copyWith(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w400),
