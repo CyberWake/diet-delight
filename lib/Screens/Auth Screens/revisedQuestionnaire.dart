@@ -64,7 +64,7 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
     await _apiCall.getUserInfo();
     questions = await _apiCall.getQuestions();
     postList = List<PostQuestionnaire>(questions.length);
-    postRes = List<bool>(questions.length);
+    postRes = List<bool>();
     options = await _apiCall.getOptions(questions);
     print(questions.length);
     _currentIndex = 0;
@@ -409,7 +409,7 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                         child:
                                                                             Container(
                                                                           decoration: BoxDecoration(
-                                                                              border: Border.all(width: comment[0] == 1 ? 0 : 2.0, color: questionnaireSelect),
+                                                                              border: Border.all(width: 2.0, color: comment[0] == 1 ? white : questionnaireSelect),
                                                                               borderRadius: comment[0] == 1 ? BorderRadius.only(topLeft: Radius.circular(25.0), topRight: Radius.circular(25.0), bottomRight: Radius.circular(0), bottomLeft: Radius.circular(0)) : BorderRadius.circular(25),
 //                                                                  boxShadow: [
 //                                                                    BoxShadow(
@@ -532,6 +532,7 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                                             question1Controller.text = done;
                                                                                             question1Focus.unfocus();
                                                                                           },
+                                                                                          autofocus: true,
                                                                                           style: authInputTextStyle,
                                                                                           maxLines: null,
                                                                                           minLines: 1,
@@ -635,7 +636,7 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                         child:
                                                                             Container(
                                                                           decoration: BoxDecoration(
-                                                                              border: Border.all(width: comment[1] == 0 ? 2.0 : 0.0, color: questionnaireSelect),
+                                                                              border: Border.all(width: 2.0, color: comment[1] == 1 ? white : questionnaireSelect),
                                                                               borderRadius: comment[1] == 1 ? BorderRadius.only(topLeft: Radius.circular(25.0), topRight: Radius.circular(25.0), bottomRight: Radius.circular(0), bottomLeft: Radius.circular(0)) : BorderRadius.circular(25),
 //                                                                  boxShadow: [
 //                                                                    BoxShadow(
@@ -758,6 +759,7 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                                             question2Controller.text = done;
                                                                                             question2Focus.unfocus();
                                                                                           },
+                                                                                          autofocus: true,
                                                                                           style: authInputTextStyle,
                                                                                           keyboardType: TextInputType.text,
                                                                                           maxLines: null,
@@ -1178,12 +1180,16 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                         bool
                                                                             res =
                                                                             await _apiCall.sendOptionsAnswers(item);
-                                                                        postRes.add(
-                                                                            res);
+                                                                        if (res ==
+                                                                            true) {
+                                                                          postRes
+                                                                              .add(res);
+                                                                        }
                                                                       });
                                                                       if (postRes
-                                                                          .contains(
-                                                                              false)) {
+                                                                              .length !=
+                                                                          questions
+                                                                              .length) {
                                                                         allQuestionsSubmitted =
                                                                             false;
                                                                       }

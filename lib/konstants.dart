@@ -463,3 +463,7 @@ var question2Background2 = DecorationImage(
 var bmiBackground = DecorationImage(
     image: AssetImage('images/questionnaire_background.jpg'),
     fit: BoxFit.fitHeight);
+
+var consultationHomePageBackground = DecorationImage(
+    image: AssetImage('images/questionnaire_background.jpg'),
+    fit: BoxFit.cover);

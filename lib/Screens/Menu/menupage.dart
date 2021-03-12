@@ -189,10 +189,12 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                           ? Padding(
                               padding: EdgeInsets.only(left: 5.0),
                               child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.star,
-                                      color: featuredColor, size: 12),
+                                  ImageIcon(
+                                      AssetImage('images/featured_icon.png'),
+                                      color: featuredColor,
+                                      size: 12),
                                   Text(
                                     'Featured',
                                     style: appBarTextStyle.copyWith(
@@ -275,27 +277,29 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
                   elevation: 2,
                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
                   child: CachedNetworkImage(
-                      imageUrl: foodItem.picture ??
-                          "http://via.placeholder.com/350x150",
-                      imageBuilder: (context, imageProvider) => Container(
-                            height: MediaQuery.of(context).size.width * 0.2,
-                            constraints: BoxConstraints(),
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                          ),
-                      placeholder: (context, url) => SpinKitChasingDots(
-                            color: defaultPurple,
-                            size: 32,
-                          ),
-                      errorWidget: (context, url, error) => ImageIcon(
-                          NetworkImage(widget.menu.picture),
-                          size: 60)),
+                    imageUrl: foodItem.picture ??
+                        "http://via.placeholder.com/350x150",
+                    imageBuilder: (context, imageProvider) => Container(
+                      height: MediaQuery.of(context).size.width * 0.2,
+                      constraints: BoxConstraints(),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ),
+                    placeholder: (context, url) => SpinKitChasingDots(
+                      color: defaultPurple,
+                      size: 32,
+                    ),
+                    errorWidget: (context, url, error) =>
+                        Image.network(widget.menu.picture),
+                    // ImageIcon(
+                    // NetworkImage(widget.menu.picture),
+                    // size: 60)
+                  ),
                 ),
               ),
             )

@@ -3,8 +3,6 @@ import 'package:date_format/date_format.dart';
 import 'package:diet_delight/Models/export_models.dart';
 import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_search_panel/flutter_search_panel.dart';
-import 'package:flutter_search_panel/search_item.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -47,7 +45,6 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
   List<List> favourites = List();
   var maxBuyIndexedList = [];
 
-
   getFavourites() async {
     var data = await _apiCall.getFavourites();
     setState(() {
@@ -58,12 +55,11 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     print('favvvvvvvvvvvvvvv $favourites');
   }
 
-
   getData() async {
     DateTime today = DateTime.now();
     today = DateTime.parse(formatDate(today, [yyyy, '-', mm, '-', dd]));
     print(today);
-    for (int i = 0; dates == null ?i < 0 : i < dates.length; i++) {
+    for (int i = 0; dates == null ? i < 0 : i < dates.length; i++) {
       if (dates[i] == today) {
         _pageController.index = i;
         print(_pageController.index);
@@ -74,7 +70,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
 
     var resources = await _apiCall.getCalorieDataa(menuId);
     print(resources);
-    for(int i =0;i<resources.length;i++){
+    for (int i = 0; i < resources.length; i++) {
       data.add(resources[i].toString());
     }
 
@@ -96,18 +92,15 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     DateTime date;
     startDate = DateTime(
         startDate.year, startDate.month, startDate.day, 00, 00, 00, 000);
-    List days =success.weekdays;
+    List days = success.weekdays;
     if (days.contains('Thu')) {
       days.remove('Thu');
       days.add('Thur');
     }
-    for (int i = 0;
-    i < int.parse(success.mealPlanDuration);
-    i++) {
+    for (int i = 0; i < int.parse(success.mealPlanDuration); i++) {
       date = startDate.add(Duration(days: (count)));
       while (!days.contains(formatDate(date, [D])) ||
           ((breakDates != null) ? (breakDates.contains(date)) : false)) {
-
         count++;
         date = startDate.add(Duration(days: count));
       }
@@ -122,7 +115,6 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     DateTime today = DateTime.now();
     today = DateTime.parse(formatDate(today, [yyyy, '-', mm, '-', dd]));
     print(today);
-
   }
 
   getMenuCategories(int menuId) async {
@@ -164,7 +156,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
         }
       }
     }
-    if (categoryItems.length>0) {
+    if (categoryItems.length > 0) {
       for (int i = 0; i < categoryItems.length;) {
         foodItems.add(await _apiCall
             .getMenuCategoryFoodItems(
@@ -174,7 +166,8 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     }
     for (int i = 0; i < foodItems.length; i++) {
       for (int j = 0; j < foodItems[i].length; j++) {
-        if (widget.placedFoodItems != null  && widget.placedFoodItems.isNotEmpty) {
+        if (widget.placedFoodItems != null &&
+            widget.placedFoodItems.isNotEmpty) {
           for (int k = 0; k < widget.placedFoodItems[i].length; k++) {
             if (foodItems[i][j].id == widget.placedFoodItems[i][k].foodItemId) {
               foodItems[i][j]
@@ -188,9 +181,9 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
       }
     }
 
-    for(int i =0;i<dates.length;i++){
+    for (int i = 0; i < dates.length; i++) {
       var temp = [];
-      for(int j =0;j<mainCategoryItems.length;j++){
+      for (int j = 0; j < mainCategoryItems.length; j++) {
         temp.add(0);
       }
       maxBuyIndexedList.add(temp);
@@ -215,9 +208,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     getDates(widget.purchaseDetails);
     var line1 = widget.purchaseDetails.shippingAddressLine1;
     var line2 = widget.purchaseDetails.shippingAddressLine2;
-    concatenatedAddress = line1 +
-        ',\n' +
-        line2;
+    concatenatedAddress = line1 + ',\n' + line2;
     selectedAddressIndex = -1;
     menuId = widget.plan.menuId;
     print(menuId.toString() + "thissss");
@@ -235,18 +226,16 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
       }
     });
     _pageController = TabController(
-        length: int.parse(widget.purchaseDetails.mealPlanDuration),
-        vsync: this)..addListener(() {
-          setState(() {
-            pageIndex = _pageController.index;
-          });
-    });
+        length: int.parse(widget.purchaseDetails.mealPlanDuration), vsync: this)
+      ..addListener(() {
+        setState(() {
+          pageIndex = _pageController.index;
+        });
+      });
     getData();
   }
 
-  List<String> data = [
-  ];
-
+  List<String> data = [];
 
   callback(address) {
     setState(() {
@@ -267,7 +256,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
       },
       child: Theme(
         data: Theme.of(context).copyWith(
-          accentColor:  Color.fromRGBO(144, 144, 144, 1),
+          accentColor: Color.fromRGBO(144, 144, 144, 1),
         ),
         child: Scaffold(
             key: _scaffoldKey,
@@ -289,9 +278,8 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                   color: defaultGreen,
                 ),
               ),
-              title: Text('Place meal orders', style: appBarTextStyle.copyWith(
-                color: defaultGreen
-              )),
+              title: Text('Place meal orders',
+                  style: appBarTextStyle.copyWith(color: defaultGreen)),
             ),
             body: SingleChildScrollView(
               child: Container(
@@ -313,8 +301,10 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Flexible(
-                                  child: Text(  widget.purchaseDetails.mealPlanName,
-                                      style: selectedTab.copyWith(fontSize: 18,color: Colors.black)),
+                                  child: Text(
+                                      widget.purchaseDetails.mealPlanName,
+                                      style: selectedTab.copyWith(
+                                          fontSize: 18, color: Colors.black)),
                                 ),
                                 SizedBox(
                                   height: 10,
@@ -328,11 +318,10 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                       widget.plan.details,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        fontFamily: 'RobotoCondensedReg',
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400,
-                                        color: Color(0xFF77838F)
-                                      ),
+                                          fontFamily: 'RobotoCondensedReg',
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400,
+                                          color: Color(0xFF77838F)),
                                       maxLines: 6,
                                     ),
                                   ),
@@ -346,56 +335,84 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                     padding: const EdgeInsets.only(
                                         left: 6.0, right: 10.0),
                                     child: Text(
-                                        widget.purchaseDetails.weekdays.contains("Sun") &&    widget.purchaseDetails.weekdays.contains("Sat")  ?
-                                        widget.purchaseDetails.mealPlanDuration +" day meal plan • with weekend" :
-                                        widget.purchaseDetails.mealPlanDuration  +" day meal plan • without weekend"
-                                        ,
+                                        widget.purchaseDetails.weekdays
+                                                    .contains("Sun") &&
+                                                widget.purchaseDetails.weekdays
+                                                    .contains("Sat")
+                                            ? widget.purchaseDetails
+                                                    .mealPlanDuration +
+                                                " day meal plan • with weekend"
+                                            : widget.purchaseDetails
+                                                    .mealPlanDuration +
+                                                " day meal plan • without weekend",
                                         style: selectedTab.copyWith(
-                                            fontSize: 13, fontWeight: FontWeight.normal,color: Color(0xFF909090))
-                                    ),
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.normal,
+                                            color: Color(0xFF909090))),
                                   ),
                                 ),
                                 Expanded(
                                   child: Padding(
-                                    padding: const EdgeInsets.only(left : 7.0),
+                                    padding: const EdgeInsets.only(left: 7.0),
                                     child: DropdownButton<String>(
                                       elevation: 0,
-                                     hint: Text("Select your calorie intake",style: descriptionTextStyle.copyWith(
-                                       fontSize: 12,
-                                       color: Color(0xFF3030303)
-                                     ),),
+                                      hint: Text(
+                                        "Select your calorie intake",
+                                        style: descriptionTextStyle.copyWith(
+                                            fontSize: 12,
+                                            color: Color(0xFF3030303)),
+                                      ),
                                       items: data.map((String value) {
                                         return new DropdownMenuItem<String>(
                                           value: value,
-                                          child:  value != data[data.length-1] ? Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Text(value,style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 12
-                                              ) ),
-                                              Divider(color: Color(0xFFDFDFFF).withOpacity(0.5),),
-                                            ],
-                                          ) : Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Text("$value (Recommended)",style: TextStyle(
-                                                  color: Color(0xFFF79E1B),
-                                                fontSize: 12
-                                              ),),
-                                              Divider(color: Color(0xFFDFDFFF).withOpacity(0.5),),
-                                            ],
-                                          ),
+                                          child: value != data[data.length - 1]
+                                              ? Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(value,
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 12)),
+                                                    Divider(
+                                                      color: Color(0xFFDFDFFF)
+                                                          .withOpacity(0.5),
+                                                    ),
+                                                  ],
+                                                )
+                                              : Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      "$value (Recommended)",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Color(0xFFF79E1B),
+                                                          fontSize: 12),
+                                                    ),
+                                                    Divider(
+                                                      color: Color(0xFFDFDFFF)
+                                                          .withOpacity(0.5),
+                                                    ),
+                                                  ],
+                                                ),
                                         );
                                       }).toList(),
                                       onChanged: (newVal) async {
                                         intake = newVal;
-                                        await  _apiCall.putMealPurchase(widget.purchaseDetails, intake.toString());
+                                        await _apiCall.putMealPurchase(
+                                            widget.purchaseDetails,
+                                            intake.toString());
                                         this.setState(() {});
                                       },
-                                      value: intake == null ? null :  intake.toString(),
+                                      value: intake == null
+                                          ? null
+                                          : intake.toString(),
                                     ),
                                   ),
                                 ),
@@ -406,7 +423,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                         Expanded(
                             flex: 3,
                             child: Padding(
-                              padding: const EdgeInsets.only(top : 15.0),
+                              padding: const EdgeInsets.only(top: 15.0),
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: Colors.white,
@@ -447,7 +464,6 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                       ],
                     ),
                   ),
-
                   Expanded(
                     flex: 1,
                     child: Container(
@@ -467,14 +483,17 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                         controller: _pageController,
                         onTap: (index) {},
                         labelStyle: selectedTab.copyWith(
-                            color: Colors.black, fontSize: 14,fontWeight: FontWeight.w500),
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500),
                         indicatorColor: Colors.transparent,
                         indicatorWeight: 3.0,
                         indicatorSize: TabBarIndicatorSize.label,
                         labelColor: Colors.black,
                         labelPadding: EdgeInsets.symmetric(horizontal: 10),
-                        unselectedLabelStyle:
-                            unSelectedTab.copyWith(color: Color(0xFF909090).withOpacity(0.5),fontWeight: FontWeight.w400),
+                        unselectedLabelStyle: unSelectedTab.copyWith(
+                            color: Color(0xFF909090).withOpacity(0.5),
+                            fontWeight: FontWeight.w400),
                         unselectedLabelColor: Color(0xFF909090),
                         tabs: List.generate(
                             int.parse(widget.purchaseDetails.mealPlanDuration),
@@ -487,7 +506,8 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                               children: [
                                 Flexible(
                                     fit: FlexFit.loose,
-                                    child: Text('Day ${(index + 1).toString()}')),
+                                    child:
+                                        Text('Day ${(index + 1).toString()}')),
                                 // Flexible(
                                 //     fit: FlexFit.loose,
                                 //     child: Text(formatDate(
@@ -512,7 +532,8 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                 child: menuUi(day: index + 1),
                               );
                             }))
-                        : Center(child: SpinKitDoubleBounce(color: defaultGreen)),
+                        : Center(
+                            child: SpinKitDoubleBounce(color: defaultGreen)),
                   )
                 ]),
               ),
@@ -607,41 +628,47 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                         return noteModalSheet(button: button);
                                       });
                                 },
-                                icon: Icon(Icons.add_comment_outlined,    size: 15,
-                                  color: Color(0xFF77838F),)),
+                                icon: Icon(
+                                  Icons.add_comment_outlined,
+                                  size: 15,
+                                  color: Color(0xFF77838F),
+                                )),
                           ),
                           item.noteAdded != null
                               ? GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                notes.clear();
-                              });
-                              if (item.noteAdded != null) {
-                                setState(() {
-                                  notes.text = item.noteAdded;
-                                });
-                              }
-                              showModalBottomSheet(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(50.0),
-                                        topRight: Radius.circular(50.0)),
+                                  onTap: () {
+                                    setState(() {
+                                      notes.clear();
+                                    });
+                                    if (item.noteAdded != null) {
+                                      setState(() {
+                                        notes.text = item.noteAdded;
+                                      });
+                                    }
+                                    showModalBottomSheet(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(50.0),
+                                              topRight: Radius.circular(50.0)),
+                                        ),
+                                        context: context,
+                                        isScrollControlled: true,
+                                        builder: (BuildContext context) {
+                                          return noteModalSheet(button: button);
+                                        });
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    padding: EdgeInsets.only(right: 10),
+                                    child: Text(
+                                      'Note to chef added',
+                                      style: TextStyle(
+                                        color: Color(0xFF77838F),
+                                        fontSize: 11,
+                                      ),
+                                    ),
                                   ),
-                                  context: context,
-                                  isScrollControlled: true,
-                                  builder: (BuildContext context) {
-                                    return noteModalSheet(button: button);
-                                  });
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              padding: EdgeInsets.only(right: 10),
-                              child: Text('Note to chef added',style: TextStyle(
-                                color: Color(0xFF77838F),
-                                fontSize: 11,
-                              ),),
-                            ),
-                          )
+                                )
                               : Container(),
                         ],
                       ),
@@ -649,62 +676,60 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                         alignment: Alignment.bottomRight,
                         padding: EdgeInsets.only(right: 10),
                         child: favPressed.contains(item.id) ||
-                            favourites[0].contains(item.id)
+                                favourites[0].contains(item.id)
                             ? IconButton(
-                            onPressed: favEnabled == false
-                                ? null
-                                : () async {
-                              favEnabled = false;
-                              int removeIndex =
-                              favourites[0].indexOf(item.id);
-                              setState(() {
-                                print(favourites[0]
-                                    .indexOf(item.id));
-                                favPressed.remove(item.id);
-                                favourites[0].remove(item.id);
-                                print('favPressed: $favPressed');
-                                print(favourites[0]);
-                                print(item.id);
-                                print(favourites[0]
-                                    .indexOf(item.id));
-                              });
-                              await _apiCall.deleteFavourites(
-                                  favourites[1][removeIndex]);
-                              setState(() {
-                                // getFavourites();
-                                print('favPressed: $favPressed');
-                                favEnabled = true;
-                                print('deleted');
-                              });
-                            },
-                            icon: Icon(Icons.favorite,
-                                size: 18, color: defaultPurple))
+                                onPressed: favEnabled == false
+                                    ? null
+                                    : () async {
+                                        favEnabled = false;
+                                        int removeIndex =
+                                            favourites[0].indexOf(item.id);
+                                        setState(() {
+                                          print(favourites[0].indexOf(item.id));
+                                          favPressed.remove(item.id);
+                                          favourites[0].remove(item.id);
+                                          print('favPressed: $favPressed');
+                                          print(favourites[0]);
+                                          print(item.id);
+                                          print(favourites[0].indexOf(item.id));
+                                        });
+                                        await _apiCall.deleteFavourites(
+                                            favourites[1][removeIndex]);
+                                        setState(() {
+                                          // getFavourites();
+                                          print('favPressed: $favPressed');
+                                          favEnabled = true;
+                                          print('deleted');
+                                        });
+                                      },
+                                icon: Icon(Icons.favorite,
+                                    size: 18, color: defaultPurple))
                             : IconButton(
-                            onPressed: favEnabled == false ||
-                                favPressed.contains(item.id)
-                                ? null
-                                : () async {
-                              setState(() {
-                                favEnabled = false;
-                                favPressed.add(item.id);
-                              });
-                              int userId = int.parse(Api.userInfo.id);
-                              AddFavouritesModel details =
-                              AddFavouritesModel(
-                                menuItemId: item.id,
-                                userId: userId,
-                              );
-                              await _apiCall.addFavourites(details);
-                              setState(() {
-                                // getFavourites();
-                                favEnabled = true;
-                              });
-                            },
-                            icon: Icon(
-                              Icons.favorite_border,
-                              size: 18,
-                              color: defaultPurple,
-                            )),
+                                onPressed: favEnabled == false ||
+                                        favPressed.contains(item.id)
+                                    ? null
+                                    : () async {
+                                        setState(() {
+                                          favEnabled = false;
+                                          favPressed.add(item.id);
+                                        });
+                                        int userId = int.parse(Api.userInfo.id);
+                                        AddFavouritesModel details =
+                                            AddFavouritesModel(
+                                          menuItemId: item.id,
+                                          userId: userId,
+                                        );
+                                        await _apiCall.addFavourites(details);
+                                        setState(() {
+                                          // getFavourites();
+                                          favEnabled = true;
+                                        });
+                                      },
+                                icon: Icon(
+                                  Icons.favorite_border,
+                                  size: 18,
+                                  color: defaultPurple,
+                                )),
                       )
                     ],
                   ),
@@ -748,7 +773,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                     )),
                 Positioned(
                   top: 70.0,
-                  left:7,
+                  left: 7,
                   child: SizedBox(
                     width: 80,
                     height: 33,
@@ -779,9 +804,11 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                   print(maxBuyIndexedList);
                                   print(pageIndex);
                                   print(maxBuyIndex);
-                                  print(maxBuyIndexedList[pageIndex][maxBuyIndex]);
-                                  if (max > maxBuyIndexedList[pageIndex][maxBuyIndex]) {
-
+                                  print(maxBuyIndexedList[pageIndex]
+                                      [maxBuyIndex]);
+                                  if (max >
+                                      maxBuyIndexedList[pageIndex]
+                                          [maxBuyIndex]) {
                                     item.change(true);
                                     setState(() {});
                                     foodItemOrder = MenuOrderModel(
@@ -794,7 +821,8 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                         menuItemDay: item.day,
                                         foodItemName: item.foodName,
                                         deliveryAddress: concatenatedAddress,
-                                        note: item.noteAdded != null && item.noteAdded.isNotEmpty
+                                        note: item.noteAdded != null &&
+                                                item.noteAdded.isNotEmpty
                                             ? ""
                                             : item.noteAdded);
                                     int result = await _apiCall
@@ -802,7 +830,11 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                     if (result != -1) {
                                       orderPlaced = true;
                                       print('called');
-                                      maxBuyIndexedList[pageIndex][maxBuyIndex] =  maxBuyIndexedList[pageIndex][maxBuyIndex] + 1;
+                                      maxBuyIndexedList[pageIndex]
+                                              [maxBuyIndex] =
+                                          maxBuyIndexedList[pageIndex]
+                                                  [maxBuyIndex] +
+                                              1;
                                       print(maxBuyIndexedList);
                                       item.updateOrderItemId(result);
                                       item.change(true);
@@ -832,7 +864,8 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                   bool result = await _apiCall.deleteMenuOrder(
                                       item.orderItemId.toString());
                                   if (result) {
-                                    maxBuyIndexedList[pageIndex][maxBuyIndex] -= 1;
+                                    maxBuyIndexedList[pageIndex][maxBuyIndex] -=
+                                        1;
                                     print(maxBuyIndexedList);
                                     item.change(false);
                                     setState(() {});
@@ -865,14 +898,19 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                         },
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
-                          child: Text(item.isSelected ? 'Selected'.toUpperCase() : "Select".toUpperCase(),
+                          child: Text(
+                              item.isSelected
+                                  ? 'Selected'.toUpperCase()
+                                  : "Select".toUpperCase(),
                               style: selectedTab.copyWith(
-                                  color: item.isSelected ? white :  Color(0xFF079404),
+                                  color: item.isSelected
+                                      ? white
+                                      : Color(0xFF079404),
                                   fontSize: 15)),
                         ),
                         style: TextButton.styleFrom(
                           backgroundColor:
-                          item.isSelected ?  Color(0xFF079404) : white,
+                              item.isSelected ? Color(0xFF079404) : white,
                         ),
                       ),
                     ),
@@ -888,7 +926,8 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
 
   noteModalSheet({Widget button}) {
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         height: 250,
         decoration: BoxDecoration(
@@ -899,7 +938,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(50), topLeft: Radius.circular(50)),
         ),
-        child: StatefulBuilder(builder: (context, setState){
+        child: StatefulBuilder(builder: (context, setState) {
           return Column(
             children: [
               Container(
@@ -919,18 +958,17 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                     ],
                   ),
                   child: Theme(
-                    data: Theme.of(context).copyWith(splashColor: Colors.transparent),
+                    data: Theme.of(context)
+                        .copyWith(splashColor: Colors.transparent),
                     child: TextFormField(
                       autofocus: true,
                       focusNode: note,
                       controller: notes,
-
                       textDirection: TextDirection.ltr,
                       decoration: authInputFieldDecoration.copyWith(
                         fillColor: Colors.transparent,
                         filled: true,
                         hintText: 'Enter your note here',
-
                       ),
                     ),
                   )),
@@ -953,7 +991,10 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
         return ExpansionTile(
             title: Text(
               mainCategoryItems[indexMajor].name,
-              style: selectedTab.copyWith(fontSize: 18,fontWeight: FontWeight.w500,color: Colors.black),
+              style: selectedTab.copyWith(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black),
             ),
             initiallyExpanded: indexMajor == 0 ? true : false,
             children: subCategoryItems[indexMajor].length == 0

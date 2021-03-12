@@ -197,9 +197,13 @@ class _SelectConsultationModeState extends State<SelectConsultationMode> {
                                         fontWeight: FontWeight.normal)),
                               ),
                               Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: Icon(Icons.arrow_forward_ios_rounded,
-                                      color: questionnaireDisabled, size: 26)),
+                                alignment: Alignment.bottomRight,
+                                child: ImageIcon(
+                                    AssetImage(
+                                        'images/next_arrow_consult_page.png'),
+                                    color: questionnaireDisabled,
+                                    size: 20),
+                              ),
                             ],
                           ),
                         ),
@@ -248,9 +252,13 @@ class _SelectConsultationModeState extends State<SelectConsultationMode> {
                                         fontWeight: FontWeight.normal)),
                               ),
                               Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: Icon(Icons.arrow_forward_ios_rounded,
-                                      color: questionnaireDisabled, size: 26)),
+                                alignment: Alignment.bottomRight,
+                                child: ImageIcon(
+                                    AssetImage(
+                                        'images/next_arrow_consult_page.png'),
+                                    color: questionnaireDisabled,
+                                    size: 20),
+                              ),
                             ],
                           ),
                         ),

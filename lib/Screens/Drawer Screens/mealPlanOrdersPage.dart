@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'dart:isolate';
 import 'dart:io';
 import 'dart:ui';
+import 'dart:convert';
+import 'package:intl/intl.dart';
 
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:path_provider/path_provider.dart';
@@ -28,6 +30,7 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
   List<String> format = [hh, ':', nn, ' ', am, ' ', dd, ' ', 'M', ', ', yyyy];
   ReceivePort _port = ReceivePort();
   bool _permissionReady = false;
+  var listOfAvailableDays = [];
 
   Future<void> DownloadFile(String key, String fileName) async {
     _permissionReady = await _checkPermission();
@@ -107,6 +110,82 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
             ],
           ),
         ));
+  }
+
+  getPrimaryAndSecondaryWithBreak(
+      {breaks, primaryList, secondaryList, purchaseDetails}) {
+    if (purchaseDetails.weekdays.contains('Sun')) {
+      listOfAvailableDays.add('Sunday');
+    }
+    if (purchaseDetails.weekdays.contains('Mon')) {
+      listOfAvailableDays.add('Monday');
+    }
+    if (purchaseDetails.weekdays.contains('Tue')) {
+      listOfAvailableDays.add('Tuesday');
+    }
+    if (purchaseDetails.weekdays.contains('Wed')) {
+      listOfAvailableDays.add('Wednesday');
+    }
+    if (purchaseDetails.weekdays.contains('Thur')) {
+      listOfAvailableDays.add('Thursday');
+    }
+    if (purchaseDetails.weekdays.contains('Fri')) {
+      listOfAvailableDays.add('Friday');
+    }
+    if (purchaseDetails.weekdays.contains('Sat')) {
+      listOfAvailableDays.add('Saturday');
+    }
+    print(listOfAvailableDays);
+
+    print('with break called');
+
+    print(breaks);
+
+    DateTime endDate = DateTime.parse(purchaseDetails.endDate);
+
+    DateTime startDate = DateTime.parse(purchaseDetails.startDate);
+
+    var totalDays = [];
+    print(breaks.length);
+    for (int i = 0;
+        i <= endDate.difference(startDate).inDays + breaks.length;
+        i++) {
+      if (listOfAvailableDays.contains(
+          DateFormat('EEEE').format(startDate.add(Duration(days: i))))) {
+        totalDays
+            .add(startDate.add(Duration(days: i)).toString().split(" ")[0]);
+      }
+    }
+
+    var primaryAndSecondary = [];
+    print("||||||||||||||");
+    print(breaks.length);
+    print(primaryList);
+    print(totalDays);
+    primaryAndSecondary.add(primaryList);
+    primaryAndSecondary.add(secondaryList);
+    primaryAndSecondary.add(totalDays);
+    return primaryAndSecondary;
+  }
+
+  getRemainingDays(var purchaseId) async {
+    var resource = await _apiCall.getBreakTakenDay();
+    var res = {};
+    setState(() {
+      loaded = false;
+    });
+    int count = 0;
+    for (int i = 0; i < resource.length; i++) {
+      if (resource[i]['meal_purchase_id'].toString() == purchaseId.toString()) {
+        res = resource[i];
+      }
+    }
+    print('printing res');
+    print(res);
+    var primaryAndSecondary = await getPrimaryAndSecondaryWithBreak(
+        breaks: jsonDecode(res['date_list']),
+        primaryList: jsonDecode(res['primary_address_dates']),
+        secondaryList: jsonDecode(res['secondary_address_dates']));
   }
 
   getData() async {

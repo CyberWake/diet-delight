@@ -85,10 +85,12 @@ class _FavouritesPageState extends State<FavouritesPage> {
                             ? Padding(
                                 padding: EdgeInsets.only(left: 5.0),
                                 child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.star,
-                                        color: featuredColor, size: 12),
+                                    ImageIcon(
+                                        AssetImage('images/featured_icon.png'),
+                                        color: featuredColor,
+                                        size: 12),
                                     Text(
                                       'Featured',
                                       style: appBarTextStyle.copyWith(

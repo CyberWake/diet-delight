@@ -381,10 +381,10 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
             updateInProgress ? 'RRecalculate BMIe' : 'Recalculate BMI',
             style: TextStyle(
                 // fontFamily: 'RobotoCondensedReg',
-                fontSize: 20,
-                fontWeight: FontWeight.normal,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
                 color: Colors.white,
-                fontFamily: 'RobotReg'),
+                fontFamily: 'MontserratMed'),
           ),
           style: TextButton.styleFrom(
               backgroundColor: Color(0xFF303960),
@@ -399,10 +399,12 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          image: DecorationImage(
-        image: AssetImage('images/user_dashboard_bg.jpg'),
-        fit: BoxFit.cover,
-      )),
+        //   image: DecorationImage(
+        // image: AssetImage('images/user_dashboard_bg.jpg'),
+        // fit: BoxFit.cover,
+        // ),
+        color: Colors.transparent,
+      ),
       child: ListView(
         shrinkWrap: true,
         children: [

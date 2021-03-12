@@ -31,7 +31,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
 
     if (isCached.toString() == 'true') {
       print('true');
-      _apiCall.resetOnGoingMealPlanCache();
+      // _apiCall.resetOnGoingMealPlanCache();
       var ordersTemp = await FlutterSecureStorage().read(key: 'ordersData');
       var plansDataTemp = await FlutterSecureStorage().read(key: 'plansData');
       var ordersPresentDataTemp =
@@ -52,6 +52,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
       });
       setState(() {
         activeMealPurchases = itemPresentMealPurchases;
+        print(activeMealPurchases);
         print("orders done");
       });
       var decodedPlansData = jsonDecode(plansDataTemp);
@@ -79,7 +80,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
 
     } else {
       print('false');
-      // getData();
+      getData();
     }
     setState(() {
       loaded = true;
@@ -118,7 +119,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
 
   @override
   void initState() {
-    getCachedData();
+    getData();
     super.initState();
   }
 
@@ -127,336 +128,367 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
     return loaded
         ? Container(
             decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('images/user_dashboard_bg.jpg'),
-                fit: BoxFit.cover,
-              ),
+              color: Colors.transparent,
+              // image: DecorationImage(
+              //   image: AssetImage('images/user_dashboard_bg.jpg'),
+              //   fit: BoxFit.cover,
+              // ),
             ),
-            child: Column(
-              children: [
-                Expanded(
-                    child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: activePurchaseMealPlans.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    print('listview index: $index');
-                    print('listview length: ${activeMealPurchases.length}');
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 30.0),
-                      child: GestureDetector(
-                        onTap: () async {
-                          if (ordersInActivePlans[index]) {
-                            print('placed called');
-                            Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                    builder: (BuildContext context) =>
-                                        PlacedMealMenuOrders(
-                                            purchaseDetails:
-                                                activeMealPurchases[index],
-                                            plan: activePurchaseMealPlans[
-                                                index])));
-                          } else {
-                            print('place called');
-                            bool returnedBack = await Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                    builder: (BuildContext context) =>
-                                        PlaceMealMenuOrders(
-                                            purchaseDetails:
-                                                activeMealPurchases[index],
-                                            plan: activePurchaseMealPlans[
-                                                index])));
-                            if (returnedBack) {
-                              getCachedData();
-                            }
-                          }
-                        },
-                        child: Container(
-                          margin: EdgeInsets.all(10),
-                          padding: EdgeInsets.fromLTRB(
-                            20,
-                            10,
-                            10,
-                            10,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: !ordersInActivePlans[index]
-                                ? white
-                                : defaultGreen,
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 4,
-                                color: Colors.black.withOpacity(0.25),
-                                spreadRadius: 0,
-                                offset: const Offset(0.0, 0.0),
-                              )
-                            ],
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Flexible(
-                                fit: FlexFit.loose,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+            child: activeMealPurchases.length == 0
+                ? Container(
+                    color: Colors.transparent,
+                    child: Center(
+                      child: Text(
+                        "Nothing to display",
+                        style: TextStyle(
+                            color: Color.fromRGBO(144, 144, 144, 1),
+                            fontFamily: 'MontserratMed',
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14),
+                      ),
+                    ),
+                  )
+                : Column(
+                    children: [
+                      Expanded(
+                          child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: activePurchaseMealPlans.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          print('listview index: $index');
+                          print(
+                              'listview length: ${activeMealPurchases.length}');
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 30.0),
+                            child: GestureDetector(
+                              onTap: () async {
+                                if (ordersInActivePlans[index]) {
+                                  print('placed called');
+                                  Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (BuildContext context) =>
+                                              PlacedMealMenuOrders(
+                                                  purchaseDetails:
+                                                      activeMealPurchases[
+                                                          index],
+                                                  plan: activePurchaseMealPlans[
+                                                      index])));
+                                } else {
+                                  print('place called');
+                                  bool returnedBack = await Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (BuildContext context) =>
+                                              PlaceMealMenuOrders(
+                                                  purchaseDetails:
+                                                      activeMealPurchases[
+                                                          index],
+                                                  plan: activePurchaseMealPlans[
+                                                      index])));
+                                  if (returnedBack) {
+                                    getCachedData();
+                                  }
+                                }
+                              },
+                              child: Container(
+                                margin: EdgeInsets.all(10),
+                                padding: EdgeInsets.fromLTRB(
+                                  20,
+                                  10,
+                                  10,
+                                  10,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: !ordersInActivePlans[index]
+                                      ? white
+                                      : defaultGreen,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      blurRadius: 4,
+                                      color: Colors.black.withOpacity(0.25),
+                                      spreadRadius: 0,
+                                      offset: const Offset(0.0, 0.0),
+                                    )
+                                  ],
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Flexible(
                                       fit: FlexFit.loose,
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Flexible(
                                             fit: FlexFit.loose,
-                                            child: Text(
-                                                activeMealPurchases[index]
-                                                    .mealPlanName,
-                                                style: selectedTab.copyWith(
-                                                    color: !ordersInActivePlans[
-                                                            index]
-                                                        ? Colors.black
-                                                        : white,
-                                                    fontSize: 18)),
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Flexible(
-                                            fit: FlexFit.loose,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 10),
-                                              child: Text(
-                                                activePurchaseMealPlans[index]
-                                                    .details,
-                                                style: TextStyle(
-                                                    fontFamily: 'RobotReg',
-                                                    fontSize: 12,
-                                                    color: !ordersInActivePlans[
-                                                            index]
-                                                        ? Colors.black
-                                                        : white),
-                                              ),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Flexible(
+                                                  fit: FlexFit.loose,
+                                                  child: Text(
+                                                      activeMealPurchases[index]
+                                                          .mealPlanName,
+                                                      style: selectedTab.copyWith(
+                                                          color:
+                                                              !ordersInActivePlans[
+                                                                      index]
+                                                                  ? Colors.black
+                                                                  : white,
+                                                          fontSize: 18)),
+                                                ),
+                                                SizedBox(
+                                                  height: 15,
+                                                ),
+                                                Flexible(
+                                                  fit: FlexFit.loose,
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        horizontal: 10),
+                                                    child: Text(
+                                                      activePurchaseMealPlans[
+                                                              index]
+                                                          .details,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'RobotReg',
+                                                          fontSize: 12,
+                                                          color:
+                                                              !ordersInActivePlans[
+                                                                      index]
+                                                                  ? Colors.black
+                                                                  : white),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        shape: BoxShape.circle,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            blurRadius: 4,
-                                            color: Colors.grey[500],
-                                            spreadRadius: 0,
-                                            offset: const Offset(0.0, 4.0),
-                                          )
-                                        ],
-                                      ),
-                                      child: CircleAvatar(
-                                        radius: 45,
-                                        backgroundColor: white,
-                                        child: CachedNetworkImage(
-                                          imageUrl: activePurchaseMealPlans[
-                                                      index]
-                                                  .picture ??
-                                              "http://via.placeholder.com/350x150",
-                                          imageBuilder:
-                                              (context, imageProvider) =>
-                                                  Container(
+                                          Container(
                                             decoration: BoxDecoration(
-                                              color: white,
+                                              color: Colors.white,
+                                              shape: BoxShape.circle,
                                               boxShadow: [
                                                 BoxShadow(
                                                   blurRadius: 4,
                                                   color: Colors.grey[500],
                                                   spreadRadius: 0,
                                                   offset:
-                                                      const Offset(0.0, 0.0),
+                                                      const Offset(0.0, 4.0),
                                                 )
                                               ],
-                                              shape: BoxShape.circle,
-                                              image: DecorationImage(
-                                                image: imageProvider,
-                                                fit: BoxFit.cover,
+                                            ),
+                                            child: CircleAvatar(
+                                              radius: 45,
+                                              backgroundColor: white,
+                                              child: CachedNetworkImage(
+                                                imageUrl: activePurchaseMealPlans[
+                                                            index]
+                                                        .picture ??
+                                                    "http://via.placeholder.com/350x150",
+                                                imageBuilder:
+                                                    (context, imageProvider) =>
+                                                        Container(
+                                                  decoration: BoxDecoration(
+                                                    color: white,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        blurRadius: 4,
+                                                        color: Colors.grey[500],
+                                                        spreadRadius: 0,
+                                                        offset: const Offset(
+                                                            0.0, 0.0),
+                                                      )
+                                                    ],
+                                                    shape: BoxShape.circle,
+                                                    image: DecorationImage(
+                                                      image: imageProvider,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
+                                                placeholder: (context, url) =>
+                                                    CircularProgressIndicator(),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
                                               ),
                                             ),
-                                          ),
-                                          placeholder: (context, url) =>
-                                              CircularProgressIndicator(),
-                                          errorWidget: (context, url, error) =>
-                                              Icon(Icons.error),
-                                        ),
+                                          )
+                                        ],
                                       ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0),
-                                child: Text(
-                                  "${activeMealPurchases[index].mealPlanDuration} day meal plan • " +
-                                      (activePurchaseMealPlans[index].type == 0
-                                          ? "With Weekends"
-                                          : "Without Weekends"),
-                                  style: TextStyle(
-                                      fontFamily: 'RobotReg',
-                                      fontSize: 12,
-                                      color: !ordersInActivePlans[index]
-                                          ? Colors.black
-                                          : white),
-                                ),
-                              ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10.0),
+                                      child: Text(
+                                        "${activeMealPurchases[index].mealPlanDuration} day meal plan • " +
+                                            (activePurchaseMealPlans[index]
+                                                        .type ==
+                                                    0
+                                                ? "With Weekends"
+                                                : "Without Weekends"),
+                                        style: TextStyle(
+                                            fontFamily: 'RobotReg',
+                                            fontSize: 12,
+                                            color: !ordersInActivePlans[index]
+                                                ? Colors.black
+                                                : white),
+                                      ),
+                                    ),
 
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 9.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text(
-                                      activeMealPurchases[index].kCal,
-                                      style: TextStyle(
-                                          fontFamily: 'RobotReg',
-                                          fontSize: 12,
-                                          color: !ordersInActivePlans[index]
-                                              ? Colors.black
-                                              : white),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 9.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Text(
+                                            activeMealPurchases[index].kCal,
+                                            style: TextStyle(
+                                                fontFamily: 'RobotReg',
+                                                fontSize: 12,
+                                                color:
+                                                    !ordersInActivePlans[index]
+                                                        ? Colors.black
+                                                        : white),
+                                          ),
+                                          Spacer(),
+                                          Text(
+                                            'Start Date - ${formatDate(DateTime.parse(activeMealPurchases[index].startDate), format)}',
+                                            style: TextStyle(
+                                                fontFamily: 'RobotReg',
+                                                fontSize: 12,
+                                                color:
+                                                    !ordersInActivePlans[index]
+                                                        ? Colors.black
+                                                        : white),
+                                          ),
+                                          Spacer(),
+                                          Align(
+                                            alignment: Alignment.centerRight,
+                                            child: TextButton(
+                                                onPressed: () {
+                                                  if (ordersInActivePlans[
+                                                      index]) {
+                                                    Navigator.push(
+                                                        context,
+                                                        CupertinoPageRoute(
+                                                            builder: (BuildContext
+                                                                    context) =>
+                                                                PlacedMealMenuOrders(
+                                                                    purchaseDetails:
+                                                                        activeMealPurchases[
+                                                                            index],
+                                                                    plan: activePurchaseMealPlans[
+                                                                        index])));
+                                                  } else {
+                                                    Navigator.push(
+                                                        context,
+                                                        CupertinoPageRoute(
+                                                            builder: (BuildContext
+                                                                    context) =>
+                                                                PlaceMealMenuOrders(
+                                                                    placedFoodItems: [],
+                                                                    purchaseDetails:
+                                                                        activeMealPurchases[
+                                                                            index],
+                                                                    plan: activePurchaseMealPlans[
+                                                                        index])));
+                                                  }
+                                                },
+                                                child: !ordersInActivePlans[
+                                                        index]
+                                                    ? Text(
+                                                        'Select Menu',
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'RobotoReg',
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: defaultGreen,
+                                                        ),
+                                                      )
+                                                    : Icon(
+                                                        Icons.arrow_right,
+                                                        color: white,
+                                                        size: 30,
+                                                      )),
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                    Spacer(),
-                                    Text(
-                                      'Start Date - ${formatDate(DateTime.parse(activeMealPurchases[index].startDate), format)}',
-                                      style: TextStyle(
-                                          fontFamily: 'RobotReg',
-                                          fontSize: 12,
-                                          color: !ordersInActivePlans[index]
-                                              ? Colors.black
-                                              : white),
-                                    ),
-                                    Spacer(),
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: TextButton(
-                                          onPressed: () {
-                                            if (ordersInActivePlans[index]) {
-                                              Navigator.push(
-                                                  context,
-                                                  CupertinoPageRoute(
-                                                      builder: (BuildContext
-                                                              context) =>
-                                                          PlacedMealMenuOrders(
-                                                              purchaseDetails:
-                                                                  activeMealPurchases[
-                                                                      index],
-                                                              plan:
-                                                                  activePurchaseMealPlans[
-                                                                      index])));
-                                            } else {
-                                              Navigator.push(
-                                                  context,
-                                                  CupertinoPageRoute(
-                                                      builder: (BuildContext
-                                                              context) =>
-                                                          PlaceMealMenuOrders(
-                                                              placedFoodItems: [],
-                                                              purchaseDetails:
-                                                                  activeMealPurchases[
-                                                                      index],
-                                                              plan:
-                                                                  activePurchaseMealPlans[
-                                                                      index])));
-                                            }
-                                          },
-                                          child: !ordersInActivePlans[index]
-                                              ? Text(
-                                                  'Select Menu',
-                                                  style: TextStyle(
-                                                    fontFamily: 'RobotoReg',
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: defaultGreen,
-                                                  ),
-                                                )
-                                              : Icon(
-                                                  Icons.arrow_right,
-                                                  color: white,
-                                                  size: 30,
-                                                )),
-                                    )
+                                    // Align(
+                                    //   alignment: Alignment.centerRight,
+                                    //   child: TextButton(
+                                    //       onPressed: () {
+                                    //         if (ordersInActivePlans[index]) {
+                                    //           Navigator.push(
+                                    //               context,
+                                    //               CupertinoPageRoute(
+                                    //                   builder: (BuildContext
+                                    //                           context) =>
+                                    //                       PlacedMealMenuOrders(
+                                    //                           purchaseDetails:
+                                    //                               activeMealPurchases[
+                                    //                                   index],
+                                    //                           plan:
+                                    //                               activePurchaseMealPlans[
+                                    //                                   index])));
+                                    //         } else {
+                                    //           Navigator.push(
+                                    //               context,
+                                    //               CupertinoPageRoute(
+                                    //                   builder: (BuildContext
+                                    //                           context) =>
+                                    //                       PlaceMealMenuOrders(
+                                    //                           placedFoodItems: [],
+                                    //                           purchaseDetails:
+                                    //                               activeMealPurchases[
+                                    //                                   index],
+                                    //                           plan:
+                                    //                               activePurchaseMealPlans[
+                                    //                                   index])));
+                                    //         }
+                                    //       },
+                                    //       child: !ordersInActivePlans[index]
+                                    //           ? Text(
+                                    //               'Select Menu',
+                                    //               style: TextStyle(
+                                    //                 fontFamily: 'RobotoReg',
+                                    //                 fontSize: 12,
+                                    //                 fontWeight: FontWeight.bold,
+                                    //                 color: defaultGreen,
+                                    //               ),
+                                    //             )
+                                    //           : Icon(
+                                    //               Icons.arrow_right,
+                                    //               color: white,
+                                    //               size: 30,
+                                    //             )),
+                                    // )
                                   ],
                                 ),
                               ),
-                              // Align(
-                              //   alignment: Alignment.centerRight,
-                              //   child: TextButton(
-                              //       onPressed: () {
-                              //         if (ordersInActivePlans[index]) {
-                              //           Navigator.push(
-                              //               context,
-                              //               CupertinoPageRoute(
-                              //                   builder: (BuildContext
-                              //                           context) =>
-                              //                       PlacedMealMenuOrders(
-                              //                           purchaseDetails:
-                              //                               activeMealPurchases[
-                              //                                   index],
-                              //                           plan:
-                              //                               activePurchaseMealPlans[
-                              //                                   index])));
-                              //         } else {
-                              //           Navigator.push(
-                              //               context,
-                              //               CupertinoPageRoute(
-                              //                   builder: (BuildContext
-                              //                           context) =>
-                              //                       PlaceMealMenuOrders(
-                              //                           placedFoodItems: [],
-                              //                           purchaseDetails:
-                              //                               activeMealPurchases[
-                              //                                   index],
-                              //                           plan:
-                              //                               activePurchaseMealPlans[
-                              //                                   index])));
-                              //         }
-                              //       },
-                              //       child: !ordersInActivePlans[index]
-                              //           ? Text(
-                              //               'Select Menu',
-                              //               style: TextStyle(
-                              //                 fontFamily: 'RobotoReg',
-                              //                 fontSize: 12,
-                              //                 fontWeight: FontWeight.bold,
-                              //                 color: defaultGreen,
-                              //               ),
-                              //             )
-                              //           : Icon(
-                              //               Icons.arrow_right,
-                              //               color: white,
-                              //               size: 30,
-                              //             )),
-                              // )
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ))
-              ],
-            ),
+                            ),
+                          );
+                        },
+                      ))
+                    ],
+                  ),
           )
         : Center(
-            child: SpinKitDoubleBounce(color: defaultGreen),
+            child: SpinKitThreeBounce(size: 32, color: defaultPurple),
           );
   }
 }

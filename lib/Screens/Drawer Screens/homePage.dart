@@ -334,33 +334,37 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           )),
                     )),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(10.0, 0, 10, 0),
-                  child: Column(
+                Flexible(
+                  fit: FlexFit.loose,
+                  flex: 4,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(10.0, 0, 10, 0),
+                    child: Column(
 //                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        consultationPackages[pos].subtitle,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontFamily: 'RobotoCondensedReg',
-                          fontSize: 11,
-                          fontWeight: FontWeight.normal,
-                          color: cardGray,
+                      children: [
+                        Text(
+                          consultationPackages[pos].subtitle,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontFamily: 'RobotoCondensedReg',
+                            fontSize: 11,
+                            fontWeight: FontWeight.normal,
+                            color: cardGray,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 10.0),
-                      Text(
-                        consultationPackages[pos].details,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontFamily: 'RobotoCondensedReg',
-                          fontSize: 11,
-                          fontWeight: FontWeight.normal,
-                          color: cardGray,
+                        SizedBox(height: 10.0),
+                        Text(
+                          consultationPackages[pos].details,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontFamily: 'RobotoCondensedReg',
+                            fontSize: 11,
+                            fontWeight: FontWeight.normal,
+                            color: cardGray,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 Spacer(),
@@ -797,12 +801,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Container(
                 width: double.infinity,
-                decoration: new BoxDecoration(
-                  image: new DecorationImage(
-                    image: new AssetImage('images/Group 4.png'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                decoration:
+                    new BoxDecoration(image: consultationHomePageBackground
+                        // new DecorationImage(
+                        //   image: new AssetImage('images/.png'),
+                        //   fit: BoxFit.cover,
+                        // ),
+                        ),
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
                   child: Column(

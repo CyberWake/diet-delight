@@ -29,13 +29,13 @@ class _MyAppState extends State<MyApp> {
     precacheImage(AssetImage('images/popup_background.jpg'), context);
     precacheImage(AssetImage("images/Group 7.png"), context);
     precacheImage(AssetImage("images/Group 57.png"), context);
-    precacheImage(AssetImage('images/user_dashboard_bg.jpg'), context);
     precacheImage(bmiBackground.image, context);
     precacheImage(question1Background.image, context);
     precacheImage(question2Background1.image, context);
     precacheImage(question2Background2.image, context);
     precacheImage(consultationBackground.image, context);
     precacheImage(selectConsultationBackgroundImage.image, context);
+    precacheImage(consultationHomePageBackground.image, context);
     return MaterialApp(
       initialRoute: '/',
       routes: {

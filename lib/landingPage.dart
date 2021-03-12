@@ -163,7 +163,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     image: AssetImage('images/order_history.jpg'),
                     fit: BoxFit.fitHeight),
               )
-            : page == 2 || page == 4 || page == 5
+            : page == 2 || page == 4 || page == 5 || page == 1
                 ? BoxDecoration(
                     image: DecorationImage(
                         image:
@@ -172,9 +172,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 : BoxDecoration(),
         child: Scaffold(
           key: _scaffoldKey,
-          backgroundColor: page == 2 || page == 3 || page == 4 || page == 5
-              ? Colors.transparent
-              : white,
+          backgroundColor:
+              page == 2 || page == 3 || page == 4 || page == 5 || page == 1
+                  ? Colors.transparent
+                  : white,
           appBar: AppBar(
             iconTheme: IconThemeData(
                 color: page == 0 || page == 1 || page == 3 || page == 4

@@ -76,7 +76,7 @@ class _PrePaymentState extends State<PrePayment> {
     if (item.flatDiscount != null) {
       return double.parse(item.flatDiscount);
     } else {
-      return total * double.parse(item.percentageDiscount);
+      return total * double.parse(item.percentageDiscount) / 100;
     }
   }
 
@@ -328,26 +328,28 @@ class _PrePaymentState extends State<PrePayment> {
                           //     color: white, size: 20),
                           title: couponCheck == true
                               ? TextFormField(
-                                  onChanged: (String account) {
-                                    couponController.text = account;
-                                    if (couponFocus.hasFocus == false &&
-                                        (couponController.text == "" ||
-                                            couponController.text == null)) {
-                                      setState(() {
-                                        couponCheck = false;
-                                      });
-                                    }
-                                  },
-                                  onFieldSubmitted: (done) {
-                                    couponController.text = done;
-                                    couponFocus.unfocus();
-                                    if (couponController.text == "" ||
-                                        couponController.text == null) {
-                                      setState(() {
-                                        couponCheck = false;
-                                      });
-                                    }
-                                  },
+                                  // onChanged: (String account) {
+                                  //   couponController.text = account;
+                                  //   print(couponController.text);
+                                  //   if (couponFocus.hasFocus == false &&
+                                  //       (couponController.text == "" ||
+                                  //           couponController.text == null)) {
+                                  //     setState(() {
+                                  //       couponCheck = false;
+                                  //     });
+                                  //   }
+                                  // },
+                                  // onFieldSubmitted: (done) {
+                                  //   couponController.text = done;
+                                  //   couponFocus.unfocus();
+                                  //   if (couponController.text == "" ||
+                                  //       couponController.text == null) {
+                                  //     setState(() {
+                                  //       couponCheck = false;
+                                  //     });
+                                  //   }
+                                  // },
+                                  controller: couponController,
                                   autofocus: true,
                                   style: questionnaireTitleStyle.copyWith(
                                       fontSize: 18,
@@ -376,18 +378,15 @@ class _PrePaymentState extends State<PrePayment> {
                           trailing: couponCheck == true
                               ? TextButton(
                                   onPressed: coupons[0].contains(
-                                              couponController.text) ==
-                                          false
-                                      ? () {
-                                          _scaffoldKey.currentState
-                                              .showSnackBar(SnackBar(
-                                            content: Text(
-                                                'Please enter a valid coupon code'),
-                                          ));
-                                        }
-                                      : () async {
+                                              couponController.text
+                                                  .toString()) ==
+                                          true
+                                      ? () async {
                                           int couponIndex = coupons[0]
                                               .indexOf(couponController.text);
+                                          setState(() {
+                                            couponFocus.unfocus();
+                                          });
                                           if (
                                               // DateTime.now().isBefore(
                                               //         DateTime.parse(coupons[1]
@@ -413,15 +412,35 @@ class _PrePaymentState extends State<PrePayment> {
                                                   'This coupon code has either expired or has reached maximum usage'),
                                             ));
                                           }
-                                        },
+                                        }
+                                      : couponController.text.toString() ==
+                                                  "" ||
+                                              couponController.text
+                                                      .toString() ==
+                                                  null
+                                          ? () {
+                                              setState(() {
+                                                couponCheck = false;
+                                              });
+                                            }
+                                          : () {
+                                              _scaffoldKey.currentState
+                                                  .showSnackBar(SnackBar(
+                                                content: Text(
+                                                    'Please enter a valid coupon code'),
+                                              ));
+                                            },
                                   child: Text('APPLY',
                                       style: questionnaireTitleStyle.copyWith(
                                           fontSize: 16)),
                                 )
                               : IconButton(
-                                  icon: Icon(Icons.arrow_forward_ios_rounded,
-                                      color: white, size: 28),
-                                  onPressed: () async {
+                                  icon: ImageIcon(
+                                      AssetImage(
+                                          'images/next_arrow_consult_page.png'),
+                                      color: white,
+                                      size: 24),
+                                  onPressed: () {
                                     setState(() {
                                       couponCheck = true;
                                     });
