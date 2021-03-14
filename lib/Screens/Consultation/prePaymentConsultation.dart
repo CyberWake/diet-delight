@@ -172,7 +172,7 @@ class _PrePaymentState extends State<PrePayment> {
                 color: questionnaireSelect,
               ),
             ),
-            title: Text('Book an Appointment',
+            title: Text('Book Appointment',
                 style: appBarTextStyle.copyWith(
                     fontFamily: 'RobotoReg',
                     color: questionnaireSelect,
@@ -477,33 +477,33 @@ class _PrePaymentState extends State<PrePayment> {
                                       style: billingTextStyle,
                                     ),
                                     Spacer(
-                                      flex: 7,
+                                      flex: 2,
                                     ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          right: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.075),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      NewQuestionnaire()));
-                                        },
-                                        child: Text('Change',
-                                            style:
-                                                addressChangeTextStyle.copyWith(
-                                                    fontSize: 14,
-                                                    color: defaultGreen)),
-                                      ),
-                                    ),
-                                    Spacer(),
-                                    SizedBox(
-                                      width: 0,
-                                    ),
+                                    // Padding(
+                                    //   padding: EdgeInsets.only(
+                                    //       right: MediaQuery.of(context)
+                                    //               .size
+                                    //               .width *
+                                    //           0.075),
+                                    //   child: GestureDetector(
+                                    //     onTap: () {
+                                    //       Navigator.push(
+                                    //           context,
+                                    //           MaterialPageRoute(
+                                    //               builder: (context) =>
+                                    //                   NewQuestionnaire()));
+                                    //     },
+                                    //     child: Text('Change',
+                                    //         style:
+                                    //             addressChangeTextStyle.copyWith(
+                                    //                 fontSize: 14,
+                                    //                 color: defaultGreen)),
+                                    //   ),
+                                    // ),
+                                    // Spacer(),
+                                    // SizedBox(
+                                    //   width: 0,
+                                    // ),
                                   ],
                                 ),
                                 SizedBox(
