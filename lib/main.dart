@@ -24,8 +24,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    precacheImage(AssetImage('images/user_dashboard_bg.jpg'), context);
-    precacheImage(AssetImage('images/order_history.jpg'), context);
+    precacheImage(AssetImage('images/bg1.jpg'), context);
+    precacheImage(AssetImage('images/bg13.jpg'), context);
     precacheImage(AssetImage('images/popup_background.jpg'), context);
     precacheImage(AssetImage("images/Group 7.png"), context);
     precacheImage(AssetImage("images/Group 57.png"), context);

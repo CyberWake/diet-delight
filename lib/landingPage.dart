@@ -160,14 +160,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         decoration: page == 3
             ? BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage('images/order_history.jpg'),
+                    image: AssetImage('images/bg13.jpg'),
                     fit: BoxFit.fitHeight),
               )
             : page == 2 || page == 4 || page == 5 || page == 1
                 ? BoxDecoration(
                     image: DecorationImage(
-                        image:
-                            AssetImage('images/questionnaire_background.jpg'),
+                        image: AssetImage('images/bg1.jpg'),
                         fit: BoxFit.fitHeight))
                 : BoxDecoration(),
         child: Scaffold(

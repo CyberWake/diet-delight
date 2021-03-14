@@ -544,7 +544,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: double.infinity,
                 decoration: new BoxDecoration(
                   image: new DecorationImage(
-                    image: new AssetImage('images/Group 7.png'),
+                    image: new AssetImage('images/bg2.jpg'),
                     fit: BoxFit.cover,
                   ),
                 ),

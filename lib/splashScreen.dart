@@ -4,6 +4,7 @@ import 'dart:core';
 import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -61,52 +62,42 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
           Container(
-      decoration: BoxDecoration(
-        color: Color(0xFF77838F).withOpacity(0.2),
-    ),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("images/bg12.jpg"), fit: BoxFit.cover),
+            ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Expanded(
-                  flex: 2,
-                  child: Container(
-                      child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        child: Container(
-                            child: Image.asset(
-                          'images/Group 66.png',
-                          width: 300.0,
-                          height: 100.0,
-                        )),
-                        radius: 100.0,
-                      ),
-                      SizedBox(
-                        height: 24,
-                      ),
-                    ],
-                  )),
-                ),
+                    flex: 3,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      child: Container(
+                          child: Image.asset(
+                        'images/Group 66.png',
+                        width: 300.0,
+                        height: 100.0,
+                      )),
+                      radius: 100.0,
+                    )),
+                Spacer(flex: 3),
                 Expanded(
                   flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SpinKitChasingDots(
-                        color: defaultPurple,
-                        size: 36,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 20.0),
-                      ),
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 24.0),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          SpinKitChasingDots(
+                            color: defaultPurple,
+                            size: 36,
+                          ),
+                        ]),
                   ),
                 ),
               ],
