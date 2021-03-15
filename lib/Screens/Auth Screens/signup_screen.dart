@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class SignUp extends StatefulWidget {
   final String token;
   var height;
-  SignUp({this.token,this.height});
+  SignUp({this.token, this.height});
   @override
   _SignUpState createState() => _SignUpState();
 }
@@ -85,7 +85,6 @@ class _SignUpState extends State<SignUp> {
                                 padding:
                                     const EdgeInsets.fromLTRB(20, 5, 20, 5),
                                 child: TextFormField(
-
                                     onChanged: (done) {
                                       firstName.text = done;
                                     },
@@ -328,7 +327,6 @@ class _SignUpState extends State<SignUp> {
                                 confPass.unfocus();
                                 FocusScope.of(context).requestFocus(submit);
                               },
-
                               style: authInputTextStyle,
                               keyboardType: TextInputType.text,
                               obscureText: true,

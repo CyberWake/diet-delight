@@ -11,7 +11,7 @@ import 'package:page_transition/page_transition.dart';
 class Login extends StatefulWidget {
   final String token;
   var height;
-  Login({this.token,this.height});
+  Login({this.token, this.height});
   @override
   _LoginState createState() => _LoginState();
 }
@@ -220,12 +220,12 @@ class _LoginState extends State<Login> {
                   },
                   child: initiated
                       ? Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: SpinKitChasingDots(
-                          color: Colors.white,
-                          size: 25,
-                  ),
-                      )
+                          padding: const EdgeInsets.all(6.0),
+                          child: SpinKitChasingDots(
+                            color: Colors.white,
+                            size: 25,
+                          ),
+                        )
                       : Text(
                           'SIGN IN',
                           style: TextStyle(

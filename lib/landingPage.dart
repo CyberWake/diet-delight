@@ -15,6 +15,7 @@ import 'package:diet_delight/Screens/Drawer%20Screens/settingsPrivacyPolicy.dart
 import 'package:diet_delight/Screens/Drawer%20Screens/settingsSecuritiesPage.dart';
 import 'package:diet_delight/Screens/Drawer%20Screens/settingsTermsAndConditions.dart';
 import 'package:diet_delight/Screens/coupon_code.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -131,6 +132,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   drawerOnTaps(int index) async {
+    if (index == 2) {
+      //Todod
+      print('index is fav');
+      Api.favourites = await Api.instance.getFavourites();
+    }
     if (index == page) {
       Navigator.pop(context);
     } else if (index != 6) {
@@ -208,7 +214,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         fontWeight: FontWeight.bold)),
             leading: IconButton(
               icon: Icon(Icons.menu),
-              onPressed: () => _scaffoldKey.currentState.openDrawer(),
+              onPressed: () {
+                WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
+                _scaffoldKey.currentState.openDrawer();
+              },
             ),
             actions: page == 0
                 ? [

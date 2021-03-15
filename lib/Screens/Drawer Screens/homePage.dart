@@ -336,7 +336,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     )),
                 Flexible(
                   fit: FlexFit.loose,
-                  flex: 4,
+                  flex: 13,
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(10.0, 0, 10, 0),
                     child: Column(
@@ -353,14 +353,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         SizedBox(height: 10.0),
-                        Text(
-                          consultationPackages[pos].details,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontFamily: 'RobotoCondensedReg',
-                            fontSize: 11,
-                            fontWeight: FontWeight.normal,
-                            color: cardGray,
+                        Expanded(
+                          child: Text(
+                            consultationPackages[pos].details,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontFamily: 'RobotoCondensedReg',
+                              fontSize: 11,
+                              fontWeight: FontWeight.normal,
+                              color: cardGray,
+                            ),
                           ),
                         ),
                       ],
