@@ -31,7 +31,7 @@ class _ResetPasswordState extends State<ResetPassword> {
         body: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage('images/Group 7.png'), fit: BoxFit.cover)),
+                  image: AssetImage('images/bg2.jpg'), fit: BoxFit.cover)),
           child: Stack(children: [
             Column(
               children: [

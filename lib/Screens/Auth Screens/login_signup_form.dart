@@ -16,17 +16,18 @@ class _AfterSplashState extends State<AfterSplash>
   int tabSel = 0;
   @override
   void initState() {
-    _tabController = new TabController(length: 2, vsync: this)..addListener(() {
-      if(_tabController.index == 0){
-        setState(() {
-          tabSel = 0;
-        });
-      }else{
-        setState(() {
-          tabSel = 1;
-        });
-      }
-    });
+    _tabController = new TabController(length: 2, vsync: this)
+      ..addListener(() {
+        if (_tabController.index == 0) {
+          setState(() {
+            tabSel = 0;
+          });
+        } else {
+          setState(() {
+            tabSel = 1;
+          });
+        }
+      });
     super.initState();
   }
 
@@ -40,10 +41,7 @@ class _AfterSplashState extends State<AfterSplash>
         body: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage('images/Group 7.png'),
-                  fit: BoxFit.cover
-              )
-          ),
+                  image: AssetImage('images/bg2.jpg'), fit: BoxFit.cover)),
           child: ListView(
             children: [
               SizedBox(
@@ -81,15 +79,23 @@ class _AfterSplashState extends State<AfterSplash>
                     controller: _tabController,
                     tabs: List.generate(2, (index) {
                       return Tab(
-                          child: index == 0 ? Text('SIGN IN') : Text('SIGN UP'));
+                          child:
+                              index == 0 ? Text('SIGN IN') : Text('SIGN UP'));
                     })),
               ),
-              tabSel == 0 ?  Container(
-                margin: EdgeInsets.all(10),
-                  child: Login(token: accessToken,height: 2.5 * devHeight / 4  ,)) :
-              Container( margin: EdgeInsets.all(10),
-                  child: SignUp(token: accessToken,height:  3.6* devHeight / 4,)),
-
+              tabSel == 0
+                  ? Container(
+                      margin: EdgeInsets.all(10),
+                      child: Login(
+                        token: accessToken,
+                        height: 2.5 * devHeight / 4,
+                      ))
+                  : Container(
+                      margin: EdgeInsets.all(10),
+                      child: SignUp(
+                        token: accessToken,
+                        height: 3.6 * devHeight / 4,
+                      )),
             ],
           ),
         ),

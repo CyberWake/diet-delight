@@ -110,7 +110,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage('images/Group 7.png'), fit: BoxFit.fitHeight)),
+              image: AssetImage('images/bg2.jpg'), fit: BoxFit.fitHeight)),
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.transparent,

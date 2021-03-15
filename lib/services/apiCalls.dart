@@ -81,7 +81,7 @@ class Api {
       HttpHeaders.contentTypeHeader: "application/json",
     };
     String body = convert.jsonEncode(registerData.toMap());
-    print(body);
+    print('req body: $body');
     final response =
         await http.post(uri + '/api/v1/register', headers: headers, body: body);
     if (response.statusCode == 200) {
@@ -92,9 +92,11 @@ class Api {
       bool result = await login(loginDetails);
       return result;
     } else if (response.statusCode == 400) {
+      print('Fail1, respone body: ${response.body}');
       print(response.statusCode);
       return false;
     } else {
+      print('Fail2, respone body: ${response.body}');
       print(response.statusCode);
       return false;
     }
@@ -123,7 +125,7 @@ class Api {
       await getUserInfo();
       return true;
     } on Exception catch (e) {
-      print(e.toString());
+      print('error in loggin in : ${e.toString()}');
       return false;
     }
   }
