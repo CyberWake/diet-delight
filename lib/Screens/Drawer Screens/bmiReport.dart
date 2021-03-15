@@ -30,6 +30,27 @@ class _BmiReportState extends State<BmiReport> {
   List<String> calories_female = ['1400-1600', '1200', '1200', '1400'];
   final _apiCall = Api.instance;
 
+  questionnaireComplete() async {
+    RegModel updateUserData = Api.userInfo;
+    updateUserData.setQuestionnaireStatus(1);
+    bool result = false;
+    result = await _apiCall.putUserInfo(updateUserData);
+    if (result) {
+      print("Questionnaire posted");
+    } else {
+      print("Questionnaire post failed");
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    if (widget.questionnaire) {
+      questionnaireComplete();
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var devWidth = MediaQuery.of(context).size.width;
@@ -268,7 +289,7 @@ class _BmiReportState extends State<BmiReport> {
                                                                 Radius.circular(
                                                                     30.0)),
                                                       ),
-                                                      height: devHeight * 0.3,
+                                                      height: devHeight * 0.35,
                                                       child: Center(
                                                         child: Column(
                                                           mainAxisAlignment:
@@ -427,7 +448,57 @@ class _BmiReportState extends State<BmiReport> {
                                 ),
                               ),
                             )
-                          : SizedBox(),
+                          : Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                              child: SizedBox(
+                                width: double.infinity,
+                                height: 50.0,
+                                child: TextButton(
+                                  onPressed: () async {
+                                    RegModel updateUserData = Api.userInfo;
+                                    updateUserData.addBmiInfo(
+                                        widget.age,
+                                        widget.gender,
+                                        widget.bmi,
+                                        widget.gender == 0
+                                            ? int.parse(
+                                                calories_male[widget.report])
+                                            : int.parse(calories_female[
+                                                widget.report]));
+                                    bool result = false;
+                                    result = await _apiCall
+                                        .putUserInfo(updateUserData);
+                                    if (result) {
+                                      print('BMI Updated Successfully');
+                                    } else {
+                                      print(
+                                          'There was an issue updating the BMI');
+                                    }
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                HomePage(openPage: 1)));
+                                  },
+                                  child: Text(
+                                    'DONE',
+                                    style: TextStyle(
+                                      fontFamily: 'RobotoReg',
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  style: TextButton.styleFrom(
+                                      backgroundColor: widget.gender == 0
+                                          ? defaultGreen
+                                          : defaultPurple,
+                                      shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(25)))),
+                                ),
+                              ),
+                            ),
                     ],
                   ),
                 ),

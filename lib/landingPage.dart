@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     Icon(Icons.dashboard, size: 24, color: defaultGreen),
     Icon(Icons.favorite, size: 24, color: defaultGreen),
     Icon(Icons.history, size: 24, color: defaultGreen),
-    Icon(Icons.notifications, size: 24, color: defaultGreen),
+    // Icon(Icons.notifications, size: 24, color: defaultGreen),
     Icon(Icons.settings, size: 24, color: defaultGreen),
     Icon(Icons.email, size: 24, color: defaultGreen),
     Icon(Icons.logout, size: 24, color: questionnaireSelect),
@@ -69,7 +69,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     ['Profile', 'Ongoing Meal Plans'],
     [],
     ['Consultation Orders', 'Meal Plan Orders'],
-    [],
+    //[],
     [
       'Security',
       'Terms and Conditions',
@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       _pageController2.index = widget.tabIndex;
     }
     _pageController3 = TabController(length: 4, vsync: this);
-    if (page == 5) {
+    if (page == 4) {
       _pageController3.index = widget.tabIndex;
     }
     initPlatformState();
@@ -133,14 +133,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   drawerOnTaps(int index) async {
     if (index == page) {
       Navigator.pop(context);
-    } else if (index != 7) {
+    } else if (index != 6) {
       Navigator.pop(context);
       setState(() {
         page = index;
       });
       print(page);
     }
-    if (index == 7) {
+    if (index == 6) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       bool result = await prefs.clear();
       if (result) {
@@ -160,23 +160,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         decoration: page == 3
             ? BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage('images/order_history.jpg'),
+                    image: AssetImage('images/bg13.jpg'),
                     fit: BoxFit.fitHeight),
               )
-            : page == 5 || page == 6
+            : page == 2 || page == 4 || page == 5 || page == 1
                 ? BoxDecoration(
                     image: DecorationImage(
-                        image:
-                            AssetImage('images/questionnaire_background.jpg'),
+                        image: AssetImage('images/bg1.jpg'),
                         fit: BoxFit.fitHeight))
                 : BoxDecoration(),
         child: Scaffold(
           key: _scaffoldKey,
           backgroundColor:
-              page == 3 || page == 5 || page == 6 ? Colors.transparent : white,
+              page == 2 || page == 3 || page == 4 || page == 5 || page == 1
+                  ? Colors.transparent
+                  : white,
           appBar: AppBar(
             iconTheme: IconThemeData(
-                color: page == 0 || page == 3 || page == 5 || page == 6
+                color: page == 0 || page == 1 || page == 3 || page == 4
                     ? defaultGreen
                     : white),
             elevation: 2.0,
@@ -185,11 +186,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     bottomLeft: Radius.circular(20.0),
                     bottomRight: Radius.circular(20.0))),
             bottomOpacity: 1,
-            shadowColor: page == 3 || page == 5 || page == 6
+            shadowColor: page == 1 || page == 3 || page == 4
                 ? (Color(0x26000000))
                 : Colors.transparent,
-            backgroundColor:
-                page == 0 || page == 5 || page == 6 ? white : white,
+            backgroundColor: page == 0 || page == 1 || page == 3 || page == 4
+                ? white
+                : defaultGreen,
             centerTitle: page == 0 ? true : false,
             title: page == 0
                 ? Image.asset(
@@ -200,12 +202,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 : Text(pageTitle[page],
                     style: appBarTextStyle.copyWith(
                         fontFamily: 'RobotoReg',
-                        color: page == 3 || page == 5 || page == 6
+                        color: page == 1 || page == 3 || page == 4
                             ? defaultGreen
-                            : defaultGreen,
+                            : white,
                         fontWeight: FontWeight.bold)),
             leading: IconButton(
-              icon: Icon(Icons.menu, color: defaultGreen),
+              icon: Icon(Icons.menu),
               onPressed: () => _scaffoldKey.currentState.openDrawer(),
             ),
             actions: page == 0
@@ -243,96 +245,129 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                   ]
                 : [],
-            bottom: page == 1 || page == 3 || page == 5
+            bottom: page == 1 || page == 3 || page == 4
                 ? TabBar(
-                    controller: page == 5
+                    controller: page == 4
                         ? _pageController3
                         : page == 3
                             ? _pageController2
                             : _pageController1,
                     isScrollable: true,
-                    onTap: (index) => setState(() => selectedIndex = index),
+                    onTap: (index) async {},
                     labelStyle: selectedTab.copyWith(
-                        fontSize: 18,
+                        fontSize: 16,
                         color: defaultPurple,
                         fontWeight: FontWeight.w600),
-                    indicatorColor: white,
-                    indicatorWeight: 1.0,
+                    indicatorColor: defaultGreen,
+                    indicatorWeight: 3.0,
                     indicatorSize: TabBarIndicatorSize.tab,
                     labelColor: defaultPurple,
-                    labelPadding: EdgeInsets.symmetric(horizontal: 13),
+                    labelPadding: page == 3
+                        ? EdgeInsets.symmetric(horizontal: 25)
+                        : page == 1
+                            ? EdgeInsets.symmetric(horizontal: 30)
+                            : EdgeInsets.symmetric(horizontal: 15),
                     unselectedLabelStyle: unSelectedTab.copyWith(
-                        fontSize: 18,
+                        fontSize: 16,
                         color: questionnaireDisabled,
                         fontWeight: FontWeight.w400),
                     unselectedLabelColor: questionnaireDisabled,
                     tabs: List.generate(tabItemsTitle[page].length, (index) {
-                      return Row(
-                        children: [
-                          Tab(
-                            // text: tabItemsTitle[page][index],
-
-                            // text: tabItemsTitle[page][index],
-                            child: Column(
-                              children: [
-                                SizedBox(height: 8),
-                                Text(
-                                  tabItemsTitle[page][index],
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                                SizedBox(height: 8),
-                                selectedIndex == index
-                                    ? Container(
-                                        width: _textSize(
-                                                    tabItemsTitle[page][index],
-                                                    TextStyle(fontSize: 16))
-                                                .width +
-                                            4,
-                                        height: 3,
-                                        color: defaultGreen,
-                                      )
-                                    : Container(),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                              width: double.parse(index.toString()) !=
-                                      double.parse(
-                                          (tabItemsTitle[page].length - 1)
-                                              .toString())
-                                  ? 100
-                                  : 0),
-                        ],
+                      return Tab(
+                        text: tabItemsTitle[page][index],
                       );
                     }))
-                // ? TabBar(
-                // controller: page == 5
-                //     ? _pageController3
-                //     : page == 3
-                //     ? _pageController2
-                //     : _pageController1,
-                // isScrollable: true,
-                // onTap: (index) async {},
-                // labelStyle: selectedTab.copyWith(
-                //     fontSize: 18,
-                //     color: defaultPurple,
-                //     fontWeight: FontWeight.w600),
-                // indicatorColor: defaultGreen,
-                // indicatorWeight: 3.0,
-                // indicatorSize: TabBarIndicatorSize.tab,
-                // labelColor: defaultPurple,
-                // labelPadding: EdgeInsets.symmetric(horizontal: 13),
-                // unselectedLabelStyle: unSelectedTab.copyWith(
-                //     fontSize: 18,
-                //     color: questionnaireDisabled,
-                //     fontWeight: FontWeight.w400),
-                // unselectedLabelColor: questionnaireDisabled,
-                // tabs: List.generate(tabItemsTitle[page].length, (index) {
-                //   return Tab(
-                //     text: tabItemsTitle[page][index],
-                //   );
-                // }))
                 : PreferredSize(child: Container(), preferredSize: Size(0, 0)),
+            // bottom: page == 1 || page == 3 || page == 5
+            //     ? TabBar(
+            //         controller: page == 5
+            //             ? _pageController3
+            //             : page == 3
+            //                 ? _pageController2
+            //                 : _pageController1,
+            //         isScrollable: true,
+            //         onTap: (index) => setState(() => selectedIndex = index),
+            //         labelStyle: selectedTab.copyWith(
+            //             fontSize: 18,
+            //             color: defaultPurple,
+            //             fontWeight: FontWeight.w600),
+            //         indicatorColor: white,
+            //         indicatorWeight: 1.0,
+            //         indicatorSize: TabBarIndicatorSize.tab,
+            //         labelColor: defaultPurple,
+            //         labelPadding: EdgeInsets.symmetric(horizontal: 13),
+            //         unselectedLabelStyle: unSelectedTab.copyWith(
+            //             fontSize: 18,
+            //             color: questionnaireDisabled,
+            //             fontWeight: FontWeight.w400),
+            //         unselectedLabelColor: questionnaireDisabled,
+            //         tabs: List.generate(tabItemsTitle[page].length, (index) {
+            //           return Row(
+            //             children: [
+            //               Tab(
+            //                 // text: tabItemsTitle[page][index],
+            //
+            //                 // text: tabItemsTitle[page][index],
+            //                 child: Column(
+            //                   children: [
+            //                     SizedBox(height: 8),
+            //                     Text(
+            //                       tabItemsTitle[page][index],
+            //                       style: TextStyle(fontSize: 16),
+            //                     ),
+            //                     SizedBox(height: 8),
+            //                     selectedIndex == index
+            //                         ? Container(
+            //                             width: _textSize(
+            //                                         tabItemsTitle[page][index],
+            //                                         TextStyle(fontSize: 16))
+            //                                     .width +
+            //                                 4,
+            //                             height: 3,
+            //                             color: defaultGreen,
+            //                           )
+            //                         : Container(),
+            //                   ],
+            //                 ),
+            //               ),
+            //               SizedBox(
+            //                   width: double.parse(index.toString()) !=
+            //                           double.parse(
+            //                               (tabItemsTitle[page].length - 1)
+            //                                   .toString())
+            //                       ? 100
+            //                       : 0),
+            //             ],
+            //           );
+            //         }))
+            // ? TabBar(
+            // controller: page == 5
+            //     ? _pageController3
+            //     : page == 3
+            //     ? _pageController2
+            //     : _pageController1,
+            // isScrollable: true,
+            // onTap: (index) async {},
+            // labelStyle: selectedTab.copyWith(
+            //     fontSize: 18,
+            //     color: defaultPurple,
+            //     fontWeight: FontWeight.w600),
+            // indicatorColor: defaultGreen,
+            // indicatorWeight: 3.0,
+            // indicatorSize: TabBarIndicatorSize.tab,
+            // labelColor: defaultPurple,
+            // labelPadding: EdgeInsets.symmetric(horizontal: 13),
+            // unselectedLabelStyle: unSelectedTab.copyWith(
+            //     fontSize: 18,
+            //     color: questionnaireDisabled,
+            //     fontWeight: FontWeight.w400),
+            // unselectedLabelColor: questionnaireDisabled,
+            // tabs: List.generate(tabItemsTitle[page].length, (index) {
+            //   return Tab(
+            //     text: tabItemsTitle[page][index],
+            //   );
+            // }))
+            // : PreferredSize(child: Container(), preferredSize: Size(0, 0)),
           ),
           drawer: ClipRRect(
             borderRadius: BorderRadius.only(

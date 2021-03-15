@@ -37,8 +37,6 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
   String name;
 
   getUserInfo() async {
-
-
     name = Api.userInfo.firstName + ' ' + Api.userInfo.lastName;
     if (Api.userInfo.addressLine1 != null) {
       addressPrimaryLine1.text = Api.userInfo.addressLine1;
@@ -54,9 +52,8 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
     }
     selectedAddressLine1 = addressPrimaryLine1.text;
     selectedAddressLine2 = addressPrimaryLine2.text;
-    concatenatedAddress = addressPrimaryLine1.text +
-        ',\n' +
-        addressPrimaryLine2.text;
+    concatenatedAddress =
+        addressPrimaryLine1.text + ',\n' + addressPrimaryLine2.text;
     isAddressSelected = true;
 
     selectedAddressIndex = 0;
@@ -64,10 +61,9 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
     setState(() {
       afterNoonValue = val;
     });
-    setState(() {
-
-    });
+    setState(() {});
   }
+
   int afterNoonValue = 0;
 
   @override
@@ -77,7 +73,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
     var temp = DateTime.now().toLocal();
     dateSelected = temp.add(Duration(days: 2));
     date =
-    '${dateSelected.year.toString()}-${dateSelected.month.toString().padLeft(2, '0')}-${dateSelected.day.toString().padLeft(2, '0')}';
+        '${dateSelected.year.toString()}-${dateSelected.month.toString().padLeft(2, '0')}-${dateSelected.day.toString().padLeft(2, '0')}';
     getUserInfo();
 
     if (widget.categories == null) {
@@ -98,6 +94,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
           ]
         : selectedDays = [true, true, true, true, true, false, false];
   }
+
   final _apiCall = Api.instance;
 
   callback(address) {
@@ -113,9 +110,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage('images/Group 7.png'),
-              fit: BoxFit.fitHeight
-          ) ),
+              image: AssetImage('images/Group 7.png'), fit: BoxFit.fitHeight)),
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.transparent,
@@ -136,17 +131,16 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
               color: defaultGreen,
             ),
           ),
-          title: Text('Subscribe your meal plan', style: appBarTextStyle.copyWith(
-            color: defaultGreen
-          )),
+          title: Text('Subscribe your meal plan',
+              style: appBarTextStyle.copyWith(color: defaultGreen)),
         ),
         body: Container(
           padding: const EdgeInsets.only(left: 30.0, right: 20),
-
           child: ListView(
-
             children: [
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.min,
@@ -167,17 +161,21 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                             height: 10,
                           ),
                           Text(
-                            selDays.contains("Sun") &&   selDays.contains("Sat")  ?
-                            widget.mealPackage.duration.toString() +" day meal plan\nwith weekend" :
-                            widget.mealPackage.duration.toString() +" day meal plan\nwithout weekend"
-                            ,
+                            selDays.contains("Sun") && selDays.contains("Sat")
+                                ? widget.mealPackage.duration.toString() +
+                                    " day meal plan\nwith weekend"
+                                : widget.mealPackage.duration.toString() +
+                                    " day meal plan\nwithout weekend",
                             style: descriptionTextStyle,
                             maxLines: 4,
                           ),
                           SizedBox(
                             height: 4,
                           ),
-                          Text(widget.categories.trim(),style: descriptionTextStyle,),
+                          Text(
+                            widget.categories.trim(),
+                            style: descriptionTextStyle,
+                          ),
                         ],
                       ),
                     ),
@@ -206,252 +204,281 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                 ],
               ),
               SizedBox(height: 40),
-             Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 15),
-               child: Container(
-                 decoration: BoxDecoration(
-                   color: formBackground,
-                   borderRadius: BorderRadius.circular(30)
-                 ),
-                 child: Padding(
-                   padding: const EdgeInsets.symmetric(vertical: 20),
-                   child: Column(
-                     mainAxisSize: MainAxisSize.max,
-                     crossAxisAlignment: CrossAxisAlignment.start,
-                     children: [
-                       Text(
-                         'Days of the week',
-                         style: selectedTab,
-                       ),
-                       Padding(
-                         padding: const EdgeInsets.only(
-                             left: 10.0, top: 10, right: 0, bottom: 25),
-                         child: Text(
-                           'Days of the week you want your food to be delivered.',
-                           style: selectedTab.copyWith(color: Colors.grey, fontSize: 14),
-                         ),
-                       ),
-                       Padding(
-                         padding: const EdgeInsets.only(left: 0.0, right: 0,bottom: 5),
-                         child: Row(
-                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                           children: List.generate(
-                               4,
-                                   (index) => GestureDetector(
-                                 onTap: () {
-                                   if (selectedDays[index] == true) {
-                                     setState(() {
-                                       selectedDays[index] = false;
-                                       count--;
-                                     });
-                                     print('unmarking $count');
-                                   } else if (selectedDays[index] == false) {
-                                     if (count < widget.weekDaysSelected) {
-                                       setState(() {
-                                         selectedDays[index] = true;
-                                         count++;
-                                       });
-                                       print('marking $count');
-                                     } else {
-                                       _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                           content: Text(
-                                               'Change the Meal Subscription plan to with weekends or change the week days selected')));
-                                     }
-                                   }
-                                 },
-                                 child: Container(
-                                   height: 45,
-                                   width: 45,
-                                   decoration: BoxDecoration(
-                                       shape: BoxShape.circle,
-                                       color:
-                                       selectedDays[index] ? defaultGreen : white,
-                                       border: Border.all(
-                                           color: selectedDays[index]
-                                               ? white
-                                               : Color.fromRGBO(144, 144, 144, 1).withOpacity(0.5)),
-                                     boxShadow: [
-                                       BoxShadow(
-                                         blurRadius:   selectedDays[index]  ? 0 : 4,
-                                         color: Colors.black.withOpacity(0.25),
-                                         spreadRadius: 0,
-                                         offset:  selectedDays[index]  ?  const Offset(0, 0):const Offset(0, 4),
-                                       )
-                                     ],
-                                   ),
-                                   child: Center(
-                                     child: Text(
-                                       days[index],
-                                       style: TextStyle(
-                                           fontSize: 14,
-                                           color: selectedDays[index]
-                                               ? Colors.white
-                                               : defaultGreen),
-                                     ),
-                                   ),
-                                 ),
-                               )),
-                         ),
-                       ),
-                       Padding(
-                         padding: const EdgeInsets.symmetric(horizontal: 35.0,vertical: 5),
-                         child: Row(
-                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                           children: List.generate(
-                               3,
-                                   (index) => Padding(
-                                 padding: const EdgeInsets.only(top: 10.0),
-                                 child: GestureDetector(
-                                   onTap: () {
-                                     if (selectedDays[index + 4] == true) {
-                                       setState(() {
-                                         selectedDays[index + 4] = false;
-                                         count--;
-                                       });
-                                       print('unmarking $count');
-                                     } else if (selectedDays[index + 4] == false) {
-                                       if (count < widget.weekDaysSelected) {
-                                         setState(() {
-                                           selectedDays[index + 4] = true;
-                                           count++;
-                                         });
-                                         print('marking $count');
-                                       } else {
-                                         _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                             content: Text(
-                                                 'Change the Meal Subscription plan to with weekends or change the week days selected')));
-                                       }
-                                     }
-                                   },
-                                   child: Container(
-                                     height: 45,
-                                     width: 45,
-                                     decoration: BoxDecoration(
-                                       shape: BoxShape.circle,
-                                       color:
-                                       selectedDays[index+4] ? defaultGreen : white,
-                                       border: Border.all(
-                                           color: selectedDays[index+4]
-                                               ? white
-                                               : Color.fromRGBO(144, 144, 144, 1).withOpacity(0.5)),
-                                       boxShadow: [
-                                         BoxShadow(
-                                           blurRadius:   selectedDays[index+4]  ? 0 : 4,
-                                           color: Colors.black.withOpacity(0.25),
-                                           spreadRadius: 0,
-                                           offset:  selectedDays[index+4]  ?  const Offset(0, 0):const Offset(0, 4),
-                                         )
-                                       ],
-                                     ),
-                                     child: Center(
-                                       child: Text(
-                                         days[index + 4],
-                                         style: TextStyle(
-                                             fontSize: 14,
-                                             color: selectedDays[index + 4]
-                                                 ? Colors.white
-                                                 : defaultGreen),
-                                       ),
-                                     ),
-                                   ),
-                                 ),
-                               )),
-                         ),
-                       ),
-                       SizedBox(height: 20),
-                       Container(
-                         height: 40,
-                         margin: EdgeInsets.symmetric(horizontal: 30),
-                         decoration: BoxDecoration(
-                             color: Colors.white,
-                             borderRadius: BorderRadius.circular(10),
-                           boxShadow: [
-                             BoxShadow(
-                               color: Colors.grey.withOpacity(0.5),
-                               spreadRadius: 1,
-                               blurRadius: 2,
-                               offset: Offset(0, 0), // changes position of shadow
-                             ),
-                           ],
-                         ),
-                         width: double.infinity,
-                         child: GestureDetector(
-                           onTap: () async {
-                             DateTime selectedDateTime = await showRoundedDatePicker(
-                                 context: context,
-                                 background: Colors.white,
-                                 styleDatePicker: MaterialRoundedDatePickerStyle(
-                                   textStyleMonthYearHeader: TextStyle(
-                                       fontSize: 18,
-                                       color: defaultPurple,
-                                       fontWeight: FontWeight.normal),
-                                   paddingMonthHeader: EdgeInsets.only(top: 10),
-                                   colorArrowNext: defaultPurple,
-                                   colorArrowPrevious: defaultPurple,
-                                   textStyleButtonPositive: TextStyle(
-                                       fontSize: 14,
-                                       color: defaultPurple,
-                                       fontWeight: FontWeight.bold),
-                                   textStyleButtonNegative: TextStyle(
-                                       fontSize: 14,
-                                       color: inactivePurple,
-                                       fontWeight: FontWeight.bold),
-                                 ),
-                                 theme: ThemeData(
-                                   primaryColor: defaultPurple,
-                                   accentColor: defaultGreen,
-                                   dialogBackgroundColor: Colors.white,
-                                   textTheme: TextTheme(
-                                     caption: TextStyle(color: defaultPurple),
-                                   ),
-                                   disabledColor: formFill,
-                                   accentTextTheme: TextTheme(),
-                                 ),
-                                 initialDate:
-                                 dateSelected ?? today.add(Duration(days: 2)),
-                                 firstDate: DateTime.now().toLocal().add(Duration(days: 1)));
-                             if (selectedDateTime != null) {
-                               setState(() {
-                                 dateSelected = selectedDateTime;
-                                 date =
-                                 '${dateSelected.year.toString()}-${dateSelected.month.toString().padLeft(2, '0')}-${dateSelected.day.toString().padLeft(2, '0')}';
-                               });
-                             }
-                             print(date);
-                           },
-                           child: Row(
-                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                             children: [
-                               Text("First Delivery",style: appBarTextStyle.copyWith(
-                                   color: defaultGreen,
-                                   fontSize: 18
-                               ),),
-                               Text(
-                                 DateFormat.E().format(dateSelected ??
-                                     today.add(Duration(days: 2))) +
-                                     ', ' +
-                                     DateFormat.MMM().add_d().format(
-                                         dateSelected ??
-                                             today.add(Duration(days: 2))),
-                                 style: TextStyle(
-                                     fontFamily: 'RobotoCondensedReg',
-                                     fontSize: 18,
-                                     color: defaultGreen),
-                               ),
-                             ],
-                           ),
-                         ),
-                       ),
-                     ],
-                   ),
-                 ),
-               ),
-             ),
-
-
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: formBackground,
+                      borderRadius: BorderRadius.circular(30)),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Days of the week',
+                          style: selectedTab,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 10.0, top: 10, right: 0, bottom: 25),
+                          child: Text(
+                            'Days of the week you want your food to be delivered.',
+                            style: selectedTab.copyWith(
+                                color: Colors.grey, fontSize: 14),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 0.0, right: 0, bottom: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: List.generate(
+                                4,
+                                (index) => GestureDetector(
+                                      onTap: () {
+                                        if (selectedDays[index] == true) {
+                                          setState(() {
+                                            selectedDays[index] = false;
+                                            count--;
+                                          });
+                                          print('unmarking $count');
+                                        } else if (selectedDays[index] ==
+                                            false) {
+                                          if (count < widget.weekDaysSelected) {
+                                            setState(() {
+                                              selectedDays[index] = true;
+                                              count++;
+                                            });
+                                            print('marking $count');
+                                          } else {
+                                            _scaffoldKey.currentState
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        'Change the Meal Subscription plan to with weekends or change the week days selected')));
+                                          }
+                                        }
+                                      },
+                                      child: Container(
+                                        height: 45,
+                                        width: 45,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: selectedDays[index]
+                                              ? defaultGreen
+                                              : white,
+                                          border: Border.all(
+                                              color: selectedDays[index]
+                                                  ? white
+                                                  : Color.fromRGBO(
+                                                          144, 144, 144, 1)
+                                                      .withOpacity(0.5)),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              blurRadius:
+                                                  selectedDays[index] ? 0 : 4,
+                                              color: Colors.black
+                                                  .withOpacity(0.25),
+                                              spreadRadius: 0,
+                                              offset: selectedDays[index]
+                                                  ? const Offset(0, 0)
+                                                  : const Offset(0, 4),
+                                            )
+                                          ],
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            days[index],
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: selectedDays[index]
+                                                    ? Colors.white
+                                                    : defaultGreen),
+                                          ),
+                                        ),
+                                      ),
+                                    )),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 35.0, vertical: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: List.generate(
+                                3,
+                                (index) => Padding(
+                                      padding: const EdgeInsets.only(top: 10.0),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          if (selectedDays[index + 4] == true) {
+                                            setState(() {
+                                              selectedDays[index + 4] = false;
+                                              count--;
+                                            });
+                                            print('unmarking $count');
+                                          } else if (selectedDays[index + 4] ==
+                                              false) {
+                                            if (count <
+                                                widget.weekDaysSelected) {
+                                              setState(() {
+                                                selectedDays[index + 4] = true;
+                                                count++;
+                                              });
+                                              print('marking $count');
+                                            } else {
+                                              _scaffoldKey.currentState
+                                                  .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          'Change the Meal Subscription plan to with weekends or change the week days selected')));
+                                            }
+                                          }
+                                        },
+                                        child: Container(
+                                          height: 45,
+                                          width: 45,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: selectedDays[index + 4]
+                                                ? defaultGreen
+                                                : white,
+                                            border: Border.all(
+                                                color: selectedDays[index + 4]
+                                                    ? white
+                                                    : Color.fromRGBO(
+                                                            144, 144, 144, 1)
+                                                        .withOpacity(0.5)),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                blurRadius:
+                                                    selectedDays[index + 4]
+                                                        ? 0
+                                                        : 4,
+                                                color: Colors.black
+                                                    .withOpacity(0.25),
+                                                spreadRadius: 0,
+                                                offset: selectedDays[index + 4]
+                                                    ? const Offset(0, 0)
+                                                    : const Offset(0, 4),
+                                              )
+                                            ],
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              days[index + 4],
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: selectedDays[index + 4]
+                                                      ? Colors.white
+                                                      : defaultGreen),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )),
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Container(
+                          height: 40,
+                          margin: EdgeInsets.symmetric(horizontal: 30),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 1,
+                                blurRadius: 2,
+                                offset:
+                                    Offset(0, 0), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          width: double.infinity,
+                          child: GestureDetector(
+                            onTap: () async {
+                              DateTime selectedDateTime =
+                                  await showRoundedDatePicker(
+                                      context: context,
+                                      background: Colors.white,
+                                      styleDatePicker:
+                                          MaterialRoundedDatePickerStyle(
+                                        textStyleMonthYearHeader: TextStyle(
+                                            fontSize: 18,
+                                            color: defaultPurple,
+                                            fontWeight: FontWeight.normal),
+                                        paddingMonthHeader:
+                                            EdgeInsets.only(top: 10),
+                                        colorArrowNext: defaultPurple,
+                                        colorArrowPrevious: defaultPurple,
+                                        textStyleButtonPositive: TextStyle(
+                                            fontSize: 14,
+                                            color: defaultPurple,
+                                            fontWeight: FontWeight.bold),
+                                        textStyleButtonNegative: TextStyle(
+                                            fontSize: 14,
+                                            color: inactivePurple,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      theme: ThemeData(
+                                        primaryColor: defaultPurple,
+                                        accentColor: defaultGreen,
+                                        dialogBackgroundColor: Colors.white,
+                                        textTheme: TextTheme(
+                                          caption:
+                                              TextStyle(color: defaultPurple),
+                                        ),
+                                        disabledColor: formFill,
+                                        accentTextTheme: TextTheme(),
+                                      ),
+                                      initialDate: dateSelected ??
+                                          today.add(Duration(days: 2)),
+                                      firstDate: DateTime.now()
+                                          .toLocal()
+                                          .add(Duration(days: 1)));
+                              if (selectedDateTime != null) {
+                                setState(() {
+                                  dateSelected = selectedDateTime;
+                                  date =
+                                      '${dateSelected.year.toString()}-${dateSelected.month.toString().padLeft(2, '0')}-${dateSelected.day.toString().padLeft(2, '0')}';
+                                });
+                              }
+                              print(date);
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  "First Delivery",
+                                  style: appBarTextStyle.copyWith(
+                                      color: defaultGreen, fontSize: 18),
+                                ),
+                                Text(
+                                  DateFormat.E().format(dateSelected ??
+                                          today.add(Duration(days: 2))) +
+                                      ', ' +
+                                      DateFormat.MMM().add_d().format(
+                                          dateSelected ??
+                                              today.add(Duration(days: 2))),
+                                  style: TextStyle(
+                                      fontFamily: 'RobotoCondensedReg',
+                                      fontSize: 18,
+                                      color: defaultGreen),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
               Container(
-
-                margin: EdgeInsets.only(top: 30, bottom: 20,left: 15,right: 15),
+                margin:
+                    EdgeInsets.only(top: 30, bottom: 20, left: 15, right: 15),
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                 decoration: BoxDecoration(
                   color: formBackground,
@@ -467,43 +494,45 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                           style: selectedTab.copyWith(),
                         ),
                         isAddressSelected
-                            ?  AddressButtonWithModal(
-                          callBackFunction: callback,
-                          child: Text('Change',
-                              style: unSelectedTab.copyWith(
-                                  color: defaultGreen,fontSize: 18)),
-                        ) :     AddressButtonWithModal(
-                          callBackFunction: callback,
-                          child: Text('Add',
-                              style: unSelectedTab.copyWith(
-                                  color: defaultGreen,fontSize: 18)),
-                        ),
+                            ? AddressButtonWithModal(
+                                callBackFunction: callback,
+                                child: Text('Change',
+                                    style: unSelectedTab.copyWith(
+                                        color: defaultGreen, fontSize: 18)),
+                              )
+                            : AddressButtonWithModal(
+                                callBackFunction: callback,
+                                child: Text('Add',
+                                    style: unSelectedTab.copyWith(
+                                        color: defaultGreen, fontSize: 18)),
+                              ),
                       ],
                     ),
-                    SizedBox(height: 10,),
+                    SizedBox(
+                      height: 10,
+                    ),
                     isAddressSelected
                         ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-
                               Text(
                                 Api.userInfo.firstName +
                                     ' ' +
                                     Api.userInfo.lastName,
                                 style: selectedTab.copyWith(
-                                    fontWeight: FontWeight.w400
-                                ),
+                                    fontWeight: FontWeight.w400),
                                 textAlign: TextAlign.start,
                               ),
                               SizedBox(
                                 height: 10,
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(concatenatedAddress, style: unSelectedTab.copyWith(
-                                    fontWeight: FontWeight.w400
-                                  ))
+                                  Text(concatenatedAddress,
+                                      style: unSelectedTab.copyWith(
+                                          fontWeight: FontWeight.w400))
                                 ],
                               ),
                             ],
@@ -516,14 +545,14 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-
-                                ],
+                                children: [],
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Text('Select An Address', style: unSelectedTab)
+                                  Text('Select An Address',
+                                      style: unSelectedTab)
                                 ],
                               ),
                               SizedBox(
@@ -535,12 +564,13 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(top: 30, bottom: 20,left: 15,right: 15),
+                margin:
+                    EdgeInsets.only(top: 30, bottom: 20, left: 15, right: 15),
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                 decoration: BoxDecoration(
                   color: formBackground,
                   borderRadius: BorderRadius.circular(15),
-           ),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -553,10 +583,8 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                         ),
                         GestureDetector(
                           onTap: () async {
-
                             showModalBottomSheet(
                                 context: context,
-
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.only(
                                       topLeft: Radius.circular(50.0),
@@ -564,87 +592,183 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                                 ),
                                 isScrollControlled: false,
                                 builder: (BuildContext context) {
-                                  return StatefulBuilder(builder: (context, setState){
+                                  return StatefulBuilder(
+                                      builder: (context, setState) {
                                     return Container(
-                                      height: MediaQuery.of(context).size.height*0.43,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.43,
                                       decoration: BoxDecoration(
                                           borderRadius: BorderRadius.only(
                                               topLeft: Radius.circular(20.0),
                                               topRight: Radius.circular(20.0)),
                                           image: DecorationImage(
-                                              image: AssetImage('images/popup_background.jpg'),
-                                              fit: BoxFit.cover
-                                          )
-                                      ),
+                                              image: AssetImage(
+                                                  'images/popup_background.jpg'),
+                                              fit: BoxFit.cover)),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 20),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 30, vertical: 20),
                                             child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
-                                                Text("Delivery Time",style: appBarTextStyle.copyWith(color: Colors.white),),
-                                                SizedBox(height: 25,),
+                                                Text(
+                                                  "Delivery Time",
+                                                  style: billingTextStyle
+                                                      .copyWith(color: white),
+                                                ),
+                                                SizedBox(
+                                                  height: 40,
+                                                ),
                                                 Row(
-                                                  mainAxisAlignment : MainAxisAlignment.spaceBetween,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
                                                     GestureDetector(
-                                                      onTap: (){
-                                                        print(deliveryTimeIndex);
-                                                        setState((){
+                                                      onTap: () {
+                                                        print(
+                                                            deliveryTimeIndex);
+                                                        setState(() {
                                                           deliveryTimeIndex = 0;
                                                         });
                                                       },
                                                       child: Stack(
                                                         children: [
                                                           Container(
-                                                            height : 105,
-                                                            width : 140,
+                                                            height: 105,
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.375,
                                                             decoration: BoxDecoration(
-                                                                color: deliveryTimeIndex == 0 ? defaultGreen : Color(0xFF77838F).withOpacity(0.3),
-                                                                borderRadius: BorderRadius.circular(15)
-                                                            ),
+                                                                color: deliveryTimeIndex ==
+                                                                        0
+                                                                    ? defaultGreen
+                                                                    : Color(0xFF77838F)
+                                                                        .withOpacity(
+                                                                            0.3),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            15)),
                                                             child: Padding(
-                                                              padding: const EdgeInsets.only(top : 22.0),
-                                                              child: Text("Morning\n6am - 12pm",textAlign: TextAlign.center,
-                                                                style: descriptionTextStyle.copyWith(color: Colors.white,fontSize: 14)
-                                                                ,),
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top:
+                                                                          22.0),
+                                                              child: Text(
+                                                                "Morning\n6am - 12pm",
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'RobotoReg',
+                                                                    fontSize:
+                                                                        16,
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
                                                             ),
                                                           ),
                                                           Positioned(
-                                                              bottom : 10,
-                                                              right : 10,
-                                                              child: Text("Cost 0 BHD", style: descriptionTextStyle.copyWith(color: Colors.white,fontSize: 14)))
+                                                              bottom: 10,
+                                                              right: 10,
+                                                              child: Text(
+                                                                "Cost 0 BHD",
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'RobotoReg',
+                                                                    fontSize:
+                                                                        11,
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ))
                                                         ],
                                                       ),
                                                     ),
                                                     GestureDetector(
-                                                      onTap: (){
-                                                        print(deliveryTimeIndex);
-                                                        setState((){
+                                                      onTap: () {
+                                                        print(
+                                                            deliveryTimeIndex);
+                                                        setState(() {
                                                           deliveryTimeIndex = 1;
                                                         });
                                                       },
                                                       child: Stack(
                                                         children: [
                                                           Container(
-                                                            height : 105,
-                                                            width : 140,
+                                                            height: 105,
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.375,
                                                             decoration: BoxDecoration(
-                                                                color :  deliveryTimeIndex == 1 ? defaultGreen : Color(0xFF77838F).withOpacity(0.3),
-                                                                borderRadius: BorderRadius.circular(15)
-                                                            ),
+                                                                color: deliveryTimeIndex ==
+                                                                        1
+                                                                    ? defaultGreen
+                                                                    : Color(0xFF77838F)
+                                                                        .withOpacity(
+                                                                            0.3),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            15)),
                                                             child: Padding(
-                                                              padding: const EdgeInsets.only(top : 22.0),
-                                                              child: Text("Afternoon\n1pm - 6pm",textAlign: TextAlign.center,
-                                                                  style: descriptionTextStyle.copyWith(color: Colors.white,fontSize: 14)),
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top:
+                                                                          22.0),
+                                                              child: Text(
+                                                                "Afternoon\n1pm - 6pm",
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'RobotoReg',
+                                                                    fontSize:
+                                                                        16,
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
                                                             ),
                                                           ),
                                                           Positioned(
-                                                              bottom : 10,
-                                                              right : 10,
-                                                              child: Text("Cost ${afterNoonValue} BHD", style: descriptionTextStyle.copyWith(color: Colors.white,fontSize: 14)))
+                                                              bottom: 10,
+                                                              right: 10,
+                                                              child: Text(
+                                                                "Cost ${afterNoonValue} BHD",
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'RobotoReg',
+                                                                    fontSize:
+                                                                        11,
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ))
                                                         ],
                                                       ),
                                                     )
@@ -654,18 +778,33 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                                             ),
                                           ),
                                           GestureDetector(
-                                            onTap: (){
+                                            onTap: () {
                                               Navigator.pop(context);
                                             },
                                             child: Container(
-                                              color: Color(0xFF77838F).withOpacity(0.3),
-                                              width: double.infinity,
+                                              margin: EdgeInsets.only(
+                                                  left: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.6),
                                               height: 50,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(20.0)),
+                                                color: questionnaireDisabled
+                                                    .withOpacity(0.7),
+                                              ),
                                               child: Center(
-                                                child: Text("Done", style: descriptionTextStyle.copyWith(
-                                                    color: Colors.white,
-                                                    fontSize: 25
-                                                ),),
+                                                child: Text(
+                                                  "DONE",
+                                                  style: TextStyle(
+                                                      fontFamily: 'RobotoReg',
+                                                      fontSize: 20,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
                                               ),
                                             ),
                                           )
@@ -677,16 +816,21 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                           },
                           child: Text('Change',
                               style: unSelectedTab.copyWith(
-                                  color: defaultGreen,fontSize: 18)),
+                                  color: defaultGreen, fontSize: 18)),
                         )
                       ],
                     ),
-                    SizedBox(height: 15,),
+                    SizedBox(
+                      height: 15,
+                    ),
                     Padding(
-                      padding: const EdgeInsets.only(left : 18.0),
+                      padding: const EdgeInsets.only(left: 18.0),
                       child: Text(
-                        deliveryTimeIndex == 0 ? 'Morning - 6am - 12pm' : "Afternoon - 1pm - 6pm",
-                        style: selectedTab.copyWith(fontWeight: FontWeight.w500,fontSize: 15),
+                        deliveryTimeIndex == 0
+                            ? 'Morning - 6am - 12pm'
+                            : "Afternoon - 1pm - 6pm",
+                        style: selectedTab.copyWith(
+                            fontWeight: FontWeight.w500, fontSize: 15),
                       ),
                     ),
                   ],
@@ -710,14 +854,18 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                             context,
                             CupertinoPageRoute(
                                 builder: (context) => PrePaymentMealPlan(
-                                  afterNoonPrice : deliveryTimeIndex ==  1 ? afterNoonValue : 0,
+                                      afterNoonPrice: deliveryTimeIndex == 1
+                                          ? afterNoonValue
+                                          : 0,
                                       categories: widget.categories,
                                       selectedDate: dateSelected,
                                       selectedDays: selDays,
-                                      addressIndex : selectedAddressIndex,
+                                      addressIndex: selectedAddressIndex,
                                       mealPlan: widget.mealPackage,
-                                      shippingAddressLine1: selectedAddressLine1,
-                                      shippingAddressLine2: selectedAddressLine2,
+                                      shippingAddressLine1:
+                                          selectedAddressLine1,
+                                      shippingAddressLine2:
+                                          selectedAddressLine2,
                                     )));
                       } else {
                         _scaffoldKey.currentState.showSnackBar(

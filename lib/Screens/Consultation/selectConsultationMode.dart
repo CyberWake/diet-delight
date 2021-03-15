@@ -44,11 +44,11 @@ class _SelectConsultationModeState extends State<SelectConsultationMode> {
     consultationIndex = widget.packageIndex;
   }
 
-  @override
-  void didChangeDependencies() {
-    precacheImage(selectConsultationBackgroundImage.image, context);
-    super.didChangeDependencies();
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   precacheImage(selectConsultationBackgroundImage.image, context);
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +88,7 @@ class _SelectConsultationModeState extends State<SelectConsultationMode> {
                     borderRadius: BorderRadius.all(Radius.circular(40.0)),
                     color: Colors.transparent,
                     child: Container(
-                      height: devHeight * 0.18,
+                      height: devHeight * 0.2,
                       width: devWidth * 0.9,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(40.0)),
@@ -172,6 +172,8 @@ class _SelectConsultationModeState extends State<SelectConsultationMode> {
                       elevation: 2,
                       borderRadius: BorderRadius.all(Radius.circular(40.0)),
                       child: Container(
+                        height: devHeight * 0.2,
+                        width: devWidth * 0.9,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(40.0)),
                           color: onlineConsultation,
@@ -195,9 +197,13 @@ class _SelectConsultationModeState extends State<SelectConsultationMode> {
                                         fontWeight: FontWeight.normal)),
                               ),
                               Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: Icon(Icons.arrow_forward_ios_rounded,
-                                      color: questionnaireDisabled, size: 26)),
+                                alignment: Alignment.bottomRight,
+                                child: ImageIcon(
+                                    AssetImage(
+                                        'images/next_arrow_consult_page.png'),
+                                    color: questionnaireDisabled,
+                                    size: 20),
+                              ),
                             ],
                           ),
                         ),
@@ -221,6 +227,8 @@ class _SelectConsultationModeState extends State<SelectConsultationMode> {
                       elevation: 2,
                       borderRadius: BorderRadius.all(Radius.circular(40.0)),
                       child: Container(
+                        height: devHeight * 0.2,
+                        width: devWidth * 0.9,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(40.0)),
                           color: offlineConsultation,
@@ -244,9 +252,13 @@ class _SelectConsultationModeState extends State<SelectConsultationMode> {
                                         fontWeight: FontWeight.normal)),
                               ),
                               Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: Icon(Icons.arrow_forward_ios_rounded,
-                                      color: questionnaireDisabled, size: 26)),
+                                alignment: Alignment.bottomRight,
+                                child: ImageIcon(
+                                    AssetImage(
+                                        'images/next_arrow_consult_page.png'),
+                                    color: questionnaireDisabled,
+                                    size: 20),
+                              ),
                             ],
                           ),
                         ),

@@ -85,10 +85,12 @@ class _FavouritesPageState extends State<FavouritesPage> {
                             ? Padding(
                                 padding: EdgeInsets.only(left: 5.0),
                                 child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.star,
-                                        color: featuredColor, size: 12),
+                                    ImageIcon(
+                                        AssetImage('images/featured_icon.png'),
+                                        color: featuredColor,
+                                        size: 12),
                                     Text(
                                       'Featured',
                                       style: appBarTextStyle.copyWith(
@@ -255,9 +257,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                           ? Center(
                               child: Text(
                                   'No dishes have been added as favourite yet',
-                                  style: orderHistoryCardStyle.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18)),
+                                  style: nullSafetyStyle),
                             )
                           : ListView.builder(
                               controller: _scrollController,

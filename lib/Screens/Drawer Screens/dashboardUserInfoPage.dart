@@ -3,6 +3,7 @@ import 'package:diet_delight/Screens/export.dart';
 import 'package:diet_delight/Widgets/shadow_text.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:diet_delight/Screens/Drawer Screens/recalculateBmiScreen.dart';
 
 class DashBoardUserInfoPage extends StatefulWidget {
   final GlobalKey<ScaffoldState> snackBarKey;
@@ -347,6 +348,8 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
         height: 40,
         child: TextButton(
           onPressed: () async {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => RecalculateBmi()));
             /*SharedPreferences prefs = await SharedPreferences.getInstance();
             String password = prefs.getString('password');
             setState(() {});
@@ -378,10 +381,10 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
             updateInProgress ? 'RRecalculate BMIe' : 'Recalculate BMI',
             style: TextStyle(
                 // fontFamily: 'RobotoCondensedReg',
-                fontSize: 20,
-                fontWeight: FontWeight.normal,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
                 color: Colors.white,
-                fontFamily: 'RobotReg'),
+                fontFamily: 'MontserratMed'),
           ),
           style: TextButton.styleFrom(
               backgroundColor: Color(0xFF303960),
@@ -396,10 +399,12 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          image: DecorationImage(
-        image: AssetImage('images/user_dashboard_bg.jpg'),
-        fit: BoxFit.cover,
-      )),
+        //   image: DecorationImage(
+        // image: AssetImage('images/user_dashboard_bg.jpg'),
+        // fit: BoxFit.cover,
+        // ),
+        color: Colors.transparent,
+      ),
       child: ListView(
         shrinkWrap: true,
         children: [

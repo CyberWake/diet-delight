@@ -134,12 +134,12 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                               padding: EdgeInsets.symmetric(horizontal: 20),
                               decoration: BoxDecoration(
                                 color: Color(0xFF77838F).withOpacity(0.5),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Color(0x26000000),
-                                      blurRadius: 4,
-                                      offset: Offset(0, 4))
-                                ],
+                                // boxShadow: [
+                                //   BoxShadow(
+                                //       color: Color(0x26000000),
+                                //       blurRadius: 4,
+                                //       offset: Offset(0, 4))
+                                // ],
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               child: TextFormField(
@@ -171,6 +171,7 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                                   keyboardType: TextInputType.text,
                                   textInputAction: TextInputAction.next,
                                   decoration: authInputFieldDecoration.copyWith(
+                                      fillColor: Colors.transparent,
                                       hintStyle: TextStyle(
                                           color: Colors.white,
                                           fontFamily: 'RobotoReg'),
@@ -181,7 +182,7 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                           ),
                         );
                       } else if (index == 3) {
-                        return Expanded(
+                        return Container(
                             child: GestureDetector(
                           onTap: () async {
                             if (whichAddress == 0) {
@@ -234,8 +235,15 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                             }
                           },
                           child: Container(
-                            margin: EdgeInsets.only(top: 20),
-                            color: Color(0xFF77838F).withOpacity(0.5),
+                            margin: EdgeInsets.only(
+                                top: 20,
+                                left: MediaQuery.of(context).size.width * 0.6),
+                            height: 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20.0)),
+                              color: questionnaireDisabled.withOpacity(0.7),
+                            ),
                             child: Center(
                                 child: Text(
                               'ADD',
@@ -347,7 +355,7 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter modalStateUpdate) {
             return Container(
-              height: 380,
+              height: MediaQuery.of(context).size.height * 0.6,
               decoration: BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage('images/popup_background.jpg'),
@@ -358,123 +366,144 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                     topLeft: Radius.circular(30.0)),
               ),
               child: Container(
-                  padding: EdgeInsets.only(top: 10),
+                  padding: EdgeInsets.only(top: 40),
                   child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: List.generate(3, (index) {
-                    if (index == 2) {
-                      return Expanded(
-                          child: GestureDetector(
-                        onTap: () {
-                          if (isAddressSelected) {
-                            if (selectedAddressIndex == 0) {
-                              concatenatedAddress = addressPrimaryLine1.text +
-                                  ',\n' +
-                                  addressPrimaryLine2.text;
-                              selectedAddressLine1 = addressPrimaryLine1.text;
-                              selectedAddressLine2 = addressPrimaryLine2.text;
-                              widget.callBackFunction(concatenatedAddress);
-                            } else if (selectedAddressIndex == 1) {
-                              concatenatedAddress = addressSecondaryLine1.text +
-                                  ',\n' +
-                                  addressSecondaryLine2.text;
-                              selectedAddressLine1 = addressSecondaryLine1.text;
-                              selectedAddressLine2 = addressSecondaryLine2.text;
-                              widget.callBackFunction(concatenatedAddress);
-                            }
-                          }
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          margin: EdgeInsets.only(top: 20),
-                          color: questionnaireDisabled.withOpacity(0.7),
-                          child: Center(
-                            child: Center(
-                                child: Text(
-                              'DONE',
-                              style: TextStyle(
-                                  fontFamily: 'RobotoReg',
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            )),
-                          ),
-                        ),
-                      ));
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40.0, vertical: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 0.0, bottom: 10),
-                            child: Text(
-                              index == 0
-                                  ? 'Primary Address'
-                                  : 'Secondary Address',
-                              style: billingTextStyle.copyWith(color: white),
-                            ),
-                          ),
-                          GestureDetector(
-                              onTap: () {
-                                if (index == 0) {
-                                  if (addressPrimaryLine1.text.isNotEmpty &&
-                                      addressPrimaryLine2.text.isNotEmpty) {
-                                    modalStateUpdate(() {
-                                      selectedAddressIndex = index;
-                                      isAddressSelected = true;
-                                    });
-                                  }
-                                } else if (index == 1) {
-                                  if (addressSecondaryLine1.text.isNotEmpty &&
-                                      addressSecondaryLine2.text.isNotEmpty) {
-                                    modalStateUpdate(() {
-                                      selectedAddressIndex = index;
-                                      isAddressSelected = true;
-                                    });
-                                  }
+                        if (index == 2) {
+                          return Container(
+                              child: GestureDetector(
+                            onTap: () {
+                              if (isAddressSelected) {
+                                if (selectedAddressIndex == 0) {
+                                  concatenatedAddress =
+                                      addressPrimaryLine1.text +
+                                          ',\n' +
+                                          addressPrimaryLine2.text;
+                                  selectedAddressLine1 =
+                                      addressPrimaryLine1.text;
+                                  selectedAddressLine2 =
+                                      addressPrimaryLine2.text;
+                                  widget.callBackFunction(concatenatedAddress);
+                                } else if (selectedAddressIndex == 1) {
+                                  concatenatedAddress =
+                                      addressSecondaryLine1.text +
+                                          ',\n' +
+                                          addressSecondaryLine2.text;
+                                  selectedAddressLine1 =
+                                      addressSecondaryLine1.text;
+                                  selectedAddressLine2 =
+                                      addressSecondaryLine2.text;
+                                  widget.callBackFunction(concatenatedAddress);
                                 }
-                              },
-                              child: Material(
-                                borderRadius: BorderRadius.circular(5.0),
-                                shadowColor: Color(0x26000000),
-                                elevation: 2,
-                                color: Colors.transparent,
-                                child: Container(
-                                    height: 100.0,
+                              }
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(
+                                  top: 20,
+                                  left:
+                                      MediaQuery.of(context).size.width * 0.6),
+                              height: 50,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20.0)),
+                                color: questionnaireDisabled.withOpacity(0.7),
+                              ),
+                              child: Center(
+                                child: Center(
+                                    child: Text(
+                                  'DONE',
+                                  style: TextStyle(
+                                      fontFamily: 'RobotoReg',
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                )),
+                              ),
+                            ),
+                          ));
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 40.0, vertical: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 0.0, bottom: 10),
+                                child: Text(
+                                  index == 0
+                                      ? 'Primary Address'
+                                      : 'Secondary Address',
+                                  style: billingTextStyle.copyWith(
+                                      color: selectedAddressIndex == index
+                                          ? defaultGreen
+                                          : white),
+                                ),
+                              ),
+                              GestureDetector(
+                                  onTap: () {
+                                    if (index == 0) {
+                                      if (addressPrimaryLine1.text.isNotEmpty &&
+                                          addressPrimaryLine2.text.isNotEmpty) {
+                                        modalStateUpdate(() {
+                                          selectedAddressIndex = index;
+                                          isAddressSelected = true;
+                                        });
+                                      }
+                                    } else if (index == 1) {
+                                      if (addressSecondaryLine1
+                                              .text.isNotEmpty &&
+                                          addressSecondaryLine2
+                                              .text.isNotEmpty) {
+                                        modalStateUpdate(() {
+                                          selectedAddressIndex = index;
+                                          isAddressSelected = true;
+                                        });
+                                      }
+                                    }
+                                  },
+                                  child: Material(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    shadowColor: Color(0x26000000),
+                                    elevation: 2,
+                                    color: Colors.transparent,
+                                    child: Container(
+                                        height: 100.0,
 //                                    padding: EdgeInsets.symmetric(
 //                                        vertical: 20, horizontal: 25),
-                                    decoration: BoxDecoration(
-                                        // boxShadow: [
-                                        //   BoxShadow(
-                                        //       color: Color(0x26000000),
-                                        //       blurRadius: 5)
-                                        // ],
-                                        borderRadius:
-                                            BorderRadius.circular(5.0),
-                                        color: selectedAddressIndex == index
-                                            ? defaultGreen
-                                            : questionnaireDisabled
-                                                .withOpacity(0.5)),
-                                    child: index == 0
-                                        ? addressPrimaryLine1.text.isNotEmpty &&
-                                                addressPrimaryLine2
-                                                    .text.isNotEmpty
-                                            ? selectionAddressCard(index)
-                                            : addAddressCard(index)
-                                        : addressSecondaryLine1
-                                                    .text.isNotEmpty &&
-                                                addressSecondaryLine2
-                                                    .text.isNotEmpty
-                                            ? selectionAddressCard(index)
-                                            : addAddressCard(index)),
-                              ))
-                        ],
-                      ),
-                    );
-                  }))),
+                                        decoration: BoxDecoration(
+                                            // boxShadow: [
+                                            //   BoxShadow(
+                                            //       color: Color(0x26000000),
+                                            //       blurRadius: 5)
+                                            // ],
+                                            borderRadius:
+                                                BorderRadius.circular(5.0),
+                                            color: selectedAddressIndex == index
+                                                ? defaultGreen
+                                                : questionnaireDisabled
+                                                    .withOpacity(0.5)),
+                                        child: index == 0
+                                            ? addressPrimaryLine1
+                                                        .text.isNotEmpty &&
+                                                    addressPrimaryLine2
+                                                        .text.isNotEmpty
+                                                ? selectionAddressCard(index)
+                                                : addAddressCard(index)
+                                            : addressSecondaryLine1
+                                                        .text.isNotEmpty &&
+                                                    addressSecondaryLine2
+                                                        .text.isNotEmpty
+                                                ? selectionAddressCard(index)
+                                                : addAddressCard(index)),
+                                  ))
+                            ],
+                          ),
+                        );
+                      }))),
             );
           });
         });

@@ -29,31 +29,46 @@ class _ContactUsPageState extends State<ContactUsPage> {
   List<Widget> iconButtons = [
     Transform.rotate(
       angle: pi * 2.5,
-      child: FaIcon(
-        FontAwesomeIcons.phone,
-        size: 25.0,
-        color: defaultGreen,
+      child: CircleAvatar(
+        backgroundColor: defaultGreen,
+        child: FaIcon(
+          FontAwesomeIcons.phone,
+          size: 25.0,
+          color: white,
+        ),
       ),
     ),
-    FaIcon(
-      FontAwesomeIcons.whatsapp,
-      size: 28.0,
-      color: defaultGreen,
+    CircleAvatar(
+      backgroundColor: defaultGreen,
+      child: FaIcon(
+        FontAwesomeIcons.whatsapp,
+        size: 28.0,
+        color: white,
+      ),
     ),
-    FaIcon(
-      FontAwesomeIcons.instagram,
-      size: 28.0,
-      color: defaultGreen,
+    CircleAvatar(
+      backgroundColor: defaultGreen,
+      child: FaIcon(
+        FontAwesomeIcons.instagram,
+        size: 28.0,
+        color: white,
+      ),
     ),
-    FaIcon(
-      FontAwesomeIcons.twitter,
-      size: 28.0,
-      color: defaultGreen,
+    CircleAvatar(
+      backgroundColor: defaultGreen,
+      child: FaIcon(
+        FontAwesomeIcons.twitter,
+        size: 28.0,
+        color: white,
+      ),
     ),
-    FaIcon(
-      FontAwesomeIcons.facebook,
-      size: 28.0,
-      color: defaultGreen,
+    CircleAvatar(
+      backgroundColor: defaultGreen,
+      child: FaIcon(
+        FontAwesomeIcons.facebook,
+        size: 28.0,
+        color: white,
+      ),
     ),
   ];
 

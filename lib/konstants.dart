@@ -60,7 +60,7 @@ const TextStyle selectedTab = TextStyle(
 
 const TextStyle drawerItemsStyle = TextStyle(
   fontFamily: 'MontserratMed',
-  fontSize: 20,
+  fontSize: 22,
   fontWeight: FontWeight.normal,
   color: questionnaireSelect,
 );
@@ -180,6 +180,12 @@ const consultationModeSelectStyle = TextStyle(
   fontWeight: FontWeight.w600,
   color: questionnaireSelect,
 );
+
+const nullSafetyStyle = TextStyle(
+    fontFamily: 'MontserratMed',
+    fontSize: 14,
+    fontWeight: FontWeight.w700,
+    color: questionnaireSelect);
 
 BoxDecoration authFieldDecoration = BoxDecoration(
     color: Colors.white,
@@ -436,24 +442,23 @@ String secondaryAddressLine2 = Api.userInfo.addressSecondary2 ?? '';
 
 enum FromPage { signUp, forgetPass }
 
-var selectConsultationBackgroundImage = DecorationImage(
-    image: AssetImage('images/consultation_pg1.jpg'), fit: BoxFit.fitHeight);
+var selectConsultationBackgroundImage =
+    DecorationImage(image: AssetImage('images/bg4.jpg'), fit: BoxFit.fitHeight);
 
-var consultationBackground = DecorationImage(
-    image: AssetImage('images/consultation.jpg'), fit: BoxFit.fitHeight);
+var consultationBackground =
+    DecorationImage(image: AssetImage('images/bg3.jpg'), fit: BoxFit.fitHeight);
 
-var question1Background = DecorationImage(
-    image: AssetImage('images/question1_background.jpg'),
-    fit: BoxFit.fitHeight);
+var question1Background =
+    DecorationImage(image: AssetImage('images/bg9.jpg'), fit: BoxFit.fitHeight);
 
 var question2Background1 = DecorationImage(
-    image: AssetImage('images/question2_background1.jpg'),
-    fit: BoxFit.fitHeight);
+    image: AssetImage('images/bg11.jpg'), fit: BoxFit.fitHeight);
 
 var question2Background2 = DecorationImage(
-    image: AssetImage('images/question2_background2.jpg'),
-    fit: BoxFit.fitHeight);
+    image: AssetImage('images/bg10.jpg'), fit: BoxFit.fitHeight);
 
-var bmiBackground = DecorationImage(
-    image: AssetImage('images/questionnaire_background.jpg'),
-    fit: BoxFit.fitHeight);
+var bmiBackground =
+    DecorationImage(image: AssetImage('images/bg1.jpg'), fit: BoxFit.fitHeight);
+
+var consultationHomePageBackground =
+    DecorationImage(image: AssetImage('images/bg1.jpg'), fit: BoxFit.cover);

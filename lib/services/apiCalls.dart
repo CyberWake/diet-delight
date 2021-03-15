@@ -29,6 +29,7 @@ var mealPlanCacheData = [];
 var onGoingMealPurchaseCacheData = [];
 var menuCategoryCacheData = [];
 var recommendedCalories = "0";
+
 class Api {
   static var client;
   static List<QuestionnaireModel> itemsQuestionnaire = List();
@@ -140,7 +141,8 @@ class Api {
         print('user model body: $body');
         userInfo = RegModel.fromMap(body);
         print(userInfo.gender);
-        await FlutterSecureStorage().write(key: 'calorie', value: recommendedCalories.toString());
+        await FlutterSecureStorage()
+            .write(key: 'calorie', value: userInfo.recommendedCalories.toString());
         return userInfo;
       } else {
         print(response.statusCode);
@@ -545,6 +547,7 @@ class Api {
       return null;
     }
   }
+
   Future<List<ConsAppointmentModel>> getConsultationAppointments() async {
     try {
       itemAppointments = [];
@@ -629,6 +632,7 @@ class Api {
   //Show unfinished meal plans
   Future<List<MealPurchaseModel>> getOngoingMealPurchases(
       DateTime endDate) async {
+    print("called");
     itemPresentMealPurchases = [];
     var cachedData = [];
     Map<String, String> headers = {
@@ -638,6 +642,7 @@ class Api {
     final response =
         await http.get(uri + '/api/v1/my-meal-purchases', headers: headers);
     if (response.statusCode == 200) {
+      print("YES SUCCESSSSSSSSSSSSSSSSSSSS");
       print('success getting present meal purchases');
       var body = convert.jsonDecode(response.body);
       List data = body['data'];
@@ -656,6 +661,7 @@ class Api {
       });
       /*await FlutterSecureStorage().write(
           key: 'onGoingOrdersDataMain', value: convert.jsonEncode(cachedData));*/
+      print(itemPresentMealPurchases);
       return itemPresentMealPurchases;
     } else {
       print(response.statusCode);
@@ -665,6 +671,7 @@ class Api {
   }
 
   Future<MealModel> getMealPlan(String mealPlanId) async {
+    print("getmealPLanCALLED");
     try {
       MealModel meal;
       Map<String, String> headers = {
@@ -674,6 +681,7 @@ class Api {
       final response = await http.get(uri + '/api/v1/meal-plans/' + mealPlanId,
           headers: headers);
       if (response.statusCode == 200) {
+        print("{}{}{}{}{}{}{}}{{}}{");
         print('Success getting meal plans');
         var body = convert.jsonDecode(response.body);
         var data = body['data'];
@@ -834,7 +842,7 @@ class Api {
     }
   }
 
-  Future<void> sendOptionsAnswers(PostQuestionnaire details) async {
+  Future<bool> sendOptionsAnswers(PostQuestionnaire details) async {
     print("sendOptionsAnswers");
     int userId = int.parse(userInfo.id);
     try {
@@ -862,15 +870,17 @@ class Api {
           headers: headers, body: body);
       print(response.statusCode);
       print(response.body);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         print('Success getting question');
+        return true;
       } else {
         print(response.statusCode);
         print(response.body);
-        //  return itemsQuestionnaire;
+        return false;
       }
     } on Exception catch (e) {
       print(e.toString());
+      return false;
     }
   }
 
@@ -961,7 +971,6 @@ class Api {
             OptionsModel model = OptionsModel.fromMap(element);
             options.add(model);
           });
-
         } else {
           print(response.statusCode);
           print(response.body);
@@ -1133,7 +1142,6 @@ class Api {
     }
   }
 
-
   Future<List<dynamic>> getBreakTakenDay() async {
     // ADD API CAll HERE
     print('breakTakenApiCalled');
@@ -1148,7 +1156,6 @@ class Api {
           await http.get(uri + "/api/v1/my-order-breaks", headers: headers);
 
       if (response.statusCode == 200) {
-
         print('Success getting breaks');
         print(response.statusCode);
         print(response.body);
@@ -1156,7 +1163,6 @@ class Api {
         var body = convert.jsonDecode(response.body)["data"];
 
         return body;
-
       } else {
         print(response.statusCode);
         print(response.body);
@@ -1199,7 +1205,6 @@ class Api {
           headers: headers, body: jsonEncode(body));
 
       if (response.statusCode == 201) {
-
         print('Success making Post call');
         print(response.statusCode);
         print(response.body);
@@ -1207,7 +1212,6 @@ class Api {
         var body = convert.jsonDecode(response.body)["data"];
 
         return body;
-
       } else {
         print(response.statusCode);
         print(response.body);
@@ -1217,8 +1221,6 @@ class Api {
       print(e.toString());
       return [];
     }
-
-
   }
 
   Future<void> putBreakTakenDay(
@@ -1252,23 +1254,18 @@ class Api {
       print(response.body);
       print(response.statusCode);
       if (response.statusCode == 201) {
-
         print('Success making Put call');
 
         var body = convert.jsonDecode(response.body)["data"];
 
         return body;
-
       } else {
-
         //return [];
       }
     } on Exception catch (e) {
       print(e.toString());
       return [];
     }
-
-
   }
 
   Future<void> postAddressBreakTakenDay(
@@ -1382,8 +1379,9 @@ class Api {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token"
       };
+      String date = DateTime.now().toString();
       final response = await http.get(
-          uri + "/api/v1/coupons?pageSize=20&sortOrder=desc",
+          uri + "/api/v1/coupons?pageSize=20&sortOrder=desc&fromDate=$date",
           headers: headers);
       if (response.statusCode == 200) {
         print('Success getting coupons');
@@ -1442,11 +1440,11 @@ class Api {
         HttpHeaders.authorizationHeader: "Bearer $token"
       };
 
-      final response = await http.get(uri + "/api/v1/key-values?key=afternoon_delivery",
+      final response = await http.get(
+          uri + "/api/v1/key-values?key=afternoon_delivery",
           headers: headers);
 
       if (response.statusCode == 200) {
-
         print('Success getting breaks');
         print(response.statusCode);
         print(response.body);
@@ -1460,8 +1458,6 @@ class Api {
       print(e.toString());
       return 0;
     }
-
-
   }
 
   Future<List<dynamic>> getCalorieDataa(id) async {
@@ -1474,15 +1470,15 @@ class Api {
         HttpHeaders.authorizationHeader: "Bearer $token"
       };
 
-      final response = await http.get(uri + "/api/v1/menus/$id",
-          headers: headers);
+      final response =
+          await http.get(uri + "/api/v1/menus/$id", headers: headers);
 
       if (response.statusCode == 200) {
-
         print('Success getting calorie');
         print(response.statusCode);
         print(response.body);
-        var calorieOption = convert.jsonDecode(jsonDecode(response.body)['data']['calorie_options']);
+        var calorieOption = convert
+            .jsonDecode(jsonDecode(response.body)['data']['calorie_options']);
         List<dynamic> opt = calorieOption;
         print("printing opt");
         print(opt);
@@ -1496,14 +1492,9 @@ class Api {
       print(e.toString());
       return [];
     }
-
-
   }
 
-
-
   Future<void> getCouponCode() async {
-
     print('getCoupon');
     print(token);
     try {
@@ -1512,18 +1503,16 @@ class Api {
         HttpHeaders.authorizationHeader: "Bearer $token"
       };
 
-      final response = await http.get(uri + "/api/v1/coupons",
-          headers: headers);
+      final response =
+          await http.get(uri + "/api/v1/coupons", headers: headers);
 
       if (response.statusCode == 200) {
-
         print('Success getting coupons');
         print(response.statusCode);
         print(response.body);
 
         var data = convert.jsonDecode(response.body);
         print(data);
-
       } else {
         print(response.statusCode);
         print(response.body);
@@ -1533,8 +1522,6 @@ class Api {
       print(e.toString());
       return [];
     }
-
-
   }
 
   Future<List<dynamic>> getMenuItem(id) async {
@@ -1547,16 +1534,13 @@ class Api {
         HttpHeaders.authorizationHeader: "Bearer $token"
       };
 
-      final response = await http.get(uri + "/api/v1/menus/user_id=${userInfo.id}&menu_item_id=$id",
+      final response = await http.get(
+          uri + "/api/v1/menus/user_id=${userInfo.id}&menu_item_id=$id",
           headers: headers);
 
       if (response.statusCode == 200) {
-
-        print('Success getting calorie');
         print(response.statusCode);
         print(response.body);
-
-
       } else {
         print(response.statusCode);
         print(response.body);
@@ -1566,12 +1550,9 @@ class Api {
       print(e.toString());
       return [];
     }
-
-
   }
 
-
-  Future<void> putMealPurchase(var orderDetails,String calorie) async {
+  Future<void> putMealPurchase(var orderDetails, String calorie) async {
     print("putMealPurchaseCalled");
 
     try {
@@ -1580,25 +1561,26 @@ class Api {
         HttpHeaders.authorizationHeader: "Bearer $token"
       };
       var data = {
-        "user_id": int.parse( orderDetails.userId),
+        "user_id": int.parse(orderDetails.userId),
         "meal_plan_id": int.parse(orderDetails.mealPlanId),
         "payment_id": int.parse(orderDetails.paymentId),
         "meal_plan_name": orderDetails.mealPlanName,
-        "meal_plan_duration": int.parse( orderDetails.mealPlanDuration),
+        "meal_plan_duration": int.parse(orderDetails.mealPlanDuration),
         "amount_paid": orderDetails.amountPaid.toString(),
         "start_date": orderDetails.startDate.toString(),
         "kcal": int.parse(calorie),
       };
       var body = jsonEncode(data);
       print(body);
-      final response = await http.put(uri + '/api/v1/my-meal-purchases/${orderDetails.mealPlanId}',
-          headers: headers, body: body);
+      final response = await http.put(
+          uri + '/api/v1/my-meal-purchases/${orderDetails.mealPlanId}',
+          headers: headers,
+          body: body);
       print(response.statusCode);
       if (response.statusCode == 201) {
         print('meal purchase put success');
         var body = convert.jsonDecode(response.body);
         print(body);
-
       } else {
         print(response.statusCode);
         print(response.body);
@@ -1609,5 +1591,4 @@ class Api {
       return null;
     }
   }
-
 }
