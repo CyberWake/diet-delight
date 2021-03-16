@@ -210,9 +210,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      Api.userInfo.firstName +
-                                          ' ' +
-                                          Api.userInfo.lastName,
+                                      "${Api.userInfo.firstName ?? ''} ${Api.userInfo.lastName ?? ''}",
                                       style: selectedTab.copyWith(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w400),
@@ -500,12 +498,12 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                                         print("called");
                                         var data =
                                             await _apiCall.getCouponCode();
-                                            
                                       },
                                       child: Text(
                                         "APPLY",
                                         style: appBarTextStyle.copyWith(
-                                            fontSize: 18, color: Colors.white,
+                                            fontSize: 18,
+                                            color: Colors.white,
                                             fontWeight: FontWeight.w700),
                                       ),
                                     ),

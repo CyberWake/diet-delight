@@ -215,7 +215,7 @@ class _MealPlanPageState extends State<MealPlanPage>
                           style: TextStyle(
                             fontFamily: 'RobotoCondensedReg',
                             fontSize: 16,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w800,
                             color: defaultGreen,
                           ),
                         ))

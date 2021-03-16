@@ -53,7 +53,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
     selectedAddressLine1 = addressPrimaryLine1.text;
     selectedAddressLine2 = addressPrimaryLine2.text;
     concatenatedAddress =
-        addressPrimaryLine1.text + ',\n' + addressPrimaryLine2.text;
+        addressPrimaryLine1.text + '\n' + addressPrimaryLine2.text;
     isAddressSelected = true;
 
     selectedAddressIndex = 0;
@@ -110,7 +110,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage('images/Group 7.png'), fit: BoxFit.fitHeight)),
+              image: AssetImage('images/bg1.jpg'), fit: BoxFit.fitHeight)),
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.transparent,
@@ -488,6 +488,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -499,13 +500,13 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                         isAddressSelected ?? false
                             ? AddressButtonWithModal(
                                 callBackFunction: callback,
-                                child: Text('Change',
+                                child: Text('CHANGE',
                                     style: unSelectedTab.copyWith(
                                         color: defaultGreen, fontSize: 18)),
                               )
                             : AddressButtonWithModal(
                                 callBackFunction: callback,
-                                child: Text('Add',
+                                child: Text('ADD',
                                     style: unSelectedTab.copyWith(
                                         color: defaultGreen, fontSize: 18)),
                               ),
@@ -525,16 +526,15 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                                 textAlign: TextAlign.start,
                               ),
                               SizedBox(
-                                height: 10,
+                                height: 15,
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(concatenatedAddress,
-                                      style: unSelectedTab.copyWith(
-                                          fontWeight: FontWeight.w400))
-                                ],
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: Text(concatenatedAddress,
+                                    style: unSelectedTab.copyWith(
+                                        height: 1.5,
+                                        fontWeight: FontWeight.w400)),
                               ),
                             ],
                           )
@@ -814,7 +814,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                                   });
                                 });
                           },
-                          child: Text('Change',
+                          child: Text('CHANGE',
                               style: unSelectedTab.copyWith(
                                   color: defaultGreen, fontSize: 18)),
                         )
