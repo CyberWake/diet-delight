@@ -76,47 +76,61 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
       setState(() {
         loaded = true;
       });
-      // getData();
+       getData();
 
     } else {
       print('false');
-      // getData();
+       getData();
     }
     setState(() {
       loaded = true;
     });
   }
 
-  // getData() async {
-  //   print("in get data");
-  //   List<MealPurchaseModel> activeMealPurchasesCache = List();
-  //   List<MealModel> activePurchaseMealPlansCache = List();
-  //   List<bool> ordersInActivePlansCache = List();
+  getData() async {
 
-  //   DateTime today = DateTime.now();
-  //   activeMealPurchasesCache = await _apiCall.getOngoingMealPurchases(today);
-  //   for (int i = 0; i < activeMealPurchasesCache.length;) {
-  //     activePurchaseMealPlansCache.add(await _apiCall
-  //         .getMealPlan(activeMealPurchasesCache[i].mealPlanId)
-  //         .whenComplete(() => i++));
-  //     print('filling up list');
-  //   }
-  //   for (int i = 0; i < activeMealPurchasesCache.length;) {
-  //     ordersInActivePlansCache.add(await _apiCall
-  //         .getCurrentMealPlanOrdersAvailability(activeMealPurchasesCache[i].id)
-  //         .whenComplete(() => i++));
-  //   }
+    print("in get data");
+    List<MealPurchaseModel> activeMealPurchasesCache = List();
+    List<MealModel> activePurchaseMealPlansCache = List();
+    List<bool> ordersInActivePlansCache = List();
 
-  //   if (mounted) {
-  //     setState(() {
-  //       activePurchaseMealPlans = activePurchaseMealPlansCache;
-  //       ordersInActivePlans = ordersInActivePlansCache;
-  //       activeMealPurchases = activeMealPurchasesCache;
-  //       loaded = true;
-  //     });
-  //   }
-  //   await FlutterSecureStorage().write(key: 'onGoingOrders', value: 'true');
-  // }
+    DateTime today = DateTime.now().toLocal();
+    activeMealPurchasesCache = await _apiCall.getOngoingMealPurchases(today);
+    for (int i = 0; i < activeMealPurchasesCache.length;) {
+      print("id : ${activeMealPurchasesCache[i].mealPlanId}");
+      print("ERROR Might occur");
+      if(DateTime.now().toLocal().isBefore(DateTime.parse(activeMealPurchasesCache[i].endDate) ) && activeMealPurchasesCache[i].mealPlanId.toString() != 10.toString() ){
+        print("yes before");
+        await Future.delayed(Duration(milliseconds: 500));
+        activePurchaseMealPlansCache.add(await _apiCall
+            .getMealPlan(activeMealPurchasesCache[i].mealPlanId)
+            .whenComplete(() => i++));
+      }else{
+        i++;
+      }
+
+      print('filling up list');
+    }
+    for (int i = 0; i < activeMealPurchasesCache.length;) {
+
+      if(!DateTime.now().toLocal().isBefore(DateTime.parse(activeMealPurchasesCache[i].endDate) ) ) {
+        ordersInActivePlansCache.add(await _apiCall
+            .getCurrentMealPlanOrdersAvailability(activeMealPurchasesCache[i].id)
+            .whenComplete(() => i++));
+      }
+
+    }
+
+    if (mounted) {
+      setState(() {
+        activePurchaseMealPlans = activePurchaseMealPlansCache;
+        ordersInActivePlans = ordersInActivePlansCache;
+        activeMealPurchases = activeMealPurchasesCache;
+        loaded = true;
+      });
+    }
+    await FlutterSecureStorage().write(key: 'onGoingOrders', value: 'true');
+  }
 
   @override
   void initState() {

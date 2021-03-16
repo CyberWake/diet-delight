@@ -75,8 +75,11 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     }
 
     var value = await FlutterSecureStorage().read(key: 'calorie');
+    print("Calorie value");
+    print(value);
+    data.remove(value);
     data.add(value);
-    print("||||||||||||||||||||| $intake");
+
     await getMenuCategories(menuId);
   }
 
@@ -164,6 +167,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
             .whenComplete(() => i++));
       }
     }
+
     for (int i = 0; i < foodItems.length; i++) {
       for (int j = 0; j < foodItems[i].length; j++) {
         if (widget.placedFoodItems != null &&
@@ -189,6 +193,8 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
       maxBuyIndexedList.add(temp);
     }
 
+    print(foodItems[0][0].isSelected);
+    print(foodItems[0][1].isSelected);
     print("{}{{}{}{{{}}{ $maxBuyIndexedList");
     print(
         'maxBuyCount: ${maxBuyCount.length}\nfoodItems: ${foodItems.length}\ncategory: ${categoryItems.length}\nmainCategoryItems: ${mainCategoryItems.length}\nsubCategoryItems: ${subCategoryItems.length}');
@@ -853,12 +859,9 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                     }
                                   } else {
                                     print("||||" + concatenatedAddress);
-                                    item.change(false);
-                                    setState(() {});
-                                    _scaffoldKey.currentState.showSnackBar(
-                                        SnackBar(
-                                            content:
-                                                Text('Select address first')));
+                                    _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                        content: Text(
+                                            'Max Buy Limit exceeded. Delete one to place one')));
                                   }
                                 } else {
                                   item.change(false);
@@ -886,9 +889,13 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                   notInProgress = true;
                                 });
                               } else {
-                                _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                    content: Text(
-                                        'Max Buy Limit exceeded. Delete one to place one')));
+                                item.change(false);
+                                setState(() {});
+                                _scaffoldKey.currentState.showSnackBar(
+                                    SnackBar(
+                                        content:
+                                        Text('Select address first')));
+
                               }
                             }
                           } else {
