@@ -169,12 +169,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     image: AssetImage('images/bg13.jpg'),
                     fit: BoxFit.fitHeight),
               )
-            : page == 2 || page == 4 || page == 5 || page == 1
+            : page == 2
                 ? BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('images/bg1.jpg'),
-                        fit: BoxFit.fitHeight))
-                : BoxDecoration(),
+                        image: AssetImage('images/bg14.jpg'),
+                        fit: BoxFit.cover))
+                : page == 4 || page == 5 || page == 1
+                    ? BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage('images/bg1.jpg'),
+                            fit: BoxFit.fitHeight))
+                    : BoxDecoration(),
         child: Scaffold(
           key: _scaffoldKey,
           backgroundColor:
@@ -183,21 +188,23 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   : white,
           appBar: AppBar(
             iconTheme: IconThemeData(
-                color: page == 0 || page == 1 || page == 3 || page == 4
+                color: page == 0 ||
+                        page == 1 ||
+                        page == 3 ||
+                        page == 4 ||
+                        page == 5
                     ? defaultGreen
                     : white),
             elevation: 2.0,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(20.0),
-                    bottomRight: Radius.circular(20.0))),
+            shape: RoundedRectangleBorder(),
             bottomOpacity: 1,
             shadowColor: page == 1 || page == 3 || page == 4
                 ? (Color(0x26000000))
                 : Colors.transparent,
-            backgroundColor: page == 0 || page == 1 || page == 3 || page == 4
-                ? white
-                : defaultGreen,
+            backgroundColor:
+                page == 0 || page == 1 || page == 3 || page == 4 || page == 5
+                    ? white
+                    : defaultGreen,
             centerTitle: page == 0 ? true : false,
             title: page == 0
                 ? Image.asset(
@@ -208,7 +215,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 : Text(pageTitle[page],
                     style: appBarTextStyle.copyWith(
                         fontFamily: 'RobotoReg',
-                        color: page == 1 || page == 3 || page == 4
+                        color: page == 1 || page == 3 || page == 4 || page == 5
                             ? defaultGreen
                             : white,
                         fontWeight: FontWeight.bold)),

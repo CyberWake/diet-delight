@@ -606,8 +606,8 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                                               topLeft: Radius.circular(20.0),
                                               topRight: Radius.circular(20.0)),
                                           image: DecorationImage(
-                                              image: AssetImage(
-                                                  'images/popup_background.jpg'),
+                                              image:
+                                                  AssetImage('images/bg7.jpg'),
                                               fit: BoxFit.cover)),
                                       child: Column(
                                         mainAxisAlignment:

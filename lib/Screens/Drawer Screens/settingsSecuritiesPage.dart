@@ -38,6 +38,7 @@ class _SettingSecuritiesState extends State<SettingSecurities> {
                       style: authInputTextStyle.copyWith(
                           color: Color(0xFF303960),
                           fontSize: 24,
+                          fontFamily: 'RobotoReg',
                           fontWeight: FontWeight.w500),
                     ),
                   ),
@@ -49,7 +50,7 @@ class _SettingSecuritiesState extends State<SettingSecurities> {
                       top: MediaQuery.of(context).size.height * 0.22),
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.75,
-                    height: 40,
+                    height: 50,
                     child: TextButton(
                       onPressed: () async {
                         if (curPassword.text.isNotEmpty) {
@@ -90,9 +91,9 @@ class _SettingSecuritiesState extends State<SettingSecurities> {
                       child: Text(
                         updateInProgress ? 'UPDATING' : 'UPDATE',
                         style: TextStyle(
-                          fontFamily: 'RobotoCondensedReg',
+                          fontFamily: 'RobotoReg',
                           fontSize: 20,
-                          fontWeight: FontWeight.normal,
+                          fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                       ),
@@ -100,7 +101,7 @@ class _SettingSecuritiesState extends State<SettingSecurities> {
                           backgroundColor: defaultGreen,
                           shape: const RoundedRectangleBorder(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(20)))),
+                                  BorderRadius.all(Radius.circular(10)))),
                     ),
                   ),
                 );
@@ -120,42 +121,43 @@ class _SettingSecuritiesState extends State<SettingSecurities> {
                     ],
                   ),
                   child: TextFormField(
-                      controller: index == 1
-                          ? curPassword
+                    controller: index == 1
+                        ? curPassword
+                        : index == 2
+                            ? newPassword
+                            : newConfPassword,
+                    focusNode: index == 1
+                        ? passCur
+                        : index == 2
+                            ? passNew
+                            : passNewConf,
+                    onFieldSubmitted: (done) {
+                      print('passing current index:$index');
+                      index == 1
+                          ? curPassword.text = done
                           : index == 2
-                              ? newPassword
-                              : newConfPassword,
-                      focusNode: index == 1
-                          ? passCur
-                          : index == 2
-                              ? passNew
-                              : passNewConf,
-                      onFieldSubmitted: (done) {
-                        print('passing current index:$index');
-                        index == 1
-                            ? curPassword.text = done
-                            : index == 2
-                                ? newPassword.text = done
-                                : newConfPassword.text = done;
-                        if (index < 3) {
-                          FocusScope.of(context)
-                              .requestFocus(index == 1 ? passNew : passNewConf);
-                        } else {
-                          FocusScope.of(context).requestFocus(FocusNode());
-                        }
-                      },
-                      style: authInputTextStyle.copyWith(fontSize: 16),
-                      textAlign: TextAlign.left,
-                      obscureText: true,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.done,
+                              ? newPassword.text = done
+                              : newConfPassword.text = done;
+                      if (index < 3) {
+                        FocusScope.of(context)
+                            .requestFocus(index == 1 ? passNew : passNewConf);
+                      } else {
+                        FocusScope.of(context).requestFocus(FocusNode());
+                      }
+                    },
+                    style: authInputTextStyle.copyWith(fontSize: 16),
+                    textAlign: TextAlign.left,
+                    obscureText: true,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.done,
                     decoration: InputDecoration(
-                      hintStyle: appBarTextStyle.copyWith(color: Color(0xFF77838F),fontSize: 16),
-                        hintText: index == 1
-                            ? 'Enter Current Password'
-                            : index == 2
-                                ? 'Enter New Password'
-                                : 'Confirm New Password',
+                      hintStyle: appBarTextStyle.copyWith(
+                          color: Color(0xFF77838F), fontSize: 16),
+                      hintText: index == 1
+                          ? 'Enter Current Password'
+                          : index == 2
+                              ? 'Enter New Password'
+                              : 'Confirm New Password',
                       fillColor: Colors.white,
                       focusedBorder: InputBorder.none,
                       enabledBorder: InputBorder.none,

@@ -42,10 +42,10 @@ class _FavouritesPageState extends State<FavouritesPage> {
       child: Container(
         margin: EdgeInsets.symmetric(
             vertical: 10, horizontal: MediaQuery.of(context).size.width * 0.05),
-        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15.0),
-            color: questionnaireDisabled.withOpacity(0.4)),
+            borderRadius: BorderRadius.circular(10.0),
+            color: questionnaireDisabled.withOpacity(0.3)),
         child: Padding(
           padding: const EdgeInsets.only(bottom: 0.0),
           child: Row(
@@ -79,7 +79,9 @@ class _FavouritesPageState extends State<FavouritesPage> {
                         Text(
                           foodItem.foodName,
                           style: appBarTextStyle.copyWith(
-                              fontSize: 13, fontWeight: FontWeight.w400),
+                              color: white,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400),
                         ),
                         foodItem.featured == 1
                             ? Padding(
@@ -91,6 +93,9 @@ class _FavouritesPageState extends State<FavouritesPage> {
                                         AssetImage('images/featured_icon.png'),
                                         color: featuredColor,
                                         size: 12),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
                                     Text(
                                       'Featured',
                                       style: appBarTextStyle.copyWith(
@@ -126,8 +131,8 @@ class _FavouritesPageState extends State<FavouritesPage> {
                                   getData();
                                 });
                               },
-                              icon: Icon(Icons.favorite,
-                                  size: 16, color: defaultPurple)),
+                              icon:
+                                  Icon(Icons.favorite, size: 16, color: white)),
                         )
                       ],
                     ),

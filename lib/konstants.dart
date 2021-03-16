@@ -47,7 +47,7 @@ const TextStyle authInputTextStyle = TextStyle(
 );
 
 const TextStyle unSelectedTab = TextStyle(
-  fontFamily: 'RobotoCondensedReg',
+  fontFamily: 'RobotoReg',
   fontSize: 14,
   fontWeight: FontWeight.bold,
 );

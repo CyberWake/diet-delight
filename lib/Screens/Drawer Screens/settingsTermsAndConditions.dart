@@ -5,21 +5,19 @@ class SettingsTermsAndConditionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10),
-        child: ListView(
-          children: [
-            Container(color: Color(0xFFC4C4C4).withOpacity(0.4),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  termsAndConditions,
-                  style: appBarTextStyle.copyWith(fontSize: 14),
-                ),
+      child: ListView(
+        children: [
+          Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                termsAndConditions,
+                style: appBarTextStyle.copyWith(fontSize: 14),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

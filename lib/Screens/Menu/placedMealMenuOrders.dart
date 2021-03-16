@@ -67,8 +67,6 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
   var primaryDaysList = [];
   var secondaryDaysList = [];
 
-
-
   getData() async {
     categoryItems = [];
     foodItems = [];
@@ -118,30 +116,29 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
       });
     }
 
-    if(widget.purchaseDetails.weekdays.contains('Sun')){
+    if (widget.purchaseDetails.weekdays.contains('Sun')) {
       listOfAvailableDays.add('Sunday');
     }
-    if(widget.purchaseDetails.weekdays.contains('Mon')){
+    if (widget.purchaseDetails.weekdays.contains('Mon')) {
       listOfAvailableDays.add('Monday');
     }
-    if(widget.purchaseDetails.weekdays.contains('Tue')){
+    if (widget.purchaseDetails.weekdays.contains('Tue')) {
       listOfAvailableDays.add('Tuesday');
     }
-    if(widget.purchaseDetails.weekdays.contains('Wed')){
+    if (widget.purchaseDetails.weekdays.contains('Wed')) {
       listOfAvailableDays.add('Wednesday');
     }
-    if(widget.purchaseDetails.weekdays.contains('Thur')){
+    if (widget.purchaseDetails.weekdays.contains('Thur')) {
       listOfAvailableDays.add('Thursday');
     }
-    if(widget.purchaseDetails.weekdays.contains('Fri')){
+    if (widget.purchaseDetails.weekdays.contains('Fri')) {
       listOfAvailableDays.add('Friday');
     }
-    if(widget.purchaseDetails.weekdays.contains('Sat')){
+    if (widget.purchaseDetails.weekdays.contains('Sat')) {
       listOfAvailableDays.add('Saturday');
     }
     print(listOfAvailableDays);
     getDaysInBeteween();
-
   }
 
   getDates() {
@@ -222,146 +219,149 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
         concatenatedAddress = address;
       });
     }
-    var col ;
-    if(primary ==  addressIndex){
-      if(addressTapList.contains(0)){
+
+    var col;
+    if (primary == addressIndex) {
+      if (addressTapList.contains(0)) {
         col = defaultGreen;
-      }else{
+      } else {
         col = Color(0xFFC6C6C6);
       }
-    }else{
-      if(addressTapList.contains(1)){
+    } else {
+      if (addressTapList.contains(1)) {
         col = Color.fromRGBO(120, 40, 139, 1);
-      }else{
+      } else {
         col = Color.fromRGBO(198, 198, 198, 1);
       }
     }
     return addressPresent
         ? GestureDetector(
-      onTap: () {
-        if (addressPresent) {
-          update(() {
-            selected = addressIndex;
-            if (addressTapList.contains(addressIndex)) {
-              addressTapList.remove(addressIndex);
-            } else {
-              addressTapList.add(addressIndex);
-            }
-          });
-        }
-      },
-          child: Container(
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-      height: MediaQuery.of(context).size.height * 0.15,
-      width: MediaQuery.of(context).size.width * 0.4,
-      decoration: BoxDecoration(
-       color: col,   borderRadius: BorderRadius.circular(15),),
-      child: Padding(
-          padding: const EdgeInsets.only(left: 6.0, top: 5),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+            onTap: () {
+              if (addressPresent) {
+                update(() {
+                  selected = addressIndex;
+                  if (addressTapList.contains(addressIndex)) {
+                    addressTapList.remove(addressIndex);
+                  } else {
+                    addressTapList.add(addressIndex);
+                  }
+                });
+              }
+            },
+            child: Container(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                height: MediaQuery.of(context).size.height * 0.15,
+                width: MediaQuery.of(context).size.width * 0.4,
+                decoration: BoxDecoration(
+                  color: col,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 6.0, top: 5),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            whichAddress,
+                            style: adressCardTextStyle.copyWith(
+                              fontWeight: addressTapList.contains(addressIndex)
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          addressPresent
+                              ? Padding(
+                                  padding: EdgeInsets.only(left: 10.0, top: 5),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        addressIndex == 0
+                                            ? primaryAddressLine1
+                                            : secondaryAddressLine1,
+                                        style: adressCardTextStyle.copyWith(
+                                          fontWeight: addressTapList
+                                                  .contains(addressIndex)
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 2,
+                                      ),
+                                      Text(
+                                        addressIndex == 0
+                                            ? primaryAddressLine2
+                                            : secondaryAddressLine2,
+                                        style: adressCardTextStyle.copyWith(
+                                          fontWeight: addressTapList
+                                                  .contains(addressIndex)
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : Center(
+                                  child: Text(
+                                    'Not Available',
+                                    style: adressCardTextStyle.copyWith(
+                                      fontWeight:
+                                          addressTapList.contains(addressIndex)
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                    ),
+                                  ),
+                                ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )),
+          )
+        : AddressButtonWithModal(
+            callBackFunction: updateCallback,
+            addNewAddressOnly: true,
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.15,
+              width: MediaQuery.of(context).size.width * 0.4,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
                 children: [
                   Text(
-                    whichAddress,
+                    'Not Available',
                     style: adressCardTextStyle.copyWith(
                       fontWeight: addressTapList.contains(addressIndex)
                           ? FontWeight.bold
                           : FontWeight.normal,
                     ),
-                  )
+                  ),
+                  Text(
+                    'Add',
+                    style: adressCardTextStyle.copyWith(
+                      fontWeight: addressTapList.contains(addressIndex)
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                    ),
+                  ),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  addressPresent
-                      ? Padding(
-                          padding: EdgeInsets.only(left: 10.0, top: 5),
-                          child: Column(
-                            mainAxisAlignment:
-                                MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                addressIndex == 0
-                                    ? primaryAddressLine1
-                                    : secondaryAddressLine1,
-                                style: adressCardTextStyle.copyWith(
-                                  fontWeight: addressTapList
-                                          .contains(addressIndex)
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 2,
-                              ),
-                              Text(
-                                addressIndex == 0
-                                    ? primaryAddressLine2
-                                    : secondaryAddressLine2,
-                                style: adressCardTextStyle.copyWith(
-                                  fontWeight: addressTapList
-                                          .contains(addressIndex)
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      : Center(
-                          child: Text(
-                            'Not Available',
-                            style: adressCardTextStyle.copyWith(
-                              fontWeight:
-                                  addressTapList.contains(addressIndex)
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                            ),
-                          ),
-                        ),
-                ],
-              ),
-            ],
-          ),
-      )
-
-    ),
-        ) : AddressButtonWithModal(
-      callBackFunction: updateCallback,
-      addNewAddressOnly: true,
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.15,
-        width: MediaQuery.of(context).size.width * 0.4,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Text(
-              'Not Available',
-              style: adressCardTextStyle.copyWith(
-                fontWeight: addressTapList.contains(addressIndex)
-                    ? FontWeight.bold
-                    : FontWeight.normal,
-              ),
             ),
-            Text(
-              'Add',
-              style: adressCardTextStyle.copyWith(
-                fontWeight: addressTapList.contains(addressIndex)
-                    ? FontWeight.bold
-                    : FontWeight.normal,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 
   List days = [];
@@ -376,16 +376,19 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
 
     for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
       setState(() {
-        days.add(startDate.add(Duration(days: i)).toString().split(" ")[0].toString());
+        days.add(startDate
+            .add(Duration(days: i))
+            .toString()
+            .split(" ")[0]
+            .toString());
       });
     }
 
     print(days);
-
   }
 
-
-  showBreakCalendar(datesBreakList,breakDays,putCall,id,primaryAndSecondary) {
+  showBreakCalendar(
+      datesBreakList, breakDays, putCall, id, primaryAndSecondary) {
     print("|||||||");
     print(primaryAndSecondary);
 
@@ -399,15 +402,22 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
         isScrollControlled: true,
         builder: (BuildContext context) {
           return Container(
-
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(topRight: Radius.circular(25),topLeft: Radius.circular(25)),
-              image: DecorationImage(
-                image: AssetImage('images/popup_background.jpg'),
-                fit: BoxFit.cover
-              )
-            ),
-              child: CustomCalenderForBreak(primaryAndSecondary : primaryAndSecondary,breakDays : breakDays,daysList: datesBreakList, mealId : widget.purchaseDetails.id,status : widget.plan.status,postCall: !putCall,listOfAvailableDays : listOfAvailableDays,id: id,getDaysInBeteween : days));
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(25),
+                      topLeft: Radius.circular(25)),
+                  image: DecorationImage(
+                      image: AssetImage('images/bg7.jpg'), fit: BoxFit.cover)),
+              child: CustomCalenderForBreak(
+                  primaryAndSecondary: primaryAndSecondary,
+                  breakDays: breakDays,
+                  daysList: datesBreakList,
+                  mealId: widget.purchaseDetails.id,
+                  status: widget.plan.status,
+                  postCall: !putCall,
+                  listOfAvailableDays: listOfAvailableDays,
+                  id: id,
+                  getDaysInBeteween: days));
         });
     done.then((value) {
       getDates();
@@ -417,7 +427,8 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
     });
   }
 
-  showAddressCalendar({bool addressCalendar, id,breakList,pList,sList}) async {
+  showAddressCalendar(
+      {bool addressCalendar, id, breakList, pList, sList}) async {
     showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
@@ -432,12 +443,12 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
             return Container(
                 height: MediaQuery.of(context).size.height * 0.8,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(topRight: Radius.circular(25),topLeft: Radius.circular(25)),
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(25),
+                        topLeft: Radius.circular(25)),
                     image: DecorationImage(
-                        image: AssetImage('images/popup_background.jpg'),
-                        fit: BoxFit.cover
-                    )
-                ),
+                        image: AssetImage('images/bg7.jpg'),
+                        fit: BoxFit.cover)),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     mainAxisSize: MainAxisSize.max,
@@ -455,7 +466,16 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                               update: updateBottomSheet),
                         ],
                       ),
-                      CustomCalenderForAddress(listOfAvailableDays : listOfAvailableDays,addressTapList: addressTapList,primaryAddress: primaryDaysList,secondaryAddress: secondaryDaysList,makePostCall : makePostAddressCall,mealId : widget.purchaseDetails.id,status : widget.plan.status,id: id,dateList : breakList)
+                      CustomCalenderForAddress(
+                          listOfAvailableDays: listOfAvailableDays,
+                          addressTapList: addressTapList,
+                          primaryAddress: primaryDaysList,
+                          secondaryAddress: secondaryDaysList,
+                          makePostCall: makePostAddressCall,
+                          mealId: widget.purchaseDetails.id,
+                          status: widget.plan.status,
+                          id: id,
+                          dateList: breakList)
                     ]));
           });
         });
@@ -465,19 +485,18 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
 
   var isPrimary = true;
 
-  getInitialPrimaryAndSecondary(){
-
-
+  getInitialPrimaryAndSecondary() {
     var billingAddress1 = widget.purchaseDetails.billingAddressLine1;
     var billingAddress2 = widget.purchaseDetails.billingAddressLine2;
     var ship1 = widget.purchaseDetails.shippingAddressLine1;
     var ship2 = widget.purchaseDetails.shippingAddressLine2;
-    if(primaryAddressLine1 == ship1 && primaryAddressLine2 == ship2){
+    if (primaryAddressLine1 == ship1 && primaryAddressLine2 == ship2) {
       setState(() {
         isPrimary = true;
         print('primary is selected');
       });
-    }else if(secondaryAddressLine1 == ship1 && secondaryAddressLine1 == ship2){
+    } else if (secondaryAddressLine1 == ship1 &&
+        secondaryAddressLine1 == ship2) {
       setState(() {
         isPrimary = false;
         print('secondary is selected');
@@ -493,12 +512,26 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
     var totalDays = [];
 
     for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
-      if(listOfAvailableDays.contains( DateFormat('EEEE').format(startDate.add(Duration(days: i)))))
-      {
-
-        isPrimary ? primaryList.add(startDate.add(Duration(days: i)).toString().split(" ")[0].toString()+" 00:00:00")
-            : secondaryList.add(startDate.add(Duration(days: i)).toString().split(" ")[0].toString()+" 00:00:00");
-        totalDays.add(startDate.add(Duration(days: i)).toString().split(" ")[0].toString());
+      if (listOfAvailableDays.contains(
+          DateFormat('EEEE').format(startDate.add(Duration(days: i))))) {
+        isPrimary
+            ? primaryList.add(startDate
+                    .add(Duration(days: i))
+                    .toString()
+                    .split(" ")[0]
+                    .toString() +
+                " 00:00:00")
+            : secondaryList.add(startDate
+                    .add(Duration(days: i))
+                    .toString()
+                    .split(" ")[0]
+                    .toString() +
+                " 00:00:00");
+        totalDays.add(startDate
+            .add(Duration(days: i))
+            .toString()
+            .split(" ")[0]
+            .toString());
       }
     }
 
@@ -513,10 +546,9 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
     print(primaryAndSecondary);
 
     return primaryAndSecondary;
-
   }
 
-  getPrimaryAndSecondaryWithBreak({breaks,primaryList,secondaryList}){
+  getPrimaryAndSecondaryWithBreak({breaks, primaryList, secondaryList}) {
     print('with break called');
 
     print(breaks);
@@ -527,10 +559,13 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
 
     var totalDays = [];
     print(breaks.length);
-    for (int i = 0; i <= endDate.difference(startDate).inDays+breaks.length; i++) {
-      if(listOfAvailableDays.contains( DateFormat('EEEE').format(startDate.add(Duration(days: i)))))
-      {
-          totalDays.add(startDate.add(Duration(days: i)).toString().split(" ")[0]);
+    for (int i = 0;
+        i <= endDate.difference(startDate).inDays + breaks.length;
+        i++) {
+      if (listOfAvailableDays.contains(
+          DateFormat('EEEE').format(startDate.add(Duration(days: i))))) {
+        totalDays
+            .add(startDate.add(Duration(days: i)).toString().split(" ")[0]);
       }
     }
 
@@ -545,13 +580,12 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
     return primaryAndSecondary;
   }
 
-
   var isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
-        accentColor:  Color.fromRGBO(144, 144, 144, 1),
+        accentColor: Color.fromRGBO(144, 144, 144, 1),
       ),
       child: Scaffold(
           key: _scaffoldKey,
@@ -573,7 +607,8 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                 color: defaultGreen,
               ),
             ),
-            title: Text('Placed Meal Orders', style: appBarTextStyle.copyWith(color: defaultGreen)),
+            title: Text('Placed Meal Orders',
+                style: appBarTextStyle.copyWith(color: defaultGreen)),
           ),
           body: Container(
             padding: EdgeInsets.only(top: 10),
@@ -598,30 +633,32 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                                   flex: 7,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Flexible(
                                         child: Text(
-                                          widget.purchaseDetails.mealPlanName,
-                                      style: selectedTab.copyWith(fontSize: 18,color: Colors.black)
-                            ),
+                                            widget.purchaseDetails.mealPlanName,
+                                            style: selectedTab.copyWith(
+                                                fontSize: 18,
+                                                color: Colors.black)),
                                       ),
-                                      SizedBox(height: 10,),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
                                       Flexible(
                                         child: Padding(
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 6),
-                                          child: Text(
-                                            widget.plan.details,
+                                          child: Text(widget.plan.details,
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
-                                                  fontFamily: 'RobotoCondensedReg',
+                                                  fontFamily:
+                                                      'RobotoCondensedReg',
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.w400,
-                                                  color: Color(0xFF77838F)
-                                              ),
-                                              maxLines: 3
-                                          ),
+                                                  color: Color(0xFF77838F)),
+                                              maxLines: 3),
                                         ),
                                       ),
                                     ],
@@ -683,28 +720,31 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                           children: [
                             Flexible(
                               child: Text(
-                                "${widget.purchaseDetails.mealPlanDuration} day meal plan • " +
-                                    (widget.plan.type == 0
-                                        ? "With Weekends"
-                                        : "Without Weekends"),
+                                  "${widget.purchaseDetails.mealPlanDuration} day meal plan • " +
+                                      (widget.plan.type == 0
+                                          ? "With Weekends"
+                                          : "Without Weekends"),
                                   style: selectedTab.copyWith(
-                                      fontSize: 13, fontWeight: FontWeight.normal,color: Color(0xFF909090))
-                              ),
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xFF909090))),
                             ),
                             Flexible(
                               fit: FlexFit.loose,
                               child: Text(
-                                "${widget.purchaseDetails.kCal} Calorie",
+                                  "${widget.purchaseDetails.kCal} Calorie",
                                   style: selectedTab.copyWith(
-                                      fontSize: 13, fontWeight: FontWeight.normal,color: Color(0xFF909090))
-                              ),
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xFF909090))),
                             ),
                             Flexible(
                               child: Text(
-                                'Start Date - ${formatDate(DateTime.parse(widget.purchaseDetails.startDate), format)}',
+                                  'Start Date - ${formatDate(DateTime.parse(widget.purchaseDetails.startDate), format)}',
                                   style: selectedTab.copyWith(
-                                      fontSize: 13, fontWeight: FontWeight.normal,color: Color(0xFF909090))
-                              ),
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xFF909090))),
                             ),
                           ],
                         ),
@@ -726,51 +766,91 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                               setState(() {
                                 isLoading = false;
                               });
-                              for(int i =0;i<resource.length;i++){
-                                if(resource[i]['meal_purchase_id'].toString() == widget.purchaseDetails.id.toString()){
+                              for (int i = 0; i < resource.length; i++) {
+                                if (resource[i]['meal_purchase_id']
+                                        .toString() ==
+                                    widget.purchaseDetails.id.toString()) {
                                   res = resource[i];
                                 }
                               }
                               print(res);
 
-                              if(res != null && res['primary_address_dates'] !=null && res['secondary_address_dates'] != null){
+                              if (res != null &&
+                                  res['primary_address_dates'] != null &&
+                                  res['secondary_address_dates'] != null) {
                                 print('both address');
-                                primaryDaysList = jsonDecode(res['primary_address_dates']);
-                                for(int  i =0;i<primaryDaysList.length;i++){
-                                  primaryDaysList[i] = primaryDaysList[i].toString().split(' ')[0];
+                                primaryDaysList =
+                                    jsonDecode(res['primary_address_dates']);
+                                for (int i = 0;
+                                    i < primaryDaysList.length;
+                                    i++) {
+                                  primaryDaysList[i] = primaryDaysList[i]
+                                      .toString()
+                                      .split(' ')[0];
                                 }
-                                secondaryDaysList = jsonDecode(res['secondary_address_dates']);
-                                for(int  i =0;i<secondaryDaysList.length;i++){
-                                  secondaryDaysList[i] = secondaryDaysList[i].toString().split(' ')[0];
-                                }
-                                makePostAddressCall = false;
-                              }else if(res != null && res['primary_address_dates'] !=null){
-                                primaryDaysList = jsonDecode(res['primary_address_dates']);
-                                for(int  i =0;i<primaryDaysList.length;i++){
-                                  primaryDaysList[i] = primaryDaysList[i].toString().split(' ')[0];
-                                }
-                                makePostAddressCall = false;
-                              }else if(res != null && res['secondary_address_dates'] !=null){
-                                secondaryDaysList = jsonDecode(res['secondary_address_dates']);
-                                for(int  i =0;i<secondaryDaysList.length;i++){
-                                  secondaryDaysList[i] = secondaryDaysList[i].toString().split(' ')[0];
+                                secondaryDaysList =
+                                    jsonDecode(res['secondary_address_dates']);
+                                for (int i = 0;
+                                    i < secondaryDaysList.length;
+                                    i++) {
+                                  secondaryDaysList[i] = secondaryDaysList[i]
+                                      .toString()
+                                      .split(' ')[0];
                                 }
                                 makePostAddressCall = false;
-                              }else{
+                              } else if (res != null &&
+                                  res['primary_address_dates'] != null) {
+                                primaryDaysList =
+                                    jsonDecode(res['primary_address_dates']);
+                                for (int i = 0;
+                                    i < primaryDaysList.length;
+                                    i++) {
+                                  primaryDaysList[i] = primaryDaysList[i]
+                                      .toString()
+                                      .split(' ')[0];
+                                }
+                                makePostAddressCall = false;
+                              } else if (res != null &&
+                                  res['secondary_address_dates'] != null) {
+                                secondaryDaysList =
+                                    jsonDecode(res['secondary_address_dates']);
+                                for (int i = 0;
+                                    i < secondaryDaysList.length;
+                                    i++) {
+                                  secondaryDaysList[i] = secondaryDaysList[i]
+                                      .toString()
+                                      .split(' ')[0];
+                                }
+                                makePostAddressCall = false;
+                              } else {
                                 makePostAddressCall = true;
                                 print('yup called');
-                                var primaryAndSecondary = getInitialPrimaryAndSecondary();
+                                var primaryAndSecondary =
+                                    getInitialPrimaryAndSecondary();
                                 primaryDaysList = primaryAndSecondary[0];
                                 secondaryDaysList = primaryAndSecondary[1];
-                                for(int i =0;i<primaryDaysList.length;i++){
-                                  primaryDaysList[i] = primaryDaysList[i].toString().split(' ')[0];
+                                for (int i = 0;
+                                    i < primaryDaysList.length;
+                                    i++) {
+                                  primaryDaysList[i] = primaryDaysList[i]
+                                      .toString()
+                                      .split(' ')[0];
                                 }
-                                for(int i =0;i<secondaryDaysList.length;i++){
-                                  secondaryDaysList[i] = secondaryDaysList[i].toString().split(' ')[0];
+                                for (int i = 0;
+                                    i < secondaryDaysList.length;
+                                    i++) {
+                                  secondaryDaysList[i] = secondaryDaysList[i]
+                                      .toString()
+                                      .split(' ')[0];
                                 }
                               }
 
-                              await showAddressCalendar(addressCalendar: true,id : res['id'],breakList : res['date_list'],pList: primaryDaysList,sList: secondaryDaysList);
+                              await showAddressCalendar(
+                                  addressCalendar: true,
+                                  id: res['id'],
+                                  breakList: res['date_list'],
+                                  pList: primaryDaysList,
+                                  sList: secondaryDaysList);
                             },
                             child: Text(
                               'Address',
@@ -792,8 +872,10 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                                 isLoading = false;
                               });
                               int count = 0;
-                              for(int i =0;i<resource.length;i++){
-                                if(resource[i]['meal_purchase_id'].toString() == widget.purchaseDetails.id.toString()){
+                              for (int i = 0; i < resource.length; i++) {
+                                if (resource[i]['meal_purchase_id']
+                                        .toString() ==
+                                    widget.purchaseDetails.id.toString()) {
                                   res = resource[i];
                                 }
                               }
@@ -801,68 +883,106 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                               print(res);
                               var dateBreakList = [];
                               var breakDays = [];
-                              if(res == null || res.length == 0){
-                                var primaryAndSecondary = getInitialPrimaryAndSecondary();
-                                dateBreakList = primaryAndSecondary[0]+primaryAndSecondary[1];
-                                for(int i =0;i<dateBreakList.length;i++){
-                                  dateBreakList[i] = dateBreakList[i].toString().split(' ')[0];
+                              if (res == null || res.length == 0) {
+                                var primaryAndSecondary =
+                                    getInitialPrimaryAndSecondary();
+                                dateBreakList = primaryAndSecondary[0] +
+                                    primaryAndSecondary[1];
+                                for (int i = 0; i < dateBreakList.length; i++) {
+                                  dateBreakList[i] =
+                                      dateBreakList[i].toString().split(' ')[0];
                                 }
 
-                                await showBreakCalendar(dateBreakList,breakDays,false,res['id'],primaryAndSecondary);
-                              }else{
-                                if(res['date_list'] == null || jsonDecode(res['date_list']).length == 0){
+                                await showBreakCalendar(
+                                    dateBreakList,
+                                    breakDays,
+                                    false,
+                                    res['id'],
+                                    primaryAndSecondary);
+                              } else {
+                                if (res['date_list'] == null ||
+                                    jsonDecode(res['date_list']).length == 0) {
                                   print('break list is empty');
-                                  var primaryAndSecondary = getInitialPrimaryAndSecondary();
+                                  var primaryAndSecondary =
+                                      getInitialPrimaryAndSecondary();
 
                                   var primary = res['primary_address_dates'];
-                                  var secondary = res['secondary_address_dates'];
+                                  var secondary =
+                                      res['secondary_address_dates'];
 
-                                  if(primary == null && secondary == null){
+                                  if (primary == null && secondary == null) {
                                     var primaryList = primaryAndSecondary[0];
                                     var secondaryList = primaryAndSecondary[1];
-                                  }else{
-                                    var primaryList = res['primary_address_dates'] !=null ? jsonDecode(res['primary_address_dates']) : [];
-                                    var secondaryList = res['secondary_address_dates'] != null ? jsonDecode(res['secondary_address_dates']) : [];
+                                  } else {
+                                    var primaryList =
+                                        res['primary_address_dates'] != null
+                                            ? jsonDecode(
+                                                res['primary_address_dates'])
+                                            : [];
+                                    var secondaryList =
+                                        res['secondary_address_dates'] != null
+                                            ? jsonDecode(
+                                                res['secondary_address_dates'])
+                                            : [];
                                     primaryAndSecondary[0] = primaryList;
                                     primaryAndSecondary[1] = secondaryList;
                                   }
 
-                                  dateBreakList = primaryAndSecondary[0]+primaryAndSecondary[1];
-                                  for(int i =0;i<dateBreakList.length;i++){
-                                    dateBreakList[i] = dateBreakList[i].toString().split(' ')[0];
+                                  dateBreakList = primaryAndSecondary[0] +
+                                      primaryAndSecondary[1];
+                                  for (int i = 0;
+                                      i < dateBreakList.length;
+                                      i++) {
+                                    dateBreakList[i] = dateBreakList[i]
+                                        .toString()
+                                        .split(' ')[0];
                                   }
 
-                                  await showBreakCalendar(dateBreakList,[],true,res['id'],primaryAndSecondary);
-
-                                }else{
+                                  await showBreakCalendar(dateBreakList, [],
+                                      true, res['id'], primaryAndSecondary);
+                                } else {
                                   print('else condition is called');
                                   var listOfDate = jsonDecode(res['date_list']);
-                                  for(int i =0 ;i<listOfDate.length;i++){
+                                  for (int i = 0; i < listOfDate.length; i++) {
                                     print(listOfDate[i]);
-                                    breakDays.add(listOfDate[i].toString().split(" ")[0]);
+                                    breakDays.add(
+                                        listOfDate[i].toString().split(" ")[0]);
                                   }
-                                  var primaryAndSecondary = await getPrimaryAndSecondaryWithBreak(
-                                      breaks: jsonDecode(res['date_list']),
-                                      primaryList  : jsonDecode(res['primary_address_dates']),
-                                      secondaryList : jsonDecode(res['secondary_address_dates'])
-                                  );
+                                  var primaryAndSecondary =
+                                      await getPrimaryAndSecondaryWithBreak(
+                                          breaks: jsonDecode(res['date_list']),
+                                          primaryList: jsonDecode(
+                                              res['primary_address_dates']),
+                                          secondaryList: jsonDecode(
+                                              res['secondary_address_dates']));
                                   var breaks = jsonDecode(res['date_list']);
                                   print('printing break days');
                                   print(breaks);
-                                  var lastBreak = breaks[breaks.length-1].toString().split(" ")[0];
-                                  var ind = primaryAndSecondary[2].indexOf(lastBreak);
+                                  var lastBreak = breaks[breaks.length - 1]
+                                      .toString()
+                                      .split(" ")[0];
+                                  var ind =
+                                      primaryAndSecondary[2].indexOf(lastBreak);
                                   print('printing break days');
                                   print(breakDays);
-                                  dateBreakList = primaryAndSecondary[0]+primaryAndSecondary[1];
-                                  for(int i =0;i<dateBreakList.length;i++){
-                                    dateBreakList[i] = dateBreakList[i].toString().split(' ')[0];
+                                  dateBreakList = primaryAndSecondary[0] +
+                                      primaryAndSecondary[1];
+                                  for (int i = 0;
+                                      i < dateBreakList.length;
+                                      i++) {
+                                    dateBreakList[i] = dateBreakList[i]
+                                        .toString()
+                                        .split(' ')[0];
                                   }
 
-                                  await showBreakCalendar(dateBreakList,breakDays,true,res['id'],primaryAndSecondary);
+                                  await showBreakCalendar(
+                                      dateBreakList,
+                                      breakDays,
+                                      true,
+                                      res['id'],
+                                      primaryAndSecondary);
                                 }
-
                               }
-
                             },
                             child: Text(
                               'Breaks',
@@ -911,14 +1031,18 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text('Day ${(index + 1).toString()}',style:  TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 12
-                                ),),
-                                Text(formatDate(dates[index], [dd, '/', mm]),style:  TextStyle(
-                                    color: Color(0xFF909090),
-                                    fontSize: 12,fontWeight: FontWeight.w400
-                                ),)
+                                Text(
+                                  'Day ${(index + 1).toString()}',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 12),
+                                ),
+                                Text(
+                                  formatDate(dates[index], [dd, '/', mm]),
+                                  style: TextStyle(
+                                      color: Color(0xFF909090),
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400),
+                                )
                               ],
                             ),
                           );
@@ -928,54 +1052,60 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                   ),
                   Expanded(
                     flex: 16,
-                    child: !isLoading ? isLoaded
-                        ? TabBarView(
-                            controller: _pageController,
-                            children: List.generate(
-                                int.parse(
-                                    widget.purchaseDetails.mealPlanDuration),
-                                (index) {
-                              return Column(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      child: menuUi(day: index + 1),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      bool returnedBack = await Navigator.push(
-                                          context,
-                                          CupertinoPageRoute(
-                                              builder: (BuildContext context) =>
-                                                  PlaceMealMenuOrders(
-                                                      dates: dates,
-                                                      placedFoodItems: foodItems,
-                                                      plan: widget.plan,
-                                                      purchaseDetails: widget
-                                                          .purchaseDetails)));
-                                      if (returnedBack) {
-                                        getData();
-                                      }
-                                    },
-                                    child: Container(
-                                      height: 50,
-                                      margin: EdgeInsets.only(top: 20),
-                                      color: defaultGreen,
-                                      child: Center(
-                                          child: Text(
-                                        'Edit Plan',
-                                        style: selectedTab.copyWith(color: white),
-                                      )),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }))
-                        : Center(child: SpinKitDoubleBounce(color: defaultGreen))  : Center(child: SpinKitDoubleBounce(color: defaultGreen)),
+                    child: !isLoading
+                        ? isLoaded
+                            ? TabBarView(
+                                controller: _pageController,
+                                children: List.generate(
+                                    int.parse(widget.purchaseDetails
+                                        .mealPlanDuration), (index) {
+                                  return Column(
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          child: menuUi(day: index + 1),
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () async {
+                                          bool returnedBack = await Navigator.push(
+                                              context,
+                                              CupertinoPageRoute(
+                                                  builder: (BuildContext
+                                                          context) =>
+                                                      PlaceMealMenuOrders(
+                                                          dates: dates,
+                                                          placedFoodItems:
+                                                              foodItems,
+                                                          plan: widget.plan,
+                                                          purchaseDetails: widget
+                                                              .purchaseDetails)));
+                                          if (returnedBack) {
+                                            getData();
+                                          }
+                                        },
+                                        child: Container(
+                                          height: 50,
+                                          margin: EdgeInsets.only(top: 20),
+                                          color: defaultGreen,
+                                          child: Center(
+                                              child: Text(
+                                            'Edit Plan',
+                                            style: selectedTab.copyWith(
+                                                color: white),
+                                          )),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }))
+                            : Center(
+                                child: SpinKitDoubleBounce(color: defaultGreen))
+                        : Center(
+                            child: SpinKitDoubleBounce(color: defaultGreen)),
                   )
                 ]),
-          ) ),
+          )),
     );
   }
 
@@ -1035,7 +1165,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                       height: 85,
                       width: 82,
                       decoration: authFieldDecoration,
-                      child:  CachedNetworkImage(
+                      child: CachedNetworkImage(
                         imageUrl: widget.plan.picture ??
                             "http://via.placeholder.com/350x150",
                         imageBuilder: (context, imageProvider) => Container(
@@ -1072,7 +1202,10 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
         return ExpansionTile(
             title: Text(
               mainCategoryItems[indexMajor].name,
-              style: selectedTab.copyWith(fontSize: 18,fontWeight: FontWeight.w500,color: Colors.black),
+              style: selectedTab.copyWith(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black),
             ),
             initiallyExpanded: indexMajor == 0 ? true : false,
             children: subCategoryItems[indexMajor].length == 0
@@ -1115,7 +1248,6 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
       },
     );
   }
-
 }
 
 class CustomWeekdayLabelsRow extends StatelessWidget {

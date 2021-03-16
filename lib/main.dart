@@ -25,7 +25,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     precacheImage(AssetImage('images/bg1.jpg'), context);
     precacheImage(AssetImage('images/bg13.jpg'), context);
-    precacheImage(AssetImage('images/popup_background.jpg'), context);
+    precacheImage(AssetImage('images/bg7.jpg'), context);
     precacheImage(AssetImage("images/Group 7.png"), context);
     precacheImage(AssetImage("images/Group 57.png"), context);
     // precacheImage(bmiBackground.image, context);

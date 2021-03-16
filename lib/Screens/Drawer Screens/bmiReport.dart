@@ -283,7 +283,7 @@ class _BmiReportState extends State<BmiReport> {
                                                       decoration: BoxDecoration(
                                                         image: DecorationImage(
                                                             image: AssetImage(
-                                                                'images/popup_background.jpg'),
+                                                                'images/bg7.jpg'),
                                                             fit: BoxFit.fill),
                                                         borderRadius:
                                                             BorderRadius.all(
