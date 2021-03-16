@@ -331,7 +331,7 @@ class _MealPlanPageState extends State<MealPlanPage>
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage('images/questionnaire_background.jpg'),
+              image: AssetImage('images/bg5.jpg'),
               fit: BoxFit.fitHeight)),
       child: Scaffold(
         backgroundColor: Colors.transparent,
