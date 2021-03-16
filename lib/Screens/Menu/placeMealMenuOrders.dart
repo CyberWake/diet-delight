@@ -534,8 +534,74 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                 int.parse(
                                     widget.purchaseDetails.mealPlanDuration),
                                 (index) {
-                              return Container(
-                                child: menuUi(day: index + 1),
+                              return Column(
+                                children: [
+                                  Expanded(
+                                    flex : 7,
+                                    child: Container(
+                                      child: menuUi(day: index + 1),
+                                    ),
+                                  ),
+                                  delataApiCalls.length > 0 || addDataApiCalls.length > 0  ?Expanded(
+                                    flex : 2,
+                                    child: GestureDetector(
+                                      onTap: () async {
+
+                                        for(int i =0;i<addDataApiCalls.length;i++){
+                                          int result = await _apiCall
+                                              .postMenuOrder(addDataApiCalls[i]);
+                                          if (result != -1) {
+
+                                            orderPlaced = true;
+                                            print(maxBuyIndexedList);
+                                            addDataItemForApiCalls[i].updateOrderItemId(result);
+                                            setState(() {});
+                                          } else {
+                                            addDataItemForApiCalls[i].change(false);
+                                            setState(() {});
+                                            _scaffoldKey.currentState.showSnackBar(
+                                                SnackBar(
+                                                    content: Text(
+                                                        'Something went wrong')));
+                                          }
+                                        }
+
+                                        for(int i = 0; i<delataApiCalls.length; i++){
+                                          bool result = await _apiCall.deleteMenuOrder(
+                                              delataApiCalls[i]);
+                                          if (result) {
+
+                                            print(maxBuyIndexedList);
+                                            setState(() {});
+                                          } else {
+                                            delDataItemForApiCalls[i].change(true);
+                                            setState(() {});
+                                            _scaffoldKey.currentState.showSnackBar(
+                                                SnackBar(
+                                                    content: Text(
+                                                        'Deleting menu order failed')));
+                                          }
+                                        }
+                                        addDataApiCalls = [];
+                                        addDataItemForApiCalls = [];
+                                        delataApiCalls = [];
+                                        delDataItemForApiCalls = [];
+                                      },
+                                      child: Container(
+                                        height: 50,
+                                        width : MediaQuery.of(context).size.width,
+                                        margin: EdgeInsets.only(top: 20),
+                                        color: defaultGreen,
+                                        child: Center(
+                                            child: Text(
+                                              'DONE',
+                                              style: selectedTab.copyWith(color: white),
+                                            )),
+                                      ),
+                                    ),
+                                  ) : Container(),
+
+                                ],
                               );
                             }))
                         : Center(
@@ -549,6 +615,11 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     );
   }
 
+  var addDataApiCalls = [];
+  var addDataItemForApiCalls = [];
+
+  var delataApiCalls = [];
+  var delDataItemForApiCalls = [];
   Widget foodItemCard(
       {FoodItemModel item, int dateIndex, int maxBuyIndex, int max}) {
     Widget button = GestureDetector(
@@ -836,28 +907,40 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                                 item.noteAdded.isNotEmpty
                                             ? ""
                                             : item.noteAdded);
-                                    int result = await _apiCall
-                                        .postMenuOrder(foodItemOrder);
-                                    if (result != -1) {
-                                      orderPlaced = true;
-                                      print('called');
+                                    addDataApiCalls.add(foodItemOrder);
+                                    addDataItemForApiCalls.add(item);
                                       maxBuyIndexedList[pageIndex]
                                               [maxBuyIndex] =
                                           maxBuyIndexedList[pageIndex]
                                                   [maxBuyIndex] +
                                               1;
-                                      print(maxBuyIndexedList);
-                                      item.updateOrderItemId(result);
                                       item.change(true);
+
+                                    orderPlaced = true;
                                       setState(() {});
-                                    } else {
-                                      item.change(false);
-                                      setState(() {});
-                                      _scaffoldKey.currentState.showSnackBar(
-                                          SnackBar(
-                                              content: Text(
-                                                  'Something went wrong')));
-                                    }
+                                    // int result = await _apiCall
+                                    //     .postMenuOrder(foodItemOrder);
+                                    // if (result != -1) {
+                                    //
+                                    //   orderPlaced = true;
+                                    //   print('called');
+                                    //   maxBuyIndexedList[pageIndex]
+                                    //           [maxBuyIndex] =
+                                    //       maxBuyIndexedList[pageIndex]
+                                    //               [maxBuyIndex] +
+                                    //           1;
+                                    //   print(maxBuyIndexedList);
+                                    //   item.updateOrderItemId(result);
+                                    //   item.change(true);
+                                    //   setState(() {});
+                                    // } else {
+                                    //   item.change(false);
+                                    //   setState(() {});
+                                    //   _scaffoldKey.currentState.showSnackBar(
+                                    //       SnackBar(
+                                    //           content: Text(
+                                    //               'Something went wrong')));
+                                    // }
                                   } else {
                                     print("||||" + concatenatedAddress);
                                     _scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -867,24 +950,28 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                 } else {
                                   item.change(false);
                                   print('deleted called');
-
-                                  setState(() {});
-                                  bool result = await _apiCall.deleteMenuOrder(
-                                      item.orderItemId.toString());
-                                  if (result) {
+                                     item.change(false);
+                                  delataApiCalls.add(item.orderItemId.toString());
+                                  delDataItemForApiCalls.add(item);
                                     maxBuyIndexedList[pageIndex][maxBuyIndex] -=
                                         1;
-                                    print(maxBuyIndexedList);
-                                    item.change(false);
-                                    setState(() {});
-                                  } else {
-                                    item.change(true);
-                                    setState(() {});
-                                    _scaffoldKey.currentState.showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                'Deleting menu order failed')));
-                                  }
+                                  setState(() {});
+                                  // bool result = await _apiCall.deleteMenuOrder(
+                                  //     item.orderItemId.toString());
+                                  // if (result) {
+                                  //   maxBuyIndexedList[pageIndex][maxBuyIndex] -=
+                                  //       1;
+                                  //   print(maxBuyIndexedList);
+                                  //   item.change(false);
+                                  //   setState(() {});
+                                  // } else {
+                                  //   item.change(true);
+                                  //   setState(() {});
+                                  //   _scaffoldKey.currentState.showSnackBar(
+                                  //       SnackBar(
+                                  //           content: Text(
+                                  //               'Deleting menu order failed')));
+                                  // }
                                 }
                                 setState(() {
                                   notInProgress = true;

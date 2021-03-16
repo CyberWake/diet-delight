@@ -1627,7 +1627,7 @@ class Api {
       var body = jsonEncode(data);
       print(body);
       final response = await http.put(
-          uri + '/api/v1/my-menu-orders/${orderDetails.mealPlanId}',
+          uri + '/api/v1/meal-purchases/${orderDetails.mealPlanId}',
           headers: headers,
           body: body);
       print(response.statusCode);

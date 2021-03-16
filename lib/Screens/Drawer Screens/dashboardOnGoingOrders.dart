@@ -100,7 +100,6 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
       print("id : ${activeMealPurchasesCache[i].mealPlanId}");
       if(DateTime.now().toLocal().isBefore(DateTime.parse(activeMealPurchasesCache[i].endDate) )){
         print("yes before");
-        await Future.delayed(Duration(milliseconds: 500));
         activePurchaseMealPlansCache.add(await _apiCall
             .getMealPlan(activeMealPurchasesCache[i].mealPlanId)
             .whenComplete(() => i++));
@@ -128,7 +127,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
 
   @override
   void initState() {
-    getCachedData();
+    getData();
     super.initState();
   }
 
