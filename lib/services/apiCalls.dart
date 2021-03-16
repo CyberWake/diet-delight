@@ -183,7 +183,7 @@ class Api {
         print('Success getting user info');
         var body = convert.jsonDecode(response.body);
         print('user model body: $body');
-        userInfo = RegModel.fromMap(body);
+        userInfo = RegModel.fromMap(body['data']);
         print(userInfo.gender);
         await FlutterSecureStorage()
             .write(key: 'calorie', value: recommendedCalories.toString());
