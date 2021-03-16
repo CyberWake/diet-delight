@@ -37,7 +37,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
   String name;
 
   getUserInfo() async {
-    name = Api.userInfo.firstName + ' ' + Api.userInfo.lastName;
+    name = "${Api.userInfo.firstName ?? ''} ${Api.userInfo.lastName ?? ''}";
     if (Api.userInfo.addressLine1 != null) {
       addressPrimaryLine1.text = Api.userInfo.addressLine1;
     }
@@ -496,7 +496,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                           'Shipping Address',
                           style: selectedTab.copyWith(),
                         ),
-                        isAddressSelected
+                        isAddressSelected ?? false
                             ? AddressButtonWithModal(
                                 callBackFunction: callback,
                                 child: Text('Change',
@@ -519,9 +519,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                Api.userInfo.firstName +
-                                    ' ' +
-                                    Api.userInfo.lastName,
+                                "${Api.userInfo.firstName ?? ''} ${Api.userInfo.lastName ?? ''}",
                                 style: selectedTab.copyWith(
                                     fontWeight: FontWeight.w400),
                                 textAlign: TextAlign.start,
