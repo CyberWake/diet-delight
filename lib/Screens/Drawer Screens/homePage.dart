@@ -207,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           child: Container(
             color: defaultGreen,
-            width: 120,
+            width: 140,
             height: 250,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -305,7 +305,8 @@ class _HomeScreenState extends State<HomeScreen> {
             print('success getting consultation package screen');
           },
           child: Container(
-            width: 140,
+            width: 160,
+            // height: 900,
             decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border.all(width: 2.0, color: defaultGreen)),
@@ -327,46 +328,40 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Text(
                             consultationPackages[pos].name,
                             style: TextStyle(
-                              fontFamily: 'RobotoCondensedReg',
+                              fontFamily: 'RobotoReg',
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
                           )),
                     )),
-                Flexible(
-                  fit: FlexFit.loose,
-                  flex: 13,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(10.0, 0, 10, 0),
-                    child: Column(
+                Padding(
+                  padding: EdgeInsets.fromLTRB(10.0, 0, 10, 0),
+                  child: Column(
 //                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          consultationPackages[pos].subtitle,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontFamily: 'RobotoCondensedReg',
-                            fontSize: 11,
-                            fontWeight: FontWeight.normal,
-                            color: cardGray,
-                          ),
+                    children: [
+                      Text(
+                        consultationPackages[pos].subtitle,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontFamily: 'RobotoCondensedReg',
+                          fontSize: 11,
+                          fontWeight: FontWeight.normal,
+                          color: cardGray,
                         ),
-                        SizedBox(height: 10.0),
-                        Expanded(
-                          child: Text(
-                            consultationPackages[pos].details,
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontFamily: 'RobotoCondensedReg',
-                              fontSize: 11,
-                              fontWeight: FontWeight.normal,
-                              color: cardGray,
-                            ),
-                          ),
+                      ),
+                      SizedBox(height: 10.0),
+                      Text(
+                        consultationPackages[pos].details,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontFamily: 'RobotoCondensedReg',
+                          fontSize: 11,
+                          fontWeight: FontWeight.normal,
+                          color: cardGray,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 Spacer(),
@@ -411,6 +406,130 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+//     return Padding(
+//       padding: EdgeInsets.only(right: 15.0),
+//       child: Material(
+//         elevation: 0.0,
+//         shadowColor: Colors.white,
+//         child: InkWell(
+//           splashColor: defaultGreen.withAlpha(30),
+//           onTap: () {
+//             Navigator.push(
+//                 context,
+//                 CupertinoPageRoute(
+//                     builder: (context) => SelectConsultationMode(
+//                           packageIndex: pos,
+//                           consultation: consultationPackages,
+//                         )));
+//             print('success getting consultation package screen');
+//           },
+//           child: Container(
+//             width: 140,
+//             decoration: BoxDecoration(
+//                 color: Colors.white,
+//                 border: Border.all(width: 2.0, color: defaultGreen)),
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.center,
+//               mainAxisAlignment: MainAxisAlignment.start,
+//               children: [
+//                 Padding(
+//                     padding: EdgeInsets.only(bottom: 15, top: 15),
+//                     child: Container(
+//                       decoration: BoxDecoration(
+//                         gradient: LinearGradient(
+//                             begin: Alignment.centerLeft,
+//                             end: Alignment.centerRight,
+//                             colors: itemColors[pos]),
+//                       ),
+//                       child: Padding(
+//                           padding: EdgeInsets.fromLTRB(15, 3, 15, 3),
+//                           child: Text(
+//                             consultationPackages[pos].name,
+//                             style: TextStyle(
+//                               fontFamily: 'RobotoCondensedReg',
+//                               fontSize: 11,
+//                               fontWeight: FontWeight.bold,
+//                               color: Colors.black,
+//                             ),
+//                           )),
+//                     )),
+//                 Flexible(
+//                   fit: FlexFit.loose,
+//                   flex: 13,
+//                   child: Padding(
+//                     padding: EdgeInsets.fromLTRB(10.0, 0, 10, 0),
+//                     child: Column(
+// //                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                       children: [
+//                         Text(
+//                           consultationPackages[pos].subtitle,
+//                           textAlign: TextAlign.left,
+//                           style: TextStyle(
+//                             fontFamily: 'RobotoCondensedReg',
+//                             fontSize: 11,
+//                             fontWeight: FontWeight.normal,
+//                             color: cardGray,
+//                           ),
+//                         ),
+//                         SizedBox(height: 10.0),
+//                         Expanded(
+//                           child: Text(
+//                             consultationPackages[pos].details,
+//                             textAlign: TextAlign.left,
+//                             style: TextStyle(
+//                               fontFamily: 'RobotoCondensedReg',
+//                               fontSize: 11,
+//                               fontWeight: FontWeight.normal,
+//                               color: cardGray,
+//                             ),
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//                 Spacer(),
+//                 Padding(
+//                   padding: EdgeInsets.fromLTRB(5.0, 0, 5, 0),
+//                   child: Text(
+//                     consultationPackages[pos].price + ' BHD',
+//                     textAlign: TextAlign.center,
+//                     style: TextStyle(
+//                       fontFamily: 'RobotoCondensedReg',
+//                       fontSize: 20,
+//                       fontWeight: FontWeight.bold,
+//                       color: defaultGreen,
+//                     ),
+//                   ),
+//                 ),
+//                 Padding(
+//                   padding: const EdgeInsets.fromLTRB(10, 10, 10, 15),
+//                   child: Container(
+//                     width: double.infinity,
+//                     decoration: BoxDecoration(
+//                         color: defaultGreen,
+//                         borderRadius: BorderRadius.all(Radius.circular(5))),
+//                     height: 25,
+//                     child: Center(
+//                       child: Text(
+//                         'BOOK YOUR APPOINTMENT',
+//                         textAlign: TextAlign.center,
+//                         style: TextStyle(
+//                           fontFamily: 'RobotoCondensedReg',
+//                           fontSize: 8,
+//                           fontWeight: FontWeight.bold,
+//                           color: Colors.white,
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
   }
 
   @override
@@ -838,7 +957,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(
                           padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                           child: Container(
-                              height: 0.37 * devHeight,
+                              height: 0.4 * devHeight,
                               child: ListView.builder(
                                 itemCount: consultationPackages.length,
                                 scrollDirection: Axis.horizontal,

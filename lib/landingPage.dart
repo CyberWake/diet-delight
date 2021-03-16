@@ -242,23 +242,23 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     SizedBox(
                       width: 20,
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                                builder: (BuildContext context) =>
-                                    CouponCode()));
-                      },
-                      child: Image.asset(
-                        'images/Group 24.png',
-                        width: 25.0,
-                        height: 25.0,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
+                    // GestureDetector(
+                    //   onTap: () {
+                    //     Navigator.push(
+                    //         context,
+                    //         CupertinoPageRoute(
+                    //             builder: (BuildContext context) =>
+                    //                 CouponCode()));
+                    //   },
+                    //   child: Image.asset(
+                    //     'images/Group 24.png',
+                    //     width: 25.0,
+                    //     height: 25.0,
+                    //   ),
+                    // ),
+                    // SizedBox(
+                    //   width: 10,
+                    // ),
                   ]
                 : [],
             bottom: page == 1 || page == 3 || page == 4

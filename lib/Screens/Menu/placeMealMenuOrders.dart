@@ -634,7 +634,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                               delDataItemForApiCalls = [];
                                             },
                                             child: Container(
-                                              height: 50,
+                                              height: 40,
                                               width: MediaQuery.of(context)
                                                   .size
                                                   .width,
@@ -653,7 +653,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                                           ),
                                                         )
                                                       : Text(
-                                                          'DONE',
+                                                          'SUBMIT',
                                                           style: selectedTab
                                                               .copyWith(
                                                                   color: white),
