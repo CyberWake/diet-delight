@@ -274,6 +274,7 @@ class _MealPlanPageState extends State<MealPlanPage>
                         style: selectedTab.copyWith(
                             fontSize: 16, fontWeight: FontWeight.w400),
                         maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
