@@ -165,7 +165,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                               onTap: () async {
                                 if (ordersInActivePlans[index]) {
                                   print('placed called');
-                                  Navigator.push(
+                                  bool returnedBack = await  Navigator.push(
                                       context,
                                       CupertinoPageRoute(
                                           builder: (BuildContext context) =>
@@ -175,6 +175,9 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                                                           index],
                                                   plan: activePurchaseMealPlans[
                                                       index])));
+                                  if (returnedBack) {
+                                    getCachedData();
+                                  }
                                 } else {
                                   print('place called');
                                   bool returnedBack = await Navigator.push(

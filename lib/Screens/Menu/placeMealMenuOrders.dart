@@ -75,6 +75,9 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     }
 
     var value = await FlutterSecureStorage().read(key: 'calorie');
+    print("Calorie value");
+    print(value);
+    data.remove(value);
     data.add(value);
     print("||||||||||||||||||||| $intake");
     await getMenuCategories(menuId);
@@ -118,6 +121,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
   }
 
   getMenuCategories(int menuId) async {
+
     categoryItems = [];
     foodItems = [];
     setState(() {
@@ -156,6 +160,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
         }
       }
     }
+
     if (categoryItems.length > 0) {
       for (int i = 0; i < categoryItems.length;) {
         foodItems.add(await _apiCall
@@ -166,12 +171,15 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     }
     for (int i = 0; i < foodItems.length; i++) {
       for (int j = 0; j < foodItems[i].length; j++) {
+        print("SELECTED VALUE + ${foodItems[i][j].isSelected}");
         if (widget.placedFoodItems != null &&
             widget.placedFoodItems.isNotEmpty) {
           for (int k = 0; k < widget.placedFoodItems[i].length; k++) {
+       print("POPOPOPOPOPOPOPOPOPOP");
             if (foodItems[i][j].id == widget.placedFoodItems[i][k].foodItemId) {
               foodItems[i][j]
                   .updateOrderItemId(widget.placedFoodItems[i][k].id);
+              foodItems[i][j].isSelected = true;
               foodItems[i][j].change(true);
             }
           }
@@ -180,6 +188,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
         }
       }
     }
+
 
     for (int i = 0; i < dates.length; i++) {
       var temp = [];
@@ -565,6 +574,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
             style: selectedTab.copyWith(color: white),
           ))),
     );
+
     return Container(
       height: 123,
       margin: EdgeInsets.symmetric(horizontal: 12),
@@ -825,6 +835,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                                 item.noteAdded.isNotEmpty
                                             ? ""
                                             : item.noteAdded);
+
                                     int result = await _apiCall
                                         .postMenuOrder(foodItemOrder);
                                     if (result != -1) {
@@ -839,6 +850,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                       item.updateOrderItemId(result);
                                       item.change(true);
                                       setState(() {});
+
                                     } else {
                                       item.change(false);
                                       setState(() {});

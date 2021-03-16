@@ -486,7 +486,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
 
   var makePostAddressCall = false;
 
-  var isPrimary;
+  var isPrimary = true;
 
   getInitialPrimaryAndSecondary(){
 

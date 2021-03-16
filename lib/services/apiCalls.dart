@@ -141,8 +141,9 @@ class Api {
         print('user model body: $body');
         userInfo = RegModel.fromMap(body);
         print(userInfo.gender);
+        print("YES ITS WAS CALLED");
         await FlutterSecureStorage()
-            .write(key: 'calorie', value: userInfo.recommendedCalories.toString());
+            .write(key: 'calorie', value: body['data']['recommended_calories'].toString());
         return userInfo;
       } else {
         print(response.statusCode);
@@ -153,6 +154,35 @@ class Api {
       return null;
     }
   }
+
+  Future<String> recommendedCalorie() async {
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      };
+      final response = await http.get(uri + '/api/v1/user', headers: headers);
+      if (response.statusCode == 200) {
+        print('Success getting user info');
+        var body = convert.jsonDecode(response.body);
+        print('user model body: $body');
+        userInfo = RegModel.fromMap(body);
+        print(userInfo.gender);
+        print("YES ITS WAS CALLED");
+        await FlutterSecureStorage()
+            .write(key: 'calorie', value: body['data']['recommended_calories'].toString());
+        print(userInfo.recommendedCalories);
+        return userInfo.recommendedCalories.toString();
+      } else {
+        print(response.statusCode);
+        return null;
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
 
   Future<bool> putUserInfo(RegModel user) async {
     print('logged id');
