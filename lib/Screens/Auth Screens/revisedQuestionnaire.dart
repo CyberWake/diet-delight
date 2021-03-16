@@ -76,16 +76,10 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
       print(options[i].question_Id);
     }
     print("done printing option");
-    // _pageController.addListener(() {
-    //   setState(() {
-    //     _currentIndex = _pageController.index;
-    //   });
-    // });
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     pageController = PageController(
       initialPage: questionNumber,
     );
@@ -96,11 +90,6 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
         isLoaded = true;
       });
     });
-//    pageController.addListener(() {
-//      _cont.animateTo(questionNumber * 30.toDouble(),
-//          duration: Duration(milliseconds: 500), curve: Curves.linear);
-//    });
-//    print(widget.qDetails);
     super.initState();
   }
 

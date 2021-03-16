@@ -22,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
@@ -70,7 +71,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     ['Profile', 'Ongoing Meal Plans'],
     [],
     ['Consultation Orders', 'Meal Plan Orders'],
-    //[],
     [
       'Security',
       'Terms and Conditions',
@@ -85,7 +85,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     'Dashboard',
     'Favourites',
     'Order History',
-    // 'Notifications',
     'Settings',
     'Contact Us'
   ];
@@ -147,6 +146,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       print(page);
     }
     if (index == 6) {
+      await GoogleSignIn().signOut();
       SharedPreferences prefs = await SharedPreferences.getInstance();
       bool result = await prefs.clear();
       if (result) {
@@ -282,8 +282,39 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         fontWeight: FontWeight.w400),
                     unselectedLabelColor: questionnaireDisabled,
                     tabs: List.generate(tabItemsTitle[page].length, (index) {
-                      return Tab(
-                        text: tabItemsTitle[page][index],
+                      return Row(
+                        children: [
+                          Tab(
+                            child: Column(
+                              children: [
+                                SizedBox(height: 8),
+                                Text(
+                                  tabItemsTitle[page][index],
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                SizedBox(height: 8),
+                                selectedIndex == index
+                                    ? Container(
+                                        width: _textSize(
+                                                    tabItemsTitle[page][index],
+                                                    TextStyle(fontSize: 16))
+                                                .width +
+                                            4,
+                                        height: 3,
+                                        color: defaultGreen,
+                                      )
+                                    : Container(),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                              width: double.parse(index.toString()) !=
+                                      double.parse(
+                                          (tabItemsTitle[page].length - 1)
+                                              .toString())
+                                  ? 100
+                                  : 0),
+                        ],
                       );
                     }))
                 : PreferredSize(child: Container(), preferredSize: Size(0, 0)),
@@ -452,10 +483,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             index: page,
             children: [
               HomeScreen(consultationScroll: widget.consultationScroll),
-              TabBarView(controller: _pageController1, children: [
-                DashBoardUserInfoPage(snackBarKey: _scaffoldKey),
-                DashBoardOngoingOrders(),
-              ]),
+              Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('images/user_dashboard_bg.jpg'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  TabBarView(controller: _pageController1, children: [
+                    DashBoardUserInfoPage(snackBarKey: _scaffoldKey),
+                    DashBoardOngoingOrders(),
+                  ]),
+                ],
+              ),
               FavouritesPage(),
               TabBarView(controller: _pageController2, children: [
                 ConsultationOrderHistoryPage(),

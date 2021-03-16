@@ -14,7 +14,6 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool result = false;
   bool initialised = false;
   TextEditingController mobileNo = TextEditingController();

@@ -629,7 +629,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
                         child: Container(
-                          height: 0.45 * devWidth,
+                          height: 0.49 * devWidth,
                           child: ListView.builder(
                               itemCount: featuredMenu.length,
                               scrollDirection: Axis.horizontal,
@@ -648,7 +648,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child: Container(
                                           color: Colors.white,
                                           width: 0.43 * devWidth,
-                                          height: 220,
                                           child: Column(
                                             mainAxisSize: MainAxisSize.max,
                                             crossAxisAlignment:
@@ -839,7 +838,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(
                           padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                           child: Container(
-                              height: 0.38 * devHeight,
+                              height: 0.37 * devHeight,
                               child: ListView.builder(
                                 itemCount: consultationPackages.length,
                                 scrollDirection: Axis.horizontal,

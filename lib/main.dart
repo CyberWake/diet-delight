@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:diet_delight/konstants.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,13 +28,13 @@ class _MyAppState extends State<MyApp> {
     precacheImage(AssetImage('images/popup_background.jpg'), context);
     precacheImage(AssetImage("images/Group 7.png"), context);
     precacheImage(AssetImage("images/Group 57.png"), context);
-    precacheImage(bmiBackground.image, context);
-    precacheImage(question1Background.image, context);
-    precacheImage(question2Background1.image, context);
-    precacheImage(question2Background2.image, context);
-    precacheImage(consultationBackground.image, context);
-    precacheImage(selectConsultationBackgroundImage.image, context);
-    precacheImage(consultationHomePageBackground.image, context);
+    // precacheImage(bmiBackground.image, context);
+    // precacheImage(question1Background.image, context);
+    // precacheImage(question2Background1.image, context);
+    // precacheImage(question2Background2.image, context);
+    // precacheImage(consultationBackground.image, context);
+    // precacheImage(selectConsultationBackgroundImage.image, context);
+    // precacheImage(consultationHomePageBackground.image, context);
     return MaterialApp(
       initialRoute: '/',
       routes: {
