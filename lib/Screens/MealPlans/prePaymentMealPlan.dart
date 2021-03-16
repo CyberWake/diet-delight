@@ -122,7 +122,9 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
             child: Text(
               disc,
               style: selectedTab.copyWith(
-                  fontSize: 14, fontWeight: FontWeight.w500),
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500),
             )),
         Padding(
             padding: EdgeInsets.only(top: 10.0),
@@ -132,7 +134,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                 fontFamily: 'RobotoCondensedReg',
                 fontSize: 12,
                 fontWeight: FontWeight.normal,
-                color: Colors.black,
+                color: Colors.white,
               ),
             )),
       ],
@@ -182,17 +184,23 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                   shrinkWrap: true,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
+                      padding: const EdgeInsets.only(left: 20.0, bottom: 5),
                       child: Text(
                         'Billing Address',
-                        style:
-                            selectedTab.copyWith(fontWeight: FontWeight.w600),
+                        style: selectedTab.copyWith(
+                            color: questionnaireSelect,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20),
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       padding:
                           EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                      decoration: BoxDecoration(
+                        color: questionnaireDisabled.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
                       child: isAddressSelected
                           ? Column(
                               children: [
@@ -205,13 +213,15 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                                           ' ' +
                                           Api.userInfo.lastName,
                                       style: selectedTab.copyWith(
+                                          color: Colors.white,
                                           fontWeight: FontWeight.w400),
                                     ),
                                     AddressButtonWithModal(
                                       callBackFunction: callback,
                                       child: Text('Change',
                                           style: unSelectedTab.copyWith(
-                                              color: defaultGreen)),
+                                            color: Colors.white,
+                                          )),
                                     ),
                                   ],
                                 ),
@@ -225,6 +235,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                                     Text(
                                       concatenatedAddress,
                                       style: unSelectedTab.copyWith(
+                                          color: Colors.white,
                                           fontWeight: FontWeight.w400),
                                     )
                                   ],
@@ -267,8 +278,10 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                       padding: EdgeInsets.fromLTRB(20, 10, 30, 0),
                       child: Text(
                         'Your Plan',
-                        style:
-                            selectedTab.copyWith(fontWeight: FontWeight.w600),
+                        style: selectedTab.copyWith(
+                            color: questionnaireSelect,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20),
                       ),
                     ),
                     Container(
@@ -286,7 +299,9 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                               Text(
                                 'Menu Package',
                                 style: selectedTab.copyWith(
-                                    fontWeight: FontWeight.w600, fontSize: 15),
+                                    color: questionnaireSelect,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 15),
                               ),
                               Padding(
                                 padding:
@@ -324,7 +339,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                             ],
                           ),
                           SizedBox(
-                            height: 13,
+                            height: 18,
                           ),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -333,7 +348,9 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                               Text(
                                 'Starting Date',
                                 style: selectedTab.copyWith(
-                                    fontWeight: FontWeight.w600, fontSize: 15),
+                                    color: questionnaireSelect,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 15),
                               ),
                               Padding(
                                 padding:
@@ -354,7 +371,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                             ],
                           ),
                           SizedBox(
-                            height: 13,
+                            height: 18,
                           ),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -362,6 +379,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                             children: [
                               Text('Subscription Days',
                                   style: selectedTab.copyWith(
+                                      color: questionnaireSelect,
                                       fontWeight: FontWeight.w600,
                                       fontSize: 15)),
                               Padding(
@@ -394,9 +412,13 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                     Container(
                       height: 60,
                       decoration: BoxDecoration(
+                        color: questionnaireDisabled.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      /*   decoration: BoxDecoration(
                           color: Color(0xFFC4C4C4).withOpacity(0.6),
-                          borderRadius: BorderRadius.circular(10)),
-                      margin: EdgeInsets.symmetric(horizontal: 20),
+                          borderRadius: BorderRadius.circular(10)), */
+                      margin: EdgeInsets.symmetric(horizontal: 10),
                       padding: EdgeInsets.symmetric(vertical: 10),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
@@ -409,6 +431,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                             Icon(
                               Icons.local_offer_outlined,
                               size: 24,
+                              color: Colors.white,
                             ),
                             SizedBox(
                               width: 20,
@@ -449,6 +472,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                                             "APPLY COUPON",
                                             style: appBarTextStyle.copyWith(
                                                 fontSize: 18,
+                                                color: Colors.white,
                                                 fontWeight: FontWeight.w700),
                                             overflow: TextOverflow.ellipsis,
                                           ),
@@ -467,6 +491,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                                       },
                                       child: Icon(
                                         Icons.navigate_next,
+                                        color: Colors.white,
                                         size: 30,
                                       ))
                                   : GestureDetector(
@@ -479,6 +504,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                                         "APPLY",
                                         style: appBarTextStyle.copyWith(
                                             fontSize: 18,
+                                            color: Colors.white,
                                             fontWeight: FontWeight.w700),
                                       ),
                                     ),
@@ -499,7 +525,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                               Text(
                                 'Payment',
                                 style: selectedTab.copyWith(
-                                    fontWeight: FontWeight.w600),
+                                    fontSize: 20, fontWeight: FontWeight.w500),
                               ),
                               Text('Change',
                                   style: unSelectedTab.copyWith(
@@ -513,7 +539,6 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 15, vertical: 10),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Container(
@@ -528,6 +553,9 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                                     'images/card.png',
                                     fit: BoxFit.fill,
                                   ),
+                                ),
+                                SizedBox(
+                                  width: 75,
                                 ),
                                 Text('**** **** **** 3947',
                                     style: unSelectedTab),
@@ -544,9 +572,14 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                       margin: EdgeInsets.symmetric(horizontal: 10),
                       padding:
                           EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                      decoration: BoxDecoration(
+                      /*  decoration: 
+                      BoxDecoration(
                           color: Color.fromRGBO(196, 196, 196, 0.5),
-                          borderRadius: BorderRadius.circular(20)),
+                          borderRadius: BorderRadius.circular(20)), */
+                      decoration: BoxDecoration(
+                        color: questionnaireDisabled.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
                       child: Column(
                         children: [
                           Row(
@@ -555,6 +588,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                               Text(
                                 'Cost Breakdown',
                                 style: selectedTab.copyWith(
+                                    color: Colors.white,
                                     fontWeight: FontWeight.w600),
                               ),
                             ],
@@ -562,25 +596,29 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                           Container(
                             width: double.infinity,
                             padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: Column(
-                              children: [
-                                breakDownFields(widget.mealPlan.name,
-                                    widget.mealPlan.price + ' USD', false),
-                                widget.afterNoonPrice > 0
-                                    ? breakDownFields('Delivery Cost',
-                                        '${widget.afterNoonPrice} USD', false)
-                                    : Container(),
-                                breakDownFields('Extras', '- - USD', false),
-                                breakDownFields('Taxes', '- - USD', false),
-                                breakDownFields(
-                                    'Grand Total',
-                                    (int.parse(widget.mealPlan.price) +
-                                                int.parse(widget.afterNoonPrice
-                                                    .toString()))
-                                            .toString() +
-                                        ' USD',
-                                    true),
-                              ],
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 20),
+                              child: Column(
+                                children: [
+                                  breakDownFields(widget.mealPlan.name,
+                                      widget.mealPlan.price + ' USD', false),
+                                  widget.afterNoonPrice > 0
+                                      ? breakDownFields('Delivery Cost',
+                                          '${widget.afterNoonPrice} USD', false)
+                                      : Container(),
+                                  breakDownFields('Extras', '- - USD', false),
+                                  breakDownFields('Taxes', '- - USD', false),
+                                  breakDownFields(
+                                      'Grand Total',
+                                      (int.parse(widget.mealPlan.price) +
+                                                  int.parse(widget
+                                                      .afterNoonPrice
+                                                      .toString()))
+                                              .toString() +
+                                          ' USD',
+                                      true),
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -680,7 +718,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                             }
                           },
                           child: Text(
-                            'Pay Now',
+                            'PAY NOW',
                             style: TextStyle(
                               fontFamily: 'RobotoCondensedReg',
                               fontSize: 16,
