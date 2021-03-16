@@ -32,8 +32,6 @@ PODS:
     - Flutter
   - flutter_open_whatsapp (0.0.1):
     - Flutter
-  - flutter_search_panel (0.0.1):
-    - Flutter
   - flutter_secure_storage (3.3.1):
     - Flutter
   - FMDB (2.7.5):
@@ -82,7 +80,6 @@ DEPENDENCIES:
   - flutter_downloader (from `.symlinks/plugins/flutter_downloader/ios`)
   - flutter_email_sender (from `.symlinks/plugins/flutter_email_sender/ios`)
   - flutter_open_whatsapp (from `.symlinks/plugins/flutter_open_whatsapp/ios`)
-  - flutter_search_panel (from `.symlinks/plugins/flutter_search_panel/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
@@ -116,8 +113,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_email_sender/ios"
   flutter_open_whatsapp:
     :path: ".symlinks/plugins/flutter_open_whatsapp/ios"
-  flutter_search_panel:
-    :path: ".symlinks/plugins/flutter_search_panel/ios"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   path_provider:
@@ -142,7 +137,6 @@ SPEC CHECKSUMS:
   flutter_downloader: 058b9c41564a90500f67f3e432e3524613a7fd83
   flutter_email_sender: 072b9b9a74ec1fddc14b6807e2342afd2da7ffe3
   flutter_open_whatsapp: 4b54cd5403cfe53414e4252fd52fc27f79635f58
-  flutter_search_panel: e2fa5ed4b86ace6add17b126dcb89f2564bd9968
   flutter_secure_storage: 13f6922f952b86b4366d875ea5ab550235fa51ec
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   GoogleDataTransport: 1024b1a4dfbd7a0e92cb20d7e0a6f1fb66b449a4
@@ -156,6 +150,6 @@ SPEC CHECKSUMS:
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   url_launcher: 4b7bf8e84db24ba2ceaf0661071eb58300794472
 
-PODFILE CHECKSUM: 7368163408c647b7eb699d0d788ba6718e18fb8d
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
 COCOAPODS: 1.10.1

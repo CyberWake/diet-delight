@@ -8,7 +8,6 @@ import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class PlacedMealMenuOrders extends StatefulWidget {
   final MealPurchaseModel purchaseDetails;
@@ -190,28 +189,6 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
   }
 
   List addressTapList = [];
-  void _onSelectionChangedForAddress(
-      DateRangePickerSelectionChangedArgs args, int address) {
-    if (address == 0) {
-      deliverPrimary = args.value;
-      if (args.value == null) {
-        deliverPrimary = [];
-      }
-    } else if (address == 1) {
-      deliverSecondary = args.value;
-      if (args.value == null) {
-        deliverSecondary = [];
-      }
-    }
-    print('primary: $deliverPrimary');
-    print('secondary: $deliverSecondary');
-  }
-
-  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
-    print(args.value);
-    breakDates = [];
-    breakDates = args.value;
-  }
 
   Widget addressCard(
       {String whichAddress, int addressIndex, StateSetter update}) {

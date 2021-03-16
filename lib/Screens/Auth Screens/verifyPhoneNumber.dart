@@ -70,15 +70,13 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
         } else {
           showSnackBar("Phone number automatically verified");
           Future.delayed(Duration(seconds: 1)).then((value) {
-
             Navigator.push(
               context,
               PageTransition(
-                type: PageTransitionType.fade,
-                child: ResetPassword(
-                  userInfo: widget.regDetails,
-                )
-              ),
+                  type: PageTransitionType.fade,
+                  child: ResetPassword(
+                    userInfo: widget.regDetails,
+                  )),
             );
           });
         }
@@ -87,6 +85,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
     print('ver complete check');
     PhoneVerificationFailed verificationFailed =
         (FirebaseAuthException authException) {
+      print('error in otp: ${authException.message}');
       showSnackBar(
           'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
     };
@@ -154,7 +153,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
         body: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage('images/Group 7.png'), fit: BoxFit.cover)),
+                  image: AssetImage('images/bg2.jpg'), fit: BoxFit.cover)),
           child: Column(
             children: [
               Row(
@@ -192,7 +191,9 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                   )
                 ],
               ),
-              SizedBox(height: MediaQuery.of(context).size.height*0.04,),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.04,
+              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -219,7 +220,9 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                   ),
                 ],
               ),
-              SizedBox(height: MediaQuery.of(context).size.height*0.01,),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.01,
+              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 30.0, 0, 20.0),
                 child: Container(
@@ -229,7 +232,6 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-
                         Padding(
                           padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
                           child: Column(
@@ -261,8 +263,8 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                                       pinBoxColor: Colors.transparent,
                                       pinBoxDecoration: ProvidedPinBoxDecoration
                                           .underlinedPinBoxDecoration,
-
-                                      defaultBorderColor: Color.fromRGBO(119, 131, 143, 0.2),
+                                      defaultBorderColor:
+                                          Color.fromRGBO(119, 131, 143, 0.2),
                                       onTextChanged: (String otp) {
                                         print(otp);
                                         enteredOtp = otp;

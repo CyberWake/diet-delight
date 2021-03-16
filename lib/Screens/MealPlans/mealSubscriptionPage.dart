@@ -29,7 +29,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
   int count = 0;
   List<String> selDays = List();
   List<bool> selectedDays = [false, false, false, false, false, false, false];
-  List<String> days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
+  List<String> days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   TextEditingController addressPrimaryLine1 = TextEditingController();
   TextEditingController addressSecondaryLine1 = TextEditingController();
   TextEditingController addressPrimaryLine2 = TextEditingController();
@@ -110,7 +110,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage('images/Group 7.png'), fit: BoxFit.fitHeight)),
+              image: AssetImage('images/bg2.jpg'), fit: BoxFit.fitHeight)),
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.transparent,
@@ -187,7 +187,8 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                       imageUrl: widget.mealPackage.picture ??
                           "http://via.placeholder.com/350x150",
                       imageBuilder: (context, imageProvider) => Container(
-                        height: 100,
+                        height: 130,
+                        width: 130,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
@@ -205,7 +206,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
               ),
               SizedBox(height: 40),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 0),
                 child: Container(
                   decoration: BoxDecoration(
                       color: formBackground,
@@ -268,12 +269,12 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                                           color: selectedDays[index]
                                               ? defaultGreen
                                               : white,
-                                          border: Border.all(
+                                          /*   border: Border.all(
                                               color: selectedDays[index]
                                                   ? white
                                                   : Color.fromRGBO(
                                                           144, 144, 144, 1)
-                                                      .withOpacity(0.5)),
+                                                      .withOpacity(0.5)), */
                                           boxShadow: [
                                             BoxShadow(
                                               blurRadius:
@@ -292,6 +293,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                                             days[index],
                                             style: TextStyle(
                                                 fontSize: 14,
+                                                fontWeight: FontWeight.bold,
                                                 color: selectedDays[index]
                                                     ? Colors.white
                                                     : defaultGreen),
@@ -343,12 +345,12 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                                             color: selectedDays[index + 4]
                                                 ? defaultGreen
                                                 : white,
-                                            border: Border.all(
+                                            /* border: Border.all(
                                                 color: selectedDays[index + 4]
                                                     ? white
                                                     : Color.fromRGBO(
                                                             144, 144, 144, 1)
-                                                        .withOpacity(0.5)),
+                                                        .withOpacity(0.5)), */
                                             boxShadow: [
                                               BoxShadow(
                                                 blurRadius:
@@ -369,6 +371,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                                               days[index + 4],
                                               style: TextStyle(
                                                   fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
                                                   color: selectedDays[index + 4]
                                                       ? Colors.white
                                                       : defaultGreen),
@@ -478,7 +481,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
               ),
               Container(
                 margin:
-                    EdgeInsets.only(top: 30, bottom: 20, left: 15, right: 15),
+                    EdgeInsets.only(top: 30, bottom: 20, left: 0, right: 00),
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                 decoration: BoxDecoration(
                   color: formBackground,
@@ -564,8 +567,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                 ),
               ),
               Container(
-                margin:
-                    EdgeInsets.only(top: 30, bottom: 20, left: 15, right: 15),
+                margin: EdgeInsets.only(top: 30, bottom: 20, left: 0, right: 0),
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                 decoration: BoxDecoration(
                   color: formBackground,
@@ -877,7 +879,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
                     }
                   },
                   child: Text(
-                    'Continue',
+                    'CONTINUE',
                     style: TextStyle(
                       fontFamily: 'RobotoCondensedReg',
                       fontSize: 16,

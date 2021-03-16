@@ -14,7 +14,6 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool result = false;
   bool initialised = false;
   TextEditingController mobileNo = TextEditingController();
@@ -40,10 +39,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         body: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage('images/Group 7.png'),
-                  fit: BoxFit.cover
-              )
-          ),
+                  image: AssetImage('images/bg2.jpg'), fit: BoxFit.cover)),
           child: Column(
             children: [
               Row(
@@ -81,7 +77,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   )
                 ],
               ),
-              SizedBox(height: MediaQuery.of(context).size.height*0.03,),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.03,
+              ),
               Center(
                 child: Text(
                   'FORGOT PASSWORD',
@@ -93,7 +91,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   ),
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height*0.05,),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.05,
+              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 30.0, 0, 20.0),
                 child: Container(
@@ -103,7 +103,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20, 15, 0, 0),
                           child: Column(
@@ -111,12 +110,13 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             children: [
                               Text('PHONE NUMBER', style: authLabelTextStyle),
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 8.0, 20, 0),
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 8.0, 20, 0),
                                 child: Row(
                                   children: [
                                     Padding(
-                                      padding:
-                                          const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 0, 10, 0),
                                       child: Material(
                                         borderRadius: BorderRadius.circular(5),
                                         child: Container(
@@ -135,15 +135,18 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                                     .requestFocus(mobile);
                                               },
                                               style: TextStyle(
-                                                fontFamily: 'RobotoCondensedReg',
+                                                fontFamily:
+                                                    'RobotoCondensedReg',
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.normal,
                                                 color: formFill,
                                               ),
                                               textAlign: TextAlign.center,
-                                              textInputAction: TextInputAction.next,
+                                              textInputAction:
+                                                  TextInputAction.next,
                                               keyboardType: TextInputType.phone,
-                                              decoration: authInputFieldDecoration,
+                                              decoration:
+                                                  authInputFieldDecoration,
                                             ),
                                           ),
                                         ),
@@ -167,7 +170,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                                   mobile.unfocus();
                                                 },
                                                 textAlign: TextAlign.center,
-                                                keyboardType: TextInputType.phone,
+                                                keyboardType:
+                                                    TextInputType.phone,
                                                 focusNode: mobile,
                                                 textInputAction:
                                                     TextInputAction.done,
@@ -184,25 +188,27 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             ],
                           ),
                         ),
-                        SizedBox(height: MediaQuery.of(context).size.height*0.06,),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.06,
+                        ),
                         Padding(
-              padding: const EdgeInsets.fromLTRB(30, 20, 30, 0),
+                          padding: const EdgeInsets.fromLTRB(30, 20, 30, 0),
                           child: SizedBox(
                             width: double.infinity,
                             child: TextButton(
                               onPressed: () {
-
                                 Navigator.push(
                                   context,
                                   PageTransition(
                                     type: PageTransitionType.fade,
                                     child: VerifyPhoneNumber(
-                                      regDetails: RegModel(mobile: countryCode.text+mobileNo.text),
+                                      regDetails: RegModel(
+                                          mobile:
+                                              countryCode.text + mobileNo.text),
                                       from: FromPage.forgetPass,
                                     ),
                                   ),
                                 );
-
                               },
                               child: Text(
                                 'SEND OTP',
@@ -216,8 +222,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                               style: TextButton.styleFrom(
                                   backgroundColor: defaultGreen,
                                   shape: const RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(20)))),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20)))),
                             ),
                           ),
                         ),

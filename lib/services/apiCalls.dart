@@ -19,39 +19,45 @@ import 'package:diet_delight/Models/questionnaireModel.dart';
 import 'package:diet_delight/Models/postQuestionnaireModel.dart';
 import 'package:diet_delight/Models/registrationModel.dart';
 import 'package:diet_delight/Models/couponModel.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../Models/loginModel.dart';
+import '../Models/registrationModel.dart';
 
 var currentMealPlanCache = [];
 var mealPlanCacheData = [];
 var onGoingMealPurchaseCacheData = [];
 var menuCategoryCacheData = [];
 var recommendedCalories = "0";
-
 class Api {
   static var client;
-  static List<QuestionnaireModel> itemsQuestionnaire = List();
-  static List<OptionsModel> itemsOptions = List();
-  static List<ConsultationModel> itemsConsultation = List();
-  static List<MenuModel> itemsMenu = List();
-  static List<MealModel> itemsMeal = List();
-  static List<MenuCategoryModel> itemsMenuCategory = List();
-  static List<ConsPurchaseModel> itemsConsultationPurchases = List();
-  static List<FoodItemModel> itemsFood = List();
-  static List<MenuOrderModel> itemsOrderedFood = List();
-  static List<ConsAppointmentModel> itemAppointments = List();
-  static List<MealPurchaseModel> itemMealPurchases = List();
-  static List<MealPurchaseModel> itemPresentMealPurchases = List();
-  static List<DurationModel> itemDurations = List();
-  static List<AddFavouritesModel> favouriteItems = List();
-  static List<int> favouriteIds = List();
-  static List<List> favourites = List();
-  static List<CouponModel> couponList = List();
-  static List<String> couponCodes = List();
-  static List<List> coupons = List();
-  static List<FoodItemModel> featuredMenu = List();
+  static UserCredential userCredential;
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
+  static List<QuestionnaireModel> itemsQuestionnaire = [];
+  static List<OptionsModel> itemsOptions = [];
+  static List<ConsultationModel> itemsConsultation = [];
+  static List<MenuModel> itemsMenu = [];
+  static List<MealModel> itemsMeal = [];
+  static List<MenuCategoryModel> itemsMenuCategory = [];
+  static List<ConsPurchaseModel> itemsConsultationPurchases = [];
+  static List<FoodItemModel> itemsFood = [];
+  static List<MenuOrderModel> itemsOrderedFood = [];
+  static List<ConsAppointmentModel> itemAppointments = [];
+  static List<MealPurchaseModel> itemMealPurchases = [];
+  static List<MealPurchaseModel> itemPresentMealPurchases = [];
+  static List<DurationModel> itemDurations = [];
+  static List<AddFavouritesModel> favouriteItems = [];
+  static List<int> favouriteIds = [];
+  static List<List> favourites = [];
+  static List<CouponModel> couponList = [];
+  static List<String> couponCodes = [];
+  static List<List> coupons = [];
+  static List<FoodItemModel> featuredMenu = [];
   static RegModel userInfo = RegModel();
   static String token;
 
@@ -76,12 +82,49 @@ class Api {
     await getUserInfo();
   }
 
+  Future<bool> googleAuth() async {
+    try {
+      final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      final GoogleAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      userCredential = await _auth.signInWithCredential(credential);
+      List name = userCredential.user.displayName.split(' ');
+      if (userCredential.additionalUserInfo.isNewUser) {
+        print('register');
+        RegModel registerUser = RegModel(
+            name: userCredential.user.displayName,
+            firebaseUid: userCredential.user.uid,
+            firstName: name[0],
+            lastName: name[1],
+            password: userCredential.user.uid,
+            email: userCredential.user.email,
+            mobile: userCredential.user.phoneNumber);
+        bool success = await register(registerUser);
+        return success;
+      } else {
+        print('login');
+        LogModel loginUser = LogModel(
+            email: userCredential.user.email,
+            password: userCredential.user.uid);
+        bool success = await login(loginUser);
+        return success;
+      }
+    } catch (e) {
+      print("google login error: " + e.toString());
+      return false;
+    }
+  }
+
   Future<bool> register(RegModel registerData) async {
     Map<String, String> headers = {
       HttpHeaders.contentTypeHeader: "application/json",
     };
     String body = convert.jsonEncode(registerData.toMap());
-    print(body);
+    print('req body: $body');
     final response =
         await http.post(uri + '/api/v1/register', headers: headers, body: body);
     if (response.statusCode == 200) {
@@ -92,10 +135,10 @@ class Api {
       bool result = await login(loginDetails);
       return result;
     } else if (response.statusCode == 400) {
-      print(response.statusCode);
+      print('Failed1: ${response.body}');
       return false;
     } else {
-      print(response.statusCode);
+      print('Failed2: ${response.body}');
       return false;
     }
   }
@@ -123,7 +166,7 @@ class Api {
       await getUserInfo();
       return true;
     } on Exception catch (e) {
-      print(e.toString());
+      print('error in loggin in : ${e.toString()}');
       return false;
     }
   }
@@ -139,7 +182,7 @@ class Api {
         print('Success getting user info');
         var body = convert.jsonDecode(response.body);
         print('user model body: $body');
-        userInfo = RegModel.fromMap(body);
+        userInfo = RegModel.fromMap(body['data']);
         print(userInfo.gender);
         print("YES ITS WAS CALLED");
         await FlutterSecureStorage()
@@ -154,35 +197,6 @@ class Api {
       return null;
     }
   }
-
-  Future<String> recommendedCalorie() async {
-    try {
-      Map<String, String> headers = {
-        HttpHeaders.contentTypeHeader: "application/json",
-        HttpHeaders.authorizationHeader: "Bearer $token"
-      };
-      final response = await http.get(uri + '/api/v1/user', headers: headers);
-      if (response.statusCode == 200) {
-        print('Success getting user info');
-        var body = convert.jsonDecode(response.body);
-        print('user model body: $body');
-        userInfo = RegModel.fromMap(body);
-        print(userInfo.gender);
-        print("YES ITS WAS CALLED");
-        await FlutterSecureStorage()
-            .write(key: 'calorie', value: body['data']['recommended_calories'].toString());
-        print(userInfo.recommendedCalories);
-        return userInfo.recommendedCalories.toString();
-      } else {
-        print(response.statusCode);
-        return null;
-      }
-    } on Exception catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
-
 
   Future<bool> putUserInfo(RegModel user) async {
     print('logged id');
@@ -577,7 +591,6 @@ class Api {
       return null;
     }
   }
-
   Future<List<ConsAppointmentModel>> getConsultationAppointments() async {
     try {
       itemAppointments = [];
@@ -662,7 +675,6 @@ class Api {
   //Show unfinished meal plans
   Future<List<MealPurchaseModel>> getOngoingMealPurchases(
       DateTime endDate) async {
-    print("called");
     itemPresentMealPurchases = [];
     var cachedData = [];
     Map<String, String> headers = {
@@ -672,7 +684,6 @@ class Api {
     final response =
         await http.get(uri + '/api/v1/my-meal-purchases', headers: headers);
     if (response.statusCode == 200) {
-      print("YES SUCCESSSSSSSSSSSSSSSSSSSS");
       print('success getting present meal purchases');
       var body = convert.jsonDecode(response.body);
       List data = body['data'];
@@ -691,7 +702,6 @@ class Api {
       });
       /*await FlutterSecureStorage().write(
           key: 'onGoingOrdersDataMain', value: convert.jsonEncode(cachedData));*/
-      print(itemPresentMealPurchases);
       return itemPresentMealPurchases;
     } else {
       print(response.statusCode);
@@ -701,7 +711,6 @@ class Api {
   }
 
   Future<MealModel> getMealPlan(String mealPlanId) async {
-    print("getmealPLanCALLED");
     try {
       MealModel meal;
       Map<String, String> headers = {
@@ -711,7 +720,6 @@ class Api {
       final response = await http.get(uri + '/api/v1/meal-plans/' + mealPlanId,
           headers: headers);
       if (response.statusCode == 200) {
-        print("{}{}{}{}{}{}{}}{{}}{");
         print('Success getting meal plans');
         var body = convert.jsonDecode(response.body);
         var data = body['data'];
@@ -1001,6 +1009,7 @@ class Api {
             OptionsModel model = OptionsModel.fromMap(element);
             options.add(model);
           });
+
         } else {
           print(response.statusCode);
           print(response.body);
@@ -1193,6 +1202,7 @@ class Api {
         var body = convert.jsonDecode(response.body)["data"];
 
         return body;
+
       } else {
         print(response.statusCode);
         print(response.body);
@@ -1284,18 +1294,23 @@ class Api {
       print(response.body);
       print(response.statusCode);
       if (response.statusCode == 201) {
+
         print('Success making Put call');
 
         var body = convert.jsonDecode(response.body)["data"];
 
         return body;
+
       } else {
+
         //return [];
       }
     } on Exception catch (e) {
       print(e.toString());
       return [];
     }
+
+
   }
 
   Future<void> postAddressBreakTakenDay(
@@ -1522,9 +1537,14 @@ class Api {
       print(e.toString());
       return [];
     }
+
+
   }
 
+
+
   Future<void> getCouponCode() async {
+
     print('getCoupon');
     print(token);
     try {
@@ -1569,6 +1589,7 @@ class Api {
           headers: headers);
 
       if (response.statusCode == 200) {
+        print('Success getting calorie');
         print(response.statusCode);
         print(response.body);
       } else {
@@ -1580,7 +1601,10 @@ class Api {
       print(e.toString());
       return [];
     }
+
+
   }
+
 
   Future<void> putMealPurchase(var orderDetails, String calorie) async {
     print("putMealPurchaseCalled");
@@ -1611,6 +1635,7 @@ class Api {
         print('meal purchase put success');
         var body = convert.jsonDecode(response.body);
         print(body);
+
       } else {
         print(response.statusCode);
         print(response.body);
@@ -1621,4 +1646,5 @@ class Api {
       return null;
     }
   }
+
 }

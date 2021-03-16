@@ -16,7 +16,7 @@ class FavouritesPage extends StatefulWidget {
 
 class _FavouritesPageState extends State<FavouritesPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  List<List> favourites = List();
+  List<List> favourites = Api.favourites;
   List<int> favPressed = List();
   final _apiCall = Api.instance;
   ScrollController _scrollController = new ScrollController();
@@ -213,6 +213,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
 
   @override
   Widget build(BuildContext context) {
+    favourites = Api.favourites;
     return SafeArea(
       child: Container(
           child: isLoaded == false

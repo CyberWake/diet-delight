@@ -34,6 +34,7 @@ class _BmiReportState extends State<BmiReport> {
     RegModel updateUserData = Api.userInfo;
     updateUserData.setQuestionnaireStatus(1);
     bool result = false;
+    print('user details sent to backend');
     result = await _apiCall.putUserInfo(updateUserData);
     if (result) {
       print("Questionnaire posted");

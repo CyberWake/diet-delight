@@ -336,7 +336,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     )),
                 Flexible(
                   fit: FlexFit.loose,
-                  flex: 4,
+                  flex: 13,
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(10.0, 0, 10, 0),
                     child: Column(
@@ -353,14 +353,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         SizedBox(height: 10.0),
-                        Text(
-                          consultationPackages[pos].details,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontFamily: 'RobotoCondensedReg',
-                            fontSize: 11,
-                            fontWeight: FontWeight.normal,
-                            color: cardGray,
+                        Expanded(
+                          child: Text(
+                            consultationPackages[pos].details,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontFamily: 'RobotoCondensedReg',
+                              fontSize: 11,
+                              fontWeight: FontWeight.normal,
+                              color: cardGray,
+                            ),
                           ),
                         ),
                       ],
@@ -627,7 +629,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
                         child: Container(
-                          height: 0.45 * devWidth,
+                          height: 0.49 * devWidth,
                           child: ListView.builder(
                               itemCount: featuredMenu.length,
                               scrollDirection: Axis.horizontal,
@@ -646,7 +648,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child: Container(
                                           color: Colors.white,
                                           width: 0.43 * devWidth,
-                                          height: 220,
                                           child: Column(
                                             mainAxisSize: MainAxisSize.max,
                                             crossAxisAlignment:
@@ -837,7 +838,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(
                           padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                           child: Container(
-                              height: 0.38 * devHeight,
+                              height: 0.37 * devHeight,
                               child: ListView.builder(
                                 itemCount: consultationPackages.length,
                                 scrollDirection: Axis.horizontal,

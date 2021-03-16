@@ -4,15 +4,18 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'revisedQuestionnaire.dart';
+
 class SignUp extends StatefulWidget {
   final String token;
   var height;
-  SignUp({this.token,this.height});
+  SignUp({this.token, this.height});
   @override
   _SignUpState createState() => _SignUpState();
 }
 
 class _SignUpState extends State<SignUp> {
+  final _apiCall = Api.instance;
   FocusNode first = FocusNode();
   FocusNode last = FocusNode();
   FocusNode country = FocusNode();
@@ -85,7 +88,6 @@ class _SignUpState extends State<SignUp> {
                                 padding:
                                     const EdgeInsets.fromLTRB(20, 5, 20, 5),
                                 child: TextFormField(
-
                                     onChanged: (done) {
                                       firstName.text = done;
                                     },
@@ -328,7 +330,6 @@ class _SignUpState extends State<SignUp> {
                                 confPass.unfocus();
                                 FocusScope.of(context).requestFocus(submit);
                               },
-
                               style: authInputTextStyle,
                               keyboardType: TextInputType.text,
                               obscureText: true,
@@ -464,7 +465,21 @@ class _SignUpState extends State<SignUp> {
                   SizedBox(
                     width: 100.0,
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        bool result = await _apiCall.googleAuth();
+                        if (result == true) {
+                          Navigator.pushReplacement(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) =>
+                                      Api.userInfo.questionnaireStatus == 0
+                                          ? NewQuestionnaire()
+                                          : HomePage()));
+                        } else {
+                          Scaffold.of(context)
+                              .showSnackBar(SnackBar(content: Text('Failed')));
+                        }
+                      },
                       child: Image.asset('images/Group 58.png', width: 18),
                       style: TextButton.styleFrom(
                           backgroundColor: gColor,

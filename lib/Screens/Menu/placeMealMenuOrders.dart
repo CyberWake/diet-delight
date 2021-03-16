@@ -75,9 +75,6 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     }
 
     var value = await FlutterSecureStorage().read(key: 'calorie');
-    print("Calorie value");
-    print(value);
-    data.remove(value);
     data.add(value);
     print("||||||||||||||||||||| $intake");
     await getMenuCategories(menuId);
@@ -121,7 +118,6 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
   }
 
   getMenuCategories(int menuId) async {
-
     categoryItems = [];
     foodItems = [];
     setState(() {
@@ -160,7 +156,6 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
         }
       }
     }
-
     if (categoryItems.length > 0) {
       for (int i = 0; i < categoryItems.length;) {
         foodItems.add(await _apiCall
@@ -171,15 +166,12 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
     }
     for (int i = 0; i < foodItems.length; i++) {
       for (int j = 0; j < foodItems[i].length; j++) {
-        print("SELECTED VALUE + ${foodItems[i][j].isSelected}");
         if (widget.placedFoodItems != null &&
             widget.placedFoodItems.isNotEmpty) {
           for (int k = 0; k < widget.placedFoodItems[i].length; k++) {
-       print("POPOPOPOPOPOPOPOPOPOP");
             if (foodItems[i][j].id == widget.placedFoodItems[i][k].foodItemId) {
               foodItems[i][j]
                   .updateOrderItemId(widget.placedFoodItems[i][k].id);
-              foodItems[i][j].isSelected = true;
               foodItems[i][j].change(true);
             }
           }
@@ -188,7 +180,6 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
         }
       }
     }
-
 
     for (int i = 0; i < dates.length; i++) {
       var temp = [];
@@ -565,16 +556,19 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
         Navigator.pop(context);
       }, //buttonFunction,
       child: Container(
-          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0)),
+            color: Color(0xFF77838F).withOpacity(0.7),
+          ),
+          width: MediaQuery.of(context).size.width * 0.3,
           height: MediaQuery.of(context).size.height * 0.07,
-          color: defaultGreen,
           child: Center(
               child: Text(
             'DONE',
-            style: selectedTab.copyWith(color: white),
+            style:
+                selectedTab.copyWith(color: white, fontWeight: FontWeight.w700),
           ))),
     );
-
     return Container(
       height: 123,
       margin: EdgeInsets.symmetric(horizontal: 12),
@@ -835,7 +829,6 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                                 item.noteAdded.isNotEmpty
                                             ? ""
                                             : item.noteAdded);
-
                                     int result = await _apiCall
                                         .postMenuOrder(foodItemOrder);
                                     if (result != -1) {
@@ -850,7 +843,6 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                       item.updateOrderItemId(result);
                                       item.change(true);
                                       setState(() {});
-
                                     } else {
                                       item.change(false);
                                       setState(() {});
@@ -860,11 +852,13 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                                   'Something went wrong')));
                                     }
                                   } else {
-
-                                    _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                        content: Text(
-                                            'Max Buy Limit exceeded. Delete one to place one')));
-
+                                    print("||||" + concatenatedAddress);
+                                    item.change(false);
+                                    setState(() {});
+                                    _scaffoldKey.currentState.showSnackBar(
+                                        SnackBar(
+                                            content:
+                                                Text('Select address first')));
                                   }
                                 } else {
                                   item.change(false);
@@ -892,14 +886,9 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                   notInProgress = true;
                                 });
                               } else {
-
-                                print("||||" + concatenatedAddress);
-                                item.change(false);
-                                setState(() {});
-                                _scaffoldKey.currentState.showSnackBar(
-                                    SnackBar(
-                                        content:
-                                        Text('Select address first')));
+                                _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                    content: Text(
+                                        'Max Buy Limit exceeded. Delete one to place one')));
                               }
                             }
                           } else {
@@ -961,7 +950,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   height: MediaQuery.of(context).size.height * 0.2,
                   decoration: BoxDecoration(
-                    color: white,
+                    color: Color(0xFF77838F).withOpacity(0.2),
                     borderRadius: BorderRadius.circular(5),
                     boxShadow: [
                       BoxShadow(
@@ -983,12 +972,18 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                       decoration: authInputFieldDecoration.copyWith(
                         fillColor: Colors.transparent,
                         filled: true,
-                        hintText: 'Enter your note here',
+                        hintText: 'Enter notes here...',
+                        hintStyle: TextStyle(color: Colors.white),
                       ),
                     ),
                   )),
               Spacer(),
-              button
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  button,
+                ],
+              )
             ],
           );
         }),
