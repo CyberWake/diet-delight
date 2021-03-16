@@ -306,6 +306,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           child: Container(
             width: 140,
+            // height: 900,
             decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border.all(width: 2.0, color: defaultGreen)),
@@ -334,39 +335,33 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           )),
                     )),
-                Flexible(
-                  fit: FlexFit.loose,
-                  flex: 13,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(10.0, 0, 10, 0),
-                    child: Column(
+                Padding(
+                  padding: EdgeInsets.fromLTRB(10.0, 0, 10, 0),
+                  child: Column(
 //                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          consultationPackages[pos].subtitle,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontFamily: 'RobotoCondensedReg',
-                            fontSize: 11,
-                            fontWeight: FontWeight.normal,
-                            color: cardGray,
-                          ),
+                    children: [
+                      Text(
+                        consultationPackages[pos].subtitle,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontFamily: 'RobotoCondensedReg',
+                          fontSize: 11,
+                          fontWeight: FontWeight.normal,
+                          color: cardGray,
                         ),
-                        SizedBox(height: 10.0),
-                        Expanded(
-                          child: Text(
-                            consultationPackages[pos].details,
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontFamily: 'RobotoCondensedReg',
-                              fontSize: 11,
-                              fontWeight: FontWeight.normal,
-                              color: cardGray,
-                            ),
-                          ),
+                      ),
+                      SizedBox(height: 10.0),
+                      Text(
+                        consultationPackages[pos].details,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontFamily: 'RobotoCondensedReg',
+                          fontSize: 11,
+                          fontWeight: FontWeight.normal,
+                          color: cardGray,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 Spacer(),
@@ -838,7 +833,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(
                           padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                           child: Container(
-                              height: 0.37 * devHeight,
+                              // height: 0.37 * devHeight,
+                              height: 300,
                               child: ListView.builder(
                                 itemCount: consultationPackages.length,
                                 scrollDirection: Axis.horizontal,

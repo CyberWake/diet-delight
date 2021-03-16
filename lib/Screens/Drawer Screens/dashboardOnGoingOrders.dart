@@ -76,11 +76,10 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
       setState(() {
         loaded = true;
       });
-       getData();
-
+      getData();
     } else {
       print('false');
-       getData();
+      getData();
     }
     setState(() {
       loaded = true;
@@ -88,7 +87,6 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
   }
 
   getData() async {
-
     print("in get data");
     List<MealPurchaseModel> activeMealPurchasesCache = List();
     List<MealModel> activePurchaseMealPlansCache = List();
@@ -98,32 +96,33 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
     activeMealPurchasesCache = await _apiCall.getOngoingMealPurchases(today);
     for (int i = 0; i < activeMealPurchasesCache.length;) {
       print("id : ${activeMealPurchasesCache[i].mealPlanId}");
-      if(DateTime.now().toLocal().isBefore(DateTime.parse(activeMealPurchasesCache[i].endDate) )){
+      if (DateTime.now()
+          .toLocal()
+          .isBefore(DateTime.parse(activeMealPurchasesCache[i].endDate))) {
         print("yes before");
         await Future.delayed(Duration(milliseconds: 500));
         activePurchaseMealPlansCache.add(await _apiCall
             .getMealPlan(activeMealPurchasesCache[i].mealPlanId)
             .whenComplete(() => i++));
-      }else{
+      } else {
         i++;
       }
 
       print('filling up list');
     }
     for (int i = 0; i < activeMealPurchasesCache.length;) {
-        ordersInActivePlansCache.add(await _apiCall
-            .getCurrentMealPlanOrdersAvailability(activeMealPurchasesCache[i].id)
-            .whenComplete(() => i++));
+      ordersInActivePlansCache.add(await _apiCall
+          .getCurrentMealPlanOrdersAvailability(activeMealPurchasesCache[i].id)
+          .whenComplete(() => i++));
     }
-      setState(() {
-        activePurchaseMealPlans = activePurchaseMealPlansCache;
-        ordersInActivePlans = ordersInActivePlansCache;
-        activeMealPurchases = activeMealPurchasesCache;
-        print('set loaded off');
-        loaded = true;
-      });
+    setState(() {
+      activePurchaseMealPlans = activePurchaseMealPlansCache;
+      ordersInActivePlans = ordersInActivePlansCache;
+      activeMealPurchases = activeMealPurchasesCache;
+      print('set loaded off');
+      loaded = true;
+    });
     await FlutterSecureStorage().write(key: 'onGoingOrders', value: 'true');
-
   }
 
   @override
@@ -138,10 +137,10 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
         ? Container(
             decoration: BoxDecoration(
               color: Colors.transparent,
-              // image: DecorationImage(
-              //   image: AssetImage('images/user_dashboard_bg.jpg'),
-              //   fit: BoxFit.cover,
-              // ),
+              image: DecorationImage(
+                image: AssetImage('images/bg6.jpg'),
+                fit: BoxFit.cover,
+              ),
             ),
             child: activeMealPurchases.length == 0
                 ? Container(

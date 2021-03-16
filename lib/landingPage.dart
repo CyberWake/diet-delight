@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   int page = 0;
   String _platformVersion = 'Unknown';
-  int selectedIndex = 0;
+  // int selectedIndex = 0;
   List<String> drawerItems = [
     '',
     'Home',
@@ -169,12 +169,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     image: AssetImage('images/bg13.jpg'),
                     fit: BoxFit.fitHeight),
               )
-            : page == 2 || page == 4 || page == 5 || page == 1
+            : page == 1
                 ? BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('images/bg1.jpg'),
+                        image: AssetImage('images/bg8.jpg'),
                         fit: BoxFit.fitHeight))
-                : BoxDecoration(),
+                : page == 2 || page == 4 || page == 5
+                    ? BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage('images/bg1.jpg'),
+                            fit: BoxFit.fitHeight))
+                    : BoxDecoration(),
         child: Scaffold(
           key: _scaffoldKey,
           backgroundColor:
@@ -262,14 +267,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             ? _pageController2
                             : _pageController1,
                     isScrollable: true,
-                    onTap: (index) => setState(() => selectedIndex = index),
+                    // onTap: (index) => setState(() => selectedIndex = index),
                     labelStyle: selectedTab.copyWith(
                         fontSize: 16,
                         color: defaultPurple,
                         fontWeight: FontWeight.w600),
-                    indicatorColor: Colors.white,
-                    // indicatorWeight: 3.0,
-                    indicatorSize: TabBarIndicatorSize.tab,
+                    indicatorColor: defaultGreen,
+                    indicatorWeight: 3.0,
+                    indicatorSize: TabBarIndicatorSize.label,
                     labelColor: defaultPurple,
                     labelPadding: page == 3
                         ? EdgeInsets.symmetric(horizontal: 25)
@@ -282,39 +287,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         fontWeight: FontWeight.w600),
                     unselectedLabelColor: questionnaireDisabled,
                     tabs: List.generate(tabItemsTitle[page].length, (index) {
-                      return Row(
-                        children: [
-                          Tab(
-                            child: Column(
-                              children: [
-                                SizedBox(height: 8),
-                                Text(
-                                  tabItemsTitle[page][index],
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                                SizedBox(height: 8),
-                                selectedIndex == index
-                                    ? Container(
-                                        width: _textSize(
-                                                    tabItemsTitle[page][index],
-                                                    TextStyle(fontSize: 16))
-                                                .width +
-                                            4,
-                                        height: 3,
-                                        color: defaultGreen,
-                                      )
-                                    : Container(),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                              width: double.parse(index.toString()) !=
-                                      double.parse(
-                                          (tabItemsTitle[page].length - 1)
-                                              .toString())
-                                  ? 100
-                                  : 0),
-                        ],
+                      return Tab(
+                        child: Text(
+                          tabItemsTitle[page][index],
+                          style: TextStyle(fontSize: 16),
+                        ),
                       );
                     }))
                 : PreferredSize(child: Container(), preferredSize: Size(0, 0)),

@@ -419,12 +419,17 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
                                     SizedBox(
                                       width: 10,
                                     ),
-                                    Text(
-                                        formatDate(
-                                            DateTime.parse(
-                                                purchasedMeal[index].createdAt),
-                                            format),
-                                        style: orderHistoryCardStyle),
+                                    Builder(
+                                      builder: (context) {
+                                        return Text(
+                                            formatDate(
+                                                DateTime.parse(
+                                                    purchasedMeal[index]
+                                                        .createdAt),
+                                                format),
+                                            style: orderHistoryCardStyle);
+                                      },
+                                    ),
                                     Spacer(),
                                     Text(
                                         purchasedMeal[index].amountPaid +
