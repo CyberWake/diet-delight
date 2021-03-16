@@ -1608,7 +1608,7 @@ class Api {
 
   Future<void> putMealPurchase(var orderDetails, String calorie) async {
     print("putMealPurchaseCalled");
-
+    print(orderDetails.mealPlanId);
     try {
       Map<String, String> headers = {
         HttpHeaders.contentTypeHeader: "application/json",
@@ -1627,7 +1627,7 @@ class Api {
       var body = jsonEncode(data);
       print(body);
       final response = await http.put(
-          uri + '/api/v1/my-meal-purchases/${orderDetails.mealPlanId}',
+          uri + '/api/v1/my-menu-orders/${orderDetails.mealPlanId}',
           headers: headers,
           body: body);
       print(response.statusCode);

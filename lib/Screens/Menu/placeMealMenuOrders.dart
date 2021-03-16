@@ -541,6 +541,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                         : Center(
                             child: SpinKitDoubleBounce(color: defaultGreen)),
                   )
+
                 ]),
               ),
             )),
