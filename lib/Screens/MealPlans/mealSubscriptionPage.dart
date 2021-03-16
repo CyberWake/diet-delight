@@ -37,6 +37,7 @@ class _MealSubscriptionPageState extends State<MealSubscriptionPage> {
   String name;
 
   getUserInfo() async {
+    await _apiCall.getUserInfo();
     name = Api.userInfo.firstName + ' ' + Api.userInfo.lastName;
     if (Api.userInfo.addressLine1 != null) {
       addressPrimaryLine1.text = Api.userInfo.addressLine1;

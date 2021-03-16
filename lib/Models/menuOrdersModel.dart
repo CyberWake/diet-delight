@@ -7,6 +7,7 @@ class MenuOrderModel {
   int mealPurchaseId;
   int status;
   String menuItemDate;
+  String picture;
   int menuItemDay;
   String foodItemName;
   String note;

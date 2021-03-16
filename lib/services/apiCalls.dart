@@ -182,11 +182,9 @@ class Api {
         print('Success getting user info');
         var body = convert.jsonDecode(response.body);
         print('user model body: $body');
-        userInfo = RegModel.fromMap(body['data']);
-        print(userInfo.gender);
-        print("YES ITS WAS CALLED");
-        await FlutterSecureStorage()
-            .write(key: 'calorie', value: body['data']['recommended_calories'].toString());
+        userInfo = RegModel.fromMap(body);
+        await FlutterSecureStorage().write(
+            key: 'calorie', value: body['recommended_calories'].toString());
         return userInfo;
       } else {
         print(response.statusCode);
@@ -801,6 +799,7 @@ class Api {
         print('Success getting menu order category items');
         var body = convert.jsonDecode(response.body);
         List data = body['data'];
+        print("DATA BODY $data");
         data.forEach((element) {
           MenuOrderModel item = MenuOrderModel.fromMap(element);
           itemsOrderedFood.add(item);
@@ -1615,19 +1614,19 @@ class Api {
         HttpHeaders.authorizationHeader: "Bearer $token"
       };
       var data = {
-        "user_id": int.parse(orderDetails.userId),
-        "meal_plan_id": int.parse(orderDetails.mealPlanId),
-        "payment_id": int.parse(orderDetails.paymentId),
-        "meal_plan_name": orderDetails.mealPlanName,
-        "meal_plan_duration": int.parse(orderDetails.mealPlanDuration),
-        "amount_paid": orderDetails.amountPaid.toString(),
-        "start_date": orderDetails.startDate.toString(),
-        "kcal": int.parse(calorie),
+        // "user_id": int.parse(orderDetails.userId),
+        // "meal_plan_id": int.parse(orderDetails.mealPlanId),
+        // "payment_id": int.parse(orderDetails.paymentId),
+        // "meal_plan_name": orderDetails.mealPlanName,
+        // "meal_plan_duration": int.parse(orderDetails.mealPlanDuration),
+        // "amount_paid": orderDetails.amountPaid.toString(),
+        // "start_date": orderDetails.startDate.toString(),
+        "kcal": int.parse(calorie)
       };
       var body = jsonEncode(data);
       print(body);
       final response = await http.put(
-          uri + '/api/v1/meal-purchases/${orderDetails.mealPlanId}',
+          uri + '/api/v1/my-meal-purchases/${orderDetails.id}',
           headers: headers,
           body: body);
       print(response.statusCode);

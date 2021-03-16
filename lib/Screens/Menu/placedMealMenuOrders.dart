@@ -1035,8 +1035,9 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
                       height: 85,
                       width: 82,
                       decoration: authFieldDecoration,
-                      child: CachedNetworkImage(
-                        imageUrl: "http://via.placeholder.com/350x150",
+                      child:  CachedNetworkImage(
+                        imageUrl: widget.plan.picture ??
+                            "http://via.placeholder.com/350x150",
                         imageBuilder: (context, imageProvider) => Container(
                           height: 60,
                           decoration: BoxDecoration(
@@ -1065,7 +1066,7 @@ class _PlacedMealMenuOrdersState extends State<PlacedMealMenuOrders>
     return ListView.separated(
       controller: _scrollController,
       shrinkWrap: true,
-      itemCount: mainCategoryItems.length,
+      itemCount: foodItems.length,
       itemBuilder: (BuildContext context, int indexMajor) {
         itemsFood = foodItems[indexMajor];
         return ExpansionTile(

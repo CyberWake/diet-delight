@@ -88,7 +88,9 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
   }
 
   getData() async {
-
+    setState(() {
+      loaded = false;
+    });
     print("in get data");
     List<MealPurchaseModel> activeMealPurchasesCache = List();
     List<MealModel> activePurchaseMealPlansCache = List();
@@ -195,7 +197,7 @@ class _DashBoardOngoingOrdersState extends State<DashBoardOngoingOrders> {
                                                   plan: activePurchaseMealPlans[
                                                       index])));
                                   if (returnedBack) {
-                                    getCachedData();
+                                    getData();
                                   }
                                 }
                               },
