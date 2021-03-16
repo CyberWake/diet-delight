@@ -631,7 +631,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           height: 0.49 * devWidth,
                           child: ListView.builder(
-                              itemCount: featuredMenu.length,
+                              itemCount: featuredMenu.length??0,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (BuildContext context, int pos) {
                                 return Padding(

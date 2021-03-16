@@ -34,7 +34,7 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
   String name;
 
   getUserInfo() async {
-    name = Api.userInfo.firstName + ' ' + Api.userInfo.lastName;
+    name = (Api.userInfo.firstName ?? '') + ' ' + (Api.userInfo.lastName ?? '');
     if (Api.userInfo.addressLine1 != null) {
       addressPrimaryLine1.text = Api.userInfo.addressLine1;
     }
