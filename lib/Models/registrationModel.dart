@@ -32,11 +32,11 @@ class RegModel {
       this.addressLine2,
       this.addressSecondary1,
       this.addressSecondary2,
-      this.questionnaireStatus=0,
-      this.age,
+      this.questionnaireStatus = 0,
+      this.age = 0,
       this.bmi,
       this.gender = 0,
-      this.recommendedCalories=0});
+      this.recommendedCalories = 0});
 
   Map<String, dynamic> toMap() {
     // ignore: unnecessary_cast

@@ -262,13 +262,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             ? _pageController2
                             : _pageController1,
                     isScrollable: true,
-                    onTap: (index) async {},
+                    onTap: (index) => setState(() => selectedIndex = index),
                     labelStyle: selectedTab.copyWith(
                         fontSize: 16,
                         color: defaultPurple,
                         fontWeight: FontWeight.w600),
-                    indicatorColor: defaultGreen,
-                    indicatorWeight: 3.0,
+                    indicatorColor: Colors.white,
+                    // indicatorWeight: 3.0,
                     indicatorSize: TabBarIndicatorSize.tab,
                     labelColor: defaultPurple,
                     labelPadding: page == 3
@@ -279,7 +279,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     unselectedLabelStyle: unSelectedTab.copyWith(
                         fontSize: 16,
                         color: questionnaireDisabled,
-                        fontWeight: FontWeight.w400),
+                        fontWeight: FontWeight.w600),
                     unselectedLabelColor: questionnaireDisabled,
                     tabs: List.generate(tabItemsTitle[page].length, (index) {
                       return Row(
@@ -488,7 +488,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   Container(
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage('images/user_dashboard_bg.jpg'),
+                        image: AssetImage('images/bg1.jpg'),
                         fit: BoxFit.cover,
                       ),
                     ),

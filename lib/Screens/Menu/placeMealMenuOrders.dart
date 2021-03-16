@@ -556,13 +556,17 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
         Navigator.pop(context);
       }, //buttonFunction,
       child: Container(
-          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0)),
+            color: Color(0xFF77838F).withOpacity(0.7),
+          ),
+          width: MediaQuery.of(context).size.width * 0.3,
           height: MediaQuery.of(context).size.height * 0.07,
-          color: defaultGreen,
           child: Center(
               child: Text(
             'DONE',
-            style: selectedTab.copyWith(color: white),
+            style:
+                selectedTab.copyWith(color: white, fontWeight: FontWeight.w700),
           ))),
     );
     return Container(
@@ -946,7 +950,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   height: MediaQuery.of(context).size.height * 0.2,
                   decoration: BoxDecoration(
-                    color: white,
+                    color: Color(0xFF77838F).withOpacity(0.2),
                     borderRadius: BorderRadius.circular(5),
                     boxShadow: [
                       BoxShadow(
@@ -968,12 +972,18 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                       decoration: authInputFieldDecoration.copyWith(
                         fillColor: Colors.transparent,
                         filled: true,
-                        hintText: 'Enter your note here',
+                        hintText: 'Enter notes here...',
+                        hintStyle: TextStyle(color: Colors.white),
                       ),
                     ),
                   )),
               Spacer(),
-              button
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  button,
+                ],
+              )
             ],
           );
         }),

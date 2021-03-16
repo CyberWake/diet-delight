@@ -136,10 +136,10 @@ class Api {
       bool result = await login(loginDetails);
       return result;
     } else if (response.statusCode == 400) {
-      print(response.body);
+      print('Failed1: ${response.body}');
       return false;
     } else {
-      print(response.body);
+      print('Failed2: ${response.body}');
       return false;
     }
   }
