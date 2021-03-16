@@ -735,11 +735,17 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                                   //             )));
                                 });
                               } else {
-                                setState(() {
-                                  progress = false;
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((_) {
+                                  setState(() {
+                                    progress = false;
+                                  });
+
+                                  _scaffoldKey.currentState.showSnackBar(
+                                      SnackBar(
+                                          content:
+                                              Text('Something went wrong')));
                                 });
-                                _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                    content: Text('Something went wrong')));
                               }
                               if (success != null) {
                                 setState(() {

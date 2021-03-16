@@ -33,7 +33,7 @@ class _MealPlanPageState extends State<MealPlanPage>
     linkMealWithMenu();
   }
 
-  linkMealWithMenu() {
+  linkMealWithMenu() async{
     for (int j = 0; j < widget.mealPlans.length; j++) {
       for (int i = 0; i < widget.menus.length; i++) {
         if (widget.menus[i].id == widget.mealPlans[j].menuId) {
@@ -41,10 +41,10 @@ class _MealPlanPageState extends State<MealPlanPage>
         }
       }
     }
-    getCacheData();
+  await  getCacheData();
   }
 
-  getCacheData() async {
+ Future getCacheData() async {
     var isCached = await FlutterSecureStorage().read(key: "menuCategories");
     if (isCached.toString() == 'true') {
       print('running');
@@ -111,9 +111,10 @@ class _MealPlanPageState extends State<MealPlanPage>
   String getCategories(index) {
     String displayCategories = '- ';
     //await Future.delayed(Duration(milliseconds: 1000));
-    categoryItems[index].forEach((element) {
-      displayCategories += element.name + ', ';
-    });
+    if (index <= categoryItems.length)
+      categoryItems[index].forEach((element) {
+        displayCategories += element.name + ', ';
+      });
     return displayCategories;
   }
 

@@ -447,7 +447,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 DashBoardUserInfoPage(snackBarKey: _scaffoldKey),
                 DashBoardOngoingOrders(),
               ]),
-              FavouritesPage(),
+              //  FavouritesPage(),
               TabBarView(controller: _pageController2, children: [
                 ConsultationOrderHistoryPage(),
                 MealPlanOrderHistoryPage()
