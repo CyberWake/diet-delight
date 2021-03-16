@@ -108,9 +108,9 @@ class _MealPlanPageState extends State<MealPlanPage>
     }
   }
 
-  getCategories(index) async {
+  String getCategories(index) {
     String displayCategories = '- ';
-    await Future.delayed(Duration(milliseconds: 1000));
+    //await Future.delayed(Duration(milliseconds: 1000));
     categoryItems[index].forEach((element) {
       displayCategories += element.name + ', ';
     });
@@ -122,7 +122,7 @@ class _MealPlanPageState extends State<MealPlanPage>
       margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
       padding: EdgeInsets.symmetric(horizontal: 10),
       width: double.infinity,
-      height: 355,
+      // height: 355,
       decoration: BoxDecoration(
         color: Colors.white,
         shape: BoxShape.rectangle,
@@ -140,199 +140,182 @@ class _MealPlanPageState extends State<MealPlanPage>
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            flex: 6,
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 15.0),
-              child: Row(
-                children: [
-                  Expanded(
-                      flex: 11,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          SizedBox(height: 12,),
-                          Text(
-                            widget.mealPlans[index].name,
-                            style: selectedTab.copyWith(
-                                fontWeight: FontWeight.w400, fontSize: 20),
-                          ),
-                          SizedBox(height: 10,),
-                          Text(
-                            widget.mealPlans[index].price + ' BHD',
-                            style: selectedTab.copyWith(
-                                fontWeight: FontWeight.w400, fontSize: 20),
-                          ),
-                          // Text(widget.mealPlans[index].type == 0
-                          //     ? 'With Weekends'
-                          //     : 'Without Weekends'),
-                        ],
-                      )),
-                  Expanded(
-                      flex: 9,
-                      child: Column(
-                        children: [
-                          Expanded(
-                              flex: 8,
-                              child: CachedNetworkImage(
-                                imageUrl: widget.mealPlans[index].picture ??
-                                    "http://via.placeholder.com/350x150",
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        blurRadius: 4,
-                                        color: Colors.black.withOpacity(0.25),
-                                        spreadRadius: 0,
-                                        offset: const Offset(0, 4),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                placeholder: (context, url) =>
-                                    CircularProgressIndicator(),
-                                errorWidget: (context, url, error) =>
-                                    Icon(Icons.error),
-                              )),
-                          SizedBox(height: 5),
-                          Expanded(
-                              flex: 2,
-                              child: InkWell(
-                                  onTap: () {
-
-                                    Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                            builder: (context) => Menu(
-                                                  menu: menus[index],
-                                                )));
-                                  },
-                                  child: Text(
-                                    'View Menu',
-                                    style: TextStyle(
-                                      fontFamily: 'RobotoCondensedReg',
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: defaultGreen,
-                                    ),
-                                  )))
-                        ],
-                      ))
-                ],
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 5,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 15.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Flexible(
-                  fit: FlexFit.loose,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 4,width: 8,
-                          decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(500)
-                          ),
-                        ),
-                        SizedBox(width: 5),
-                        Text(
-                          getCategories(index).toString().replaceAll('-', "").replaceAll(" ", ""),
-                          style: selectedTab.copyWith(
-                              fontSize: 16, fontWeight: FontWeight.w400),
-                        ),
-                      ],
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      height: 12,
                     ),
-                  ),
-                ),
-                Flexible(
-                  fit: FlexFit.loose,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Container(
-                            height: 4,width: 8,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(500)
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 5),
-                        Flexible(
-                          child: Text(
-                             menus[index].description,
-                            style: selectedTab.copyWith(
-                                fontSize: 16, fontWeight: FontWeight.w400),
-                            maxLines: 3,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      widget.mealPlans[index].name,
+                      style: selectedTab.copyWith(
+                          fontWeight: FontWeight.w400, fontSize: 20),
                     ),
-                  ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      widget.mealPlans[index].price + ' BHD',
+                      style: selectedTab.copyWith(
+                          fontWeight: FontWeight.w400, fontSize: 20),
+                    ),
+                    // Text(widget.mealPlans[index].type == 0
+                    //     ? 'With Weekends'
+                    //     : 'Without Weekends'),
+                  ],
                 ),
+                SizedBox(width: 30),
+                Column(
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl: widget.mealPlans[index].picture ??
+                          "http://via.placeholder.com/350x150",
+                      imageBuilder: (context, imageProvider) => Container(
+                        height: 130,
+                        width: 130,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                          /* boxShadow: [
+                            BoxShadow(
+                              blurRadius: 4,
+                              color: Colors.black.withOpacity(0.25),
+                              spreadRadius: 0,
+                              offset: const Offset(0, 4),
+                            )
+                          ], */
+                        ),
+                      ),
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
+                    SizedBox(height: 5),
+                    InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) => Menu(
+                                        menu: menus[index],
+                                      )));
+                        },
+                        child: Text(
+                          'View Menu',
+                          style: TextStyle(
+                            fontFamily: 'RobotoCondensedReg',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: defaultGreen,
+                          ),
+                        ))
+                  ],
+                )
               ],
             ),
           ),
-          Expanded(
-            flex: 2,
-            child: Container(
-              margin: EdgeInsets.only(
-                  right: MediaQuery.of(context).size.width * 0.18,
-                  left: MediaQuery.of(context).size.width * 0.18,
-                  bottom: 15),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: defaultGreen,
-                  borderRadius: BorderRadius.all(Radius.circular(15))),
-              child: Center(
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                            builder: (context) => MealSubscriptionPage(
-                                categories: getCategories(index)
-                                    .toString()
-                                    .substring(1),
-                                mealPackage: widget.mealPlans[index],
-                                weekDaysSelected:
-                                    widget.mealPlans[index].type == 0
-                                        ? 7
-                                        : 5)));
-                  },
-                  child: Text(
-                    'Buy Subscription',
-                    style: TextStyle(
-                      fontFamily: 'RobotoCondensedReg',
-                      fontSize: 20,
-                      fontWeight: FontWeight.normal,
-                      color: white,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 15),
+                child: Row(
+                  children: [
+                    Container(
+                      height: 4,
+                      width: 8,
+                      decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(500)),
                     ),
-                  ),
-                  style: TextButton.styleFrom(
-                      backgroundColor: defaultGreen,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20)))),
+                    SizedBox(width: 5),
+                    Flexible(
+                      child: Text(
+                        getCategories(index)
+                            .toString()
+                            .replaceAll('-', "")
+                            .replaceAll(" ", ""),
+                        style: selectedTab.copyWith(
+                            fontSize: 16, fontWeight: FontWeight.w400),
+                      ),
+                    ),
+                  ],
                 ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 40),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Container(
+                        height: 4,
+                        width: 8,
+                        decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(500)),
+                      ),
+                    ),
+                    SizedBox(width: 5),
+                    Flexible(
+                      child: Text(
+                        menus[index].description,
+                        style: selectedTab.copyWith(
+                            fontSize: 16, fontWeight: FontWeight.w400),
+                        maxLines: 3,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Container(
+            margin: EdgeInsets.only(
+                right: MediaQuery.of(context).size.width * 0.18,
+                left: MediaQuery.of(context).size.width * 0.18,
+                bottom: 15),
+            width: double.infinity,
+            decoration: BoxDecoration(
+                color: defaultGreen,
+                borderRadius: BorderRadius.all(Radius.circular(15))),
+            child: Center(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => MealSubscriptionPage(
+                              categories:
+                                  getCategories(index).toString().substring(1),
+                              mealPackage: widget.mealPlans[index],
+                              weekDaysSelected:
+                                  widget.mealPlans[index].type == 0 ? 7 : 5)));
+                },
+                child: Text(
+                  'Buy Subscription',
+                  style: TextStyle(
+                    fontFamily: 'RobotoCondensedReg',
+                    fontSize: 20,
+                    fontWeight: FontWeight.normal,
+                    color: white,
+                  ),
+                ),
+                style: TextButton.styleFrom(
+                    backgroundColor: defaultGreen,
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)))),
               ),
             ),
           ),
@@ -347,17 +330,16 @@ class _MealPlanPageState extends State<MealPlanPage>
       decoration: BoxDecoration(
           image: DecorationImage(
               image: AssetImage('images/questionnaire_background.jpg'),
-              fit: BoxFit.fitHeight
-          ) ),
+              fit: BoxFit.fitHeight)),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          elevation: 5.0,
+          elevation: 0,
           backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
+          /* shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(20.0),
-                  bottomRight: Radius.circular(20.0))),
+                  bottomRight: Radius.circular(20.0))), */
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -368,20 +350,25 @@ class _MealPlanPageState extends State<MealPlanPage>
               color: defaultGreen,
             ),
           ),
-          title: Text('Choose your meal plan', style: appBarTextStyle.copyWith(color: defaultGreen)),
+          title: Text('Choose your meal plan',
+              style: appBarTextStyle.copyWith(color: defaultGreen)),
           bottom: TabBar(
               controller: _pageController1,
               isScrollable: false,
               onTap: (index) async {},
               labelStyle: selectedTab.copyWith(
-                  fontSize: 18, color: Colors.black, fontWeight: FontWeight.w600),
+                  fontSize: 16,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600),
               indicatorColor: defaultGreen,
               indicatorWeight: 3.0,
               indicatorSize: TabBarIndicatorSize.label,
               labelColor: defaultPurple,
               labelPadding: EdgeInsets.symmetric(horizontal: 13),
               unselectedLabelStyle: unSelectedTab.copyWith(
-                  fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w400),
+                  fontSize: 16,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w600),
               unselectedLabelColor: Colors.grey,
               tabs: List.generate(2, (index) {
                 return Tab(
