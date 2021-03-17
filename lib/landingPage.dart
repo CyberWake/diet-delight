@@ -17,6 +17,7 @@ import 'package:diet_delight/Screens/Drawer%20Screens/settingsTermsAndConditions
 import 'package:diet_delight/Screens/coupon_code.dart';
 import 'package:diet_delight/Screens/export.dart';
 import 'package:diet_delight/konstants.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,6 +37,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  FirebaseMessaging _messaging = FirebaseMessaging();
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   TabController _pageController1;
   TabController _pageController2;
@@ -111,9 +114,23 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
   }
 
+  void registerNotificationService() async {
+    await _messaging.requestNotificationPermissions(
+      IosNotificationSettings(
+        alert: true,
+        badge: true,
+        provisional: false,
+        sound: true,
+      ),
+    );
+
+    //
+  }
+
   @override
   void initState() {
     super.initState();
+    registerNotificationService();
     page = widget.openPage;
     _pageController1 = TabController(length: 2, vsync: this);
     if (page == 1) {

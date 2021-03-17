@@ -111,7 +111,7 @@ class _MealPlanPageState extends State<MealPlanPage>
   String getCategories(index) {
     String displayCategories = '- ';
     //await Future.delayed(Duration(milliseconds: 1000));
-    if (index <= categoryItems.length)
+    if (index < categoryItems.length)
       categoryItems[index].forEach((element) {
         displayCategories += element.name + ', ';
       });
@@ -384,8 +384,19 @@ class _MealPlanPageState extends State<MealPlanPage>
             ? TabBarView(
                 controller: _pageController1,
                 children: List.generate(2, (indexTab) {
+                  var typeZeroItemCount = 0;
+                  var typeOneItemCount = 0;
+                  for (int i = 0; i < widget.mealPlans.length; i++) {
+                    if (widget.mealPlans[i].type == 0) {
+                      typeZeroItemCount = typeZeroItemCount + 1;
+                    } else if (widget.mealPlans[i].type == 1) {
+                      typeOneItemCount = typeOneItemCount + 1;
+                    }
+                  }
+
                   return ListView.builder(
-                    itemCount: widget.mealPlans.length,
+                    itemCount:
+                        indexTab == 0 ? typeZeroItemCount : typeOneItemCount,
                     itemBuilder: (BuildContext context, int index) {
                       if (indexTab == 0) {
                         if (widget.mealPlans[index].type == 0) {

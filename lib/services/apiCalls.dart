@@ -180,6 +180,7 @@ class Api {
         HttpHeaders.authorizationHeader: "Bearer $token"
       };
       final response = await http.get(uri + '/api/v1/user', headers: headers);
+      print('user model body without 200 status ${response.body}');
       if (response.statusCode == 200) {
         print('Success getting user info');
         var body = convert.jsonDecode(response.body);
@@ -472,6 +473,8 @@ class Api {
       };
       String body = convert.jsonEncode(order.toMap());
       print(body);
+      print('headers: $headers');
+      print('$uri + /api/v1/my-meal-purchases');
       final response = await http.post(uri + '/api/v1/my-meal-purchases',
           headers: headers, body: body);
       if (response.statusCode == 201) {

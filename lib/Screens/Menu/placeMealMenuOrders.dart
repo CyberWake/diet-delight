@@ -296,7 +296,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
             key: _scaffoldKey,
             backgroundColor: white,
             appBar: AppBar(
-              elevation: 5.0,
+              elevation: 0.0,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(20.0),
@@ -312,15 +312,15 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                   color: defaultGreen,
                 ),
               ),
-              title: Text('Place meal orders',
-                  style: appBarTextStyle.copyWith(color: defaultGreen)),
+              // title: Text('Place meal orders',
+              //     style: appBarTextStyle.copyWith(color: defaultGreen)),
             ),
             body: SingleChildScrollView(
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.88,
+                height: MediaQuery.of(context).size.height * 0.9,
                 child: Column(children: [
                   Expanded(
-                    flex: 5,
+                    flex: 3,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -338,32 +338,31 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                   child: Text(
                                       widget.purchaseDetails.mealPlanName,
                                       style: selectedTab.copyWith(
-                                          fontSize: 18, color: Colors.black)),
+                                          fontSize: 18, color: defaultGreen)),
                                 ),
                                 SizedBox(
                                   height: 10,
                                 ),
-                                Flexible(
-                                  fit: FlexFit.loose,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 6.0, right: 10.0),
-                                    child: Text(
-                                      widget.plan.details,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontFamily: 'RobotoCondensedReg',
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w400,
-                                          color: Color(0xFF77838F)),
-                                      maxLines: 6,
-                                    ),
-                                  ),
-                                ),
+                                // Flexible(
+                                //   fit: FlexFit.loose,
+                                //   child: Padding(
+                                //     padding: const EdgeInsets.only(
+                                //         left: 6.0, right: 10.0),
+                                //     child: Text(
+                                //       widget.plan.details,
+                                //       overflow: TextOverflow.ellipsis,
+                                //       style: TextStyle(
+                                //           fontFamily: 'RobotoCondensedReg',
+                                //           fontSize: 12,
+                                //           fontWeight: FontWeight.w400,
+                                //           color: Color(0xFF77838F)),
+                                //       maxLines: 6,
+                                //     ),
+                                //   ),
+                                // ),
                                 SizedBox(
                                   height: 10,
                                 ),
-
                                 Flexible(
                                   fit: FlexFit.loose,
                                   child: Padding(
@@ -389,7 +388,8 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                 SizedBox(
                                   height: 5,
                                 ),
-                                Expanded(
+                                Container(
+                                  height: 50,
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 7.0),
                                     child: DropdownButton<String>(
@@ -414,10 +414,10 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                                         style: TextStyle(
                                                             color: Colors.black,
                                                             fontSize: 12)),
-                                                    Divider(
-                                                      color: Color(0xFFDFDFFF)
-                                                          .withOpacity(0.5),
-                                                    ),
+                                                    // Divider(
+                                                    //   color: Color(0xFFDFDFFF)
+                                                    //       .withOpacity(0.5),
+                                                    // ),
                                                   ],
                                                 )
                                               : Column(
@@ -578,8 +578,9 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                   ),
                                   delataApiCalls.length > 0 ||
                                           addDataApiCalls.length > 0
-                                      ? Expanded(
-                                          flex: 2,
+                                      ? Container(
+                                          height: 50,
+                                          // flex: 1.5,
                                           child: GestureDetector(
                                             onTap: () async {
                                               setState(() {
@@ -640,7 +641,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                               width: MediaQuery.of(context)
                                                   .size
                                                   .width,
-                                              margin: EdgeInsets.only(top: 20),
+                                              // margin: EdgeInsets.only(top: 20),
                                               color: defaultGreen,
                                               child: Center(
                                                   child: postCallMade
@@ -670,7 +671,6 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                         : Center(
                             child: SpinKitDoubleBounce(color: defaultGreen)),
                   )
-
                 ]),
               ),
             )),
@@ -955,7 +955,6 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                   if (max >
                                       maxBuyIndexedList[pageIndex]
                                           [maxBuyIndex]) {
-
                                     setState(() {});
                                     foodItemOrder = MenuOrderModel(
                                         foodItemId: item.id,
@@ -1105,7 +1104,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
-        height: 250,
+        height: 290,
         decoration: BoxDecoration(
           image: DecorationImage(
               image: AssetImage('images/bg7.jpg'), fit: BoxFit.cover),
@@ -1136,7 +1135,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                     data: Theme.of(context)
                         .copyWith(splashColor: Colors.transparent),
                     child: TextFormField(
-                      autofocus: true,
+                      autofocus: false,
                       focusNode: note,
                       controller: notes,
                       textDirection: TextDirection.ltr,
@@ -1182,7 +1181,6 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
             children: subCategoryItems[indexMajor].length == 0
                 ? List.generate(itemsFood.length, (index) {
                     if (itemsFood[index].day == day) {
-
                       return foodItemCard(
                           item: itemsFood[index],
                           dateIndex: day - 1,

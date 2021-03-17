@@ -16,7 +16,7 @@ dependencies:
   flutter_rounded_date_picker: ^1.0.5+1
   email_validator: ^1.0.6
   oauth2: ^1.6.3
-  firebase_messaging: ^5.0.1
+  firebase_messaging: ^6.0.16
   flutter_secure_storage: ^3.3.5
   carousel_slider: ^3.0.0
   flutter_spinkit: ^4.1.2+1
