@@ -172,8 +172,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             : page == 2
                 ? BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('images/bg14.jpg'),
-                        fit: BoxFit.cover))
+                        image: AssetImage('images/bg8.jpg'), fit: BoxFit.cover))
                 : page == 4 || page == 5 || page == 1
                     ? BoxDecoration(
                         image: DecorationImage(
@@ -187,24 +186,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ? Colors.transparent
                   : white,
           appBar: AppBar(
-            iconTheme: IconThemeData(
-                color: page == 0 ||
-                        page == 1 ||
-                        page == 3 ||
-                        page == 4 ||
-                        page == 5
-                    ? defaultGreen
-                    : white),
+            iconTheme: IconThemeData(color: defaultGreen),
+            // color: page == 0 ||
+            //         page == 1 ||
+            //         page == 3 ||
+            //         page == 4 ||
+            //         page == 5
+            //     ? defaultGreen
+            //     : white),
             elevation: 2.0,
             shape: RoundedRectangleBorder(),
             bottomOpacity: 1,
             shadowColor: page == 1 || page == 3 || page == 4
                 ? (Color(0x26000000))
                 : Colors.transparent,
-            backgroundColor:
-                page == 0 || page == 1 || page == 3 || page == 4 || page == 5
-                    ? white
-                    : defaultGreen,
+            backgroundColor: white,
+            // page == 0 || page == 1 || page == 3 || page == 4 || page == 5
+            //     ? white
+            //     : defaultGreen,
             centerTitle: page == 0 ? true : false,
             title: page == 0
                 ? Image.asset(
@@ -215,9 +214,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 : Text(pageTitle[page],
                     style: appBarTextStyle.copyWith(
                         fontFamily: 'RobotoReg',
-                        color: page == 1 || page == 3 || page == 4 || page == 5
-                            ? defaultGreen
-                            : white,
+                        color: defaultGreen,
+                        // color: page == 1 || page == 3 || page == 4 || page == 5
+                        //     ? defaultGreen
+                        //     : white,
                         fontWeight: FontWeight.bold)),
             leading: IconButton(
               icon: Icon(Icons.menu),

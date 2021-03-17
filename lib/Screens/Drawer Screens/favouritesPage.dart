@@ -42,7 +42,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
       child: Container(
         margin: EdgeInsets.symmetric(
             vertical: 10, horizontal: MediaQuery.of(context).size.width * 0.05),
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
             color: questionnaireDisabled.withOpacity(0.3)),
@@ -63,8 +63,8 @@ class _FavouritesPageState extends State<FavouritesPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          height: 15,
-                          width: 15,
+                          height: 10,
+                          width: 10,
                           child: Image.asset(
                             foodItem.isVeg
                                 ? 'images/veg.png'
@@ -84,27 +84,24 @@ class _FavouritesPageState extends State<FavouritesPage> {
                               fontWeight: FontWeight.w400),
                         ),
                         foodItem.featured == 1
-                            ? Padding(
-                                padding: EdgeInsets.only(left: 5.0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    ImageIcon(
-                                        AssetImage('images/featured_icon.png'),
-                                        color: featuredColor,
-                                        size: 12),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      'Featured',
-                                      style: appBarTextStyle.copyWith(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w600,
-                                          color: featuredColor),
-                                    ),
-                                  ],
-                                ),
+                            ? Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  ImageIcon(
+                                      AssetImage('images/featured_icon.png'),
+                                      color: featuredColor,
+                                      size: 12),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    'Featured',
+                                    style: appBarTextStyle.copyWith(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w600,
+                                        color: featuredColor),
+                                  ),
+                                ],
                               )
                             : SizedBox(),
 //                       SizedBox(
@@ -120,7 +117,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
 //                       SizedBox(
 //                         height: 4,
 //                       ),
-                        Spacer(),
+                        //Spacer(),
                         Container(
                           alignment: Alignment.bottomRight,
                           padding: EdgeInsets.only(right: 10),
@@ -131,8 +128,8 @@ class _FavouritesPageState extends State<FavouritesPage> {
                                   getData();
                                 });
                               },
-                              icon:
-                                  Icon(Icons.favorite, size: 16, color: white)),
+                              icon: Icon(Icons.favorite,
+                                  size: 16, color: defaultPurple)),
                         )
                       ],
                     ),
