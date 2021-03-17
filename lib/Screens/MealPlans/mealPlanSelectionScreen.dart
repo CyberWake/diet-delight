@@ -33,7 +33,7 @@ class _MealPlanPageState extends State<MealPlanPage>
     linkMealWithMenu();
   }
 
-  linkMealWithMenu() async{
+  linkMealWithMenu() async {
     for (int j = 0; j < widget.mealPlans.length; j++) {
       for (int i = 0; i < widget.menus.length; i++) {
         if (widget.menus[i].id == widget.mealPlans[j].menuId) {
@@ -41,10 +41,10 @@ class _MealPlanPageState extends State<MealPlanPage>
         }
       }
     }
-  await  getCacheData();
+    await getCacheData();
   }
 
- Future getCacheData() async {
+  Future getCacheData() async {
     var isCached = await FlutterSecureStorage().read(key: "menuCategories");
     if (isCached.toString() == 'true') {
       print('running');
@@ -173,54 +173,57 @@ class _MealPlanPageState extends State<MealPlanPage>
                   ],
                 ),
                 SizedBox(width: 30),
-                Column(
-                  children: [
-                    CachedNetworkImage(
-                      imageUrl: widget.mealPlans[index].picture ??
-                          "http://via.placeholder.com/350x150",
-                      imageBuilder: (context, imageProvider) => Container(
-                        height: 130,
-                        width: 130,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
+                Flexible(
+                  flex: 2,
+                  child: Column(
+                    children: [
+                      CachedNetworkImage(
+                        imageUrl: widget.mealPlans[index].picture ??
+                            "http://via.placeholder.com/350x150",
+                        imageBuilder: (context, imageProvider) => Container(
+                          height: 130,
+                          width: 130,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
+                            /* boxShadow: [
+                              BoxShadow(
+                                blurRadius: 4,
+                                color: Colors.black.withOpacity(0.25),
+                                spreadRadius: 0,
+                                offset: const Offset(0, 4),
+                              )
+                            ], */
                           ),
-                          /* boxShadow: [
-                            BoxShadow(
-                              blurRadius: 4,
-                              color: Colors.black.withOpacity(0.25),
-                              spreadRadius: 0,
-                              offset: const Offset(0, 4),
-                            )
-                          ], */
                         ),
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
                       ),
-                      placeholder: (context, url) =>
-                          CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
-                    ),
-                    SizedBox(height: 5),
-                    InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (context) => Menu(
-                                        menu: menus[index],
-                                      )));
-                        },
-                        child: Text(
-                          'View Menu',
-                          style: TextStyle(
-                            fontFamily: 'RobotoCondensedReg',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                            color: defaultGreen,
-                          ),
-                        ))
-                  ],
+                      SizedBox(height: 5),
+                      InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => Menu(
+                                          menu: menus[index],
+                                        )));
+                          },
+                          child: Text(
+                            'View Menu',
+                            style: TextStyle(
+                              fontFamily: 'RobotoCondensedReg',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                              color: defaultGreen,
+                            ),
+                          ))
+                    ],
+                  ),
                 )
               ],
             ),
@@ -331,8 +334,7 @@ class _MealPlanPageState extends State<MealPlanPage>
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage('images/bg5.jpg'),
-              fit: BoxFit.fitHeight)),
+              image: AssetImage('images/bg5.jpg'), fit: BoxFit.fitHeight)),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
