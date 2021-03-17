@@ -221,7 +221,7 @@ class _PrePaymentState extends State<PrePayment> {
 //                    ],
                             borderRadius: BorderRadius.circular(15.0),
                             color: questionnaireDisabled.withOpacity(0.4)),
-                        child: primaryAddressLine1 == null
+                        child: addressPrimaryLine1 == null
                             ? Padding(
                                 padding: const EdgeInsets.only(bottom: 15.0),
                                 child: Column(

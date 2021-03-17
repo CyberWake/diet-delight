@@ -208,6 +208,8 @@ class Api {
     print(body);
     final response =
         await http.put(uri + '/api/v1/user', headers: headers, body: body);
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
       print('Success updating user info');
       var body = convert.jsonDecode(response.body);
