@@ -87,8 +87,7 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
                   child: RichText(
                 text: TextSpan(children: <TextSpan>[
                   TextSpan(
-                      text: fieldValue1 + '\n',
-                      style: orderHistoryCardStyle.copyWith(fontSize: 12)),
+                      text: fieldValue1 + '\n', style: orderHistoryCardStyle),
                   TextSpan(
                       text: fieldValue2,
                       style: orderHistoryCardStyle.copyWith(
@@ -366,32 +365,32 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
                                             ),
                                           ),
                                         ),
-                                        PopupMenuItem<int>(
-                                          value: 1,
-                                          child: Material(
-                                            color: Colors.white,
-                                            child: ListTile(
-                                              onTap: () async {
-                                                await DownloadFile(
-                                                    'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-                                                    'Dummy PDF.pdf');
-                                                Navigator.pop(context);
-                                              },
-                                              leading: Icon(
-                                                Icons.file_download,
-                                                size: 24,
-                                                color: Colors.black,
-                                              ),
-//                                            new Image.asset(
-//                                                "images/download_invoice.png",
-//                                                width: 20),
-                                              title: Text(
-                                                'Download Invoice',
-                                                style: orderHistoryPopUpStyle,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
+//                                         PopupMenuItem<int>(
+//                                           value: 1,
+//                                           child: Material(
+//                                             color: Colors.white,
+//                                             child: ListTile(
+//                                               onTap: () async {
+//                                                 await DownloadFile(
+//                                                     'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+//                                                     'Dummy PDF.pdf');
+//                                                 Navigator.pop(context);
+//                                               },
+//                                               leading: Icon(
+//                                                 Icons.file_download,
+//                                                 size: 24,
+//                                                 color: Colors.black,
+//                                               ),
+// //                                            new Image.asset(
+// //                                                "images/download_invoice.png",
+// //                                                width: 20),
+//                                               title: Text(
+//                                                 'Download Invoice',
+//                                                 style: orderHistoryPopUpStyle,
+//                                               ),
+//                                             ),
+//                                           ),
+//                                         ),
                                       ],
                                     ),
                                   ],
@@ -415,7 +414,7 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Icon(Icons.schedule,
-                                        size: 18, color: timeGrid),
+                                        size: 16, color: timeGrid),
                                     SizedBox(
                                       width: 10,
                                     ),
@@ -424,12 +423,16 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
                                             DateTime.parse(
                                                 purchasedMeal[index].createdAt),
                                             format),
-                                        style: orderHistoryCardStyle),
+                                        style: orderHistoryCardStyle.copyWith(
+                                            fontSize: 12, color: timeGrid)),
                                     Spacer(),
                                     Text(
                                         purchasedMeal[index].amountPaid +
                                             ' BHD',
-                                        style: orderHistoryCardStyle)
+                                        style: orderHistoryCardStyle.copyWith(
+                                          color: defaultGreen,
+                                          fontWeight: FontWeight.w600,
+                                        ))
                                   ],
                                 ),
                               ))

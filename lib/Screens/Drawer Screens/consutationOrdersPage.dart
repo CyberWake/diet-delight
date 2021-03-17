@@ -105,8 +105,8 @@ class _ConsultationOrderHistoryPageState
                       },
                       child: Text(
                         fieldValue,
-                        style:
-                            orderHistoryCardStyle.copyWith(color: defaultGreen),
+                        style: orderHistoryCardStyle.copyWith(
+                            color: defaultGreen, fontWeight: FontWeight.w600),
                       ))),
               Expanded(child: Container())
             ],
@@ -315,32 +315,32 @@ class _ConsultationOrderHistoryPageState
                                             ),
                                           ),
                                         ),
-                                        PopupMenuItem<int>(
-                                          value: 1,
-                                          child: Material(
-                                            color: Colors.white,
-                                            child: ListTile(
-                                              onTap: () async {
-                                                await DownloadFile(
-                                                    'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-                                                    'Dummy PDF.pdf');
-                                                Navigator.pop(context);
-                                              },
-                                              leading: Icon(
-                                                Icons.file_download,
-                                                size: 24,
-                                                color: Colors.black,
-                                              ),
-//                                            new Image.asset(
-//                                                "images/download_invoice.png",
-//                                                width: 20),
-                                              title: Text(
-                                                'Download Invoice',
-                                                style: orderHistoryPopUpStyle,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
+//                                         PopupMenuItem<int>(
+//                                           value: 1,
+//                                           child: Material(
+//                                             color: Colors.white,
+//                                             child: ListTile(
+//                                               onTap: () async {
+//                                                 await DownloadFile(
+//                                                     'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+//                                                     'Dummy PDF.pdf');
+//                                                 Navigator.pop(context);
+//                                               },
+//                                               leading: Icon(
+//                                                 Icons.file_download,
+//                                                 size: 24,
+//                                                 color: Colors.black,
+//                                               ),
+// //                                            new Image.asset(
+// //                                                "images/download_invoice.png",
+// //                                                width: 20),
+//                                               title: Text(
+//                                                 'Download Invoice',
+//                                                 style: orderHistoryPopUpStyle,
+//                                               ),
+//                                             ),
+//                                           ),
+//                                         ),
                                       ],
                                     ),
                                   ],
@@ -361,8 +361,8 @@ class _ConsultationOrderHistoryPageState
                                         '0000-00-00 00:00:00' ||
                                     appointments[index].consultationTime ==
                                         'null'
-                                ? 'Online'
-                                : 'Offline',
+                                ? 'ONLINE'
+                                : 'OFFLINE',
                           ),
                           dataField(
                             fieldName: 'Consultant:',
@@ -387,7 +387,10 @@ class _ConsultationOrderHistoryPageState
                                         consultationPurchases[index]
                                                 .amountPaid +
                                             ' BHD',
-                                        style: orderHistoryCardStyle)
+                                        style: orderHistoryCardStyle.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: defaultGreen,
+                                        ))
                                   ],
                                 ),
                               )),
