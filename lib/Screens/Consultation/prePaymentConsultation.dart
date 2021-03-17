@@ -68,6 +68,9 @@ class _PrePaymentState extends State<PrePayment> {
     addressSecondaryLine1 = info.addressSecondary1;
     addressPrimaryLine2 = info.addressLine2;
     addressSecondaryLine2 = info.addressSecondary2;
+    setState(() {
+
+    });
     print(primaryAddressLine1);
     print(addressPrimaryLine1);
   }

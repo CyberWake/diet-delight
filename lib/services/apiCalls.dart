@@ -185,6 +185,10 @@ class Api {
         var body = convert.jsonDecode(response.body);
         print('user model body: $body');
         userInfo = RegModel.fromMap(body);
+        // userInfo.addressLine1 = '2145';
+        // userInfo.addressLine2 = 'Estancia Apartments';
+        // userInfo.addressSecondary1 = 'b405';
+        // userInfo.addressSecondary2 = 'safaa apartments';
         await FlutterSecureStorage().write(
             key: 'calorie', value: body['recommended_calories'].toString());
         return userInfo;
