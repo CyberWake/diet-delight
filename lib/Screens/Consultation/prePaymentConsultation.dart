@@ -68,6 +68,9 @@ class _PrePaymentState extends State<PrePayment> {
     addressSecondaryLine1 = info.addressSecondary1;
     addressPrimaryLine2 = info.addressLine2;
     addressSecondaryLine2 = info.addressSecondary2;
+    setState(() {
+
+    });
     print(primaryAddressLine1);
     print(addressPrimaryLine1);
   }
@@ -221,7 +224,7 @@ class _PrePaymentState extends State<PrePayment> {
 //                    ],
                             borderRadius: BorderRadius.circular(15.0),
                             color: questionnaireDisabled.withOpacity(0.4)),
-                        child: primaryAddressLine1 == null
+                        child: addressPrimaryLine1 == null
                             ? Padding(
                                 padding: const EdgeInsets.only(bottom: 15.0),
                                 child: Column(

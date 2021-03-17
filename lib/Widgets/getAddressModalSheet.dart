@@ -127,7 +127,8 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                                     fontSize: 24,
                                     color: Colors.white)));
                       } else if (index < 3) {
-                        return Expanded(
+                        return Expanded
+                          (
                           child: Material(
                             color: Colors.transparent,
                             borderRadius: BorderRadius.circular(10.0),
@@ -204,6 +205,9 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                                   ',\n' +
                                   addressSecondaryLine2.text;
                             }
+                            print("{{}}{}{}");
+                            print(primaryAddressLine1);
+                            print(primaryAddressLine2);
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
                             String password = prefs.getString('password');
@@ -226,7 +230,7 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
                             bool result = false;
                             setState(() {});
                             widget.callBackFunction(concatenatedAddress);
-                            if (!widget.addNewAddressOnly) {
+                            if (widget.addNewAddressOnly) {
                               result =
                                   await _apiCall.putUserInfo(updateUserData);
                               Navigator.pop(context);
