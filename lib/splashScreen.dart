@@ -25,12 +25,14 @@ class _SplashScreenState extends State<SplashScreen>
     if (prefs.containsKey('accessToken')) {
       await Future.delayed(Duration(seconds: 2));
       _apiCall.autoLogin().whenComplete(() {
+        print(
+            'Api.userInfo.questionnaireStatus: ${Api.userInfo.questionnaireStatus}');
         Navigator.pushReplacement(
             context,
             CupertinoPageRoute(
-                builder: (context) =>
-                Api.userInfo.questionnaireStatus != 0
-                    ?NewQuestionnaire():HomePage()));
+                builder: (context) => Api.userInfo.questionnaireStatus == 0
+                    ? NewQuestionnaire()
+                    : HomePage()));
       });
     } else {
       await Future.delayed(Duration(seconds: 2));

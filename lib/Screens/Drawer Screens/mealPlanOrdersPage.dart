@@ -365,32 +365,32 @@ class _MealPlanOrderHistoryPageState extends State<MealPlanOrderHistoryPage> {
                                             ),
                                           ),
                                         ),
-//                                         PopupMenuItem<int>(
-//                                           value: 1,
-//                                           child: Material(
-//                                             color: Colors.white,
-//                                             child: ListTile(
-//                                               onTap: () async {
-//                                                 await DownloadFile(
-//                                                     'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-//                                                     'Dummy PDF.pdf');
-//                                                 Navigator.pop(context);
-//                                               },
-//                                               leading: Icon(
-//                                                 Icons.file_download,
-//                                                 size: 24,
-//                                                 color: Colors.black,
-//                                               ),
-// //                                            new Image.asset(
-// //                                                "images/download_invoice.png",
-// //                                                width: 20),
-//                                               title: Text(
-//                                                 'Download Invoice',
-//                                                 style: orderHistoryPopUpStyle,
-//                                               ),
-//                                             ),
-//                                           ),
-//                                         ),
+                                        PopupMenuItem<int>(
+                                          value: 1,
+                                          child: Material(
+                                            color: Colors.white,
+                                            child: ListTile(
+                                              onTap: () async {
+                                                await DownloadFile(
+                                                    'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+                                                    'Dummy PDF.pdf');
+                                                Navigator.pop(context);
+                                              },
+                                              leading: Icon(
+                                                Icons.file_download,
+                                                size: 24,
+                                                color: Colors.black,
+                                              ),
+//                                            new Image.asset(
+//                                                "images/download_invoice.png",
+//                                                width: 20),
+                                              title: Text(
+                                                'Download Invoice',
+                                                style: orderHistoryPopUpStyle,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ],

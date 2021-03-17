@@ -34,6 +34,7 @@ var mealPlanCacheData = [];
 var onGoingMealPurchaseCacheData = [];
 var menuCategoryCacheData = [];
 var recommendedCalories = "0";
+
 class Api {
   static var client;
   static UserCredential userCredential;
@@ -159,6 +160,7 @@ class Api {
         secret: secret,
       );
       var body = convert.jsonDecode(client.credentials.toJson());
+      print('login body: $body');
       token = body['accessToken'];
       prefs.setString('accessToken', body['accessToken']);
       prefs.setString('refreshToken', body['refreshToken']);
@@ -589,6 +591,7 @@ class Api {
       return null;
     }
   }
+
   Future<List<ConsAppointmentModel>> getConsultationAppointments() async {
     try {
       itemAppointments = [];
@@ -1008,7 +1011,6 @@ class Api {
             OptionsModel model = OptionsModel.fromMap(element);
             options.add(model);
           });
-
         } else {
           print(response.statusCode);
           print(response.body);
@@ -1201,7 +1203,6 @@ class Api {
         var body = convert.jsonDecode(response.body)["data"];
 
         return body;
-
       } else {
         print(response.statusCode);
         print(response.body);
@@ -1293,23 +1294,18 @@ class Api {
       print(response.body);
       print(response.statusCode);
       if (response.statusCode == 201) {
-
         print('Success making Put call');
 
         var body = convert.jsonDecode(response.body)["data"];
 
         return body;
-
       } else {
-
         //return [];
       }
     } on Exception catch (e) {
       print(e.toString());
       return [];
     }
-
-
   }
 
   Future<void> postAddressBreakTakenDay(
@@ -1536,14 +1532,9 @@ class Api {
       print(e.toString());
       return [];
     }
-
-
   }
 
-
-
   Future<void> getCouponCode() async {
-
     print('getCoupon');
     print(token);
     try {
@@ -1600,10 +1591,7 @@ class Api {
       print(e.toString());
       return [];
     }
-
-
   }
-
 
   Future<void> putMealPurchase(var orderDetails, String calorie) async {
     print("putMealPurchaseCalled");
@@ -1634,7 +1622,6 @@ class Api {
         print('meal purchase put success');
         var body = convert.jsonDecode(response.body);
         print(body);
-
       } else {
         print(response.statusCode);
         print(response.body);
@@ -1645,5 +1632,4 @@ class Api {
       return null;
     }
   }
-
 }

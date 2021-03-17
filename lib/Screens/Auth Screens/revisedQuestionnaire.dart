@@ -59,6 +59,7 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
   List<bool> postRes;
   var answer;
   int _currentIndex;
+  bool initiated = false;
 
   Future getQuestions() async {
     await _apiCall.getUserInfo();
@@ -91,6 +92,68 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
       });
     });
     super.initState();
+  }
+
+  void nextButtonOnPressed() async {
+    bmi = weight / (height * height / 10000);
+    display_bmi = bmi.toStringAsPrecision(3);
+    print(display_bmi);
+    if (bmi < bmi_values[0]) {
+      report = 0;
+    } else if (bmi < bmi_values[1]) {
+      report = 1;
+    } else if (bmi < bmi_values[2]) {
+      report = 2;
+    } else {
+      report = 3;
+    }
+    print('postList: $postList');
+    if (postList.contains(null)) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text('Please fill out all the questions to proceed'),
+      ));
+    } else {
+      bool allQuestionsSubmitted = true;
+      print('value here 1: $allQuestionsSubmitted');
+      postList.forEach((item) async {
+        print('value here 2: $allQuestionsSubmitted');
+        bool res = await _apiCall.sendOptionsAnswers(item);
+        if (res == true) {
+          print('value here 3: $allQuestionsSubmitted');
+          postRes.add(res);
+        }
+      });
+      if (postRes.length != questions.length) {
+        print('value here 4: $allQuestionsSubmitted');
+        allQuestionsSubmitted = false;
+        print('value here 5: $allQuestionsSubmitted');
+      }
+      // RegModel
+      //     updateUserData =
+      //     Api.userInfo;
+      // updateUserData
+      //     .setQuestionnaireStatus(1);
+      // bool
+      //     result =
+      //     false;
+      // result =
+      //     await _apiCall.putUserInfo(updateUserData);
+      print('value here 6: $allQuestionsSubmitted');
+      if (allQuestionsSubmitted) {
+        print('Questionnaire filled Successfully');
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => BmiReport(
+                    bmi: display_bmi,
+                    report: report,
+                    age: age,
+                    gender: gender,
+                    questionnaire: true)));
+      } else {
+        print('There was an issue submitting the questionnaire');
+      }
+    }
   }
 
   // @override
@@ -1120,7 +1183,12 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                 child:
                                                                     TextButton(
                                                                   onPressed:
-                                                                      () {
+                                                                      () async {
+                                                                    setState(
+                                                                        () {
+                                                                      initiated =
+                                                                          true;
+                                                                    });
                                                                     bmi = weight /
                                                                         (height *
                                                                             height /
@@ -1165,17 +1233,23 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                       bool
                                                                           allQuestionsSubmitted =
                                                                           true;
-                                                                      postList.forEach(
-                                                                          (item) async {
+
+                                                                      for (int i =
+                                                                              0;
+                                                                          i < postList.length;
+                                                                          i++) {
                                                                         bool
                                                                             res =
-                                                                            await _apiCall.sendOptionsAnswers(item);
+                                                                            await _apiCall.sendOptionsAnswers(postList[i]);
                                                                         if (res ==
                                                                             true) {
                                                                           postRes
                                                                               .add(res);
+                                                                        } else {
+                                                                          print(
+                                                                              'res false for ${postList[i]}');
                                                                         }
-                                                                      });
+                                                                      }
                                                                       if (postRes
                                                                               .length !=
                                                                           questions
@@ -1183,16 +1257,6 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                         allQuestionsSubmitted =
                                                                             false;
                                                                       }
-                                                                      // RegModel
-                                                                      //     updateUserData =
-                                                                      //     Api.userInfo;
-                                                                      // updateUserData
-                                                                      //     .setQuestionnaireStatus(1);
-                                                                      // bool
-                                                                      //     result =
-                                                                      //     false;
-                                                                      // result =
-                                                                      //     await _apiCall.putUserInfo(updateUserData);
                                                                       if (allQuestionsSubmitted) {
                                                                         print(
                                                                             'Questionnaire filled Successfully');
@@ -1205,21 +1269,32 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                       }
                                                                     }
                                                                   },
-                                                                  child: Text(
-                                                                    'NEXT',
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontFamily:
-                                                                          'RobotoReg',
-                                                                      fontSize:
-                                                                          18,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      color: Colors
-                                                                          .white,
-                                                                    ),
-                                                                  ),
+                                                                  child: initiated
+                                                                      ? Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.all(6.0),
+                                                                          child:
+                                                                              SpinKitChasingDots(
+                                                                            color:
+                                                                                Colors.white,
+                                                                            size:
+                                                                                25,
+                                                                          ),
+                                                                        )
+                                                                      : Text(
+                                                                          'NEXT',
+                                                                          style:
+                                                                              TextStyle(
+                                                                            fontFamily:
+                                                                                'RobotoReg',
+                                                                            fontSize:
+                                                                                18,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            color:
+                                                                                Colors.white,
+                                                                          ),
+                                                                        ),
                                                                   style: TextButton.styleFrom(
                                                                       backgroundColor: gender ==
                                                                               0

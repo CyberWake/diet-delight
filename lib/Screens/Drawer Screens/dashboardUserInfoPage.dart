@@ -399,10 +399,10 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        //   image: DecorationImage(
-        // image: AssetImage('images/user_dashboard_bg.jpg'),
-        // fit: BoxFit.cover,
-        // ),
+        image: DecorationImage(
+          image: AssetImage('images/bg8.jpg'),
+          fit: BoxFit.cover,
+        ),
         color: Colors.transparent,
       ),
       child: ListView(
