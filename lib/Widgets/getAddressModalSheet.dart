@@ -34,20 +34,25 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
   String name;
 
   getUserInfo() async {
-    name = (Api.userInfo.firstName ?? '') + ' ' + (Api.userInfo.lastName ?? '');
-    if (Api.userInfo.addressLine1 != null) {
-      addressPrimaryLine1.text = Api.userInfo.addressLine1;
-    }
-    if (Api.userInfo.addressLine2 != null) {
-      addressPrimaryLine2.text = Api.userInfo.addressLine2;
-    }
-    if (Api.userInfo.addressSecondary1 != null) {
-      addressSecondaryLine1.text = Api.userInfo.addressSecondary1;
-    }
-    if (Api.userInfo.addressSecondary2 != null) {
-      addressSecondaryLine2.text = Api.userInfo.addressSecondary2;
-    }
-    setState(() {});
+    print("yes yes called");
+    await _apiCall.getUserInfo();
+
+    setState(() {
+      name = (Api.userInfo.firstName ?? '') + ' ' + (Api.userInfo.lastName ?? '');
+      if (Api.userInfo.addressLine1 != null) {
+        addressPrimaryLine1.text = Api.userInfo.addressLine1;
+      }
+      if (Api.userInfo.addressLine2 != null) {
+        addressPrimaryLine2.text = Api.userInfo.addressLine2;
+      }
+      if (Api.userInfo.addressSecondary1 != null) {
+        addressSecondaryLine1.text = Api.userInfo.addressSecondary1;
+      }
+      if (Api.userInfo.addressSecondary2 != null) {
+        addressSecondaryLine2.text = Api.userInfo.addressSecondary2;
+      }
+
+    });
   }
 
   @override
@@ -354,7 +359,7 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter modalStateUpdate) {
             return Container(
-              height: MediaQuery.of(context).size.height * 0.6,
+              height: MediaQuery.of(context).size.height * 0.65,
               decoration: BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage('images/bg7.jpg'), fit: BoxFit.fitHeight),

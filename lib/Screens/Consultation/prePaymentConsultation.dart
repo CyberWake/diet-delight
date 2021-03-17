@@ -58,6 +58,8 @@ class _PrePaymentState extends State<PrePayment> {
   String addressSecondaryLine2;
 
   getUserInfo() async {
+    print('called again');
+    await _apiCall.getUserInfo();
     info = Api.userInfo;
     name = info.firstName + ' ' + info.lastName;
     mobileNo = info.mobile;
@@ -66,6 +68,8 @@ class _PrePaymentState extends State<PrePayment> {
     addressSecondaryLine1 = info.addressSecondary1;
     addressPrimaryLine2 = info.addressLine2;
     addressSecondaryLine2 = info.addressSecondary2;
+    print(primaryAddressLine1);
+    print(addressPrimaryLine1);
   }
 
   double getDiscount(CouponModel item) {
@@ -116,6 +120,8 @@ class _PrePaymentState extends State<PrePayment> {
     setState(() {
       concatenatedAddress = address;
     });
+    print("call back called");
+    getUserInfo();
   }
 
   Widget breakDownFields(String disc, String price, bool isGrandTotal) {
@@ -215,7 +221,7 @@ class _PrePaymentState extends State<PrePayment> {
 //                    ],
                             borderRadius: BorderRadius.circular(15.0),
                             color: questionnaireDisabled.withOpacity(0.4)),
-                        child: addressPrimaryLine1 == null
+                        child: primaryAddressLine1 == null
                             ? Padding(
                                 padding: const EdgeInsets.only(bottom: 15.0),
                                 child: Column(
