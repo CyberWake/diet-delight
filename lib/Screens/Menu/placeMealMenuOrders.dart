@@ -363,6 +363,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                 SizedBox(
                                   height: 10,
                                 ),
+
                                 Flexible(
                                   fit: FlexFit.loose,
                                   child: Padding(
@@ -521,17 +522,18 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                         controller: _pageController,
                         onTap: (index) {},
                         labelStyle: selectedTab.copyWith(
-                            color: Colors.black,
                             fontSize: 14,
-                            fontWeight: FontWeight.w500),
-                        indicatorColor: Colors.transparent,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600),
+                        indicatorColor: defaultGreen,
                         indicatorWeight: 3.0,
                         indicatorSize: TabBarIndicatorSize.label,
-                        labelColor: Colors.black,
+                        labelColor: defaultPurple,
                         labelPadding: EdgeInsets.symmetric(horizontal: 10),
                         unselectedLabelStyle: unSelectedTab.copyWith(
+                            fontSize: 14,
                             color: Color(0xFF909090).withOpacity(0.5),
-                            fontWeight: FontWeight.w400),
+                            fontWeight: FontWeight.w600),
                         unselectedLabelColor: Color(0xFF909090),
                         tabs: List.generate(
                             int.parse(widget.purchaseDetails.mealPlanDuration),
@@ -634,7 +636,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                               delDataItemForApiCalls = [];
                                             },
                                             child: Container(
-                                              height: 40,
+                                              height: 50,
                                               width: MediaQuery.of(context)
                                                   .size
                                                   .width,
@@ -653,7 +655,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                                           ),
                                                         )
                                                       : Text(
-                                                          'SUBMIT',
+                                                          'DONE',
                                                           style: selectedTab
                                                               .copyWith(
                                                                   color: white),
@@ -668,6 +670,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                         : Center(
                             child: SpinKitDoubleBounce(color: defaultGreen)),
                   )
+
                 ]),
               ),
             )),
@@ -952,6 +955,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
                                   if (max >
                                       maxBuyIndexedList[pageIndex]
                                           [maxBuyIndex]) {
+
                                     setState(() {});
                                     foodItemOrder = MenuOrderModel(
                                         foodItemId: item.id,
@@ -1178,6 +1182,7 @@ class _PlaceMealMenuOrdersState extends State<PlaceMealMenuOrders>
             children: subCategoryItems[indexMajor].length == 0
                 ? List.generate(itemsFood.length, (index) {
                     if (itemsFood[index].day == day) {
+
                       return foodItemCard(
                           item: itemsFood[index],
                           dateIndex: day - 1,

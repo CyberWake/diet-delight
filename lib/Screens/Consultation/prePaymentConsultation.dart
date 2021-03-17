@@ -384,6 +384,7 @@ class _PrePaymentState extends State<PrePayment> {
                                       ? () async {
                                           int couponIndex = coupons[0]
                                               .indexOf(couponController.text);
+                                              
                                           setState(() {
                                             couponFocus.unfocus();
                                           });

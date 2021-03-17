@@ -24,7 +24,7 @@ class _DashBoardUserInfoPageState extends State<DashBoardUserInfoPage> {
 
   getUserInfo() async {
     info = Api.userInfo;
-    name.text = info.firstName + ' ' + info.lastName;
+    name.text = (info.firstName??'')+ ' ' + (info.lastName??'');
     mobileNo.text = info.mobile;
     email.text = info.email;
   }

@@ -1,4 +1,5 @@
 import 'package:date_format/date_format.dart';
+import 'package:diet_delight/Models/couponModel.dart';
 import 'package:diet_delight/Models/export_models.dart';
 import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/cupertino.dart';
@@ -40,7 +41,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
   List<List<MenuOrderModel>> foodItems = List();
   List<DateTime> dates = [];
   List<List<MenuOrderModel>> foodItems1 = List();
-
+  double discount = 0.0;
   getDates(success) {
     dates = [];
     int count = 0;
@@ -95,6 +96,18 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
     }
   }
 
+  double getDiscount(CouponModel item) {
+    double total = (double.parse(widget.mealPlan.price) +
+            double.parse(widget.afterNoonPrice.toString())) +
+        80;
+    item.addUsed();
+    if (item.flatDiscount != null) {
+      return double.parse(item.flatDiscount);
+    } else {
+      return total * double.parse(item.percentageDiscount) / 100;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -142,7 +155,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
   }
 
   var hasCoupon = false;
-  var couponCode;
+  String couponCode;
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -152,7 +165,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
       child: Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage('images/bg2.jpg'), fit: BoxFit.fitHeight)),
+                image: AssetImage('images/bg8.jpg'), fit: BoxFit.fitHeight)),
         child: Scaffold(
           key: _scaffoldKey,
           backgroundColor: Colors.transparent,
@@ -209,9 +222,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      Api.userInfo.firstName +
-                                          ' ' +
-                                          Api.userInfo.lastName,
+                                      "${Api.userInfo.firstName ?? ''} ${Api.userInfo.lastName ?? ''}",
                                       style: selectedTab.copyWith(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w400),
@@ -428,11 +439,8 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                             SizedBox(
                               width: 10,
                             ),
-                            Icon(
-                              Icons.local_offer_outlined,
-                              size: 24,
-                              color: Colors.white,
-                            ),
+                            ImageIcon(AssetImage('images/discount.png'),
+                                color: white, size: 28),
                             SizedBox(
                               width: 20,
                             ),
@@ -451,7 +459,7 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                                           errorBorder: InputBorder.none,
                                           disabledBorder: InputBorder.none,
                                           hintStyle: appBarTextStyle.copyWith(
-                                              color: Color(0xFF303030),
+                                              color: Colors.white,
                                               fontSize: 17,
                                               fontWeight: FontWeight.w600),
                                           hintText: "Enter coupon code here"),
@@ -496,9 +504,35 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                                       ))
                                   : GestureDetector(
                                       onTap: () async {
-                                        print("called");
-                                        var data =
-                                            await _apiCall.getCouponCode();
+                                        var data = await _apiCall.getCoupons();
+                                        int couponIndex;
+                                        if (data is List<List<dynamic>> &&
+                                            data != null &&
+                                            data.length >= 2) {
+                                          couponIndex = data[0].indexOf(
+                                              couponCode.toUpperCase());
+
+                                          CouponModel item =
+                                              data[1][couponIndex];
+                                          if (item.timesUsable >
+                                              item.timesUsed) {
+                                            setState(() {
+                                              discount = getDiscount(item);
+                                            });
+
+                                            _scaffoldKey.currentState
+                                                .showSnackBar(SnackBar(
+                                              content:
+                                                  Text('Coupon Code applied'),
+                                            ));
+                                          }
+                                        } else
+                                          _scaffoldKey.currentState
+                                              .showSnackBar(SnackBar(
+                                                  content: Text(
+                                                      'Some error occured')));
+
+                                        print("apply");
                                       },
                                       child: Text(
                                         "APPLY",
@@ -610,10 +644,11 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                                   breakDownFields('Taxes', '- - USD', false),
                                   breakDownFields(
                                       'Grand Total',
-                                      (int.parse(widget.mealPlan.price) +
-                                                  int.parse(widget
-                                                      .afterNoonPrice
-                                                      .toString()))
+                                      ((double.parse(widget.mealPlan.price) +
+                                                      double.parse(widget
+                                                          .afterNoonPrice
+                                                          .toString())) -
+                                                  discount)
                                               .toString() +
                                           ' USD',
                                       true),
@@ -645,10 +680,13 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                                 mealPlanName: widget.mealPlan.name,
                                 mealPlanDuration:
                                     widget.mealPlan.duration.toString(),
-                                amountPaid: (int.parse(widget.mealPlan.price) +
-                                        int.parse(
-                                            widget.afterNoonPrice.toString()))
-                                    .toString(),
+                                amountPaid:
+                                    ((double.parse(widget.mealPlan.price) +
+                                                double.parse(widget
+                                                    .afterNoonPrice
+                                                    .toString())) -
+                                            discount)
+                                        .toString(),
                                 startDate: widget.selectedDate.toString(),
                                 endDate: widget.selectedDate
                                     .add(Duration(
@@ -696,11 +734,17 @@ class _PrePaymentMealPlanState extends State<PrePaymentMealPlan> {
                                   //             )));
                                 });
                               } else {
-                                setState(() {
-                                  progress = false;
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((_) {
+                                  setState(() {
+                                    progress = false;
+                                  });
+
+                                  _scaffoldKey.currentState.showSnackBar(
+                                      SnackBar(
+                                          content:
+                                              Text('Something went wrong')));
                                 });
-                                _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                    content: Text('Something went wrong')));
                               }
                               if (success != null) {
                                 setState(() {
