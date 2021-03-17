@@ -796,12 +796,13 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                       height: devHeight * 0.8,
                                                       child: Padding(
                                                         padding:
-                                                            EdgeInsets.fromLTRB(
-                                                                devWidth * 0.06,
-                                                                devWidth * 0.06,
-                                                                devWidth * 0.06,
-                                                                devWidth *
-                                                                    0.06),
+                                                            // EdgeInsets.fromLTRB(
+                                                            //     devWidth * 0.02,
+                                                            //     devWidth * 0.02,
+                                                            //     devWidth * 0.02,
+                                                            //     devWidth *
+                                                            //         0.02),
+                                                            EdgeInsets.all(5.0),
                                                         child: Column(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
@@ -914,7 +915,7 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                             Row(
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
-                                                                      .spaceBetween,
+                                                                      .start,
                                                               children: [
                                                                 Row(
                                                                   crossAxisAlignment:
@@ -1025,7 +1026,7 @@ class _NewQuestionnaireState extends State<NewQuestionnaire> {
                                                                             value:
                                                                                 weight.toDouble(),
                                                                             min:
-                                                                                40.0,
+                                                                                30.0,
                                                                             max:
                                                                                 180.0,
                                                                             onChanged:

@@ -1,3 +1,4 @@
+import 'package:diet_delight/Screens/Auth%20Screens/revisedQuestionnaire.dart';
 import 'package:diet_delight/splashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 

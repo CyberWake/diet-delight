@@ -95,17 +95,16 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
         context: context,
         isScrollControlled: true,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
+          borderRadius: BorderRadius.circular(5.0),
         ),
         builder: (builder) {
           return Container(
             decoration: BoxDecoration(
               borderRadius: new BorderRadius.only(
-                  topLeft: const Radius.circular(20.0),
-                  topRight: const Radius.circular(20.0)),
+                  topLeft: const Radius.circular(10.0),
+                  topRight: const Radius.circular(10.0)),
               image: DecorationImage(
-                  image: AssetImage('images/popup_background.jpg'),
-                  fit: BoxFit.cover),
+                  image: AssetImage('images/bg7.jpg'), fit: BoxFit.cover),
             ),
             height: _height,
             child: Container(
@@ -358,8 +357,7 @@ class _AddressButtonWithModalState extends State<AddressButtonWithModal> {
               height: MediaQuery.of(context).size.height * 0.6,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage('images/popup_background.jpg'),
-                    fit: BoxFit.fitHeight),
+                    image: AssetImage('images/bg7.jpg'), fit: BoxFit.fitHeight),
                 color: Colors.transparent,
                 borderRadius: BorderRadius.only(
                     topRight: Radius.circular(30.0),
