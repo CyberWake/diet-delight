@@ -3,6 +3,7 @@ import 'dart:convert';
 class MealPurchaseModel {
   String id;
   String userId;
+  String durationId;
   String mealPlanId;
   String paymentId;
   String status;
@@ -23,6 +24,7 @@ class MealPurchaseModel {
   MealPurchaseModel(
       {this.id,
       this.userId,
+      this.durationId,
       this.mealPlanId,
       this.paymentId,
       this.status = "0",
@@ -44,6 +46,7 @@ class MealPurchaseModel {
     // ignore: unnecessary_cast
     return {
       'user_id': this.userId,
+      'duration_id': this.durationId,
       'meal_plan_id': this.mealPlanId,
       'payment_id': this.paymentId,
       'status': this.status,
@@ -67,6 +70,7 @@ class MealPurchaseModel {
     return MealPurchaseModel(
         id: item['id'].toString(),
         userId: item['user_id'].toString(),
+        durationId: item['duration_id'].toString(),
         mealPlanId: item['meal_plan_id'].toString(),
         paymentId: item['payment_id'].toString(),
         status: item['status'].toString(),
@@ -98,6 +102,7 @@ class MealPurchaseModel {
   show() {
     print('id: $id');
     print('userId: $userId');
+    print('durationId: $durationId');
     print('mealPlanId: $mealPlanId');
     print('paymentId: $paymentId');
     print('status: $status');
@@ -110,5 +115,9 @@ class MealPurchaseModel {
     print('kCal: $kCal');
     print('portions: $portions');
     print('created at: $createdAt');
+    print('billingAddressLine1: $billingAddressLine1');
+    print('billingAddressLine2: $billingAddressLine2');
+    print('shippingAddressLine1: $shippingAddressLine1');
+    print('shippingAddressLine2: $shippingAddressLine2');
   }
 }

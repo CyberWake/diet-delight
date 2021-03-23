@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:core';
 
-import 'package:diet_delight/Screens/Auth%20Screens/login_signup_form.dart';
-import 'package:diet_delight/landingPage.dart';
-import 'package:diet_delight/services/apiCalls.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'Screens/Auth Screens/revisedQuestionnaire.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -22,11 +23,19 @@ class _SplashScreenState extends State<SplashScreen>
   _retrieveCredentials() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('accessToken')) {
+      await Future.delayed(Duration(seconds: 2));
       _apiCall.autoLogin().whenComplete(() {
-        Navigator.of(context).pushReplacement(
-            CupertinoPageRoute(builder: (BuildContext context) => HomePage()));
+        print(
+            'Api.userInfo.questionnaireStatus: ${Api.userInfo.questionnaireStatus}');
+        Navigator.pushReplacement(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => Api.userInfo.questionnaireStatus == 0
+                    ? NewQuestionnaire()
+                    : HomePage()));
       });
     } else {
+      await Future.delayed(Duration(seconds: 2));
       Navigator.of(context).pushReplacement(
           CupertinoPageRoute(builder: (BuildContext context) => AfterSplash()));
     }
@@ -61,20 +70,20 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                flex: 2,
-                child: Container(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    CircleAvatar(
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("images/bg12.jpg"), fit: BoxFit.cover),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Expanded(
+                    flex: 3,
+                    child: CircleAvatar(
                       backgroundColor: Colors.transparent,
                       child: Container(
                           child: Image.asset(
@@ -83,34 +92,24 @@ class _SplashScreenState extends State<SplashScreen>
                         height: 100.0,
                       )),
                       radius: 100.0,
-                    ),
-                    SizedBox(
-                      height: 24,
-                    ),
-                  ],
-                )),
-              ),
-              Expanded(
-                flex: 1,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SpinKitFadingCircle(
-                      itemBuilder: (BuildContext context, int index) {
-                        return DecoratedBox(
-                          decoration: BoxDecoration(
-                            color: index.isEven ? Colors.red : Colors.green,
+                    )),
+                Spacer(flex: 3),
+                Expanded(
+                  flex: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 24.0),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          SpinKitChasingDots(
+                            color: defaultPurple,
+                            size: 36,
                           ),
-                        );
-                      },
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 20.0),
-                    ),
-                  ],
+                        ]),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

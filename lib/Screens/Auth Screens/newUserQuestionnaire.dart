@@ -7,6 +7,7 @@ import 'package:diet_delight/landingPage.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Questionnaire extends StatefulWidget {
   final String username;
@@ -386,7 +387,7 @@ class _QuestionnaireState extends State<Questionnaire>
                                                                       context,
                                                                       CupertinoPageRoute(
                                                                           builder: (context) =>
-                                                                              HomePage()));
+                                                                              HomePage(openPage: 0)));
                                                                 },
                                                                 child:
                                                                     Container(
@@ -433,7 +434,7 @@ class _QuestionnaireState extends State<Questionnaire>
                                                                       context,
                                                                       CupertinoPageRoute(
                                                                           builder: (context) =>
-                                                                              HomePage()));
+                                                                              HomePage(openPage: 0)));
                                                                   Navigator.push(
                                                                       context,
                                                                       CupertinoPageRoute(
@@ -582,24 +583,24 @@ class _QuestionnaireState extends State<Questionnaire>
                                                                           content:
                                                                               Text('Please enter some value')));
                                                                 } else {
-                                                                  await _apiCall.sendOptionsAnswers(
-                                                                      answerId:
-                                                                          orderId,
-                                                                      questionId:
-                                                                          questions[_pageController.index]
-                                                                              .id,
-                                                                      additionalText:
-                                                                          addText,
-                                                                      answer:
-                                                                          ans,
-                                                                      question:
-                                                                          questions[_pageController.index]
-                                                                              .question,
-                                                                      type: questions[_pageController
-                                                                              .index]
-                                                                          .type,
-                                                                      optionSelected:
-                                                                          ans);
+                                                                  // await _apiCall.sendOptionsAnswers(
+                                                                  //     answerId:
+                                                                  //         orderId,
+                                                                  //     questionId:
+                                                                  //         questions[_pageController.index]
+                                                                  //             .id,
+                                                                  //     additionalText:
+                                                                  //         addText,
+                                                                  //     answer:
+                                                                  //         ans,
+                                                                  //     question:
+                                                                  //         questions[_pageController.index]
+                                                                  //             .question,
+                                                                  //     type: questions[_pageController
+                                                                  //             .index]
+                                                                  //         .type,
+                                                                  //     optionSelected:
+                                                                  //         ans);
                                                                   answer = null;
                                                                   setState(() {
                                                                     show =
@@ -641,6 +642,6 @@ class _QuestionnaireState extends State<Questionnaire>
                     ],
                   )
                 : Center(child: Text("No questions to show"))
-            : Center(child: CircularProgressIndicator()));
+            : Center(child: SpinKitDoubleBounce(color: defaultGreen)));
   }
 }

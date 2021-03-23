@@ -1,18 +1,21 @@
-import 'package:diet_delight/Models/registrationModel.dart';
-import 'package:diet_delight/Screens/Auth%20Screens/verifyPhoneNumber.dart';
-import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/Models/export_models.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'revisedQuestionnaire.dart';
+
 class SignUp extends StatefulWidget {
   final String token;
-  SignUp({this.token});
+  var height;
+  SignUp({this.token, this.height});
   @override
   _SignUpState createState() => _SignUpState();
 }
 
 class _SignUpState extends State<SignUp> {
+  final _apiCall = Api.instance;
   FocusNode first = FocusNode();
   FocusNode last = FocusNode();
   FocusNode country = FocusNode();
@@ -55,11 +58,13 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     double devWidth = MediaQuery.of(context).size.width;
     return Container(
-      height: 600.0,
+      height: widget.height,
+      decoration: BoxDecoration(
+        color: formBackground,
+      ),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-        child: ListView(
-          shrinkWrap: true,
+        child: Column(
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
@@ -370,6 +375,7 @@ class _SignUpState extends State<SignUp> {
                             CupertinoPageRoute(
                                 builder: (context) => VerifyPhoneNumber(
                                       regDetails: signUpDetails,
+                                      from: FromPage.signUp,
                                     )));
                       } else {
                         if (confirmPass.text != password.text) {
@@ -424,7 +430,7 @@ class _SignUpState extends State<SignUp> {
                 children: [
                   Container(
                     color: defaultGreen,
-                    height: 1,
+                    height: 1.6,
                     width: 130,
                   ),
                   Padding(
@@ -433,7 +439,7 @@ class _SignUpState extends State<SignUp> {
                   ),
                   Container(
                     color: defaultGreen,
-                    height: 1,
+                    height: 1.6,
                     width: 130,
                   ),
                 ],
@@ -459,7 +465,21 @@ class _SignUpState extends State<SignUp> {
                   SizedBox(
                     width: 100.0,
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        bool result = await _apiCall.googleAuth();
+                        if (result == true) {
+                          Navigator.pushReplacement(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) =>
+                                      Api.userInfo.questionnaireStatus == 0
+                                          ? NewQuestionnaire()
+                                          : HomePage()));
+                        } else {
+                          Scaffold.of(context)
+                              .showSnackBar(SnackBar(content: Text('Failed')));
+                        }
+                      },
                       child: Image.asset('images/Group 58.png', width: 18),
                       style: TextButton.styleFrom(
                           backgroundColor: gColor,

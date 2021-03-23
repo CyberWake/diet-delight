@@ -10,25 +10,33 @@ dependencies:
   flutter:
     sdk: flutter
   pin_code_text_field: ^1.7.1
+  page_transition: ^1.1.7+6
+  flutter_downloader: ^1.5.2
+  ticketview: ^1.0.0
   flutter_rounded_date_picker: ^1.0.5+1
   email_validator: ^1.0.6
   oauth2: ^1.6.3
+  firebase_messaging: ^6.0.16
   flutter_secure_storage: ^3.3.5
+  carousel_slider: ^3.0.0
   flutter_spinkit: ^4.1.2+1
   shared_preferences: ^0.5.12+4
   firebase_core: ^0.7.0
   firebase_auth: ^0.20.0+1
+  google_sign_in: ^4.5.3
   flutter_open_whatsapp: ^0.1.2
   flutter_dropdown: ^0.0.8
   date_format: ^1.0.9
   cached_network_image: ^2.5.0
-  syncfusion_flutter_datepicker: ^18.4.41-beta
+  percent_indicator: ^2.1.9+1
+  flutter_email_sender: ^4.0.0
   font_awesome_flutter: ^8.11.0
   url_launcher: ^5.7.10
-  flutter_downloader: ^1.5.2
+
   path_provider: ^1.6.9
   permission_handler: ^4.0.0
-#  flutter_svg: ^0.17.1
+  pull_to_refresh: ^1.6.5
+
 
 dev_dependencies:
   flutter_test:
@@ -52,3 +60,16 @@ flutter:
     - family: MontserratMed
       fonts:
         - asset: fonts/Montserrat-Medium.ttf
+    - family: NewIcons
+      fonts:
+        - asset: fonts/NewIcons.ttf
+    - family: MontserratMed
+      fonts:
+        - asset: fonts/Montserrat-Medium.ttf
+    - family: KalamReg
+      fonts:
+        - asset: fonts/Kalam-Regular.ttf
+
+flutter_native_splash:
+  image: images/splash_screen1.png
+  color: "42a5f5"

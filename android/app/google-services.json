@@ -14,11 +14,43 @@
       },
       "oauth_client": [
         {
+          "client_id": "403601863858-epe775vk2n9amtk6l154tvg07pd0e5sp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.webknot.diet_delight",
+            "certificate_hash": "7a1e7e1d35e6d92fda8e996172e40cf719e2e774"
+          }
+        },
+        {
+          "client_id": "403601863858-muo76mum5o2a54ai4kr37lh9p41lm21k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.webknot.diet_delight",
+            "certificate_hash": "51e0a55ef8b51b22427f1c9060ba1cf1f3e3dc25"
+          }
+        },
+        {
           "client_id": "403601863858-rkjicdg8q527fhcnbstnt4qvoma1psq8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.webknot.diet_delight",
             "certificate_hash": "85cdf5ae5eff1677b49fdf4ef436c10a97f3e546"
+          }
+        },
+        {
+          "client_id": "403601863858-t5cihb71uekuh1dnp1on0kj02cc7ttb7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.webknot.diet_delight",
+            "certificate_hash": "cc0295ab3eed5b632dcc16de350ef6a0c1917ab5"
+          }
+        },
+        {
+          "client_id": "403601863858-vrio5ftfujkcgtd1au1djlvg58bvvhd6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.webknot.diet_delight",
+            "certificate_hash": "67992d030be0d453788ca5bba250efdfe039ff5e"
           }
         },
         {

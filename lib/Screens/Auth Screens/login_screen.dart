@@ -1,16 +1,18 @@
-import 'package:diet_delight/Models/loginModel.dart';
-import 'package:diet_delight/Screens/Auth%20Screens/forgotPassword.dart';
-import 'package:diet_delight/konstants.dart';
-import 'package:diet_delight/landingPage.dart';
-import 'package:diet_delight/services/apiCalls.dart';
+import 'package:diet_delight/Models/export_models.dart';
+import 'package:diet_delight/Screens/Auth%20Screens/revisedQuestionnaire.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:page_transition/page_transition.dart';
 
 class Login extends StatefulWidget {
   final String token;
-  Login({this.token});
+  final double height;
+  Login({this.token, this.height});
   @override
   _LoginState createState() => _LoginState();
 }
@@ -25,7 +27,6 @@ class _LoginState extends State<Login> {
   bool initiated = false;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     pass = FocusNode();
     mailOrMobile = FocusNode();
@@ -35,7 +36,10 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300.0,
+      height: widget.height,
+      decoration: BoxDecoration(
+        color: formBackground,
+      ),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 20.0, 0, 0),
         child: ListView(
@@ -124,9 +128,12 @@ class _LoginState extends State<Login> {
                 child: GestureDetector(
                   onTap: () {
                     Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                            builder: (context) => ForgotPassword()));
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.fade,
+                        child: ForgotPassword(),
+                      ),
+                    );
                   },
                   child: Text('Forgot Password?',
                       style: TextStyle(
@@ -182,10 +189,16 @@ class _LoginState extends State<Login> {
                             loginDetails.show();
                             bool result = await _apiCall.login(loginDetails);
                             if (result) {
-                              Navigator.pushReplacement(
-                                  context,
-                                  CupertinoPageRoute(
-                                      builder: (context) => HomePage()));
+                              Api.userInfo.questionnaireStatus == 0
+                                  ? Navigator.pushReplacement(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (context) =>
+                                              NewQuestionnaire()))
+                                  : Navigator.pushReplacement(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (context) => HomePage()));
                             }
                           } else {
                             Scaffold.of(context).showSnackBar(SnackBar(
@@ -206,7 +219,13 @@ class _LoginState extends State<Login> {
                     }
                   },
                   child: initiated
-                      ? CircularProgressIndicator()
+                      ? Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: SpinKitChasingDots(
+                            color: Colors.white,
+                            size: 25,
+                          ),
+                        )
                       : Text(
                           'SIGN IN',
                           style: TextStyle(
@@ -230,7 +249,7 @@ class _LoginState extends State<Login> {
                 children: [
                   Container(
                     color: defaultGreen,
-                    height: 1,
+                    height: 1.6,
                     width: 130,
                   ),
                   Padding(
@@ -239,7 +258,7 @@ class _LoginState extends State<Login> {
                   ),
                   Container(
                     color: defaultGreen,
-                    height: 1,
+                    height: 1.6,
                     width: 130,
                   ),
                 ],
@@ -253,7 +272,9 @@ class _LoginState extends State<Login> {
                   SizedBox(
                     width: 100.0,
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        await GoogleSignIn().signOut();
+                      },
                       child: Image.asset('images/Group 59.png', width: 11),
                       style: TextButton.styleFrom(
                           backgroundColor: fColor,
@@ -265,7 +286,21 @@ class _LoginState extends State<Login> {
                   SizedBox(
                     width: 100.0,
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        bool result = await _apiCall.googleAuth();
+                        if (result == true) {
+                          Navigator.pushReplacement(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) =>
+                                      Api.userInfo.questionnaireStatus == 0
+                                          ? NewQuestionnaire()
+                                          : HomePage()));
+                        } else {
+                          Scaffold.of(context)
+                              .showSnackBar(SnackBar(content: Text('Failed')));
+                        }
+                      },
                       child: Image.asset('images/Group 58.png', width: 18),
                       style: TextButton.styleFrom(
                           backgroundColor: gColor,

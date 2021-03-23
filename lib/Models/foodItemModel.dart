@@ -10,6 +10,7 @@ class FoodItemModel {
   String date;
   int day;
   String des;
+  int featured;
   String noteAdded;
   FoodItemModel(
       {this.foodName,
@@ -22,18 +23,20 @@ class FoodItemModel {
       this.day,
       this.date,
       this.des,
-      this.picture,this.noteAdded});
+      this.picture,
+      this.featured,
+      this.noteAdded});
   factory FoodItemModel.fromMap(Map item) {
     return FoodItemModel(
-      id: item['id'],
-      foodName: item['name'],
-      categoryId: item['menu_category_id'],
-      menuId: item['menu_Id'],
-      picture: item['picture'],
-      isVeg: item['veg'] == 1 ? true : false,
-      day: item['day'],
-      date: item['date'],
-    );
+        id: item['id'],
+        foodName: item['name'],
+        categoryId: item['menu_category_id'],
+        menuId: item['menu_Id'],
+        picture: item['picture'],
+        isVeg: item['veg'] == 1 ? true : false,
+        day: item['day'],
+        date: item['date'],
+        featured: item['featured']);
   }
 
   change(bool isSel) {
@@ -44,7 +47,7 @@ class FoodItemModel {
     this.orderItemId = id;
   }
 
-  updateNote(String note){
+  updateNote(String note) {
     this.noteAdded = note;
   }
 }

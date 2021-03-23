@@ -12,6 +12,11 @@ class RegModel {
   String addressLine2;
   String addressSecondary1;
   String addressSecondary2;
+  int questionnaireStatus;
+  String bmi;
+  int age;
+  int gender;
+  int recommendedCalories;
 
   RegModel(
       {this.status = "0",
@@ -26,7 +31,12 @@ class RegModel {
       this.addressLine1,
       this.addressLine2,
       this.addressSecondary1,
-      this.addressSecondary2});
+      this.addressSecondary2,
+      this.questionnaireStatus = 0,
+      this.age = 0,
+      this.bmi,
+      this.gender = 0,
+      this.recommendedCalories = 0});
 
   Map<String, dynamic> toMap() {
     // ignore: unnecessary_cast
@@ -41,10 +51,15 @@ class RegModel {
         'last_name': this.lastName,
         'mobile': this.mobile,
         'password': this.password,
+        'gender': this.gender,
+        'age': this.age,
+        'recommended_calories': this.recommendedCalories,
+        'bmi': this.bmi,
         'primary_address_line1': this.addressLine1,
         'primary_address_line2': this.addressLine2,
         'secondary_address_line1': this.addressSecondary1,
         'secondary_address_line2': this.addressSecondary2,
+        'questionnaire_status': this.questionnaireStatus,
       };
     }
     return {
@@ -52,10 +67,15 @@ class RegModel {
       'firebase_uid': this.firebaseUid,
       'name': this.name,
       'email': this.email,
+      'gender': this.gender,
+      'recommended_calories': this.recommendedCalories,
+      'age': this.age,
+      'bmi': this.bmi,
       'password': this.password,
       'first_name': this.firstName,
       'last_name': this.lastName,
       'mobile': this.mobile,
+      'questionnaire_status': this.questionnaireStatus,
     };
   }
 
@@ -77,12 +97,17 @@ class RegModel {
         email: item['email'],
         password: item['password'],
         firstName: item['first_name'],
+        gender: item['gender'],
+        age: item['age'],
+        bmi: item['bmi'],
+        recommendedCalories: item['recommended_calories'],
         lastName: item['last_name'],
         mobile: item['mobile'],
         addressLine1: item['primary_address_line1'],
         addressLine2: item['primary_address_line2'],
         addressSecondary1: item['secondary_address_line1'],
-        addressSecondary2: item['secondary_address_line2']);
+        addressSecondary2: item['secondary_address_line2'],
+        questionnaireStatus: item['questionnaire_status']);
   }
 
   show() {
@@ -95,10 +120,15 @@ class RegModel {
     print('firstName: $firstName');
     print('lastName: $lastName');
     print('mobile: $mobile');
+    print('bmi: $bmi');
+    print('gender: $gender');
+    print('age: $age');
+    print('recommendedCalories: $recommendedCalories');
     print('addressLine1: $addressLine1');
     print('addressLine2: $addressLine2');
     print('addressSecondaryLine1: $addressSecondary1');
     print('addressSecondaryLine2: $addressSecondary2');
+    print('questionnaireStatus: $questionnaireStatus');
   }
 
   setUid(String uId) {
@@ -107,5 +137,16 @@ class RegModel {
 
   setPassword(String pass) {
     this.password = pass;
+  }
+
+  setQuestionnaireStatus(int questionnaireStatus) {
+    this.questionnaireStatus = questionnaireStatus;
+  }
+
+  addBmiInfo(int age, int gender, String bmi, int recommendedCalories) {
+    this.age = age;
+    this.gender = gender;
+    this.bmi = bmi;
+    this.recommendedCalories = recommendedCalories;
   }
 }

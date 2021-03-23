@@ -1,16 +1,33 @@
 import 'package:diet_delight/Models/consultationAppointmentModel.dart';
 import 'package:diet_delight/Models/consultationPurchaseModel.dart';
+import 'package:diet_delight/Models/consultationModel.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dropdown/flutter_dropdown.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:diet_delight/Models/registrationModel.dart';
+import 'package:diet_delight/Models/couponModel.dart';
 import 'package:diet_delight/Widgets/getAddressModalSheet.dart';
+import 'package:diet_delight/landingPage.dart';
+import 'package:diet_delight/Screens/Auth Screens/revisedQuestionnaire.dart';
+import 'package:diet_delight/Screens/Auth Screens/newUserQuestionnaire.dart';
+import 'package:date_format/date_format.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class PrePayment extends StatefulWidget {
+  final int package;
   final ConsAppointmentModel appointment;
   final ConsPurchaseModel orderDetails;
-  PrePayment({this.orderDetails, this.appointment});
+  final List<ConsultationModel> consultation;
+  final String consultationMode;
+  PrePayment(
+      {this.package,
+      this.orderDetails,
+      this.appointment,
+      this.consultation,
+      this.consultationMode});
   @override
   _PrePaymentState createState() => _PrePaymentState();
 }
@@ -20,24 +37,16 @@ class _PrePaymentState extends State<PrePayment> {
   Api _apiCall = Api.instance;
   ConsAppointmentModel _appointment;
   ConsPurchaseModel order;
-
-  TextEditingController addressPrimary1 = TextEditingController();
-  TextEditingController addressPrimary2 = TextEditingController();
-  TextEditingController addressSecondary1 = TextEditingController();
-  TextEditingController addressSecondary2 = TextEditingController();
-  FocusNode addressFocus1 = FocusNode();
-  FocusNode addressFocus2 = FocusNode();
-  String addressArea = 'Bahrain';
-  String localAddress = '';
-  double _height = 350;
-  int items = 4;
-  int selectedAddress = -1;
-  List<String> types = ['Primary', 'Secondary'];
-  List<String> areas = ['Bahrain', 'India'];
-  List<String> areas2 = ['Bahrain', 'India'];
-  String addressType = 'Primary';
-
+  FlutterSecureStorage storage = new FlutterSecureStorage();
+  int consultationIndex;
   bool isButtonEnabled = true;
+  int paymentMethod = 0;
+  bool couponCheck = false;
+  TextEditingController couponController = TextEditingController();
+  FocusNode couponFocus;
+  List<String> format = [hh, ':', nn, ' ', am, ', ', dd, ' ', 'M', ', ', yyyy];
+  List<List> coupons = List();
+  double discount = 0.0;
 
   RegModel info;
   String name;
@@ -49,6 +58,8 @@ class _PrePaymentState extends State<PrePayment> {
   String addressSecondaryLine2;
 
   getUserInfo() async {
+    print('called again');
+    await _apiCall.getUserInfo();
     info = Api.userInfo;
     name = info.firstName + ' ' + info.lastName;
     mobileNo = info.mobile;
@@ -57,594 +68,727 @@ class _PrePaymentState extends State<PrePayment> {
     addressSecondaryLine1 = info.addressSecondary1;
     addressPrimaryLine2 = info.addressLine2;
     addressSecondaryLine2 = info.addressSecondary2;
+    setState(() {
+
+    });
+    print(primaryAddressLine1);
+    print(addressPrimaryLine1);
+  }
+
+  double getDiscount(CouponModel item) {
+    double total = double.parse(
+            widget.consultation[consultationIndex].price.substring(0, 2)) +
+        80;
+    item.addUsed();
+    if (item.flatDiscount != null) {
+      return double.parse(item.flatDiscount);
+    } else {
+      return total * double.parse(item.percentageDiscount) / 100;
+    }
+  }
+
+  getCouponData() async {
+    coupons = await _apiCall.getCoupons();
   }
 
   @override
   void initState() {
+    consultationIndex = widget.package;
     getUserInfo();
+    getCouponData();
     addressPrimaryLine1 == 'null' ? print(addressPrimaryLine1) : print('yes');
     super.initState();
     order = widget.orderDetails;
+    couponFocus = FocusNode();
     _appointment = widget.appointment;
+//    DateTime appointmentDateTime =
+//        DateTime.parse(widget.appointment.consultationTime);
+//    print(appointmentDateTime);
     concatenatedAddress = '';
+    selectedAddressLine1 = '';
+    selectedAddressLine2 = '';
+//    print('selectedIndex : ' +
+//        storage.read(key: 'selectedAddressIndex').toString());
+//    if (storage.read(key: 'selectedAddressIndex') != null) {
+//      isAddressSelected = true;
+//      selectedAddressIndex =
+//          int.parse(storage.read(key: 'selectedAddressIndex').toString());
+//    } else {
     isAddressSelected = false;
-    selectedAddressIndex = -1;
+    selectedAddressIndex = 0;
+//    }
   }
 
   callback(address) {
     setState(() {
       concatenatedAddress = address;
     });
+    print("call back called");
+    getUserInfo();
   }
 
-  void addAddress({int address}) {
-    if (address == 0 && addressPrimary1.text.isNotEmpty) {
-      var separatedAddress = addressPrimary1.text.split(',');
-      addressArea = separatedAddress[separatedAddress.length - 1];
-      localAddress = separatedAddress[0];
-    } else if (address == 1 && addressSecondary1.text.isNotEmpty) {
-      var separatedAddress = addressSecondary1.text.split(',');
-      addressArea = separatedAddress[separatedAddress.length - 1];
-      localAddress = separatedAddress[0];
-    } else {
-      localAddress = '';
-    }
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        builder: (builder) {
-          return StatefulBuilder(builder:
-              (BuildContext context, StateSetter addressModalStateUpdate) {
-            return Container(
-              height: _height,
-              color:
-                  Colors.transparent, //could change this to Color(0xFF737373),
-              //so you don't have to change MaterialApp canvasColor
-              child: Container(
-                  padding: EdgeInsets.only(top: 30),
-                  child: Column(
-                      children: List.generate(items, (index) {
-                    if (index < 1) {
-                      return Expanded(
-                        child: Container(
-                          margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(3.0),
-                            border: Border.all(width: 0.5, color: formLinks),
-                            color: white,
-                          ),
-                          child: DropDown<String>(
-                            showUnderline: false,
-                            initialValue: types[index],
-                            items: index == 0 ? types : areas,
-                            onChanged: (String choice) {
-                              if (index == 0) {
-                                addressType = choice;
-                              } else if (index == 1) {
-                                addressArea = choice;
-                              }
-                              print(choice);
-                              addressModalStateUpdate(() {});
-                            },
-                            isExpanded: true,
-                          ),
-                        ),
-                      );
-                    } else if (index == 1 || index == 2) {
-                      return Expanded(
-                        child: Container(
-                          margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(3.0),
-                            border: Border.all(width: 0.5, color: formLinks),
-                            color: white,
-                          ),
-                          child: TextFormField(
-                              controller: address == 0
-                                  ? (index == 1
-                                      ? addressPrimary1
-                                      : addressPrimary2)
-                                  : (index == 1
-                                      ? addressSecondary1
-                                      : addressSecondary2),
-                              focusNode:
-                                  index == 1 ? addressFocus1 : addressFocus2,
-                              onFieldSubmitted: (done) {
-                                localAddress = done;
-                              },
-                              style: authInputTextStyle,
-                              textAlign: TextAlign.center,
-                              keyboardType: TextInputType.text,
-                              textInputAction: TextInputAction.next,
-                              decoration: authInputFieldDecoration.copyWith(
-                                  hintText: 'Address Line ${index}')),
-                        ),
-                      );
-                    } else if (index == 3) {
-                      return Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            print(addressArea);
-                            if (address == 0) {
-                              addressPrimary1.text += ', ' + addressArea;
-                              print(addressPrimary1.text);
-                            } else if (address == 1) {
-                              addressSecondary1.text += ', ' + addressArea;
-                            }
-                            setState(() {});
-                            Navigator.pop(context);
-                          },
-                          child: Container(
-                              margin: EdgeInsets.only(top: 20),
-                              color: defaultGreen,
-                              child: Center(
-                                child: Text(
-                                  localAddress.length > 0 || addressArea != null
-                                      ? 'UPDATE'
-                                      : 'ADD',
-                                  style: TextStyle(
-                                      fontFamily: 'RobotoReg',
-                                      fontSize: 20,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              )),
-                        ),
-                      );
-                    } else {
-                      return SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.35,
-                      );
-                    }
-                  }))),
-            );
-          });
-        });
+  Widget breakDownFields(String disc, String price, bool isGrandTotal) {
+    return Row(
+      mainAxisAlignment:
+          isGrandTotal ? MainAxisAlignment.end : MainAxisAlignment.spaceBetween,
+      children: [
+        Padding(
+            padding: isGrandTotal
+                ? EdgeInsets.only(top: 10.0, right: 10)
+                : EdgeInsets.only(top: 10.0),
+            child: Text(disc, style: costBreakdownTextStyle)),
+        Padding(
+            padding: EdgeInsets.only(top: 10.0),
+            child: Text(price, style: costBreakdownTextStyle)),
+      ],
+    );
   }
 
-  void getBottomSheet() {
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        builder: (builder) {
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter modalStateUpdate) {
-            return Container(
-              height: 380,
-              color: Colors.transparent,
-              child: Container(
-                  padding: EdgeInsets.only(top: 10),
-                  child: Column(
-                      children: List.generate(3, (index) {
-                    if (index == 2) {
-                      return Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(top: 20),
-                            color: defaultGreen,
-                            child: Center(
-                                child: Text(
-                              'DONE',
-                              style: TextStyle(
-                                  fontFamily: 'RobotoReg',
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            )),
-                          ),
-                        ),
-                      );
-                    }
-                    if (index == 0 && addressPrimary1.text.isNotEmpty) {
-                      var separatedAddress = addressPrimary1.text.split(',');
-                      addressArea =
-                          separatedAddress[separatedAddress.length - 1];
-                      localAddress = separatedAddress[0];
-                    } else if (index == 1 &&
-                        addressSecondary1.text.isNotEmpty) {
-                      var separatedAddress = addressSecondary1.text.split(',');
-                      addressArea =
-                          separatedAddress[separatedAddress.length - 1];
-                      localAddress = separatedAddress[0];
-                    } else {
-                      localAddress = '';
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40.0, vertical: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 0.0, bottom: 10),
-                            child: Text(
-                              index == 0
-                                  ? 'Primary Address'
-                                  : 'Secondary Address',
-                              style: billingTextStyle.copyWith(
-                                  color: index == 0
-                                      ? defaultGreen
-                                      : Color(0xFF222222)),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              if (index == 0) {
-                                if (addressPrimary1.text.isNotEmpty) {
-                                  modalStateUpdate(() {
-                                    selectedAddress = index;
-                                  });
-                                }
-                              } else if (index == 1) {
-                                if (addressSecondary1.text.isNotEmpty) {
-                                  modalStateUpdate(() {
-                                    selectedAddress = index;
-                                  });
-                                }
-                              }
-                            },
-                            child: Container(
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(3.0),
-                                  border:
-                                      Border.all(width: 0.5, color: formLinks),
-                                  color: selectedAddress == index
-                                      ? defaultGreen
-                                      : white,
-                                ),
-                                child: localAddress.length > 0
-                                    ? Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            height: 10.0,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                '${name}',
-                                                style:
-                                                    billingTextStyle.copyWith(
-                                                        fontSize: 14,
-                                                        color:
-                                                            Color(0xFF222222)),
-                                              ),
-                                              Text('Select',
-                                                  style:
-                                                      billingTextStyle.copyWith(
-                                                          fontSize: 14,
-                                                          color: defaultGreen)),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(15.0),
-                                                child: Text(
-                                                    localAddress +
-                                                        ',\n' +
-                                                        addressArea,
-                                                    style: billingTextStyle
-                                                        .copyWith(
-                                                      fontSize: 14,
-                                                      fontStyle:
-                                                          FontStyle.normal,
-                                                      color: selectedAddress ==
-                                                              index
-                                                          ? white
-                                                          : Color(0xFF222222),
-                                                    )),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      )
-                                    : Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              TextButton(
-                                                child: Text('ADD',
-                                                    style: billingTextStyle
-                                                        .copyWith(
-                                                            fontSize: 14,
-                                                            color:
-                                                                defaultGreen)),
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                  addAddress(address: index);
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text('Not Available',
-                                                  style:
-                                                      billingTextStyle.copyWith(
-                                                          fontSize: 14,
-                                                          fontStyle:
-                                                              FontStyle.normal,
-                                                          color: Color(
-                                                              0xFF4E4848)))
-                                            ],
-                                          )
-                                        ],
-                                      )),
-                          )
-                        ],
-                      ),
-                    );
-                  }))),
-            );
-          });
-        });
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   precacheImage(consultationBackground.image, context);
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: white,
-        centerTitle: false,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.keyboard_backspace,
-            size: 30.0,
-            color: defaultGreen,
-          ),
+    var devWidth = MediaQuery.of(context).size.width;
+    var devHeight = MediaQuery.of(context).size.height;
+    return SafeArea(
+      child: Container(
+        decoration: BoxDecoration(
+          image: consultationBackground,
         ),
-        title: Text('Book an Appointment', style: appBarTextStyle),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 30.0),
-              child: Text(
-                'Billing Address',
-                style: billingTextStyle,
+        child: Scaffold(
+          key: _scaffoldKey,
+          backgroundColor: Colors.transparent,
+          resizeToAvoidBottomInset: true,
+          appBar: AppBar(
+            elevation: 0.0,
+            backgroundColor: Colors.transparent,
+//          shape: RoundedRectangleBorder(
+//              borderRadius: BorderRadius.only(
+//                  bottomLeft: Radius.circular(20.0),
+//                  bottomRight: Radius.circular(20.0))),
+            centerTitle: false,
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                Icons.keyboard_backspace,
+                size: 30.0,
+                color: questionnaireSelect,
               ),
             ),
-            Material(
-              borderRadius: BorderRadius.circular(5.0),
-              shadowColor: Color(0x26000000),
-              elevation: 2,
-              color: Colors.white,
-              child: Container(
-                margin: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
-                decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(color: Color(0x26000000), blurRadius: 5)
-                    ],
-                    borderRadius: BorderRadius.circular(5.0),
-                    color: Colors.white),
-                child: addressPrimaryLine1 == null
-                    ? Padding(
-                        padding: const EdgeInsets.only(bottom: 15.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+            title: Text('Book Appointment',
+                style: appBarTextStyle.copyWith(
+                    fontFamily: 'RobotoReg',
+                    color: questionnaireSelect,
+                    fontWeight: FontWeight.bold)),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: Container(
+              height: devHeight -
+                  MediaQuery.of(context).padding.top -
+                  AppBar().preferredSize.height -
+                  20,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: MediaQuery.of(context).size.width * 0.05),
+                      child: Text(
+                        'Billing Address',
+                        style: billingTextStyle,
+                      ),
+                    ),
+                    Material(
+                      borderRadius: BorderRadius.circular(15.0),
+                      shadowColor: Color(0x00000000),
+                      elevation: 0,
+                      color: Colors.transparent,
+                      child: Container(
+                        margin: EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal:
+                                MediaQuery.of(context).size.width * 0.05),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+                        decoration: BoxDecoration(
+//                    boxShadow: [
+//                      BoxShadow(color: Color(0x26000000), blurRadius: 5)
+//                    ],
+                            borderRadius: BorderRadius.circular(15.0),
+                            color: questionnaireDisabled.withOpacity(0.4)),
+                        child: addressPrimaryLine1 == null
+                            ? Padding(
+                                padding: const EdgeInsets.only(bottom: 15.0),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        AddressButtonWithModal(
+                                          addNewAddressOnly: true,
+                                          callBackFunction: callback,
+                                          child: Text('ADD',
+                                              style: addressChangeTextStyle
+                                                  .copyWith(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text('Not Available',
+                                            style: addressChangeTextStyle
+                                                .copyWith(fontSize: 14))
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '$name',
+                                        style: addressChangeTextStyle.copyWith(
+                                            fontSize: 14),
+                                      ),
+                                      AddressButtonWithModal(
+                                        callBackFunction: callback,
+                                        child: Text('Change',
+                                            style:
+                                                addressChangeTextStyle.copyWith(
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 10.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        (selectedAddressLine1 == '' ||
+                                                selectedAddressLine1 == null)
+                                            ? Text(
+                                                '$addressPrimaryLine1\n$addressPrimaryLine2',
+                                                style: addressChangeTextStyle
+                                                    .copyWith(
+                                                  fontSize: 14,
+                                                ))
+                                            : Text(
+                                                '$selectedAddressLine1\n$selectedAddressLine2',
+                                                style: addressChangeTextStyle
+                                                    .copyWith(
+                                                  fontSize: 14,
+                                                ))
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                      ),
+                    ),
+                    Padding(
+                        padding: EdgeInsets.fromLTRB(
+                            MediaQuery.of(context).size.width * 0.075,
+                            5,
+                            MediaQuery.of(context).size.width * 0.075,
+                            10),
+                        child: Container(
+                          color: paymentSeparator,
+                          height: 1.0,
+                        )),
+                    Material(
+                      elevation: 0,
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      child: Container(
+                        margin: EdgeInsets.symmetric(
+                            horizontal: devWidth * 0.05, vertical: 5),
+                        decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.0)),
+                            color: questionnaireDisabled.withOpacity(0.4)),
+                        child: ListTile(
+                          tileColor: Colors.transparent,
+                          leading: ImageIcon(AssetImage('images/discount.png'),
+                              color: white, size: 28),
+                          // Icon(FontAwesomeIcons.tag,
+                          //     color: white, size: 20),
+                          title: couponCheck == true
+                              ? TextFormField(
+                                  // onChanged: (String account) {
+                                  //   couponController.text = account;
+                                  //   print(couponController.text);
+                                  //   if (couponFocus.hasFocus == false &&
+                                  //       (couponController.text == "" ||
+                                  //           couponController.text == null)) {
+                                  //     setState(() {
+                                  //       couponCheck = false;
+                                  //     });
+                                  //   }
+                                  // },
+                                  // onFieldSubmitted: (done) {
+                                  //   couponController.text = done;
+                                  //   couponFocus.unfocus();
+                                  //   if (couponController.text == "" ||
+                                  //       couponController.text == null) {
+                                  //     setState(() {
+                                  //       couponCheck = false;
+                                  //     });
+                                  //   }
+                                  // },
+                                  controller: couponController,
+                                  autofocus: true,
+                                  style: questionnaireTitleStyle.copyWith(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400),
+                                  maxLines: 1,
+                                  minLines: 1,
+                                  keyboardType: TextInputType.text,
+                                  textInputAction: TextInputAction.done,
+                                  focusNode: couponFocus,
+                                  decoration: InputDecoration(
+                                    fillColor: Colors.transparent,
+                                    hintText: 'Enter Coupon here...',
+                                    hintStyle: questionnaireTitleStyle.copyWith(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w400),
+                                    hoverColor: white,
+                                    focusColor: white,
+                                    enabledBorder: InputBorder.none,
+                                    border: InputBorder.none,
+                                    disabledBorder: InputBorder.none,
+                                  ),
+                                )
+                              : Text('APPLY COUPON',
+                                  style: questionnaireTitleStyle.copyWith(
+                                      fontSize: 18)),
+                          trailing: couponCheck == true
+                              ? TextButton(
+                                  onPressed: coupons[0].contains(
+                                              couponController.text
+                                                  .toString()) ==
+                                          true
+                                      ? () async {
+                                          int couponIndex = coupons[0]
+                                              .indexOf(couponController.text);
+                                              
+                                          setState(() {
+                                            couponFocus.unfocus();
+                                          });
+                                          if (
+                                              // DateTime.now().isBefore(
+                                              //         DateTime.parse(coupons[1]
+                                              //                 [couponIndex]
+                                              //             .expiryDate)) &&
+                                              coupons[1][couponIndex]
+                                                      .timesUsable >
+                                                  coupons[1][couponIndex]
+                                                      .timesUsed) {
+                                            discount = getDiscount(
+                                                coupons[1][couponIndex]);
+                                            await _apiCall.putCouponUpdate(
+                                                coupons[1][couponIndex]);
+                                            _scaffoldKey.currentState
+                                                .showSnackBar(SnackBar(
+                                              content:
+                                                  Text('Coupon Code applied'),
+                                            ));
+                                          } else {
+                                            _scaffoldKey.currentState
+                                                .showSnackBar(SnackBar(
+                                              content: Text(
+                                                  'This coupon code has either expired or has reached maximum usage'),
+                                            ));
+                                          }
+                                        }
+                                      : couponController.text.toString() ==
+                                                  "" ||
+                                              couponController.text
+                                                      .toString() ==
+                                                  null
+                                          ? () {
+                                              setState(() {
+                                                couponCheck = false;
+                                              });
+                                            }
+                                          : () {
+                                              _scaffoldKey.currentState
+                                                  .showSnackBar(SnackBar(
+                                                content: Text(
+                                                    'Please enter a valid coupon code'),
+                                              ));
+                                            },
+                                  child: Text('APPLY',
+                                      style: questionnaireTitleStyle.copyWith(
+                                          fontSize: 16)),
+                                )
+                              : IconButton(
+                                  icon: ImageIcon(
+                                      AssetImage(
+                                          'images/next_arrow_consult_page.png'),
+                                      color: white,
+                                      size: 24),
+                                  onPressed: () {
+                                    setState(() {
+                                      couponCheck = true;
+                                    });
+                                  },
+                                ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                        padding: EdgeInsets.fromLTRB(
+                            MediaQuery.of(context).size.width * 0.075,
+                            10,
+                            MediaQuery.of(context).size.width * 0.075,
+                            10),
+                        child: Container(
+                          color: paymentSeparator,
+                          height: 1.0,
+                        )),
+                    // : SizedBox(),
+                    widget.consultationMode == "0"
+                        ? Padding(
+                            padding: EdgeInsets.fromLTRB(
+                                MediaQuery.of(context).size.width * 0.05,
+                                5,
+                                MediaQuery.of(context).size.width * 0.05,
+                                10),
+                            child: Column(
                               children: [
-                                AddressButtonWithModal(
-                                  addNewAddressOnly: true,
-                                  callBackFunction: callback,
-                                  child: Text('ADD',
-                                      style: billingTextStyle.copyWith(
-                                          fontSize: 14, color: defaultGreen)),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Payment Method',
+                                      style: billingTextStyle,
+                                    ),
+                                    Spacer(
+                                      flex: 2,
+                                    ),
+                                    // Padding(
+                                    //   padding: EdgeInsets.only(
+                                    //       right: MediaQuery.of(context)
+                                    //               .size
+                                    //               .width *
+                                    //           0.075),
+                                    //   child: GestureDetector(
+                                    //     onTap: () {
+                                    //       Navigator.push(
+                                    //           context,
+                                    //           MaterialPageRoute(
+                                    //               builder: (context) =>
+                                    //                   NewQuestionnaire()));
+                                    //     },
+                                    //     child: Text('Change',
+                                    //         style:
+                                    //             addressChangeTextStyle.copyWith(
+                                    //                 fontSize: 14,
+                                    //                 color: defaultGreen)),
+                                    //   ),
+                                    // ),
+                                    // Spacer(),
+                                    // SizedBox(
+                                    //   width: 0,
+                                    // ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: devWidth * 0.05),
+                                      child: Material(
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
+                                        color: paymentMethod == 0
+                                            ? defaultGreen
+                                            : white,
+                                        elevation: 1,
+                                        child: ListTile(
+                                            dense: true,
+                                            onTap: () {
+                                              setState(() {
+                                                paymentMethod = 0;
+                                              });
+                                            },
+                                            title: Text(
+                                              'Pay at Clinic',
+                                              style: billingTextStyle.copyWith(
+                                                  fontSize: 14,
+                                                  color: paymentMethod == 0
+                                                      ? white
+                                                      : paymentMethodText),
+                                            ),
+                                            trailing: Icon(Icons.check_circle,
+                                                color: paymentMethod == 0
+                                                    ? white
+                                                    : Colors.transparent,
+                                                size: 20)),
+                                      ),
+                                    ),
+                                    SizedBox(height: devHeight * 0.03),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: devWidth * 0.05),
+                                      child: Material(
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
+                                        color: paymentMethod == 1
+                                            ? defaultGreen
+                                            : white,
+                                        elevation: 1,
+                                        child: ListTile(
+                                            dense: true,
+                                            onTap: () {
+                                              setState(() {
+                                                paymentMethod = 1;
+                                              });
+                                            },
+                                            title: Text(
+                                              'Pay Online',
+                                              style: billingTextStyle.copyWith(
+                                                  fontSize: 14,
+                                                  color: paymentMethod == 1
+                                                      ? white
+                                                      : paymentMethodText),
+                                            ),
+                                            trailing: Icon(Icons.check_circle,
+                                                color: paymentMethod == 1
+                                                    ? white
+                                                    : Colors.transparent,
+                                                size: 20)),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text('Not Available',
-                                    style: billingTextStyle.copyWith(
-                                        fontSize: 14,
-                                        fontStyle: FontStyle.normal,
-                                        color: Color(0xFF4E4848)))
-                              ],
-                            ),
-                          ],
-                        ),
-                      )
-                    : Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '${name}',
-                                style: billingTextStyle.copyWith(fontSize: 14),
-                              ),
-                              AddressButtonWithModal(
-                                callBackFunction: callback,
-                                child: Text('Change',
-                                    style: billingTextStyle.copyWith(
-                                        fontSize: 14, color: defaultGreen)),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('$addressPrimaryLine1\n$addressPrimaryLine2',
-                                  style: billingTextStyle.copyWith(
-                                    fontSize: 14,
-                                    fontStyle: FontStyle.normal,
-                                    color: Color(0xFF222222),
-                                  ))
-                            ],
-                          ),
-                        ],
-                      ),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Payment',
+                          )
+                        : SizedBox(),
+                    widget.consultationMode == "0"
+                        ? Padding(
+                            padding: EdgeInsets.fromLTRB(
+                                MediaQuery.of(context).size.width * 0.075,
+                                10,
+                                MediaQuery.of(context).size.width * 0.075,
+                                10),
+                            child: Container(
+                              color: paymentSeparator,
+                              height: 1.0,
+                            ))
+                        : SizedBox(),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: MediaQuery.of(context).size.width * 0.05),
+                      child: Text(
+                        'Cost Breakdown',
                         style: billingTextStyle,
                       ),
-                      Spacer(
-                        flex: 7,
+                    ),
+                    Material(
+                      borderRadius: BorderRadius.circular(15.0),
+                      elevation: 0,
+                      color: Colors.transparent,
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(
+                            MediaQuery.of(context).size.width * 0.05,
+                            10,
+                            MediaQuery.of(context).size.width * 0.05,
+                            0),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+                        decoration: BoxDecoration(
+//                    boxShadow: [
+//                      BoxShadow(color: Color(0x26000000), blurRadius: 5)
+//                    ],
+                            borderRadius: BorderRadius.circular(15.0),
+                            color: questionnaireDisabled.withOpacity(0.4)),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                child: Column(
+                                  children: [
+                                    breakDownFields(
+                                        '${widget.consultation[consultationIndex].name} Consultancy Package',
+                                        '${widget.consultation[consultationIndex].price} BHD',
+                                        false),
+                                    widget.consultationMode == "0"
+                                        ? Padding(
+                                            padding: EdgeInsets.only(
+                                                top: 5.0, left: 10.0),
+                                            child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                  'First Appointment - ' +
+                                                      formatDate(
+                                                          DateTime.parse(
+                                                              _appointment
+                                                                  .consultationTime),
+                                                          format),
+                                                  style: costBreakdownTextStyle
+                                                      .copyWith(fontSize: 11)),
+                                            ))
+                                        : SizedBox(),
+                                    breakDownFields('Taxes', '80 BHD', false),
+                                    breakDownFields(
+                                        'Discount', '$discount BHD', false),
+                                    breakDownFields(
+                                        'Grand Total',
+                                        '${double.parse(widget.consultation[consultationIndex].price.substring(0, 2)) + 80 - discount} BHD',
+                                        true),
+                                  ],
+                                ),
+                              ),
+                            ]),
                       ),
-                      Text('Change',
-                          style: billingTextStyle.copyWith(
-                              fontSize: 14, color: defaultGreen)),
-                      Spacer(),
-                      SizedBox(
-                        width: 0,
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Material(
-                        borderRadius: BorderRadius.circular(5.0),
-                        shadowColor: Color(0x26000000),
-                        elevation: 2,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.3,
-                          height: MediaQuery.of(context).size.height * 0.1,
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Color(0x26000000), blurRadius: 5)
-                              ],
-                              borderRadius: BorderRadius.circular(5.0),
-                              color: Colors.white),
-                          child: Center(
-                            child: Image.asset(
-                              'images/card.png',
-                              width: MediaQuery.of(context).size.width * 0.15,
-                              height:
-                                  MediaQuery.of(context).size.height * 0.075,
-                            ),
+                    ),
+                    // Spacer(flex: 4),
+                    SizedBox(
+                        height: widget.consultationMode == "0"
+                            ? 0
+                            : devHeight * 0.2 - 10),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(50, 40, 50, 20),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 40.0,
+                          child: TextButton(
+                            onPressed: isButtonEnabled
+                                ? () async {
+                                    setState(() {
+                                      isButtonEnabled = false;
+                                    });
+                                    print('pressed');
+                                    if ((selectedAddressLine1 == '' ||
+                                            selectedAddressLine1 == null) &&
+                                        addressPrimaryLine1 == null) {
+                                      _scaffoldKey.currentState.showSnackBar(
+                                          SnackBar(
+                                              content: Text(
+                                                  'Please Add and select an address before proceeding')));
+                                    } else if (selectedAddressLine1 != null &&
+                                        selectedAddressLine1 != '') {
+                                      order.setUserPaymentDetails(
+                                          userId: Api.userInfo.id,
+                                          paymentId: '11487',
+                                          billingAddressLine1:
+                                              selectedAddressLine1,
+                                          billingAddressLine2:
+                                              selectedAddressLine2);
+                                      String id = await _apiCall
+                                          .postConsultationPurchase(order);
+                                    } else if ((selectedAddressLine1 == '' ||
+                                            selectedAddressLine1 == null) &&
+                                        addressPrimaryLine1 != null) {
+                                      order.setUserPaymentDetails(
+                                          userId: Api.userInfo.id,
+                                          paymentId: '11487',
+                                          billingAddressLine1:
+                                              addressPrimaryLine1,
+                                          billingAddressLine2:
+                                              addressPrimaryLine2);
+                                      String id = await _apiCall
+                                          .postConsultationPurchase(order);
+                                    }
+                                    String id = await _apiCall
+                                        .postConsultationPurchase(order);
+                                    if (id != null) {
+                                      _appointment.putDetails(
+                                          packagePurchaseId: id,
+                                          selectedConsultationMode:
+                                              widget.consultationMode);
+                                      bool success = await _apiCall
+                                          .postConsultationAppointment(
+                                              _appointment);
+                                      if (success) {
+                                        _scaffoldKey.currentState.showSnackBar(
+                                            SnackBar(
+                                                content:
+                                                    Text('Appointment Added')));
+                                      }
+                                      _scaffoldKey.currentState.showSnackBar(
+                                          SnackBar(
+                                              content:
+                                                  Text('Purchase Successful')));
+                                    } else {
+                                      _scaffoldKey.currentState.showSnackBar(
+                                          SnackBar(
+                                              content: Text(
+                                                  'Something went wrong')));
+                                    }
+                                    Navigator.pushReplacement(
+                                        context,
+                                        CupertinoPageRoute(
+                                            builder: (context) =>
+                                                HomePage(openPage: 3)));
+                                  }
+                                : () {},
+                            child: isButtonEnabled == false
+                                ? Padding(
+                                    padding: const EdgeInsets.all(6.0),
+                                    child: SpinKitChasingDots(
+                                      color: Colors.white,
+                                      size: 18,
+                                    ))
+                                : Text(
+                                    paymentMethod == 1 ||
+                                            widget.consultationMode == "1"
+                                        ? 'PAY NOW'
+                                        : 'BOOK APPOINTMENT',
+                                    style: TextStyle(
+                                      fontFamily: 'RobotoReg',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                            style: TextButton.styleFrom(
+                                backgroundColor: defaultGreen,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)))),
                           ),
                         ),
                       ),
-//                      Material(
-//                          elevation: 2.0,
-//                          borderRadius: BorderRadius.circular(2.0),
-//                          color: Colors.white,
-//                          child: Padding(
-//                              padding: EdgeInsets.symmetric(
-//                                  vertical: 15, horizontal: 30),
-//                              child: Container(
-//                                height: 55,
-//                                width: 75,
-//                                child: Image.asset(
-//                                  'images/card.png',
-//                                  fit: BoxFit.fill,
-//                                ),
-//                              ))),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
-                        child: Text('**** **** **** 3947',
-                            style: billingTextStyle.copyWith(
-                                fontStyle: FontStyle.normal)),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Spacer(),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(50, 50, 50, 30),
-              child: SizedBox(
-                width: double.infinity,
-                height: 40.0,
-                child: TextButton(
-                  onPressed: isButtonEnabled
-                      ? () async {
-                          setState(() {
-                            isButtonEnabled = false;
-                          });
-                          print('pressed');
-                          order.setUserPaymentDetails(
-                              userId: Api.userInfo.id, paymentId: '11487');
-                          String id =
-                              await _apiCall.postConsultationPurchase(order);
-                          if (id != null) {
-                            _appointment.putId(packagePurchaseId: id);
-                            bool success =
-                                await _apiCall.postConsultationAppointment(_appointment);
-                            if (success) {
-                              _scaffoldKey.currentState.showSnackBar(
-                                  SnackBar(content: Text('Appointment Added')));
-                            }
-                            _scaffoldKey.currentState.showSnackBar(
-                                SnackBar(content: Text('Purchase Successful')));
-                          } else {
-                            _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                content: Text('Something went wrong')));
-                          }
-                        }
-                      : {},
-                  child: Text(
-                    'PAY NOW',
-                    style: TextStyle(
-                      fontFamily: 'RobotoCondensedReg',
-                      fontSize: 16,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.white,
                     ),
-                  ),
-                  style: TextButton.styleFrom(
-                      backgroundColor: defaultGreen,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)))),
+                  ],
                 ),
               ),
             ),
-          ],
+          ),
         ),
       ),
     );

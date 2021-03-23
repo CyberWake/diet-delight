@@ -4,6 +4,7 @@ import 'package:diet_delight/Models/consultationAppointmentModel.dart';
 import 'package:diet_delight/Models/consultationModel.dart';
 import 'package:diet_delight/Models/consultationPurchaseModel.dart';
 import 'package:diet_delight/Screens/Consultation/prePaymentConsultation.dart';
+import 'package:diet_delight/Widgets/consultation_pop_up.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,7 +32,13 @@ class _ConfirmConsultationState extends State<ConfirmConsultation> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int consultationIndex;
   int selectedIndex;
-  List<String> opt = ['Silver', 'Platinum', 'Gold'];
+
+  updateSelectedConsultation(int index) {
+    setState(() {
+      selectedIndex = index;
+      consultationIndex = index;
+    });
+  }
 
   Widget breakDownFields(String disc, String price, bool isGrandTotal) {
     return Row(
@@ -75,239 +82,6 @@ class _ConfirmConsultationState extends State<ConfirmConsultation> {
 
   @override
   Widget build(BuildContext context) {
-//    Dialog SelectionDialog = Dialog(
-//      shape: RoundedRectangleBorder(
-//          borderRadius: BorderRadius.circular(12.0)), //this right here
-//      child: Container(
-//        height: opt.length.toDouble() * 56,
-//        width: MediaQuery.of(context).size.width * 0.5,
-//        child: ListView.builder(
-//            itemCount: opt.length,
-//            itemBuilder: (context, int index) {
-//              if (selectedIndex == index && index == 0) {
-//                return Container(
-//                  decoration: BoxDecoration(
-//                    color: defaultPurple,
-//                    borderRadius: BorderRadius.only(
-//                      topLeft: const Radius.circular(10),
-//                      topRight: const Radius.circular(10),
-//                    ),
-//                  ),
-//                  child: Material(
-//                    color: Colors.transparent,
-//                    child: ListTile(
-//                      leading: new CircleAvatar(
-//                        radius: 12.0,
-//                        child: Container(
-//                          decoration: BoxDecoration(
-//                            shape: BoxShape.circle,
-//                            gradient: LinearGradient(
-//                                begin: Alignment.centerLeft,
-//                                end: Alignment.centerRight,
-//                                colors: itemColors[index]),
-//                          ),
-//                        ),
-//                      ),
-//                      title: Text(
-//                        opt[index],
-//                        style: consultationSelectStyle.copyWith(
-//                            color: Colors.white),
-//                      ),
-//                      onTap: () {
-//                        setState(() {
-//                          selectedIndex = index;
-//                          consultationIndex = index;
-//                        });
-//                        Navigator.pop(context);
-//                      },
-//                    ),
-//                  ),
-//                );
-//              } else if (index == 0) {
-//                return Container(
-//                  decoration: BoxDecoration(
-//                    color: Colors.white,
-//                    borderRadius: BorderRadius.only(
-//                      topLeft: const Radius.circular(10),
-//                      topRight: const Radius.circular(10),
-//                    ),
-//                  ),
-//                  child: Material(
-//                    color: Colors.transparent,
-//                    child: ListTile(
-//                      leading: new CircleAvatar(
-//                        radius: 12.0,
-//                        child: Container(
-//                          decoration: BoxDecoration(
-//                            shape: BoxShape.circle,
-//                            gradient: LinearGradient(
-//                                begin: Alignment.centerLeft,
-//                                end: Alignment.centerRight,
-//                                colors: itemColors[index]),
-//                          ),
-//                        ),
-//                      ),
-//                      title: Text(
-//                        opt[index],
-//                        style: consultationSelectStyle,
-//                      ),
-//                      onTap: () {
-//                        setState(() {
-//                          selectedIndex = index;
-//                          consultationIndex = index;
-//                        });
-//                        Navigator.pop(context);
-//                      },
-//                    ),
-//                  ),
-//                );
-//              }
-//              if (selectedIndex == index && index == opt.length - 1) {
-//                return Container(
-//                  decoration: BoxDecoration(
-//                    color: defaultPurple,
-//                    borderRadius: BorderRadius.only(
-//                      bottomLeft: const Radius.circular(10),
-//                      bottomRight: const Radius.circular(10),
-//                    ),
-//                  ),
-//                  child: Material(
-//                    color: Colors.transparent,
-//                    child: ListTile(
-//                      leading: new CircleAvatar(
-//                        radius: 12.0,
-//                        child: Container(
-//                          decoration: BoxDecoration(
-//                            shape: BoxShape.circle,
-//                            gradient: LinearGradient(
-//                                begin: Alignment.centerLeft,
-//                                end: Alignment.centerRight,
-//                                colors: itemColors[index]),
-//                          ),
-//                        ),
-//                      ),
-//                      title: Text(
-//                        opt[index],
-//                        style: consultationSelectStyle.copyWith(
-//                            color: Colors.white),
-//                      ),
-//                      onTap: () {
-//                        setState(() {
-//                          selectedIndex = index;
-//                          consultationIndex = index;
-//                        });
-//                        Navigator.pop(context);
-//                      },
-//                    ),
-//                  ),
-//                );
-//              } else if (selectedIndex == index) {
-//                return Container(
-//                  color: defaultPurple,
-//                  child: Material(
-//                    color: Colors.transparent,
-//                    child: ListTile(
-//                      leading: new CircleAvatar(
-//                        radius: 12.0,
-//                        child: Container(
-//                          decoration: BoxDecoration(
-//                            shape: BoxShape.circle,
-//                            gradient: LinearGradient(
-//                                begin: Alignment.centerLeft,
-//                                end: Alignment.centerRight,
-//                                colors: itemColors[index]),
-//                          ),
-//                        ),
-//                      ),
-//                      title: Text(
-//                        opt[index],
-//                        style: consultationSelectStyle.copyWith(
-//                            color: Colors.white),
-//                      ),
-//                      onTap: () {
-//                        setState(() {
-//                          selectedIndex = index;
-//                          consultationIndex = index;
-//                        });
-//                        Navigator.pop(context);
-//                      },
-//                    ),
-//                  ),
-//                );
-//              } else if (index == opt.length - 1) {
-//                return Container(
-//                  decoration: BoxDecoration(
-//                    color: Colors.white,
-//                    borderRadius: BorderRadius.only(
-//                      bottomLeft: const Radius.circular(10),
-//                      bottomRight: const Radius.circular(10),
-//                    ),
-//                  ),
-//                  child: Material(
-//                    color: Colors.transparent,
-//                    child: ListTile(
-//                      leading: new CircleAvatar(
-//                        radius: 12.0,
-//                        child: Container(
-//                          decoration: BoxDecoration(
-//                            shape: BoxShape.circle,
-//                            gradient: LinearGradient(
-//                                begin: Alignment.centerLeft,
-//                                end: Alignment.centerRight,
-//                                colors: itemColors[index]),
-//                          ),
-//                        ),
-//                      ),
-//                      title: Text(
-//                        opt[index],
-//                        style: consultationSelectStyle,
-//                      ),
-//                      onTap: () {
-//                        setState(() {
-//                          selectedIndex = index;
-//                          consultationIndex = index;
-//                        });
-//                        Navigator.pop(context);
-//                      },
-//                    ),
-//                  ),
-//                );
-//              } else {
-//                return Container(
-//                  color: Colors.white,
-//                  child: Material(
-//                    color: Colors.transparent,
-//                    child: ListTile(
-//                      leading: new CircleAvatar(
-//                        radius: 12.0,
-//                        child: Container(
-//                          decoration: BoxDecoration(
-//                            shape: BoxShape.circle,
-//                            gradient: LinearGradient(
-//                                begin: Alignment.centerLeft,
-//                                end: Alignment.centerRight,
-//                                colors: itemColors[index]),
-//                          ),
-//                        ),
-//                      ),
-//                      title: Text(
-//                        opt[index],
-//                        style: consultationSelectStyle,
-//                      ),
-//                      onTap: () {
-//                        setState(() {
-//                          selectedIndex = index;
-//                          consultationIndex = index;
-//                        });
-//                        Navigator.pop(context);
-//                      },
-//                    ),
-//                  ),
-//                );
-//              }
-//            }),
-//      ),
-//    );
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
@@ -339,34 +113,22 @@ class _ConfirmConsultationState extends State<ConfirmConsultation> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-//                    TextButton(
-//                      child: ddItems[consultationIndex],
-//                      onPressed: () {
-//                        showDialog(
-//                            context: context,
-//                            builder: (BuildContext context) => SelectionDialog);
-//                      },
-//                    ),
-                    DropdownButton<Widget>(
-                      value: ddItems[widget.package],
-                      elevation: 16,
-                      onChanged: (Widget newValue) {
-                        setState(() {
-                          widget.package = ddItems.indexOf(newValue);
-                        });
+                    TextButton(
+                      child: ddItems[consultationIndex],
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                ConsultationPopUp(
+                                  selectedIndex: selectedIndex,
+                                  callBackFunction: updateSelectedConsultation,
+                                ));
                       },
-                      items:
-                          ddItems.map<DropdownMenuItem<Widget>>((Widget value) {
-                        return DropdownMenuItem<Widget>(
-                          value: value,
-                          child: value,
-                        );
-                      }).toList(),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 15.0, 0, 0),
                       child: Text(
-                        widget.consultation[widget.package].details,
+                        widget.consultation[consultationIndex].details,
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           fontFamily: 'RobotoCondensedReg',
@@ -544,14 +306,14 @@ class _ConfirmConsultationState extends State<ConfirmConsultation> {
                         child: Column(
                           children: [
                             breakDownFields(
-                                '${widget.consultation[widget.package].name} Consultancy Package',
-                                '${widget.consultation[widget.package].price} BHD',
+                                '${widget.consultation[consultationIndex].name} Consultancy Package',
+                                '${widget.consultation[consultationIndex].price} BHD',
                                 false),
                             breakDownFields('Extras', '- - BHD', false),
                             breakDownFields('Taxes', '- - BHD', false),
                             breakDownFields(
                                 'Grand Total',
-                                '${int.parse(widget.consultation[widget.package].price.substring(0, 2)) + 80} BHD',
+                                '${int.parse(widget.consultation[consultationIndex].price.substring(0, 2)) + 80} BHD',
                                 true),
                           ],
                         ),
@@ -572,7 +334,7 @@ class _ConfirmConsultationState extends State<ConfirmConsultation> {
                       print('pressed');
                       var formatter = new DateFormat('yyyy-MM-dd');
                       DateTime time =
-                          DateFormat("hh:mma").parse(widget.consultationTime);
+                          DateFormat("hh:mm a").parse(widget.consultationTime);
                       ConsAppointmentModel appointment = ConsAppointmentModel(
                         userId: Api.userInfo.id,
                         consultationTime:
@@ -582,14 +344,18 @@ class _ConfirmConsultationState extends State<ConfirmConsultation> {
                       );
                       ConsPurchaseModel purchaseDetails = ConsPurchaseModel(
                           consultationName:
-                              widget.consultation[widget.package].name,
-                          consultationPackageId:
-                              widget.consultation[widget.package].id.toString(),
-                          consultationPackageDuration: widget
-                              .consultation[widget.package].duration
+                              widget.consultation[consultationIndex].name,
+                          consultationPackageId: widget
+                              .consultation[consultationIndex].id
                               .toString(),
-                          amountPaid: widget.consultation[widget.package].price
+                          consultationPackageDuration: widget
+                              .consultation[consultationIndex].duration
+                              .toString(),
+                          amountPaid: widget
+                              .consultation[consultationIndex].price
                               .toString());
+                      print(purchaseDetails.consultationPackageId);
+                      print(widget.package);
                       Navigator.push(
                           context,
                           MaterialPageRoute(

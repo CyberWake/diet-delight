@@ -1,20 +1,23 @@
-import 'package:diet_delight/konstants.dart';
+import 'package:diet_delight/Screens/export.dart';
 import 'package:flutter/material.dart';
 
 class SettingsTermsAndConditionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0),
-        child: ListView(
-          children: [
-            Text(
-              termsAndConditions,
-              style: appBarTextStyle,
+      child: ListView(
+        children: [
+          Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                termsAndConditions,
+                style: appBarTextStyle.copyWith(fontSize: 14),
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -1,17 +1,24 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:diet_delight/Models/addFavouritesModel.dart';
 import 'package:diet_delight/Models/consultationModel.dart';
+import 'package:diet_delight/Models/foodItemModel.dart';
 import 'package:diet_delight/Models/mealModel.dart';
 import 'package:diet_delight/Models/mealPlanDurationsModel.dart';
 import 'package:diet_delight/Models/menuModel.dart';
-import 'package:diet_delight/Screens/Consultation/bookConsultation.dart';
+import 'package:diet_delight/Screens/Consultation/selectConsultationMode.dart';
 import 'package:diet_delight/Screens/MealPlans/mealPlanSelectionScreen.dart';
 import 'package:diet_delight/Screens/Menu/menupage.dart';
 import 'package:diet_delight/konstants.dart';
 import 'package:diet_delight/services/apiCalls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
+  final bool consultationScroll;
+
+  HomeScreen({this.consultationScroll});
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -21,11 +28,18 @@ class _HomeScreenState extends State<HomeScreen> {
   List<ConsultationModel> consultationPackages = List();
   List<DurationModel> durations = List();
   List<MenuModel> menus = List();
+  List<FoodItemModel> featuredMenu = List();
   List<List<MealModel>> mealPackages = List();
+  List<List> favourites = List();
+  List<int> favPressed = List();
   bool isLoaded = false;
+  bool favEnabled = true;
+  ScrollController _scrollController = new ScrollController();
 
   Future testApiData() async {
     consultationPackages = await _apiCall.getConsultationPackages();
+    featuredMenu = await _apiCall.getFeaturedMenuItems();
+    favourites = await _apiCall.getFavourites();
     menus = await _apiCall.getMenuPackages();
     durations = await _apiCall.getDurations();
     for (int i = 0; i < durations.length;) {
@@ -36,9 +50,20 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  getFavourites() async {
+    favourites = await _apiCall.getFavourites();
+    setState(() {
+      favEnabled = true;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    // if (widget.consultationScroll == true) {
+    //   _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+    //       duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
+    // }
     testApiData().whenComplete(() {
       if (mounted) {
         setState(() {
@@ -91,8 +116,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                      placeholder: (context, url) =>
-                          CircularProgressIndicator(),
+                      placeholder: (context, url) => SpinKitChasingDots(
+                        color: defaultPurple,
+                        size: 32,
+                      ),
                       errorWidget: (context, url, error) => Icon(Icons.error),
                     ),
                   ),
@@ -175,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 context,
                 CupertinoPageRoute(
                     builder: (context) => MealPlanPage(
-                        menus: menus, mealPlans: mealPackages[pos])));
+                        menus: menus, mealPlans: mealPackages[pos],durationId: durations[pos].id)));
             print('success getting meal details page');
           },
           child: Container(
@@ -187,7 +214,8 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                    padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                    padding: EdgeInsets.only(
+                        top: 10.0, bottom: 10.0, left: 10, right: 10),
                     child: Text(
                       durations[pos].title,
                       style: TextStyle(
@@ -196,6 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
+                      textAlign: TextAlign.center,
                     )),
                 durations[pos].subTitle == null
                     ? SizedBox()
@@ -269,14 +298,15 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.push(
                 context,
                 CupertinoPageRoute(
-                    builder: (context) => BookConsultation(
+                    builder: (context) => SelectConsultationMode(
                           packageIndex: pos,
                           consultation: consultationPackages,
                         )));
             print('success getting consultation package screen');
           },
           child: Container(
-            width: 130,
+            width: 160,
+            // height: 900,
             decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border.all(width: 2.0, color: defaultGreen)),
@@ -298,7 +328,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Text(
                             consultationPackages[pos].name,
                             style: TextStyle(
-                              fontFamily: 'RobotoCondensedReg',
+                              fontFamily: 'RobotoReg',
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
@@ -306,16 +336,32 @@ class _HomeScreenState extends State<HomeScreen> {
                           )),
                     )),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(5.0, 0, 5, 0),
-                  child: Text(
-                    consultationPackages[pos].subtitle,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'RobotoCondensedReg',
-                      fontSize: 11,
-                      fontWeight: FontWeight.normal,
-                      color: cardGray,
-                    ),
+                  padding: EdgeInsets.fromLTRB(10.0, 0, 10, 0),
+                  child: Column(
+//                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        consultationPackages[pos].subtitle,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontFamily: 'RobotoCondensedReg',
+                          fontSize: 11,
+                          fontWeight: FontWeight.normal,
+                          color: cardGray,
+                        ),
+                      ),
+                      SizedBox(height: 10.0),
+                      Text(
+                        consultationPackages[pos].details,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontFamily: 'RobotoCondensedReg',
+                          fontSize: 11,
+                          fontWeight: FontWeight.normal,
+                          color: cardGray,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Spacer(),
@@ -365,9 +411,17 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     double devWidth = MediaQuery.of(context).size.width;
+    double devHeight = MediaQuery.of(context).size.height;
+    widget.consultationScroll == true
+        ? Timer(
+            Duration(milliseconds: 100),
+            () => _scrollController
+                .jumpTo(_scrollController.position.maxScrollExtent))
+        : null;
     return isLoaded
         ? ListView(
             shrinkWrap: true,
+            controller: _scrollController,
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 10, 0, 20.0),
@@ -441,58 +495,58 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Container(
                 width: double.infinity,
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Column(
-                        children: [
-                          Text(
-                            'OUR MENU PACKAGE',
-                            style: TextStyle(
-                              fontFamily: 'RobotoCondensedReg',
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: defaultPurple,
-                            ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      children: [
+                        Text(
+                          'OUR MENU PACKAGE',
+                          style: TextStyle(
+                            fontFamily: 'RobotoCondensedReg',
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: defaultPurple,
                           ),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                            child: Container(
-                              width: 60,
-                              height: 3,
-                              color: defaultGreen,
-                            ),
-                          )
-                        ],
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(20, 20, 10, 10),
-                        child: Container(
-                          height: 0.65 * devWidth,
-                          child: ListView.builder(
-                              itemCount: menus.length,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (BuildContext context, int index) {
-                                return menuItemCard(index);
-                              }),
                         ),
-                      )
-                    ],
-                  ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                          child: Container(
+                            width: 60,
+                            height: 3,
+                            color: defaultGreen,
+                          ),
+                        )
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
+                      child: Container(
+                        height: 0.65 * devWidth,
+                        child: ListView.builder(
+                            itemCount: menus.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                child: menuItemCard(index),
+                              );
+                            }),
+                      ),
+                    )
+                  ],
                 ),
               ),
               Container(
                 width: double.infinity,
                 decoration: new BoxDecoration(
                   image: new DecorationImage(
-                    image: new AssetImage('images/Group 7.png'),
+                    image: new AssetImage('images/bg2.jpg'),
                     fit: BoxFit.cover,
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 10.0),
+                  padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 10.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -518,14 +572,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(15, 20, 10, 10),
+                        padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
                         child: Container(
                           height: 0.55 * devWidth,
                           child: ListView.builder(
                               itemCount: durations.length,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (BuildContext context, int index) {
-                                return mealPlanDurationCategoryCard(index);
+                                return Padding(
+                                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  child: mealPlanDurationCategoryCard(index),
+                                );
                               }),
                         ),
                       ),
@@ -539,7 +596,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 width: double.infinity,
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 10.0),
+                  padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 10.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -565,15 +622,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(20, 20, 10, 10),
+                        padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
                         child: Container(
-                          height: 0.45 * devWidth,
+                          height: 0.49 * devWidth,
                           child: ListView.builder(
-                              itemCount: 5,
+                              itemCount: featuredMenu.length,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (BuildContext context, int pos) {
                                 return Padding(
-                                  padding: EdgeInsets.only(right: 15.0),
+                                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                                   child: Material(
                                     elevation: 0.0,
                                     shadowColor: Colors.white,
@@ -585,26 +642,47 @@ class _HomeScreenState extends State<HomeScreen> {
                                         },
                                         child: Container(
                                           color: Colors.white,
-                                          width: 0.4 * devWidth,
-                                          height: 220,
+                                          width: 0.43 * devWidth,
                                           child: Column(
+                                            mainAxisSize: MainAxisSize.max,
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             children: [
                                               Padding(
-                                                padding: EdgeInsets.fromLTRB(
-                                                    5.0, 5.0, 5.0, 5.0),
-                                                child: Image.asset(
-                                                  'images/Group 26.png',
-                                                  width: (0.4 * devWidth),
-                                                  height: (0.4 * devWidth) / 2,
+                                                padding: EdgeInsets.all(5),
+                                                child: CachedNetworkImage(
+                                                  imageUrl: featuredMenu[pos]
+                                                          .picture ??
+                                                      "http://via.placeholder.com/350x150",
+                                                  imageBuilder: (context,
+                                                          imageProvider) =>
+                                                      Container(
+                                                    width: (0.43 * devWidth),
+                                                    height:
+                                                        (0.44 * devWidth) / 2,
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.rectangle,
+                                                      image: DecorationImage(
+                                                        image: imageProvider,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  placeholder: (context, url) =>
+                                                      SpinKitChasingDots(
+                                                          size: 32,
+                                                          color: defaultPurple),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          FlutterLogo(
+                                                    size: 60,
+                                                  ),
                                                 ),
                                               ),
                                               Padding(
-                                                padding: EdgeInsets.fromLTRB(
-                                                    5.0, 0, 5.0, 0),
+                                                padding: EdgeInsets.all(5),
                                                 child: Text(
-                                                  'Honey garlic Chicken Stir Fry',
+                                                  featuredMenu[pos].foodName,
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                     fontFamily:
@@ -617,24 +695,89 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.only(
-                                                    top: 20.0),
+                                                    bottom: 5),
                                                 child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
                                                   children: [
                                                     Icon(
                                                       Icons.adjust,
-                                                      size: 15,
+                                                      size: 18,
                                                       color: defaultPurple,
                                                     ),
                                                     SizedBox(
                                                       width: 5,
                                                     ),
-                                                    Icon(
-                                                      Icons.favorite_border,
-                                                      size: 15,
-                                                      color: defaultPurple,
-                                                    )
+                                                    favEnabled == false
+                                                        ? IconButton(
+                                                            icon:
+                                                                SpinKitChasingDots(
+                                                              color:
+                                                                  defaultPurple,
+                                                              size: 18,
+                                                            ),
+                                                          )
+                                                        : favourites[0].contains(
+                                                                featuredMenu[
+                                                                        pos]
+                                                                    .id)
+                                                            ? IconButton(
+                                                                onPressed:
+                                                                    () async {
+                                                                  setState(() {
+                                                                    favEnabled =
+                                                                        false;
+                                                                  });
+                                                                  int removeIndex =
+                                                                      favourites[
+                                                                              0]
+                                                                          .indexOf(
+                                                                              featuredMenu[pos].id);
+                                                                  await _apiCall
+                                                                      .deleteFavourites(
+                                                                          favourites[1]
+                                                                              [
+                                                                              removeIndex]);
+                                                                  getFavourites();
+                                                                },
+                                                                icon: Icon(
+                                                                    Icons
+                                                                        .favorite,
+                                                                    size: 18,
+                                                                    color:
+                                                                        defaultPurple))
+                                                            : IconButton(
+                                                                onPressed:
+                                                                    () async {
+                                                                  setState(() {
+                                                                    favEnabled =
+                                                                        false;
+                                                                  });
+                                                                  int userId = int
+                                                                      .parse(Api
+                                                                          .userInfo
+                                                                          .id);
+                                                                  AddFavouritesModel
+                                                                      details =
+                                                                      AddFavouritesModel(
+                                                                    menuItemId:
+                                                                        featuredMenu[pos]
+                                                                            .id,
+                                                                    userId:
+                                                                        userId,
+                                                                  );
+                                                                  await _apiCall
+                                                                      .addFavourites(
+                                                                          details);
+                                                                  getFavourites();
+                                                                },
+                                                                icon: Icon(
+                                                                  Icons
+                                                                      .favorite_border,
+                                                                  size: 18,
+                                                                  color:
+                                                                      defaultPurple,
+                                                                )),
                                                   ],
                                                 ),
                                               ),
@@ -654,14 +797,15 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Container(
                 width: double.infinity,
-                decoration: new BoxDecoration(
-                  image: new DecorationImage(
-                    image: new AssetImage('images/Group 4.png'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                decoration:
+                    new BoxDecoration(image: consultationHomePageBackground
+                        // new DecorationImage(
+                        //   image: new AssetImage('images/.png'),
+                        //   fit: BoxFit.cover,
+                        // ),
+                        ),
                 child: Padding(
-                  padding: EdgeInsets.all(10.0),
+                  padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -687,14 +831,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Padding(
-                          padding: EdgeInsets.fromLTRB(20, 20, 10, 0),
+                          padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                           child: Container(
-                              height: 0.525 * devWidth,
+                              height: 0.4 * devHeight,
                               child: ListView.builder(
                                 itemCount: consultationPackages.length,
                                 scrollDirection: Axis.horizontal,
                                 itemBuilder: (BuildContext context, int index) {
-                                  return consultationItemCard(index);
+                                  return Padding(
+                                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    child: consultationItemCard(index),
+                                  );
                                 },
                               ))),
                       SizedBox(
@@ -706,6 +853,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           )
-        : Center(child: CircularProgressIndicator());
+        : Center(
+            child: SpinKitThreeBounce(
+              color: defaultPurple,
+              size: 32,
+            ),
+          );
   }
 }
